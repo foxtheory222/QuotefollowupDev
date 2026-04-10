@@ -1,0 +1,14 @@
+adx_append: false
+adx_appendto: false
+adx_create: false
+adx_delete: false
+adx_entitylogicalname: qfu_deliverynotpgi
+adx_entityname: operationhub qfu_deliverynotpgi Global ReadWrite
+adx_entitypermission_webrole:
+- 0d42a052-4ceb-4d02-bfb1-eea0860bcae9
+- 695703dc-ec50-466e-a28c-9878fe269a7a
+- d1681251-ec76-4138-b394-038772b4aa90
+adx_entitypermissionid: 1c4a7f7e-f472-4ae3-9f1e-130204f2260f
+adx_read: true
+adx_scope: 756150000
+adx_write: true

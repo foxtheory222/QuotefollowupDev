@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "hub",
+    "url": "https://operationhub.powerappsportals.com/",
+    "title": "Regional Operations Hub",
+    "h1": "Quote Follow Up Regional Operations Hub",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 0,
+    "cardCount": 0
+  },
+  {
+    "slug": "region-southern-alberta",
+    "url": "https://operationhub.powerappsportals.com/southern-alberta",
+    "title": "Southern Alberta Region",
+    "h1": "Southern Alberta",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 4,
+    "cardCount": 6
+  },
+  {
+    "slug": "branch-4171-calgary",
+    "url": "https://operationhub.powerappsportals.com/southern-alberta/4171-calgary",
+    "title": "4171 Calgary",
+    "h1": "Calgary (4171)",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 0,
+    "cardCount": 6
+  },
+  {
+    "slug": "branch-4172-lethbridge",
+    "url": "https://operationhub.powerappsportals.com/southern-alberta/4172-lethbridge",
+    "title": "4172 Lethbridge",
+    "h1": "Lethbridge (4172)",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 0,
+    "cardCount": 6
+  },
+  {
+    "slug": "branch-4173-medicine-hat",
+    "url": "https://operationhub.powerappsportals.com/southern-alberta/4173-medicine-hat",
+    "title": "4173 Medicine Hat",
+    "h1": "Medicine Hat (4173)",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 0,
+    "cardCount": 6
+  },
+  {
+    "slug": "analytics-4171",
+    "url": "https://operationhub.powerappsportals.com/southern-alberta/4171-calgary/detail?view=analytics",
+    "title": "4171 Detail Shell",
+    "h1": "Calgary (4171)",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 0,
+    "cardCount": 12
+  },
+  {
+    "slug": "detail-overdue-backorders-4171",
+    "url": "https://operationhub.powerappsportals.com/southern-alberta/4171-calgary/detail?view=overdue-backorders",
+    "title": "4171 Detail Shell",
+    "h1": "Calgary (4171)",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 0,
+    "cardCount": 6
+  },
+  {
+    "slug": "ops-admin",
+    "url": "https://operationhub.powerappsportals.com/ops-admin",
+    "title": "Ops / Admin",
+    "h1": "Internal Manager / Ops Panel",
+    "hasLoadingShell": false,
+    "hasJsCrashText": false,
+    "duplicate4171Mentions": 2,
+    "cardCount": 6
+  }
+]

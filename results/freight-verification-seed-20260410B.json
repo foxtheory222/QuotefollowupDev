@@ -1,0 +1,29 @@
+{
+  "target_environment": "https://regionaloperationshub.crm.dynamics.com",
+  "seeded_on_utc": "2026-04-10T21:58:37.7026440Z",
+  "run_tag": "20260410B",
+  "portal_source_id": "4171|freight-test|portal|20260410B",
+  "archive_source_id": "4171|freight-test|archive|20260410B",
+  "portal_reference": "QFU-FREIGHT-PORTAL-VERIFY-20260410B",
+  "archive_reference": "QFU-FREIGHT-ARCHIVE-VERIFY-20260410B",
+  "records": [
+    {
+      "source_id": "4171|freight-test|portal|20260410B",
+      "record_id": "b546d26c-2835-f111-88b5-000d3a59294a",
+      "result": "created",
+      "reference": "QFU-FREIGHT-PORTAL-VERIFY-20260410B",
+      "status": "Open",
+      "archived": false
+    },
+    {
+      "source_id": "4171|freight-test|archive|20260410B",
+      "record_id": "b646d26c-2835-f111-88b5-000d3a59294a",
+      "result": "created",
+      "reference": "QFU-FREIGHT-ARCHIVE-VERIFY-20260410B",
+      "status": "Closed",
+      "archived": false
+    }
+  ],
+  "portal_url": "https://operationhub.powerappsportals.com/southern-alberta/4171-calgary/detail/?view=freight-worklist&search=QFU-FREIGHT-PORTAL-VERIFY-20260410B",
+  "archive_url": "https://operationhub.powerappsportals.com/southern-alberta/4171-calgary/detail/?view=freight-worklist&search=QFU-FREIGHT-ARCHIVE-VERIFY-20260410B"
+}

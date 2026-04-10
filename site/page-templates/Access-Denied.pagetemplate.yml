@@ -1,0 +1,6 @@
+adx_entityname: adx_webpage
+adx_isdefault: false
+adx_name: Access Denied
+adx_pagetemplateid: c64ccc39-8f96-41a4-82a3-0cc71fcbeef8
+adx_rewriteurl: ~/Pages/AccessDenied.aspx
+adx_usewebsiteheaderandfooter: true

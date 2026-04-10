@@ -1,0 +1,170 @@
+{
+    "generated_at":  "2026-04-09T12:21:42.4149636-06:00",
+    "target_environment_url":  "https://regionaloperationshub.crm.dynamics.com",
+    "as_of_date":  "2026-04-09",
+    "current_month":  4,
+    "current_year":  2026,
+    "current_fiscal_year":  "FY26",
+    "summary":  {
+                    "branches_checked":  3,
+                    "total_issues":  3,
+                    "critical_issues":  0,
+                    "warning_issues":  3
+                },
+    "region_expected_display":  {
+                                    "actual":  256584.65,
+                                    "target":  1746030.00,
+                                    "pace_pct":  14.70
+                                },
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "current_month":  4,
+                         "current_year":  2026,
+                         "current_fiscal_year":  "FY26",
+                         "summary":  {
+                                         "row_id":  "8484c6c8-a533-f111-88b4-000d3a59294a",
+                                         "summary_date":  "2026-03-31",
+                                         "is_current_month":  false,
+                                         "budget_actual":  null,
+                                         "budget_target":  null
+                                     },
+                         "qfu_budget":  {
+                                            "candidate_count":  1,
+                                            "active_candidate_count":  1,
+                                            "canonical_id":  "449c488b-a833-f111-88b4-000d3a59294a",
+                                            "source_id":  "4171|SA1300|2026-04",
+                                            "actual_sales":  108916.03,
+                                            "budget_goal":  945500.00,
+                                            "last_updated":  "2026-04-09T02:14:00"
+                                        },
+                         "qfu_budgetarchive":  {
+                                                   "candidate_count":  1,
+                                                   "canonical_id":  "232dc1d9-b933-f111-88b4-000d3a59294a",
+                                                   "source_id":  "4171|budgetarchive|FY26|04",
+                                                   "budget_goal":  945500.00,
+                                                   "last_updated":  "2026-04-09T02:14:00"
+                                               },
+                         "expected_display":  {
+                                                  "actual":  108916.03,
+                                                  "actual_source":  "qfu_budget",
+                                                  "target":  945500.00,
+                                                  "target_source":  "qfu_budgetarchive",
+                                                  "pace_pct":  11.52
+                                              },
+                         "issues":  [
+                                        {
+                                            "severity":  "warning",
+                                            "code":  "stale_summary_fallback_blocked",
+                                            "detail":  "4171 latest qfu_branchdailysummary row is from 2026-03-31; it must not drive April budget numbers."
+                                        }
+                                    ]
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "current_month":  4,
+                         "current_year":  2026,
+                         "current_fiscal_year":  "FY26",
+                         "summary":  {
+                                         "row_id":  "8684c6c8-a533-f111-88b4-000d3a59294a",
+                                         "summary_date":  "2026-03-31",
+                                         "is_current_month":  false,
+                                         "budget_actual":  null,
+                                         "budget_target":  null
+                                     },
+                         "qfu_budget":  {
+                                            "candidate_count":  1,
+                                            "active_candidate_count":  1,
+                                            "canonical_id":  "69efb79a-a833-f111-88b4-000d3a59294a",
+                                            "source_id":  "4172|SA1300|2026-04",
+                                            "actual_sales":  118936.62,
+                                            "budget_goal":  388540.00,
+                                            "last_updated":  "2026-04-09T02:14:00"
+                                        },
+                         "qfu_budgetarchive":  {
+                                                   "candidate_count":  1,
+                                                   "canonical_id":  "242dc1d9-b933-f111-88b4-000d3a59294a",
+                                                   "source_id":  "4172|budgetarchive|FY26|04",
+                                                   "budget_goal":  388540.00,
+                                                   "last_updated":  "2026-04-09T02:14:00"
+                                               },
+                         "expected_display":  {
+                                                  "actual":  118936.62,
+                                                  "actual_source":  "qfu_budget",
+                                                  "target":  388540.00,
+                                                  "target_source":  "qfu_budgetarchive",
+                                                  "pace_pct":  30.61
+                                              },
+                         "issues":  [
+                                        {
+                                            "severity":  "warning",
+                                            "code":  "stale_summary_fallback_blocked",
+                                            "detail":  "4172 latest qfu_branchdailysummary row is from 2026-03-31; it must not drive April budget numbers."
+                                        }
+                                    ]
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "current_month":  4,
+                         "current_year":  2026,
+                         "current_fiscal_year":  "FY26",
+                         "summary":  {
+                                         "row_id":  "8884c6c8-a533-f111-88b4-000d3a59294a",
+                                         "summary_date":  "2026-03-31",
+                                         "is_current_month":  false,
+                                         "budget_actual":  null,
+                                         "budget_target":  null
+                                     },
+                         "qfu_budget":  {
+                                            "candidate_count":  1,
+                                            "active_candidate_count":  1,
+                                            "canonical_id":  "d5a729a7-a833-f111-88b4-000d3a59294a",
+                                            "source_id":  "4173|SA1300|2026-04",
+                                            "actual_sales":  28732.00,
+                                            "budget_goal":  411990.00,
+                                            "last_updated":  "2026-04-09T02:14:00"
+                                        },
+                         "qfu_budgetarchive":  {
+                                                   "candidate_count":  1,
+                                                   "canonical_id":  "252dc1d9-b933-f111-88b4-000d3a59294a",
+                                                   "source_id":  "4173|budgetarchive|FY26|04",
+                                                   "budget_goal":  411990.00,
+                                                   "last_updated":  "2026-04-09T02:14:00"
+                                               },
+                         "expected_display":  {
+                                                  "actual":  28732.00,
+                                                  "actual_source":  "qfu_budget",
+                                                  "target":  411990.00,
+                                                  "target_source":  "qfu_budgetarchive",
+                                                  "pace_pct":  6.97
+                                              },
+                         "issues":  [
+                                        {
+                                            "severity":  "warning",
+                                            "code":  "stale_summary_fallback_blocked",
+                                            "detail":  "4173 latest qfu_branchdailysummary row is from 2026-03-31; it must not drive April budget numbers."
+                                        }
+                                    ]
+                     }
+                 ],
+    "issues":  [
+                   {
+                       "branch_code":  "4171",
+                       "severity":  "warning",
+                       "code":  "stale_summary_fallback_blocked",
+                       "detail":  "4171 latest qfu_branchdailysummary row is from 2026-03-31; it must not drive April budget numbers."
+                   },
+                   {
+                       "branch_code":  "4172",
+                       "severity":  "warning",
+                       "code":  "stale_summary_fallback_blocked",
+                       "detail":  "4172 latest qfu_branchdailysummary row is from 2026-03-31; it must not drive April budget numbers."
+                   },
+                   {
+                       "branch_code":  "4173",
+                       "severity":  "warning",
+                       "code":  "stale_summary_fallback_blocked",
+                       "detail":  "4173 latest qfu_branchdailysummary row is from 2026-03-31; it must not drive April budget numbers."
+                   }
+               ]
+}

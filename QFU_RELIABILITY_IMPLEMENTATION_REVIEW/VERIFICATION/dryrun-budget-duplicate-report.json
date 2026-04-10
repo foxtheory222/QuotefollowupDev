@@ -1,0 +1,114 @@
+{
+  "generatedOn": "2026-04-07T23:10:20",
+  "mode": "dry-run",
+  "asOfDate": "2026-04-07",
+  "branchCodes": [
+    "4171",
+    "4172",
+    "4173"
+  ],
+  "groups": [
+    {
+      "branchCode": "4171",
+      "fiscalYear": "FY26",
+      "monthNumber": 4,
+      "candidateCount": 2,
+      "activeCandidateCount": 1,
+      "chosen": {
+        "budgetId": "4a0cb790-1f32-f111-88b4-000d3a59294a",
+        "sourceId": "4171|SA1300|2026-04",
+        "active": true,
+        "sourceFamily": "SA1300",
+        "lastUpdated": "2026-04-07T20:03:27",
+        "actualSales": 863863.38
+      },
+      "wouldDeactivate": [],
+      "candidates": [
+        {
+          "budgetId": "4a0cb790-1f32-f111-88b4-000d3a59294a",
+          "sourceId": "4171|SA1300|2026-04",
+          "active": true,
+          "sourceFamily": "SA1300",
+          "lastUpdated": "2026-04-07T20:03:27",
+          "actualSales": 863863.38
+        },
+        {
+          "budgetId": "841ee282-a232-f111-88b4-000d3a59294a",
+          "sourceId": "4171|SA1300|2026-04",
+          "active": false,
+          "sourceFamily": "SA1300",
+          "lastUpdated": "2026-04-07T20:03:27",
+          "actualSales": 60674.1
+        }
+      ]
+    },
+    {
+      "branchCode": "4172",
+      "fiscalYear": "FY26",
+      "monthNumber": 4,
+      "candidateCount": 2,
+      "activeCandidateCount": 1,
+      "chosen": {
+        "budgetId": "4b0cb790-1f32-f111-88b4-000d3a59294a",
+        "sourceId": "4172|SA1300|2026-04",
+        "active": true,
+        "sourceFamily": "SA1300",
+        "lastUpdated": "2026-04-07T20:03:27",
+        "actualSales": 450895.98
+      },
+      "wouldDeactivate": [],
+      "candidates": [
+        {
+          "budgetId": "4b0cb790-1f32-f111-88b4-000d3a59294a",
+          "sourceId": "4172|SA1300|2026-04",
+          "active": true,
+          "sourceFamily": "SA1300",
+          "lastUpdated": "2026-04-07T20:03:27",
+          "actualSales": 450895.98
+        },
+        {
+          "budgetId": "7efdcdf0-ab32-f111-88b4-000d3a59294a",
+          "sourceId": "4172|SA1300|2026-04",
+          "active": false,
+          "sourceFamily": "SA1300",
+          "lastUpdated": "2026-04-07T20:03:27",
+          "actualSales": 83846.31
+        }
+      ]
+    },
+    {
+      "branchCode": "4173",
+      "fiscalYear": "FY26",
+      "monthNumber": 4,
+      "candidateCount": 2,
+      "activeCandidateCount": 1,
+      "chosen": {
+        "budgetId": "4c0cb790-1f32-f111-88b4-000d3a59294a",
+        "sourceId": "4173|SA1300|2026-04",
+        "active": true,
+        "sourceFamily": "SA1300",
+        "lastUpdated": "2026-04-07T20:03:27",
+        "actualSales": 224055.53
+      },
+      "wouldDeactivate": [],
+      "candidates": [
+        {
+          "budgetId": "4c0cb790-1f32-f111-88b4-000d3a59294a",
+          "sourceId": "4173|SA1300|2026-04",
+          "active": true,
+          "sourceFamily": "SA1300",
+          "lastUpdated": "2026-04-07T20:03:27",
+          "actualSales": 224055.53
+        },
+        {
+          "budgetId": "d9ab950b-ad32-f111-88b4-000d3a59294a",
+          "sourceId": "4173|SA1300|2026-04",
+          "active": false,
+          "sourceFamily": "SA1300",
+          "lastUpdated": "2026-04-07T20:03:27",
+          "actualSales": 19735.42
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+- adx_disablepagevalidation: false
+  adx_displayimageonly: false
+  adx_displayorder: 2
+  adx_displaypagechildlinks: false
+  adx_name: Ops / Admin
+  adx_openinnewwindow: false
+  adx_pageid: df0adbc8-06dd-4026-86e1-8612075a9e6d
+  adx_publishingstateid: 0031c8c3-da10-4b08-b964-4307e321a8a1
+  adx_robotsfollowlink: true
+  adx_weblinkid: 6774d49e-272d-4d23-a81b-d7f3cbd384cb
+  adx_weblinksetid: 887d62a7-d0ee-496a-b0eb-370b5f59974f
+- adx_disablepagevalidation: false
+  adx_displayimageonly: false
+  adx_displayorder: 1
+  adx_displaypagechildlinks: false
+  adx_name: Hub
+  adx_openinnewwindow: false
+  adx_pageid: 87d75475-3ed8-4bd4-b259-bb8d82e0e676
+  adx_publishingstateid: 0031c8c3-da10-4b08-b964-4307e321a8a1
+  adx_robotsfollowlink: true
+  adx_weblinkid: ffdcc09f-04cd-48e0-96ca-84188caa0de0
+  adx_weblinksetid: 887d62a7-d0ee-496a-b0eb-370b5f59974f

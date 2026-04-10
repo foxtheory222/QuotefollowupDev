@@ -1,0 +1,1447 @@
+{
+    "captured_at":  "2026-04-09T18:58:40.6775717Z",
+    "environment_url":  "https://regionaloperationshub.crm.dynamics.com",
+    "branch_codes":  [
+                         "4171",
+                         "4172",
+                         "4173"
+                     ],
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "quotes":  {
+                                        "total_rows":  30,
+                                        "duplicate_groups":  15,
+                                        "duplicate_rows":  30,
+                                        "latest_createdon":  "2026-04-08 23:48:00",
+                                        "sample_groups":  [
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515441439",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "4e1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515441418",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "4d1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515441354",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "4a1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515441248",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "481be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515440886",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "471be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515439822",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "451be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515439677",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "431be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515439263",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "411be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515438811",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "3f1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4171|SP830CA|0515438681",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "3d1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              }
+                                                          ]
+                                    },
+                         "backorders":  {
+                                            "total_rows":  902,
+                                            "duplicate_groups":  451,
+                                            "duplicate_rows":  902,
+                                            "latest_createdon":  "2026-04-08 23:49:00",
+                                            "sample_groups":  [
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522970695|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8e18cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968303|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8b18cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968303|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8918cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968234|60",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8718cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968234|50",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8518cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968234|40",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8418cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968234|30",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8218cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968234|130",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8018cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522968234|120",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "7e18cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4171|ZBO|1522967465|30",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "7b18cd9e-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:49:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:49:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  }
+                                                              ]
+                                        },
+                         "margins":  {
+                                         "total_rows":  11,
+                                         "duplicate_groups":  0,
+                                         "duplicate_rows":  null,
+                                         "latest_createdon":  "2026-04-09 01:19:00",
+                                         "latest_snapshotdate":  "4/8/2026",
+                                         "snapshot_groups":  [
+                                                                 {
+                                                                     "snapshotdate":  "4/8/2026",
+                                                                     "row_count":  4
+                                                                 },
+                                                                 {
+                                                                     "snapshotdate":  "4/7/2026",
+                                                                     "row_count":  2
+                                                                 },
+                                                                 {
+                                                                     "snapshotdate":  "3/31/2026",
+                                                                     "row_count":  5
+                                                                 }
+                                                             ],
+                                         "sample_groups":  [
+
+                                                           ]
+                                     },
+                         "delivery_not_pgi":  {
+                                                  "total_rows":  143,
+                                                  "active_rows":  91,
+                                                  "inactive_rows":  52,
+                                                  "duplicate_groups":  10,
+                                                  "duplicate_rows":  20,
+                                                  "active_duplicate_groups":  0,
+                                                  "active_duplicate_rows":  null,
+                                                  "reappearance_history_groups":  10,
+                                                  "latest_snapshotcapturedon":  "2026-04-08 14:20:00",
+                                                  "sample_groups":  [
+                                                                        {
+                                                                            "key":  "4171|ZBO|1523026752|30",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "86f2109d-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1523026752|20",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "1a8eaf96-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1523026752|10",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "198eaf96-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522993700|10",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "188eaf96-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522978429|10",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "1a24538a-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522963047|50",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "4e1a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522963047|40",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "4d1a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522915717|40",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "4a1a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522915717|30",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "491a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        },
+                                                                        {
+                                                                            "key":  "4171|ZBO|1522915717|20",
+                                                                            "count":  2,
+                                                                            "entity_kind":  "delivery",
+                                                                            "winner_record_id":  "481a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                            "winner_createdon":  "2026-04-02 21:26:00",
+                                                                            "winner_modifiedon":  "2026-04-08 14:24:00",
+                                                                            "winner_importbatchid":  "b09ad829-f706-44e5-8439-e52ef0212dfa",
+                                                                            "winner_status":  null,
+                                                                            "winner_snapshotdate":  null,
+                                                                            "loser_record_ids":  [
+
+                                                                                                 ]
+                                                                        }
+                                                                    ]
+                                              },
+                         "ingestion_batches":  {
+                                                   "total_rows":  7,
+                                                   "duplicate_groups":  3,
+                                                   "duplicate_rows":  6,
+                                                   "latest_createdon":  "2026-04-09 01:20:00",
+                                                   "sample_groups":  [
+                                                                         {
+                                                                             "key":  "4171|batch|ZBO",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "94fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         },
+                                                                         {
+                                                                             "key":  "4171|batch|SP830CA",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "93fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         },
+                                                                         {
+                                                                             "key":  "4171|batch|SA1300",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "95fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         }
+                                                                     ],
+                                                   "latest_by_family":  [
+                                                                            {
+                                                                                "source_family":  "SP830CA",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 12:33:00",
+                                                                                "latest_completedon":  "2026-03-20 12:33:00",
+                                                                                "latest_file":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "ZBO",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 12:33:00",
+                                                                                "latest_completedon":  "2026-03-20 12:33:00",
+                                                                                "latest_file":  "CA ZBO 20250320_30_4023207436626456977.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 12:33:00",
+                                                                                "latest_completedon":  "2026-03-20 12:33:00",
+                                                                                "latest_file":  "SA1300.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300-ABNORMALMARGIN",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-09 01:20:00",
+                                                                                "latest_startedon":  "2026-04-09 01:20:00",
+                                                                                "latest_completedon":  "2026-04-09 01:20:00",
+                                                                                "latest_file":  "SA1300.xlsx",
+                                                                                "latest_trigger":  "4171-Budget-Update-SA1300"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300-LATEORDER",
+                                                                                "latest_status":  null,
+                                                                                "latest_createdon":  null,
+                                                                                "latest_startedon":  null,
+                                                                                "latest_completedon":  null,
+                                                                                "latest_file":  null,
+                                                                                "latest_trigger":  null
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "GL060",
+                                                                                "latest_status":  null,
+                                                                                "latest_createdon":  null,
+                                                                                "latest_startedon":  null,
+                                                                                "latest_completedon":  null,
+                                                                                "latest_file":  null,
+                                                                                "latest_trigger":  null
+                                                                            }
+                                                                        ]
+                                               }
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "quotes":  {
+                                        "total_rows":  36,
+                                        "duplicate_groups":  18,
+                                        "duplicate_rows":  36,
+                                        "latest_createdon":  "2026-04-08 23:48:00",
+                                        "sample_groups":  [
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515441419",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "721be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515441209",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "701be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515441186",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "6e1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515441160",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "6c1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515441004",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "6a1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515440863",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "681be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515440441",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "661be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515439968",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "651be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515439869",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "621be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4172|SP830CA|0515439746",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "601be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              }
+                                                          ]
+                                    },
+                         "backorders":  {
+                                            "total_rows":  864,
+                                            "duplicate_groups":  432,
+                                            "duplicate_rows":  864,
+                                            "latest_createdon":  "2026-04-08 23:50:00",
+                                            "sample_groups":  [
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970737|30",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "18debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970737|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "16debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970737|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "14debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970681|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "12debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970681|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "10debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970608|30",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "0edebfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970608|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "0cdebfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970608|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "0adebfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970584|90",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "08debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4172|ZBO|1522970584|80",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "06debfbc-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:50:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:50:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  }
+                                                              ]
+                                        },
+                         "margins":  {
+                                         "total_rows":  24,
+                                         "duplicate_groups":  0,
+                                         "duplicate_rows":  null,
+                                         "latest_createdon":  "2026-04-09 01:20:00",
+                                         "latest_snapshotdate":  "4/8/2026",
+                                         "snapshot_groups":  [
+                                                                 {
+                                                                     "snapshotdate":  "4/8/2026",
+                                                                     "row_count":  5
+                                                                 },
+                                                                 {
+                                                                     "snapshotdate":  "4/7/2026",
+                                                                     "row_count":  13
+                                                                 },
+                                                                 {
+                                                                     "snapshotdate":  "3/31/2026",
+                                                                     "row_count":  6
+                                                                 }
+                                                             ],
+                                         "sample_groups":  [
+
+                                                           ]
+                                     },
+                         "delivery_not_pgi":  {
+                                                  "total_rows":  179,
+                                                  "active_rows":  80,
+                                                  "inactive_rows":  99,
+                                                  "duplicate_groups":  0,
+                                                  "duplicate_rows":  null,
+                                                  "active_duplicate_groups":  0,
+                                                  "active_duplicate_rows":  null,
+                                                  "reappearance_history_groups":  0,
+                                                  "latest_snapshotcapturedon":  "2026-04-08 14:20:00",
+                                                  "sample_groups":  [
+
+                                                                    ]
+                                              },
+                         "ingestion_batches":  {
+                                                   "total_rows":  7,
+                                                   "duplicate_groups":  3,
+                                                   "duplicate_rows":  6,
+                                                   "latest_createdon":  "2026-04-09 01:20:00",
+                                                   "sample_groups":  [
+                                                                         {
+                                                                             "key":  "4172|batch|ZBO",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "97fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         },
+                                                                         {
+                                                                             "key":  "4172|batch|SP830CA",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "96fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         },
+                                                                         {
+                                                                             "key":  "4172|batch|SA1300",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "98fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         }
+                                                                     ],
+                                                   "latest_by_family":  [
+                                                                            {
+                                                                                "source_family":  "SP830CA",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 13:43:00",
+                                                                                "latest_completedon":  "2026-03-20 13:43:00",
+                                                                                "latest_file":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "ZBO",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 13:43:00",
+                                                                                "latest_completedon":  "2026-03-20 13:43:00",
+                                                                                "latest_file":  "CA SC ZBO - 20260120_226_6709604248778416599.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 13:43:00",
+                                                                                "latest_completedon":  "2026-03-20 13:43:00",
+                                                                                "latest_file":  "SA1300.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300-ABNORMALMARGIN",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-09 01:20:00",
+                                                                                "latest_startedon":  "2026-04-09 01:20:00",
+                                                                                "latest_completedon":  "2026-04-09 01:20:00",
+                                                                                "latest_file":  "SA1300.xlsx",
+                                                                                "latest_trigger":  "4172-Budget-Update-SA1300"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300-LATEORDER",
+                                                                                "latest_status":  null,
+                                                                                "latest_createdon":  null,
+                                                                                "latest_startedon":  null,
+                                                                                "latest_completedon":  null,
+                                                                                "latest_file":  null,
+                                                                                "latest_trigger":  null
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "GL060",
+                                                                                "latest_status":  null,
+                                                                                "latest_createdon":  null,
+                                                                                "latest_startedon":  null,
+                                                                                "latest_completedon":  null,
+                                                                                "latest_file":  null,
+                                                                                "latest_trigger":  null
+                                                                            }
+                                                                        ]
+                                               }
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "quotes":  {
+                                        "total_rows":  16,
+                                        "duplicate_groups":  8,
+                                        "duplicate_rows":  16,
+                                        "latest_createdon":  "2026-04-08 23:48:00",
+                                        "sample_groups":  [
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515441484",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "821be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515441337",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "801be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515440839",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "7e1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515440471",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "7c1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515439139",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "7a1be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515438820",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "781be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515437523",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "761be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              },
+                                                              {
+                                                                  "key":  "4173|SP830CA|0515437490",
+                                                                  "count":  2,
+                                                                  "entity_kind":  "quote",
+                                                                  "winner_record_id":  "741be77a-a533-f111-88b4-000d3a59294a",
+                                                                  "winner_createdon":  "2026-04-08 23:48:00",
+                                                                  "winner_modifiedon":  "2026-04-08 23:48:00",
+                                                                  "winner_importbatchid":  null,
+                                                                  "winner_status":  null,
+                                                                  "winner_snapshotdate":  null,
+                                                                  "loser_record_ids":  [
+
+                                                                                       ]
+                                                              }
+                                                          ]
+                                    },
+                         "backorders":  {
+                                            "total_rows":  416,
+                                            "duplicate_groups":  208,
+                                            "duplicate_rows":  416,
+                                            "latest_createdon":  "2026-04-08 23:51:00",
+                                            "sample_groups":  [
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970910|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8984c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970874|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8784c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970874|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8584c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970854|50",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8384c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970854|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8284c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970854|10",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "8084c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970762|50",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "7e84c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970762|40",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "7c84c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970762|30",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "7a84c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  },
+                                                                  {
+                                                                      "key":  "4173|ZBO|1522970762|20",
+                                                                      "count":  2,
+                                                                      "entity_kind":  "backorder",
+                                                                      "winner_record_id":  "7884c6c8-a533-f111-88b4-000d3a59294a",
+                                                                      "winner_createdon":  "2026-04-08 23:51:00",
+                                                                      "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                      "winner_importbatchid":  null,
+                                                                      "winner_status":  null,
+                                                                      "winner_snapshotdate":  null,
+                                                                      "loser_record_ids":  [
+
+                                                                                           ]
+                                                                  }
+                                                              ]
+                                        },
+                         "margins":  {
+                                         "total_rows":  3,
+                                         "duplicate_groups":  0,
+                                         "duplicate_rows":  null,
+                                         "latest_createdon":  "2026-04-09 01:19:00",
+                                         "latest_snapshotdate":  "4/8/2026",
+                                         "snapshot_groups":  [
+                                                                 {
+                                                                     "snapshotdate":  "4/8/2026",
+                                                                     "row_count":  2
+                                                                 },
+                                                                 {
+                                                                     "snapshotdate":  "4/7/2026",
+                                                                     "row_count":  1
+                                                                 }
+                                                             ],
+                                         "sample_groups":  [
+
+                                                           ]
+                                     },
+                         "delivery_not_pgi":  {
+                                                  "total_rows":  134,
+                                                  "active_rows":  64,
+                                                  "inactive_rows":  70,
+                                                  "duplicate_groups":  0,
+                                                  "duplicate_rows":  null,
+                                                  "active_duplicate_groups":  0,
+                                                  "active_duplicate_rows":  null,
+                                                  "reappearance_history_groups":  0,
+                                                  "latest_snapshotcapturedon":  "2026-04-08 14:20:00",
+                                                  "sample_groups":  [
+
+                                                                    ]
+                                              },
+                         "ingestion_batches":  {
+                                                   "total_rows":  7,
+                                                   "duplicate_groups":  3,
+                                                   "duplicate_rows":  6,
+                                                   "latest_createdon":  "2026-04-09 01:19:00",
+                                                   "sample_groups":  [
+                                                                         {
+                                                                             "key":  "4173|batch|ZBO",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "9afac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         },
+                                                                         {
+                                                                             "key":  "4173|batch|SP830CA",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "99fac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         },
+                                                                         {
+                                                                             "key":  "4173|batch|SA1300",
+                                                                             "count":  2,
+                                                                             "entity_kind":  "batch",
+                                                                             "winner_record_id":  "9bfac0ce-a533-f111-88b4-000d3a59294a",
+                                                                             "winner_createdon":  "2026-04-08 23:51:00",
+                                                                             "winner_modifiedon":  "2026-04-08 23:51:00",
+                                                                             "winner_importbatchid":  null,
+                                                                             "winner_status":  "ready",
+                                                                             "winner_snapshotdate":  null,
+                                                                             "loser_record_ids":  [
+
+                                                                                                  ]
+                                                                         }
+                                                                     ],
+                                                   "latest_by_family":  [
+                                                                            {
+                                                                                "source_family":  "SP830CA",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 14:17:00",
+                                                                                "latest_completedon":  "2026-03-20 14:17:00",
+                                                                                "latest_file":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "ZBO",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 12:34:00",
+                                                                                "latest_completedon":  "2026-03-20 12:34:00",
+                                                                                "latest_file":  "CA SC ZBO - 20260120_209_5473802619978626103.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-08 23:51:00",
+                                                                                "latest_startedon":  "2026-03-20 12:34:00",
+                                                                                "latest_completedon":  "2026-03-20 12:34:00",
+                                                                                "latest_file":  "SA1300.xlsx",
+                                                                                "latest_trigger":  "Controlled workbook seed"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300-ABNORMALMARGIN",
+                                                                                "latest_status":  "ready",
+                                                                                "latest_createdon":  "2026-04-09 01:19:00",
+                                                                                "latest_startedon":  "2026-04-09 01:19:00",
+                                                                                "latest_completedon":  "2026-04-09 01:19:00",
+                                                                                "latest_file":  "SA1300.xlsx",
+                                                                                "latest_trigger":  "4173-Budget-Update-SA1300"
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "SA1300-LATEORDER",
+                                                                                "latest_status":  null,
+                                                                                "latest_createdon":  null,
+                                                                                "latest_startedon":  null,
+                                                                                "latest_completedon":  null,
+                                                                                "latest_file":  null,
+                                                                                "latest_trigger":  null
+                                                                            },
+                                                                            {
+                                                                                "source_family":  "GL060",
+                                                                                "latest_status":  null,
+                                                                                "latest_createdon":  null,
+                                                                                "latest_startedon":  null,
+                                                                                "latest_completedon":  null,
+                                                                                "latest_file":  null,
+                                                                                "latest_trigger":  null
+                                                                            }
+                                                                        ]
+                                               }
+                     }
+                 ]
+}

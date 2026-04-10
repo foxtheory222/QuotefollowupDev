@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-04-09",
+  "environment_url": "https://operationhub.powerappsportals.com/",
+  "checks": [
+    {
+      "route": "/southern-alberta",
+      "configured_branches": 3,
+      "live_branches": 3,
+      "duplicate_4171_reproduced": false
+    },
+    {
+      "route": "/southern-alberta/4171-calgary",
+      "abnormal_margin_rows": 4,
+      "duplicate_margin_docs": {
+        "7034265912": 1,
+        "7034274546": 1
+      },
+      "cssr_metric_label": "OVERDUE ORDERS",
+      "cssr_count_basis": "distinct_sales_orders"
+    },
+    {
+      "route": "/southern-alberta/4171-calgary/detail?view=analytics",
+      "abnormal_margin_rows": 4,
+      "snapshot_label": "Apr 8, 2026",
+      "duplicate_margin_docs": {
+        "7034265912": 1,
+        "7034274546": 1
+      }
+    },
+    {
+      "route": "/ops-admin",
+      "configured_branches": 3,
+      "branch_rows": [
+        "4171",
+        "4172",
+        "4173"
+      ]
+    }
+  ],
+  "remaining_warnings": [
+    {
+      "signal": "seeded-operational-import",
+      "branch_code": "4171",
+      "captured_at": "2026-03-20T06:33:00-06:00"
+    },
+    {
+      "signal": "seeded-operational-import",
+      "branch_code": "4172",
+      "captured_at": "2026-03-20T07:43:00-06:00"
+    },
+    {
+      "signal": "seeded-operational-import",
+      "branch_code": "4173",
+      "captured_at": "2026-03-20T08:17:00-06:00"
+    }
+  ]
+}

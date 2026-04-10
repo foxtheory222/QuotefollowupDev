@@ -1,0 +1,15 @@
+{
+  "target_environment": "https://regionaloperationshub.crm.dynamics.com",
+  "archive_after_days": 60,
+  "archived_count": 1,
+  "archived_rows": [
+    {
+      "id": "b646d26c-2835-f111-88b5-000d3a59294a",
+      "source_id": "4171|freight-test|archive|20260410B",
+      "branch_code": "4171",
+      "branch_slug": "4171-calgary",
+      "status": "Closed",
+      "last_activity_on": "2026-01-25T00:00:00"
+    }
+  ]
+}

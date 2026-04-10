@@ -1,0 +1,238 @@
+{
+    "generatedOn":  "2026-04-09T11:11:30",
+    "runtimePath":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\web-templates\\qfu-regional-runtime\\QFU-Regional-Runtime.webtemplate.source.html",
+    "siteSettingsPath":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\sitesetting.yml",
+    "missingFieldTableCount":  0,
+    "tables":  [
+                   {
+                       "table":  "qfu_backorder",
+                       "runtimeFieldCount":  19,
+                       "allowListFieldCount":  40,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "modifiedon",
+                                           "qfu_accountmanager",
+                                           "qfu_accountmanagername",
+                                           "qfu_createdby",
+                                           "qfu_firstdate",
+                                           "qfu_itemcategory",
+                                           "qfu_materialgroup",
+                                           "qfu_name",
+                                           "qfu_netprice",
+                                           "qfu_plant",
+                                           "qfu_qtybilled",
+                                           "qfu_qtynotondel",
+                                           "qfu_qtyondelnotpgid",
+                                           "qfu_salesdoctype",
+                                           "qfu_shipto",
+                                           "qfu_shiptoname",
+                                           "qfu_soldto",
+                                           "qfu_sourcefamily",
+                                           "qfu_uom",
+                                           "qfu_userstatusdescription",
+                                           "qfu_vendorpo"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_branch",
+                       "runtimeFieldCount":  16,
+                       "allowListFieldCount":  17,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_name"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_branchdailysummary",
+                       "runtimeFieldCount":  28,
+                       "allowListFieldCount":  30,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_name",
+                                           "qfu_sourceid"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_branchopsdaily",
+                       "runtimeFieldCount":  0,
+                       "allowListFieldCount":  21,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "createdon",
+                                           "modifiedon",
+                                           "qfu_billingday",
+                                           "qfu_billinglabel",
+                                           "qfu_branchcode",
+                                           "qfu_branchopsdailyid",
+                                           "qfu_branchslug",
+                                           "qfu_currencytype",
+                                           "qfu_gp",
+                                           "qfu_gppct",
+                                           "qfu_istotalrow",
+                                           "qfu_name",
+                                           "qfu_ontimedelivery",
+                                           "qfu_regionslug",
+                                           "qfu_sales",
+                                           "qfu_snapshotdate",
+                                           "qfu_sortorder",
+                                           "qfu_sourcefamily",
+                                           "qfu_sourcefile",
+                                           "qfu_sourceid",
+                                           "qfu_sourceworksheet"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_budget",
+                       "runtimeFieldCount":  19,
+                       "allowListFieldCount":  21,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_name",
+                                           "qfu_percentachieved"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_budgetarchive",
+                       "runtimeFieldCount":  16,
+                       "allowListFieldCount":  16,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_deliverynotpgi",
+                       "runtimeFieldCount":  26,
+                       "allowListFieldCount":  28,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_inactiveon",
+                                           "qfu_name"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_financesnapshot",
+                       "runtimeFieldCount":  32,
+                       "allowListFieldCount":  32,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_financevariance",
+                       "runtimeFieldCount":  23,
+                       "allowListFieldCount":  23,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_ingestionbatch",
+                       "runtimeFieldCount":  16,
+                       "allowListFieldCount":  16,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_lateorderexception",
+                       "runtimeFieldCount":  21,
+                       "allowListFieldCount":  21,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_marginexception",
+                       "runtimeFieldCount":  22,
+                       "allowListFieldCount":  22,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_quote",
+                       "runtimeFieldCount":  16,
+                       "allowListFieldCount":  20,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_lastfollowupupdatedon",
+                                           "qfu_name",
+                                           "qfu_sourcefamily",
+                                           "qfu_sourceupdatedon"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_quoteline",
+                       "runtimeFieldCount":  29,
+                       "allowListFieldCount":  38,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_additionalinfo",
+                                           "qfu_followupdate",
+                                           "qfu_followupnotes",
+                                           "qfu_regionslug",
+                                           "qfu_soldtopartycode",
+                                           "qfu_sourcefamily",
+                                           "qfu_sourcefile",
+                                           "qfu_sourceid",
+                                           "qfu_uniquekey"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_region",
+                       "runtimeFieldCount":  12,
+                       "allowListFieldCount":  13,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_name"
+                                       ]
+                   },
+                   {
+                       "table":  "qfu_sourcefeed",
+                       "runtimeFieldCount":  12,
+                       "allowListFieldCount":  13,
+                       "missingFields":  [
+
+                                         ],
+                       "extraFields":  [
+                                           "qfu_name"
+                                       ]
+                   }
+               ]
+}

@@ -1,0 +1,82 @@
+{
+  "mode": "authenticated",
+  "authStatePath": "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\.playwright-auth\\operationhub-dev-state.json",
+  "checks": [
+    {
+      "check": "portal-search-baseline",
+      "ok": true
+    },
+    {
+      "check": "take-ownership",
+      "ok": true,
+      "userName": "Stephen McFarlane"
+    },
+    {
+      "check": "save-note-status",
+      "ok": true,
+      "noteText": "Portal verification note 2026-04-10T22:02:34.389Z",
+      "status": "In Progress"
+    },
+    {
+      "check": "status-filter",
+      "ok": true,
+      "rowCount": 1
+    },
+    {
+      "check": "owner-filter",
+      "ok": true,
+      "rowCount": 1,
+      "userName": "Stephen McFarlane"
+    },
+    {
+      "check": "release-ownership",
+      "ok": true
+    },
+    {
+      "check": "carrier-filter",
+      "ok": true,
+      "rowCount": 25
+    },
+    {
+      "check": "amount-filter",
+      "ok": true,
+      "rowCount": 1
+    },
+    {
+      "check": "csv-export-button",
+      "ok": true,
+      "filename": "4171-calgary-freight-worklist.csv"
+    },
+    {
+      "check": "archive-row",
+      "ok": true,
+      "archivedRowId": "b546d26c-2835-f111-88b5-000d3a59294a"
+    },
+    {
+      "check": "archive-hidden-by-default",
+      "ok": true,
+      "activeRowIds": []
+    },
+    {
+      "check": "archived-visible-when-enabled",
+      "ok": true,
+      "rowCount": 1,
+      "archivedRowIds": [
+        "b546d26c-2835-f111-88b5-000d3a59294a"
+      ]
+    },
+    {
+      "check": "unarchive-row",
+      "ok": true
+    },
+    {
+      "check": "archive-candidate-hidden-by-default",
+      "ok": true
+    },
+    {
+      "check": "archive-candidate-visible-with-archived-toggle",
+      "ok": true,
+      "rowCount": 1
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+- adx_description: Used to group a set of entities under an entry in the record type facet view.
+  adx_name: Search/RecordTypeFacetsEntities
+  adx_sitesettingid: 002e43a2-e069-48fb-a138-7a00cd6d75d3
+  adx_value: Downloads:annotation,adx_webfile
+- adx_description: 'The default number of unauthenticated login attempts from an IP address before the IP address is blocked for Authentication/LoginThrottling/IpAddressTimeoutTimeSpan if the attempts occur within Authentication/LoginThrottling/MaxAttemptsTimeLimitTimeSpan amount of time. Default: 5'
+  adx_name: Authentication/LoginThrottling/MaxInvaildAttemptsFromIPAddress
+  adx_sitesettingid: 0ba6e6d7-3a3f-46d9-a54d-783075506eba
+  adx_value: 5
+- adx_name: Authentication/OpenAuth/Microsoft/ClientId
+  adx_sitesettingid: 12152c8f-a548-457f-ad46-e00f56fdc770
+- adx_description: Enabling this setting will show all customer activity on the portal timeline.
+  adx_name: CustomerSupport/DisplayAllUserActivitiesOnTimeline
+  adx_sitesettingid: 133f564b-a89a-4644-b7fd-d3e8dc6f895e
+  adx_value: false
+- adx_name: Search/IndexNotesAttachments
+  adx_sitesettingid: 145229c7-9f8a-4291-95aa-a739867db0c1
+  adx_value: false
+- adx_description: A true or false value. If set to true, the local account will be marked as deprecated. The portal user will be required to migrate to a non-deprecated account.
+  adx_name: Authentication/Registration/LocalLoginDeprecated
+  adx_sitesettingid: 17b35f69-71fe-4f5e-8d6a-5cb59b83d69e
+  adx_value: False
+- adx_name: Authentication/OpenAuth/Twitter/ConsumerKey
+  adx_sitesettingid: 1d4b8f61-b53e-4dd5-9981-122cb2eedfcc
+- adx_name: Webapi/qfu_financesnapshot/enabled
+  adx_sitesettingid: 1d5ce2f2-3a31-4e40-a4b6-4a49f4dcb401
+  adx_value: true
+- adx_name: Webapi/qfu_region/fields
+  adx_sitesettingid: 1ee7e236-ec9c-493c-bb9e-cc1abb20f7f2
+  adx_value: qfu_regionid,qfu_name,qfu_regionslug,qfu_regionname,qfu_status,qfu_sortorder,qfu_stalethresholdhours,qfu_budgetpacewarningpct,qfu_overduequotewarningcount,qfu_overduebackorderwarningcount,qfu_managernote,createdon,modifiedon
+- adx_description: Denies use of the portal to minors. By default, it is set to false.
+  adx_name: Authentication/Registration/DenyMinors
+  adx_sitesettingid: 2097c7ba-372c-46b0-b7d3-37ca9abfcf49
+  adx_value: false
+- adx_description: Setting controls whether attachments will be displayed on Knowledge articles
+  adx_name: KnowledgeManagement/DisplayNotes
+  adx_sitesettingid: 2b7aa6ca-250e-4029-b2de-707333f1ad70
+  adx_value: false
+- adx_name: Webapi/qfu_financesnapshot/fields
+  adx_sitesettingid: 2c6af3c7-5224-457d-8e8f-94d34cf8b402
+  adx_value: qfu_financesnapshotid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_monthlabel,qfu_month,qfu_year,qfu_lastupdated,qfu_currentmonthsalesactual,qfu_currentmonthsalesplan,qfu_currentmonthgrossprofitactual,qfu_currentmonthgrossprofitplan,qfu_currentmonthgrossprofitpctactual,qfu_currentmonthgrossprofitpctplan,qfu_currentmonthopexpctactual,qfu_currentmonthopexpctplan,qfu_currentmonthgapactual,qfu_currentmonthgapplan,qfu_currentmonthoperatingprofitactual,qfu_currentmonthoperatingprofitplan,qfu_ytdsalesactual,qfu_ytdsalesplan,qfu_ytdgrossprofitactual,qfu_ytdgrossprofitplan,qfu_ytdoperatingprofitactual,qfu_ytdoperatingprofitplan,createdon,modifiedon
+- adx_description: 'Override query for site search, to apply additional weights and filters. @Query is the query text entered by a user. Lucene query syntax reference: http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html'
+  adx_name: search/query
+  adx_sitesettingid: 34ab5737-73b0-4288-ab28-916119fc7f3b
+  adx_value: +(@Query) _title:(@Query) _logicalname:knowledgearticle~0.9^0.3 _logicalname:annotation~0.9^0.25 _logicalname:adx_webpage~0.9^0.2 -_logicalname:adx_webfile~0.9 adx_partialurl:(@Query) _logicalname:adx_blogpost~0.9^0.1 -_logicalname:adx_communityforumthread~0.9
+- adx_name: Webapi/qfu_financevariance/enabled
+  adx_sitesettingid: 34d5bcef-9d93-4fdc-89a4-837019b9b403
+  adx_value: true
+- adx_name: Authentication/OpenIdConnect/AzureAD/Caption
+  adx_sitesettingid: 34e66c00-792c-f111-88b4-000d3a59294a
+  adx_value: Microsoft Entra ID
+- adx_name: HTTP/X-Frame-Options
+  adx_sitesettingid: 354f6f1a-0d45-4e98-881d-7eca4ab67dfe
+  adx_value: SAMEORIGIN
+- adx_name: Authentication/OpenIdConnect/AzureAD/RebrandDisclaimerEnabled
+  adx_sitesettingid: 36e66c00-792c-f111-88b4-000d3a59294a
+  adx_value: false
+- adx_name: Webapi/qfu_region/enabled
+  adx_sitesettingid: 39f1e53e-3b34-478e-aa37-24e8b735c277
+  adx_value: true
+- adx_name: Authentication/Registration/Enabled
+  adx_sitesettingid: 3a5bfb4e-d9f8-4c0d-8821-0f5f27434e54
+  adx_value: true
+- adx_name: Authentication/OpenAuth/LinkedIn/ConsumerKey
+  adx_sitesettingid: 3b23ea41-048d-4db0-9041-0c0fb8f0087c
+- adx_name: Webapi/qfu_branch/fields
+  adx_sitesettingid: 423f28d6-ef78-4030-b38f-2ea499e5de56
+  adx_value: qfu_branchid,qfu_name,qfu_branchcode,qfu_branchname,qfu_branchslug,qfu_regionslug,qfu_regionname,qfu_mailboxaddress,qfu_sortorder,qfu_branchstate,qfu_stalethresholdhours,qfu_budgetpacewarningpct,qfu_overduequotewarningcount,qfu_overduebackorderwarningcount,qfu_managernote,createdon,modifiedon
+- adx_name: Site/BootstrapV5Enabled
+  adx_sitesettingid: 42aed285-d4f4-4b6d-b7f1-4892fb1b7dc3
+  adx_value: true
+- adx_name: Authentication/OpenAuth/Facebook/AppSecret
+  adx_sitesettingid: 43762dc5-47a9-4637-a1f3-5350e206cdde
+- adx_name: Webapi/qfu_quote/fields
+  adx_sitesettingid: 45b1ce6f-0fd9-4c58-b66c-c3e3bea4d182
+  adx_value: qfu_quoteid,qfu_name,qfu_sourceid,qfu_quotenumber,qfu_customername,qfu_amount,qfu_assignedto,qfu_cssrname,qfu_nextfollowup,qfu_overduesince,qfu_lasttouchedon,qfu_lastfollowupupdatedon,qfu_priorityscore,qfu_status,qfu_sourcedate,qfu_sourceupdatedon,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon,modifiedon
+- adx_name: Webapi/qfu_financevariance/fields
+  adx_sitesettingid: 48f4c246-2fca-42cf-a2f0-1708f149b404
+  adx_value: qfu_financevarianceid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_monthlabel,qfu_month,qfu_year,qfu_variancelabel,qfu_varianceslug,qfu_sortorder,qfu_currentmonthactual,qfu_currentmonthplan,qfu_currentmonthvariance,qfu_ytdactual,qfu_ytdplan,qfu_ytdvariance,qfu_lastupdated,createdon,modifiedon
+- adx_name: Search/IndexQueryName
+  adx_sitesettingid: 5095042b-5429-463c-9de5-f65b5de7f4be
+  adx_value: Portal Search
+- adx_name: Webapi/qfu_marginexception/enabled
+  adx_sitesettingid: 52ab2fd8-06cc-4546-bd5d-8fe83b36b405
+  adx_value: true
+- adx_name: ThemeFeature
+  adx_sitesettingid: 52df6f80-df31-4351-8b2e-5d15f7f76d3f
+  adx_value: '{"status":"enable","selectedThemeId":"f21551a1-7244-432f-ad88-220609e070d3","version":"V2"}'
+- adx_name: Profile/ForceSignUp
+  adx_sitesettingid: 52e2ac15-edf2-4ba1-b71c-290d4f8d2f3f
+  adx_value: False
+- adx_name: Webapi/qfu_branchdailysummary/enabled
+  adx_sitesettingid: 5923ba8a-1e07-4c19-b25a-232979b66f47
+  adx_value: true
+- adx_name: Webapi/qfu_branch/enabled
+  adx_sitesettingid: 5b7beb9f-bfb3-49f2-9b61-1d4b094a087a
+  adx_value: true
+- adx_name: Webapi/qfu_marginexception/fields
+  adx_sitesettingid: 66233dd1-c0c0-45ff-9944-f61dd26ab406
+  adx_value: qfu_marginexceptionid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_snapshotdate,qfu_billingdate,qfu_reviewtype,qfu_currencytype,qfu_cssr,qfu_cssrname,qfu_customername,qfu_billingdocumentnumber,qfu_billingdocumenttype,qfu_sales,qfu_cogs,qfu_gp,createdon,modifiedon
+- adx_name: Webapi/qfu_backorder/enabled
+  adx_sitesettingid: 6701cfee-287e-4c66-ace1-87ef2af67095
+  adx_value: true
+- adx_description: A true or false value. If set to true, the Last Successful Login field on the portal user’s contact will be updated with the date and time when they successfully signed in.
+  adx_name: Authentication/LoginTrackingEnabled
+  adx_sitesettingid: 67d551d2-45ae-4dd2-9463-436ac93a8278
+  adx_value: False
+- adx_description: A true or false value. If set to true, the portal will display the terms and conditions of the site. Users must agree to the terms and conditions before they are considered authenticated and can use the site.
+  adx_name: Authentication/Registration/TermsAgreementEnabled
+  adx_sitesettingid: 6c6e702b-8144-4c77-8061-30097aa8b8f5
+  adx_value: false
+- adx_name: Webapi/qfu_branchdailysummary/fields
+  adx_sitesettingid: 6d73e6a2-b98c-4180-9d3c-eb503d8d0f35
+  adx_value: qfu_branchdailysummaryid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_summarydate,qfu_openquotes,qfu_overduequotes,qfu_duetoday,qfu_unscheduledold,qfu_openquotevalue,qfu_quoteslast30days,qfu_quoteswon30days,qfu_quoteslost30days,qfu_quotesopen30days,qfu_avgquotevalue30days,qfu_backordercount,qfu_overduebackordercount,qfu_currentmonthforecastvalue,qfu_currentmonthlatevalue,qfu_allbackordersvalue,qfu_overduebackordersvalue,qfu_budgetactual,qfu_budgettarget,qfu_budgetpace,qfu_cadsales,qfu_usdsales,qfu_lastcalculatedon,createdon
+- adx_description: Set whether the footer web template is output cached.
+  adx_name: Footer/OutputCache/Enabled
+  adx_sitesettingid: 7607df2b-83d3-4e99-8402-a13e006d822c
+  adx_value: True
+- adx_name: Webapi/qfu_ingestionbatch/fields
+  adx_sitesettingid: 79f5313c-67e7-4d47-8043-46a71d3ae75e
+  adx_value: qfu_ingestionbatchid,qfu_name,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_status,qfu_startedon,qfu_completedon,qfu_insertedcount,qfu_updatedcount,qfu_notes,qfu_triggerflow,createdon,modifiedon
+- adx_name: Authentication/Registration/LocalLoginEnabled
+  adx_sitesettingid: 7a149fd3-4018-4803-8866-0fd0e37dde01
+  adx_value: false
+- adx_name: Webapi/qfu_budgetarchive/enabled
+  adx_sitesettingid: 7a5756d9-d77d-4d05-81d8-c5f61c6d4492
+  adx_value: true
+- adx_name: Webapi/qfu_lateorderexception/enabled
+  adx_sitesettingid: 7c10bf14-bd50-442a-98df-3a02ce76b407
+  adx_value: true
+- adx_description: >-
+    A collection of search logical name filter options. Defining a value here will add dropdown filter options to site-wide search.
+
+
+    This value should be in the form of name/value pairs, with name and value separated by a colon, and pairs separated by a semicolon. For example: "Forums:adx_communityforum,adx_communityforumthread,adx_communityforumpost;Blogs:adx_blog,adx_blogpost,adx_blogpostcomment".
+  adx_name: search/filters
+  adx_sitesettingid: 7dc280ff-768f-4e62-a0e7-bcf0f3ecb178
+- adx_name: Webapi/qfu_quote/enabled
+  adx_sitesettingid: 8119237c-c4ee-4196-8c29-9c502de642d5
+  adx_value: true
+- adx_name: Webapi/qfu_budget/fields
+  adx_sitesettingid: 88287bd5-0678-4fe1-91dd-a4ede6246eff
+  adx_value: qfu_budgetid,qfu_name,qfu_budgetname,qfu_actualsales,qfu_budgetgoal,qfu_percentachieved,qfu_lastupdated,qfu_cadsales,qfu_usdsales,qfu_month,qfu_monthname,qfu_fiscalyear,qfu_year,qfu_isactive,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_opsdailycadjson,qfu_opsdailyusdjson,createdon
+- adx_name: Webapi/qfu_budgetarchive/fields
+  adx_sitesettingid: 88aa581e-0b97-457c-bf05-38a4d59b5d8a
+  adx_value: qfu_budgetarchiveid,qfu_name,qfu_sourceid,qfu_budgetgoal,qfu_actualsales,qfu_month,qfu_monthname,qfu_year,qfu_fiscalyear,qfu_lastupdated,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon,modifiedon
+- adx_name: Webapi/qfu_backorder/fields
+  adx_sitesettingid: 8b52fc12-a38d-4fd8-8933-134e7957311b
+  adx_value: qfu_backorderid,qfu_name,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_salesdoctype,qfu_materialgroup,qfu_qtybilled,qfu_qtyondelnotpgid,qfu_qtynotondel,qfu_netprice,qfu_uom,qfu_accountmanager,qfu_accountmanagername,qfu_soldto,qfu_shipto,qfu_shiptoname,qfu_shipconddesc,qfu_lineitemcreatedon,qfu_firstdate,qfu_delblockdesc,qfu_billblockdesc,qfu_itemcategory,qfu_vendorpo,qfu_createdby,qfu_plant,qfu_userstatusdescription,qfu_reasonforrejection,qfu_sourceline,createdon,modifiedon
+- adx_name: Search/Enabled
+  adx_sitesettingid: 8b9e7846-5e47-4bd4-8d16-68ebf8463424
+  adx_value: true
+- adx_name: Webapi/qfu_lateorderexception/fields
+  adx_sitesettingid: 8e1fe0f7-0937-44c5-9ab0-96db5b6bb408
+  adx_value: qfu_lateorderexceptionid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_snapshotdate,qfu_billingdate,qfu_cssr,qfu_cssrname,qfu_soldtocustomername,qfu_shiptocustomername,qfu_billingdocumentnumber,qfu_materialgroup,qfu_itemcategory,qfu_itemcategorydescription,qfu_sales,createdon,modifiedon
+- adx_name: Authentication/Registration/LoginButtonAuthenticationType
+  adx_sitesettingid: 8e2247af-59e9-4612-b3ba-73ff68db868d
+- adx_description: Site setting that controls the depth of the webpage hierarchy that’s cloned in a newly-added supported language. Web link sets and content snippets are cloned in the newly-added language when webpages are cloned.
+  adx_name: MultiLanguage/MaximumDepthToClone
+  adx_sitesettingid: 9593b3be-ac42-49e8-9a3a-f0f4cd6fe289
+  adx_value: 3
+- adx_name: Webapi/qfu_sourcefeed/enabled
+  adx_sitesettingid: 9873dfbb-af97-431b-9e92-8e0453ab087c
+  adx_value: true
+- adx_description: 'The amount of time the IP address will have to wait if Authentication/LoginThrottling/MaxInvaildAttemptsFromIPAddress occur within Authentication/LoginThrottling/MaxAttemptsTimeLimitTimeSpan amount of time. Default: 00:15:00 (15 mins)'
+  adx_name: Authentication/LoginThrottling/IpAddressTimeoutTimeSpan
+  adx_sitesettingid: 99a2d510-e6f3-4f33-85f0-6e760cc61d64
+  adx_value: 00:15:00
+- adx_name: Authentication/Registration/OpenRegistrationEnabled
+  adx_sitesettingid: 99b82daa-bdba-4810-9b58-8a8e97f5f46d
+  adx_value: true
+- adx_name: Authentication/Registration/EmailConfirmationEnabled
+  adx_sitesettingid: 9aa05b2f-0b04-4c8d-8054-c8ccb881c0bd
+  adx_value: true
+- adx_description: Site setting that determines if the language code is included in the portal URL.
+  adx_name: MultiLanguage/DisplayLanguageCodeInURL
+  adx_sitesettingid: a5178e48-ecbd-484f-944e-80edd56d5fe1
+  adx_value: False
+- adx_name: Webapi/qfu_ingestionbatch/enabled
+  adx_sitesettingid: a9e27d25-72b7-4781-9ad6-0297f71f626d
+  adx_value: true
+- adx_description: Set whether the header web template is output cached.
+  adx_name: Header/OutputCache/Enabled
+  adx_sitesettingid: aadf3474-8e64-4b49-96d2-df82f784e135
+  adx_value: True
+- adx_name: Authentication/OpenAuth/Microsoft/ClientSecret
+  adx_sitesettingid: b1b9874d-f8f0-4598-b141-faa614679825
+- adx_name: Webapi/qfu_deliverynotpgi/enabled
+  adx_sitesettingid: b5877971-f4e5-48a8-816b-767e90817be2
+  adx_value: true
+- adx_name: Webapi/qfu_freightworkitem/enabled
+  adx_sitesettingid: 307740d4-2874-4a0e-8d17-7cf34940213c
+  adx_value: true
+- adx_name: Webapi/qfu_freightworkitem/fields
+  adx_sitesettingid: d2d3fd15-fb7a-45f3-92ef-f675991f6732
+  adx_value: qfu_freightworkitemid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_sourcecarrier,qfu_importbatchid,qfu_trackingnumber,qfu_pronumber,qfu_invoicenumber,qfu_controlnumber,qfu_reference,qfu_shipdate,qfu_invoicedate,qfu_closedate,qfu_billtype,qfu_service,qfu_servicecode,qfu_sender,qfu_destination,qfu_zone,qfu_actualweight,qfu_billedweight,qfu_quantity,qfu_totalamount,qfu_freightamount,qfu_fuelamount,qfu_taxamount,qfu_gstamount,qfu_hstamount,qfu_qstamount,qfu_accessorialamount,qfu_accessorialpresent,qfu_unrealizedsavings,qfu_chargebreakdowntext,qfu_direction,qfu_status,qfu_priorityband,qfu_ownername,qfu_owneridentifier,qfu_claimedon,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_lastactivityon,qfu_isarchived,qfu_archivedon,qfu_lastseenon,createdon,modifiedon
+- adx_description: A date/time value in GMT format to represent the effective date of the current published terms and conditions. If the terms agreement is enabled, portal users that have not accepted the terms after this date will be asked to accept them the next time they sign in. If the date is not provided, and the terms agreement is enabled, the terms will be presented every time portal users sign in.
+  adx_name: Authentication/Registration/TermsPublicationDate
+  adx_sitesettingid: b76fc9e2-5239-4d09-a368-f7eeb2d89702
+- adx_description: Denies use of the portal to minors without parental consent. By default, it is set to false.
+  adx_name: Authentication/Registration/DenyMinorsWithoutParentalConsent
+  adx_sitesettingid: bb1388b5-4e8f-4033-a029-3ad1cb7a7a4c
+  adx_value: false
+- adx_name: Webapi/Enabled
+  adx_sitesettingid: bbd872de-1776-44f7-91cb-533973f06422
+  adx_value: true
+- adx_name: Webapi/qfu_quoteline/enabled
+  adx_sitesettingid: c656f099-ed13-4012-a331-4a4ab9a7b585
+  adx_value: true
+- adx_name: Profile/ShowMarketingOptionsPanel
+  adx_sitesettingid: c70245f5-9f55-4bcb-b8f9-ac46ec884c0d
+  adx_value: True
+- adx_name: OnlineDomains
+  adx_sitesettingid: c70e22f1-8323-4a28-ad7a-bfd267d7a3a6
+  adx_value: sharepoint.com;microsoftonline.com
+- adx_name: Authentication/Registration/ExternalLoginEnabled
+  adx_sitesettingid: c9579a8d-6314-4387-bdd5-a6e99551501c
+  adx_value: true
+- adx_name: Authentication/Registration/InvitationEnabled
+  adx_sitesettingid: cd8dff1d-6368-452b-9bdd-90519183e159
+  adx_value: true
+- adx_name: Webapi/qfu_budget/enabled
+  adx_sitesettingid: d5caa203-641f-45a0-bc70-1009c13ef18f
+  adx_value: true
+- adx_description: 'The amount of time the Authentication/LoginThrottling/MaxInvaildAttemptsFromIPAddress are to be within before the IP address has to wait Authentication/LoginThrottling/IpAddressTimeoutTimeSpan. Default: 00:05:00 (5 mins)'
+  adx_name: Authentication/LoginThrottling/MaxAttemptsTimeLimitTimeSpan
+  adx_sitesettingid: d61f47dd-8cc0-4aa0-b481-4cbd1a936ec3
+  adx_value: 00:05:00
+- adx_description: Specifies the default value for the SameSite attribute on HTTP cookies set by the portal.
+  adx_name: HTTP/SameSite/Default
+  adx_sitesettingid: d6d9d49b-2614-4be0-a310-3c00c498bd9b
+  adx_value: Lax
+- adx_name: Authentication/OpenAuth/Twitter/ConsumerSecret
+  adx_sitesettingid: d6e2a786-16f2-4636-af53-b806af17fbda
+- adx_description: Determines if faceted search is used for this portal.
+  adx_name: Search/FacetedView
+  adx_sitesettingid: d930eb65-9d54-4964-9a78-8653bf4f954f
+  adx_value: True
+- adx_description: Enables or disables Azure AD as an external identity provider. By default, it is set to true.
+  adx_name: Authentication/Registration/AzureADLoginEnabled
+  adx_sitesettingid: db2a0dbb-1363-4580-8352-38ad30fe32ec
+  adx_value: true
+- adx_description: 'The Prefix entered here will be used to filter Notes Text, allowing you to control notes exposed on the Portal ex: *WEB*'
+  adx_name: KnowledgeManagement/NotesFilter
+  adx_sitesettingid: dc409896-2fa2-4e4f-95df-ddf8a30e8754
+  adx_value: '*WEB*'
+- adx_name: Header/ShowAllProfileNavigationLinks
+  adx_sitesettingid: dfa01b8f-b4bc-4f7b-bab5-be7a7d78972c
+  adx_value: false
+- adx_name: Authentication/OpenAuth/LinkedIn/ConsumerSecret
+  adx_sitesettingid: e0d4546c-1d9f-404f-b8b7-ea61724d5f09
+- adx_name: Authentication/OpenAuth/Facebook/AppId
+  adx_sitesettingid: e2145131-9d2e-4538-995f-57522ef95e14
+- adx_name: Webapi/qfu_branchopsdaily/enabled
+  adx_sitesettingid: f2087ec3-b8c1-4ddb-8612-711f01ca73b2
+  adx_source: 0
+  adx_value: true
+- adx_name: Webapi/qfu_quoteline/fields
+  adx_sitesettingid: f2ac41cc-eae2-4c0d-8918-33412ab3f3fd
+  adx_value: qfu_quotelineid,qfu_quotenumber,qfu_linenumber,qfu_productname,qfu_itemnumber,qfu_productcode,qfu_description,qfu_quantity,qfu_unitprice,qfu_linetotal,qfu_amount,qfu_followupowner,qfu_followupnotes,qfu_followupdate,qfu_status,qfu_rejectionreason,qfu_cssrname,qfu_soldtopartyname,qfu_soldtopartycode,qfu_location,qfu_materialgroup,qfu_additionalinfo,qfu_dollarconnected,qfu_gppercent,qfu_tsr,qfu_tsrname,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourceid,qfu_sourcefamily,qfu_sourcefile,qfu_sourceworksheet,qfu_uniquekey,qfu_sourcedate,qfu_lastimportdate,createdon,modifiedon
+- adx_description: Sets whether or not the portal can redirect the user to the profile page after successful sign-in. By default, it is set to true.
+  adx_name: Authentication/Registration/ProfileRedirectEnabled
+  adx_sitesettingid: f4c346b5-0dd8-468e-acf8-b0b3e7700664
+  adx_value: true
+- adx_name: Webapi/qfu_sourcefeed/fields
+  adx_sitesettingid: f5646884-bc8b-4ff5-9078-d518a06c79ae
+  adx_value: qfu_sourcefeedid,qfu_name,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_mailboxaddress,qfu_filenamepattern,qfu_subjectfilter,qfu_folderid,qfu_enabled,createdon,modifiedon
+- adx_name: Profile/Enabled
+  adx_sitesettingid: f6a52e92-cac5-460a-a10e-aa71bcfed924
+  adx_value: true
+- adx_name: Webapi/qfu_deliverynotpgi/fields
+  adx_sitesettingid: fd8a4c22-9243-4b9c-9519-e61f156cf5bf
+  adx_value: qfu_deliverynotpgiid,qfu_name,qfu_sourceid,qfu_deliverynumber,qfu_deliveryline,qfu_ontimedate,qfu_dayslate,qfu_shiptocustomername,qfu_soldtocustomername,qfu_material,qfu_description,qfu_qtyondelnotpgid,qfu_unshippednetvalue,qfu_cssrname,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_snapshotcapturedon,qfu_active,qfu_inactiveon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_importbatchid,createdon,modifiedon
+- adx_name: Webapi/qfu_branchopsdaily/fields
+  adx_sitesettingid: ff7aed9a-7070-4249-9bfa-54df8e776b1c
+  adx_source: 0
+  adx_value: qfu_branchopsdailyid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_sourceworksheet,qfu_snapshotdate,qfu_billingday,qfu_billinglabel,qfu_istotalrow,qfu_currencytype,qfu_sales,qfu_gp,qfu_gppct,qfu_ontimedelivery,qfu_sortorder,createdon,modifiedon

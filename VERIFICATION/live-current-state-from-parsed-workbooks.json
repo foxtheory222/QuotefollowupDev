@@ -1,0 +1,182 @@
+{
+    "repaired_at":  "2026-04-09T16:50:32.5918992-06:00",
+    "target_environment_url":  "https://regionaloperationshub.crm.dynamics.com",
+    "parsed_workbook_json":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\results\\\\apr9-replay\\\\parsed-apr9.json",
+    "replay_label":  "Captured workbook replay",
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "backorders":  {
+                                            "branch_code":  "4171",
+                                            "captured_on":  "2026-04-09T16:29:51.4618050",
+                                            "parsed_count":  510,
+                                            "updated":  510,
+                                            "created":  0,
+                                            "deactivated":  177,
+                                            "deduped":  0
+                                        },
+                         "budget":  {
+                                        "branch_code":  "4171",
+                                        "source_id":  "4171|SA1300|2026-04",
+                                        "updated":  1,
+                                        "created":  0,
+                                        "retired":  0,
+                                        "actual_sales":  179432.42,
+                                        "budget_goal":  945500.0
+                                    },
+                         "summary":  {
+                                         "branch_code":  "4171",
+                                         "source_id":  "4171|summary|2026-04-09",
+                                         "updated":  1,
+                                         "created":  0,
+                                         "backorder_count":  510,
+                                         "overdue_backorder_count":  112,
+                                         "budget_actual":  179432.42
+                                     },
+                         "batches":  {
+                                         "branch_code":  "4171",
+                                         "updated":  3,
+                                         "created":  0,
+                                         "rows":  [
+                                                      {
+                                                          "source_id":  "4171|batch|SP830CA",
+                                                          "source_family":  "SP830CA",
+                                                          "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.5251310",
+                                                          "completed_on":  "2026-04-09T16:29:51.5251310"
+                                                      },
+                                                      {
+                                                          "source_id":  "4171|batch|ZBO",
+                                                          "source_family":  "ZBO",
+                                                          "source_filename":  "CA ZBO 20250320_719_2965954137580406575.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.4618050",
+                                                          "completed_on":  "2026-04-09T16:29:51.4618050"
+                                                      },
+                                                      {
+                                                          "source_id":  "4171|batch|SA1300",
+                                                          "source_family":  "SA1300",
+                                                          "source_filename":  "SA1300.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.4979480",
+                                                          "completed_on":  "2026-04-09T16:29:51.4979480"
+                                                      }
+                                                  ]
+                                     }
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "backorders":  {
+                                            "branch_code":  "4172",
+                                            "captured_on":  "2026-04-09T16:29:51.5694260",
+                                            "parsed_count":  417,
+                                            "updated":  417,
+                                            "created":  0,
+                                            "deactivated":  0,
+                                            "deduped":  0
+                                        },
+                         "budget":  {
+                                        "branch_code":  "4172",
+                                        "source_id":  "4172|SA1300|2026-04",
+                                        "updated":  1,
+                                        "created":  0,
+                                        "retired":  0,
+                                        "actual_sales":  131074.29,
+                                        "budget_goal":  388540.0
+                                    },
+                         "summary":  {
+                                         "branch_code":  "4172",
+                                         "source_id":  "4172|summary|2026-04-09",
+                                         "updated":  1,
+                                         "created":  0,
+                                         "backorder_count":  417,
+                                         "overdue_backorder_count":  181,
+                                         "budget_actual":  131074.29
+                                     },
+                         "batches":  {
+                                         "branch_code":  "4172",
+                                         "updated":  3,
+                                         "created":  0,
+                                         "rows":  [
+                                                      {
+                                                          "source_id":  "4172|batch|SP830CA",
+                                                          "source_family":  "SP830CA",
+                                                          "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.5994890",
+                                                          "completed_on":  "2026-04-09T16:29:51.5994890"
+                                                      },
+                                                      {
+                                                          "source_id":  "4172|batch|ZBO",
+                                                          "source_family":  "ZBO",
+                                                          "source_filename":  "CA SC ZBO - 20260120_243_4269750294371077189.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.5694260",
+                                                          "completed_on":  "2026-04-09T16:29:51.5694260"
+                                                      },
+                                                      {
+                                                          "source_id":  "4172|batch|SA1300",
+                                                          "source_family":  "SA1300",
+                                                          "source_filename":  "SA1300.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.5872440",
+                                                          "completed_on":  "2026-04-09T16:29:51.5872440"
+                                                      }
+                                                  ]
+                                     }
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "backorders":  {
+                                            "branch_code":  "4173",
+                                            "captured_on":  "2026-04-09T16:29:51.6579100",
+                                            "parsed_count":  214,
+                                            "updated":  202,
+                                            "created":  12,
+                                            "deactivated":  0,
+                                            "deduped":  0
+                                        },
+                         "budget":  {
+                                        "branch_code":  "4173",
+                                        "source_id":  "4173|SA1300|2026-04",
+                                        "updated":  1,
+                                        "created":  0,
+                                        "retired":  0,
+                                        "actual_sales":  44275.7,
+                                        "budget_goal":  411990.0
+                                    },
+                         "summary":  {
+                                         "branch_code":  "4173",
+                                         "source_id":  "4173|summary|2026-04-09",
+                                         "updated":  1,
+                                         "created":  0,
+                                         "backorder_count":  214,
+                                         "overdue_backorder_count":  60,
+                                         "budget_actual":  44275.7
+                                     },
+                         "batches":  {
+                                         "branch_code":  "4173",
+                                         "updated":  3,
+                                         "created":  0,
+                                         "rows":  [
+                                                      {
+                                                          "source_id":  "4173|batch|SP830CA",
+                                                          "source_family":  "SP830CA",
+                                                          "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.7275280",
+                                                          "completed_on":  "2026-04-09T16:29:51.7275280"
+                                                      },
+                                                      {
+                                                          "source_id":  "4173|batch|ZBO",
+                                                          "source_family":  "ZBO",
+                                                          "source_filename":  "CA SC ZBO - 20260120_30_5427988465983970409.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.6579100",
+                                                          "completed_on":  "2026-04-09T16:29:51.6579100"
+                                                      },
+                                                      {
+                                                          "source_id":  "4173|batch|SA1300",
+                                                          "source_family":  "SA1300",
+                                                          "source_filename":  "SA1300.xlsx",
+                                                          "started_on":  "2026-04-09T16:29:51.7085240",
+                                                          "completed_on":  "2026-04-09T16:29:51.7085240"
+                                                      }
+                                                  ]
+                                     }
+                     }
+                 ]
+}
