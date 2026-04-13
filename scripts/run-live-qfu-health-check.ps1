@@ -16,6 +16,7 @@ $flowScript = Join-Path $root "scripts\check-southern-alberta-flow-health.ps1"
 $opsDailyFreshnessScript = Join-Path $root "scripts\check-live-sa1300-opsdaily-freshness.ps1"
 $marginSnapshotScript = Join-Path $root "scripts\audit-live-margin-snapshot-integrity.ps1"
 $cssrOrderCountScript = Join-Path $root "scripts\audit-live-cssr-overdue-order-counts.ps1"
+$taskHealthScript = Join-Path $root "scripts\check-local-qfu-task-health.ps1"
 $summaryPath = Join-Path $root "VERIFICATION\live-health-check-summary.md"
 
 function Ensure-Directory {
@@ -71,6 +72,9 @@ $steps += [pscustomobject]@{ name = "margin snapshot integrity audit"; path = "V
 
 & powershell -NoProfile -ExecutionPolicy Bypass -File $cssrOrderCountScript -TargetEnvironmentUrl $TargetEnvironmentUrl -Username $Username
 $steps += [pscustomobject]@{ name = "CSSR overdue order-count audit"; path = "VERIFICATION\\cssr-overdue-order-counts.md" }
+
+& powershell -NoProfile -ExecutionPolicy Bypass -File $taskHealthScript
+$steps += [pscustomobject]@{ name = "local scheduled task health"; path = "VERIFICATION\\local-task-health.md" }
 
 $lines = New-Object System.Collections.Generic.List[string]
 $lines.Add("# Live QFU Health Check") | Out-Null

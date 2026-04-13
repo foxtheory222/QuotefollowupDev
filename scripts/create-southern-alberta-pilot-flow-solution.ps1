@@ -6,6 +6,7 @@ param(
   [string]$SolutionUniqueName = "qfu_sapilotflows",
   [string]$SolutionDisplayName = "QFU Southern Alberta Pilot Flows",
   [string]$SolutionVersion = "1.0.0.1",
+  [string[]]$Families = @(),
   [switch]$ImportToTarget = $false
 )
 
@@ -32,6 +33,7 @@ $templateSpecs = @(
     SourceFile = "QuoteFollow-UpImport-Staging_DEV-7742C979-E2EB-F011-8406-000D3AF4C93E.json"
     TargetSuffix = "QuoteFollowUp-Import-Staging"
     SourceFamily = "SP830CA"
+    TriggerKind = "SharedMailbox"
     SubjectFilter = "SP830CA - Quote Follow Up Report"
   },
   [pscustomobject]@{
@@ -40,6 +42,7 @@ $templateSpecs = @(
     SourceFile = "BackOrder_Update_From_CA_ZBO_DEV-5C42C979-E2EB-F011-8406-000D3AF4C93E.json"
     TargetSuffix = "BackOrder-Update-ZBO"
     SourceFamily = "ZBO"
+    TriggerKind = "SharedMailbox"
     SubjectFilter = "Daily Backorder Report"
   },
   [pscustomobject]@{
@@ -48,9 +51,18 @@ $templateSpecs = @(
     SourceFile = "Budget_Update_From_SA1300_Unmanaged_DEV-6942C979-E2EB-F011-8406-000D3AF4C93E.json"
     TargetSuffix = "Budget-Update-SA1300"
     SourceFamily = "SA1300"
+    TriggerKind = "SharedMailbox"
     SubjectFilter = "SA1300-Excel Report"
   }
 )
+
+if (@($Families | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count -gt 0) {
+  $selectedFamilies = @($Families | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)
+  $templateSpecs = @($templateSpecs | Where-Object { $_.Family -in $selectedFamilies })
+  if ($templateSpecs.Count -eq 0) {
+    throw "No template specs matched Families: $($selectedFamilies -join ', ')"
+  }
+}
 
 $workflowIdMap = @{
   "4171|Quote" = "0aff92f1-a8f0-45d7-b05c-3afe5ade9ed1"
@@ -157,7 +169,11 @@ function Get-WorkflowTemplate {
 
 function Get-FirstTriggerName {
   param([object]$Definition)
-  return $Definition.triggers.PSObject.Properties[0].Name
+  $triggerProperty = @($Definition.triggers.PSObject.Properties | Select-Object -First 1)
+  if ($triggerProperty.Count -eq 0) {
+    return $null
+  }
+  return $triggerProperty[0].Name
 }
 
 function Set-ParameterDefault {
@@ -242,6 +258,60 @@ function Set-SharedMailboxTrigger {
   })
 }
 
+function Set-PrimaryInboxTrigger {
+  param(
+    [object]$Definition,
+    [string]$Description,
+    [string]$SubjectFilter
+  )
+
+  $triggerName = Get-FirstTriggerName -Definition $Definition
+  $existing = $Definition.triggers.$triggerName
+  $opId = if ($existing.metadata.operationMetadataId) { $existing.metadata.operationMetadataId } else { [guid]::NewGuid().Guid }
+
+  $parameters = [ordered]@{
+    includeAttachments = $true
+    importance = "Any"
+    fetchOnlyWithAttachment = $true
+    folderPath = "@parameters('qfu_QFU_OutlookFolderId')"
+  }
+  if ($SubjectFilter) {
+    $parameters.subjectFilter = $SubjectFilter
+  }
+
+  $Definition.triggers = [pscustomobject]([ordered]@{
+    "When_email_arrives_(V3)" = [ordered]@{
+      type = "OpenApiConnectionNotification"
+      description = $Description
+      inputs = [ordered]@{
+        parameters = $parameters
+        host = [ordered]@{
+          apiId = "/providers/Microsoft.PowerApps/apis/shared_office365"
+          operationId = "OnNewEmailV3"
+          connectionName = "shared_office365"
+        }
+      }
+      splitOn = "@triggerOutputs()?['body/value']"
+      metadata = [ordered]@{
+        operationMetadataId = $opId
+      }
+    }
+  })
+}
+
+function Get-TriggerSubjectFilter {
+  param(
+    [object]$Template,
+    [object]$Branch
+  )
+
+  if ($Template.Family -eq "Backorder") {
+    return "{0} {1}" -f $Template.SubjectFilter, $Branch.BranchCode
+  }
+
+  return $Template.SubjectFilter
+}
+
 function Add-BranchParameters {
   param(
     [object]$Definition,
@@ -260,6 +330,35 @@ function Add-BranchParameters {
   if ($Template.Family -eq "Budget") {
     Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_ActiveFiscalYear" -DefaultValue "FY26"
   }
+}
+
+function Set-TemplateTrigger {
+  param(
+    [object]$Definition,
+    [object]$Branch,
+    [object]$Template,
+    [string]$SharedMailboxDescription,
+    [string]$PrimaryInboxDescription
+  )
+
+  $subjectFilter = Get-TriggerSubjectFilter -Template $Template -Branch $Branch
+  if ($Template.TriggerKind -eq "PrimaryInbox") {
+    Set-PrimaryInboxTrigger -Definition $Definition -Description $PrimaryInboxDescription -SubjectFilter $subjectFilter
+  } else {
+    Set-SharedMailboxTrigger -Definition $Definition -Description $SharedMailboxDescription -SubjectFilter $subjectFilter
+  }
+
+  $triggerName = Get-FirstTriggerName -Definition $Definition
+  $triggerProperty = @($Definition.triggers.PSObject.Properties | Where-Object { $_.Name -eq $triggerName }) | Select-Object -First 1
+  if (-not $triggerProperty) {
+    throw "Unable to resolve trigger property '$triggerName' after trigger rewrite."
+  }
+  $trigger = $triggerProperty.Value
+  $trigger | Add-Member -NotePropertyName "runtimeConfiguration" -NotePropertyValue ([ordered]@{
+    concurrency = [ordered]@{
+      runs = 1
+    }
+  }) -Force
 }
 
 function Set-FieldValue {
@@ -305,6 +404,136 @@ function Copy-DeepObject {
     return $null
   }
   return ($Source | ConvertTo-Json -Depth 100 | ConvertFrom-Json)
+}
+
+function New-IngestionBatchSyncActionSet {
+  param(
+    [string]$ActionPrefix,
+    [string]$ImportNameSuffix,
+    [string]$SourceFamily,
+    [string]$FlowNameExpression,
+    [string]$FileNameExpression,
+    [string]$StartedOnExpression,
+    [object]$RunAfter,
+    [string]$ConnectionName = "shared_commondataserviceforapps"
+  )
+
+  $listActionName = "List_Existing_{0}_Import_Batch" -f $ActionPrefix
+  $conditionActionName = "Condition_{0}_Import_Batch_Exists" -f $ActionPrefix
+  $updateActionName = "Update_{0}_Import_Batch" -f $ActionPrefix
+  $createActionName = "Create_{0}_Import_Batch" -f $ActionPrefix
+  $sourceIdExpression = "@concat(parameters('qfu_QFU_BranchCode'), '|batch|$SourceFamily')"
+
+  $listAction = [ordered]@{
+    type = "OpenApiConnection"
+    description = "Load the stable qfu_ingestionbatch row for the $SourceFamily workbook feed."
+    inputs = [ordered]@{
+      parameters = [ordered]@{
+        entityName = "qfu_ingestionbatchs"
+        '$select' = "qfu_ingestionbatchid,qfu_sourceid,qfu_completedon"
+        '$filter' = "qfu_branchcode eq '@{parameters('qfu_QFU_BranchCode')}' and qfu_sourcefamily eq '$SourceFamily' and qfu_sourceid eq '@{concat(parameters('qfu_QFU_BranchCode'), '|batch|$SourceFamily')}'"
+        '$top' = 1
+        '$orderby' = "modifiedon desc, createdon desc"
+      }
+      host = [ordered]@{
+        apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        operationId = "ListRecords"
+        connectionName = $ConnectionName
+      }
+    }
+    runAfter = (Copy-OrderedMap -Source $RunAfter)
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $commonParameters = [ordered]@{
+    "item/qfu_name" = "@concat(parameters('qfu_QFU_BranchCode'), ' $ImportNameSuffix')"
+    "item/qfu_sourceid" = $sourceIdExpression
+    "item/qfu_branchcode" = "@parameters('qfu_QFU_BranchCode')"
+    "item/qfu_branchslug" = "@parameters('qfu_QFU_BranchSlug')"
+    "item/qfu_regionslug" = "@parameters('qfu_QFU_RegionSlug')"
+    "item/qfu_sourcefamily" = $SourceFamily
+    "item/qfu_sourcefilename" = $FileNameExpression
+    "item/qfu_status" = "ready"
+    "item/qfu_startedon" = $StartedOnExpression
+    "item/qfu_completedon" = "@utcNow()"
+    "item/qfu_triggerflow" = $FlowNameExpression
+  }
+
+  $updateParameters = [ordered]@{
+    entityName = "qfu_ingestionbatchs"
+    recordId = "@first(outputs('$listActionName')?['body/value'])?['qfu_ingestionbatchid']"
+  }
+  foreach ($pair in $commonParameters.GetEnumerator()) {
+    $updateParameters[$pair.Key] = $pair.Value
+  }
+
+  $createParameters = [ordered]@{
+    entityName = "qfu_ingestionbatchs"
+  }
+  foreach ($pair in $commonParameters.GetEnumerator()) {
+    $createParameters[$pair.Key] = $pair.Value
+  }
+
+  $conditionAction = [ordered]@{
+    type = "If"
+    expression = [ordered]@{
+      greater = @(
+        "@length(outputs('$listActionName')?['body/value'])",
+        0
+      )
+    }
+    actions = [ordered]@{
+      $updateActionName = [ordered]@{
+        type = "OpenApiConnection"
+        description = "Refresh the existing qfu_ingestionbatch audit row for the $SourceFamily workbook feed."
+        inputs = [ordered]@{
+          parameters = $updateParameters
+          host = [ordered]@{
+            apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            operationId = "UpdateRecord"
+            connectionName = $ConnectionName
+          }
+        }
+        metadata = [ordered]@{
+          operationMetadataId = [guid]::NewGuid().Guid
+        }
+      }
+    }
+    else = [ordered]@{
+      actions = [ordered]@{
+        $createActionName = [ordered]@{
+          type = "OpenApiConnection"
+          description = "Create the stable qfu_ingestionbatch audit row for the $SourceFamily workbook feed."
+          inputs = [ordered]@{
+            parameters = $createParameters
+            host = [ordered]@{
+              apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              operationId = "CreateRecord"
+              connectionName = $ConnectionName
+            }
+          }
+          metadata = [ordered]@{
+            operationMetadataId = [guid]::NewGuid().Guid
+          }
+        }
+      }
+    }
+    runAfter = [ordered]@{
+      $listActionName = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  return [pscustomobject]@{
+    ListActionName = $listActionName
+    ListAction = [pscustomobject]$listAction
+    ConditionActionName = $conditionActionName
+    ConditionAction = [pscustomobject]$conditionAction
+  }
 }
 
 function Add-Sa1300AbnormalMarginActions {
@@ -1103,13 +1332,12 @@ function Update-QuoteFlow {
 
   $definition = $Json.properties.definition
   Add-BranchParameters -Definition $definition -Branch $Branch -Template $Template
-  Set-SharedMailboxTrigger -Definition $definition -Description "Triggers when a new SP830CA workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." -SubjectFilter $Template.SubjectFilter
-
-  $definition.triggers.Shared_Mailbox_New_Email.runtimeConfiguration = [ordered]@{
-    concurrency = [ordered]@{
-      runs = 1
-    }
-  }
+  Set-TemplateTrigger `
+    -Definition $definition `
+    -Branch $Branch `
+    -Template $Template `
+    -SharedMailboxDescription "Triggers when a new SP830CA workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." `
+    -PrimaryInboxDescription "Triggers when a new SP830CA workbook lands in the primary inbox for $($Branch.BranchCode) $($Branch.BranchName)."
 
   $existingTopLevelActions = $definition.actions
   $definition.actions = [pscustomobject]([ordered]@{
@@ -1387,7 +1615,21 @@ function Update-QuoteFlow {
         }
       }))
 
-  Add-Note -Notes $Notes -Text "Quote flow now enforces trigger concurrency = 1, stamps a branch-scoped import batch id on headers and lines, treats qfu_quote as current-state with qfu_active/qfu_inactiveon/qfu_lastseenon, uses qfu_quote line source ids in the canonical branch|SP830CA|quote|line format, closes lost/rejected rows explicitly, and marks previously-active headers inactive when they disappear from the latest SP830CA workbook."
+  $quoteBatchActions = New-IngestionBatchSyncActionSet `
+    -ActionPrefix "Quote" `
+    -ImportNameSuffix "Quote Workbook Import" `
+    -SourceFamily "SP830CA" `
+    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-QuoteFollowUp-Import-Staging')" `
+    -FileNameExpression "@items('Apply_to_each_attachment')?['name']" `
+    -StartedOnExpression "@variables('QuoteSnapshotProcessedOn')" `
+    -RunAfter ([ordered]@{
+        Deactivate_Missing_Quotes = @("Succeeded", "Skipped")
+        Set_QuoteImportBatchId = @("Succeeded")
+      })
+  Set-FieldValue -Map $quoteActions -Name $quoteBatchActions.ListActionName -Value $quoteBatchActions.ListAction
+  Set-FieldValue -Map $quoteActions -Name $quoteBatchActions.ConditionActionName -Value $quoteBatchActions.ConditionAction
+
+  Add-Note -Notes $Notes -Text "Quote flow now enforces trigger concurrency = 1, stamps a branch-scoped import batch id on headers and lines, treats qfu_quote as current-state with qfu_active/qfu_inactiveon/qfu_lastseenon, uses qfu_quote line source ids in the canonical branch|SP830CA|quote|line format, closes lost/rejected rows explicitly, marks previously-active headers inactive when they disappear from the latest SP830CA workbook, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
 }
 
 function Update-BackorderFlow {
@@ -1400,12 +1642,12 @@ function Update-BackorderFlow {
 
   $definition = $Json.properties.definition
   Add-BranchParameters -Definition $definition -Branch $Branch -Template $Template
-  Set-SharedMailboxTrigger -Definition $definition -Description "Triggers when a new ZBO workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." -SubjectFilter $Template.SubjectFilter
-  $definition.triggers.Shared_Mailbox_New_Email.runtimeConfiguration = [ordered]@{
-    concurrency = [ordered]@{
-      runs = 1
-    }
-  }
+  Set-TemplateTrigger `
+    -Definition $definition `
+    -Branch $Branch `
+    -Template $Template `
+    -SharedMailboxDescription "Triggers when a new ZBO workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." `
+    -PrimaryInboxDescription "Triggers when a new ZBO workbook lands in the primary inbox for $($Branch.BranchCode) $($Branch.BranchName)."
 
   $topLevelActions = $definition.actions
   Set-FieldValue -Map $topLevelActions -Name "Initialize_DeliverySnapshotProcessedOn" -Value ([pscustomobject]([ordered]@{
@@ -2013,7 +2255,21 @@ function Update-BackorderFlow {
         }
       }))
 
-  Add-Note -Notes $Notes -Text "Backorder flow now enforces trigger concurrency = 1, treats qfu_backorder as current-state with qfu_active/qfu_inactiveon/qfu_lastseenon, upserts actionable ZBO rows by canonical source id, marks missing rows inactive on rerun, and syncs qfu_deliverynotpgi from the same workbook using branch-scoped upsert plus inactive marking."
+  $backorderBatchActions = New-IngestionBatchSyncActionSet `
+    -ActionPrefix "Backorder" `
+    -ImportNameSuffix "Backorder Workbook Import" `
+    -SourceFamily "ZBO" `
+    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-BackOrder-Update-ZBO')" `
+    -FileNameExpression "@items('Apply_to_each_Attachment')?['name']" `
+    -StartedOnExpression "@variables('DeliverySnapshotProcessedOn')" `
+    -RunAfter ([ordered]@{
+        Guard_BackOrder_Row_Limit = @("Succeeded")
+        Reset_CurrentBackorderSnapshotKeys = @("Succeeded")
+      })
+  Set-FieldValue -Map $conditionActions -Name $backorderBatchActions.ListActionName -Value $backorderBatchActions.ListAction
+  Set-FieldValue -Map $conditionActions -Name $backorderBatchActions.ConditionActionName -Value $backorderBatchActions.ConditionAction
+
+  Add-Note -Notes $Notes -Text "Backorder flow now enforces trigger concurrency = 1, treats qfu_backorder as current-state with qfu_active/qfu_inactiveon/qfu_lastseenon, upserts actionable ZBO rows by canonical source id, marks missing rows inactive on rerun, syncs qfu_deliverynotpgi from the same workbook using branch-scoped upsert plus inactive marking, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
 }
 
 function Update-BudgetFlow {
@@ -2040,7 +2296,12 @@ function Update-BudgetFlow {
   $preservedCadOpsDailyExpr = "@if($sameMonthActualRollbackBody, coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailycadjson'], string(json('[]'))), string(coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]'))))"
   $preservedUsdOpsDailyExpr = "@if($sameMonthActualRollbackBody, coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailyusdjson'], string(json('[]'))), string(coalesce(outputs('Filter_USD_Ops_Daily_Rows')?['body'], json('[]'))))"
   Add-BranchParameters -Definition $definition -Branch $Branch -Template $Template
-  Set-SharedMailboxTrigger -Definition $definition -Description "Triggers when a new SA1300 workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." -SubjectFilter $Template.SubjectFilter
+  Set-TemplateTrigger `
+    -Definition $definition `
+    -Branch $Branch `
+    -Template $Template `
+    -SharedMailboxDescription "Triggers when a new SA1300 workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." `
+    -PrimaryInboxDescription "Triggers when a new SA1300 workbook lands in the primary inbox for $($Branch.BranchCode) $($Branch.BranchName)."
 
   $budgetRootActions = $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions
   $budgetRootActions.Create_File_in_OneDrive.inputs.parameters.name = "@concat(parameters('qfu_QFU_BranchCode'), '_SA1300_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.xlsx')"
@@ -2313,8 +2574,23 @@ function Update-BudgetFlow {
 
   Add-Sa1300AbnormalMarginActions -Definition $definition -BudgetRootActions $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions -FlowName $flowName
   Add-Sa1300OpsDailyActions -Definition $definition -BudgetRootActions $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions -Branch $Branch
+  $budgetBatchActions = New-IngestionBatchSyncActionSet `
+    -ActionPrefix "Budget" `
+    -ImportNameSuffix "Budget Workbook Import" `
+    -SourceFamily "SA1300" `
+    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-Budget-Update-SA1300')" `
+    -FileNameExpression "@items('Apply_to_each_Attachment')?['name']" `
+    -StartedOnExpression "@utcNow()" `
+    -RunAfter ([ordered]@{
+        Create_Abnormal_Margin_Batch = @("Succeeded")
+        Apply_to_each_CAD_Ops_Daily_Row = @("Succeeded", "Skipped")
+        Condition_Current_Month_Budget_Record_For_Analytics_Exists = @("Succeeded")
+      })
+  $budgetRootActions = $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions
+  Set-FieldValue -Map $budgetRootActions -Name $budgetBatchActions.ListActionName -Value $budgetBatchActions.ListAction
+  Set-FieldValue -Map $budgetRootActions -Name $budgetBatchActions.ConditionActionName -Value $budgetBatchActions.ConditionAction
 
-  Add-Note -Notes $Notes -Text "Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, blocks stale same-month SA1300 actuals from rolling back the live qfu_budget/qfu_branchopsdaily state, replaces the current branch's same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, and stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics."
+  Add-Note -Notes $Notes -Text "Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, blocks stale same-month SA1300 actuals from rolling back the live qfu_budget/qfu_branchopsdaily state, replaces the current branch's same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
 }
 
 function New-WorkflowDataXml {

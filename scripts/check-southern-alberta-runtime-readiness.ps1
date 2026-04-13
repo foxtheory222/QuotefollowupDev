@@ -72,6 +72,28 @@ function Get-TargetConnection {
   return $conn
 }
 
+function Get-BatchMoment {
+  param([object]$Row)
+
+  foreach ($fieldName in @("qfu_completedon", "qfu_startedon", "createdon")) {
+    if (-not $Row -or -not $Row.PSObject.Properties[$fieldName]) {
+      continue
+    }
+
+    $value = $Row.$fieldName
+    if ($null -eq $value -or [string]::IsNullOrWhiteSpace([string]$value)) {
+      continue
+    }
+
+    try {
+      return [datetime]$value
+    } catch {
+    }
+  }
+
+  return [datetime]::MinValue
+}
+
 function Get-FlowSnapshot {
   param(
     [string]$EnvironmentName,
@@ -235,7 +257,11 @@ function Get-LatestIngestionBatch {
     ) -TopCount 5000).CrmRecords
   )
 
-  return @($rows | Where-Object { $_.qfu_sourcefamily -eq $SourceFamily } | Sort-Object createdon -Descending) | Select-Object -First 1
+  return @(
+    $rows |
+      Where-Object { $_.qfu_sourcefamily -eq $SourceFamily } |
+      Sort-Object { Get-BatchMoment -Row $_ } -Descending
+  ) | Select-Object -First 1
 }
 
 function Get-LatestSnapshotBatch {
@@ -259,7 +285,11 @@ function Get-LatestSnapshotBatch {
     ) -TopCount 5000).CrmRecords
   )
 
-  return @($rows | Where-Object { $_.qfu_sourcefamily -eq $SourceFamily } | Sort-Object createdon -Descending) | Select-Object -First 1
+  return @(
+    $rows |
+      Where-Object { $_.qfu_sourcefamily -eq $SourceFamily } |
+      Sort-Object { Get-BatchMoment -Row $_ } -Descending
+  ) | Select-Object -First 1
 }
 
 function Get-LatestDeliveryRow {

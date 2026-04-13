@@ -1,18 +1,18 @@
 param(
   [string]$RepoRoot = "C:\Users\smcfarlane\Desktop\WorkBench\QuoteFollowUpRegion",
-  [string]$TaskName = "QFU-Freight-Inbox-Queue-Processor",
+  [string]$TaskName = "QFU-Branch-Daily-Summary-Refresh",
   [int]$IntervalMinutes = 15,
   [switch]$StartImmediately
 )
 
 $ErrorActionPreference = "Stop"
 
-$processorScript = Join-Path $RepoRoot "scripts\process-freight-inbox-queue.ps1"
-if (-not (Test-Path -LiteralPath $processorScript)) {
-  throw "Processor script not found: $processorScript"
+$refreshScript = Join-Path $RepoRoot "scripts\refresh-live-branch-daily-summaries.ps1"
+if (-not (Test-Path -LiteralPath $refreshScript)) {
+  throw "Refresh script not found: $refreshScript"
 }
 
-$taskCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$processorScript`""
+$taskCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$refreshScript`" -Apply"
 $arguments = @(
   "/Create",
   "/SC", "MINUTE",
