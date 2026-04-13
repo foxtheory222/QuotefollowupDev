@@ -168,6 +168,14 @@ function Test-BackorderReadyToShipOnly {
   return $qtyOnDelivery -gt 0 -and $qtyNotOnDelivery -le 0
 }
 
+function Test-BackorderActionable {
+  param([object]$Row)
+
+  $qtyOnDelivery = Get-DecimalValue $Row.qfu_qtyondelnotpgid
+  $qtyNotOnDelivery = Get-DecimalValue $Row.qfu_qtynotondel
+  return $qtyNotOnDelivery -gt 0 -or $qtyOnDelivery -gt 0
+}
+
 function Get-DesiredBackorderOverdueDays {
   param(
     [object]$Row,
@@ -212,9 +220,10 @@ foreach ($branchCode in $BranchCodes) {
   )
 
   $activeRows = @($rows | Where-Object { Test-OperationalRowIsActive -Row $_ })
+  $actionableRows = @($activeRows | Where-Object { Test-BackorderActionable -Row $_ })
   $changes = New-Object System.Collections.Generic.List[object]
 
-  foreach ($row in $activeRows) {
+  foreach ($row in $actionableRows) {
     $currentDays = Get-IntegerValue $row.qfu_daysoverdue
     $desiredDays = Get-DesiredBackorderOverdueDays -Row $row -Today $today
     if ($currentDays -eq $desiredDays) {
@@ -249,7 +258,7 @@ foreach ($branchCode in $BranchCodes) {
 
   $branchReports.Add([pscustomobject]@{
     branch_code = $branchCode
-    active_row_count = $activeRows.Count
+    active_row_count = $actionableRows.Count
     candidate_update_count = $changes.Count
     rows_becoming_overdue_count = @($changes | Where-Object { $_.current_days_overdue -le 0 -and $_.desired_days_overdue -gt 0 }).Count
     rows_clearing_overdue_count = @($changes | Where-Object { $_.current_days_overdue -gt 0 -and $_.desired_days_overdue -le 0 }).Count

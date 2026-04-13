@@ -120,6 +120,22 @@ function Get-DecimalValue {
   }
 }
 
+function Test-BackorderReadyToShipOnly {
+  param([object]$Row)
+
+  $qtyOnDelivery = Get-DecimalValue $Row.qfu_qtyondelnotpgid
+  $qtyNotOnDelivery = Get-DecimalValue $Row.qfu_qtynotondel
+  return $qtyOnDelivery -gt 0 -and $qtyNotOnDelivery -le 0
+}
+
+function Test-BackorderActionable {
+  param([object]$Row)
+
+  $qtyOnDelivery = Get-DecimalValue $Row.qfu_qtyondelnotpgid
+  $qtyNotOnDelivery = Get-DecimalValue $Row.qfu_qtynotondel
+  return $qtyNotOnDelivery -gt 0 -or $qtyOnDelivery -gt 0
+}
+
 function Test-OperationalRowIsActive {
   param([object]$Row)
 
@@ -148,13 +164,21 @@ foreach ($branchCode in $BranchCodes) {
         "qfu_cssrname",
         "qfu_daysoverdue",
         "qfu_totalvalue",
+        "qfu_qtyondelnotpgid",
+        "qfu_qtynotondel",
         "qfu_active",
         "qfu_inactiveon"
       ) -TopCount 5000).CrmRecords
   )
 
   $activeRows = @($rows | Where-Object { Test-OperationalRowIsActive -Row $_ })
-  $overdueRows = @($activeRows | Where-Object { (Get-IntegerValue $_.qfu_daysoverdue) -gt 0 })
+  $overdueRows = @(
+    $activeRows |
+      Where-Object {
+        (Test-BackorderActionable -Row $_) -and
+        (Get-IntegerValue $_.qfu_daysoverdue) -gt 0
+      }
+  )
   $groupRows = New-Object System.Collections.Generic.List[object]
 
   foreach ($group in @($overdueRows | Group-Object {

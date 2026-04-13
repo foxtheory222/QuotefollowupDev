@@ -6,6 +6,8 @@ param(
   [string]$ReplayLabel = "Captured workbook replay",
   [string]$OutputJson = "results\\live-current-state-from-parsed-workbooks.json",
   [switch]$SkipBackorders,
+  [switch]$SkipOpsDaily,
+  [switch]$SkipBudget,
   [switch]$SkipSummary,
   [switch]$SkipBatches
 )
@@ -237,6 +239,9 @@ function Build-BackorderFields {
     qfu_material = [string]$Record.qfu_material
     qfu_description = [string]$Record.qfu_description
     qfu_quantity = Get-NullableDecimal $Record.qfu_quantity
+    qfu_qtybilled = Get-NullableDecimal $Record.qfu_qtybilled
+    qfu_qtyondelnotpgid = Get-NullableDecimal $Record.qfu_qtyondelnotpgid
+    qfu_qtynotondel = Get-NullableDecimal $Record.qfu_qtynotondel
     qfu_branchcode = [string]$Record.qfu_branchcode
     qfu_branchslug = [string]$Record.qfu_branchslug
     qfu_regionslug = [string]$Record.qfu_regionslug
@@ -247,6 +252,14 @@ function Build-BackorderFields {
     qfu_inactiveon = $null
     qfu_lastseenon = $CapturedOn
   }
+}
+
+function Test-BackorderRecordIsActionable {
+  param([object]$Row)
+
+  $qtyOnDelivery = Get-NullableDecimal $Row.qfu_qtyondelnotpgid
+  $qtyNotOnDelivery = Get-NullableDecimal $Row.qfu_qtynotondel
+  return $qtyNotOnDelivery -gt 0 -or $qtyOnDelivery -gt 0
 }
 
 function Build-BudgetFields {
@@ -416,8 +429,10 @@ function Sync-Backorders {
   $created = 0
   $deactivated = 0
   $deduped = 0
+  $parsedBackorders = @($BranchPayload.backorders.records | Where-Object { Test-BackorderRecordIsActionable -Row $_ })
+  $skippedNonActionable = @($BranchPayload.backorders.records).Count - @($parsedBackorders).Count
 
-  foreach ($record in @($BranchPayload.backorders.records)) {
+  foreach ($record in $parsedBackorders) {
     $sourceId = [string]$record.qfu_sourceid
     [void]$parsedSourceIds.Add($sourceId)
     $fields = Build-BackorderFields -Record $record -CapturedOn $capturedOn
@@ -464,11 +479,13 @@ function Sync-Backorders {
   return [pscustomobject]@{
     branch_code = $branchCode
     captured_on = $capturedOn.ToString("o")
-    parsed_count = @($BranchPayload.backorders.records).Count
+    raw_parsed_count = @($BranchPayload.backorders.records).Count
+    parsed_count = @($parsedBackorders).Count
     updated = $updated
     created = $created
     deactivated = $deactivated
     deduped = $deduped
+    skipped_non_actionable = $skippedNonActionable
   }
 }
 
@@ -720,8 +737,8 @@ $connection = Connect-Target -Url $TargetEnvironmentUrl -User $Username
 $branchReports = @()
 foreach ($branchPayload in @($payload.branches | Where-Object { [string]$_.branch.branch_code -in $BranchCodes })) {
   $backorderResult = if (-not $SkipBackorders) { Sync-Backorders -Connection $connection -BranchPayload $branchPayload } else { $null }
-  $opsDailyResult = Sync-OpsDaily -Connection $connection -BranchPayload $branchPayload
-  $budgetResult = Sync-Budget -Connection $connection -BranchPayload $branchPayload
+  $opsDailyResult = if (-not $SkipOpsDaily) { Sync-OpsDaily -Connection $connection -BranchPayload $branchPayload } else { $null }
+  $budgetResult = if (-not $SkipBudget) { Sync-Budget -Connection $connection -BranchPayload $branchPayload } else { $null }
   $summaryResult = if (-not $SkipSummary) { Sync-Summary -Connection $connection -BranchPayload $branchPayload } else { $null }
   $batchResult = if (-not $SkipBatches) { Sync-Batches -Connection $connection -BranchPayload $branchPayload -Label $ReplayLabel } else { $null }
 
@@ -744,5 +761,12 @@ $report = [pscustomobject]@{
 }
 
 Write-Utf8Json -Path $outputPath -Object $report
-$branchReports | Select-Object branch_code, @{ Name = "backorders_updated"; Expression = { $_.backorders.updated } }, @{ Name = "backorders_created"; Expression = { $_.backorders.created } }, @{ Name = "backorders_deactivated"; Expression = { $_.backorders.deactivated } }, @{ Name = "budget_actual"; Expression = { $_.budget.actual_sales } } | Format-Table -AutoSize
+$branchReports |
+  Select-Object `
+    branch_code,
+    @{ Name = "backorders_updated"; Expression = { if ($_.backorders) { $_.backorders.updated } else { $null } } },
+    @{ Name = "backorders_created"; Expression = { if ($_.backorders) { $_.backorders.created } else { $null } } },
+    @{ Name = "backorders_deactivated"; Expression = { if ($_.backorders) { $_.backorders.deactivated } else { $null } } },
+    @{ Name = "budget_actual"; Expression = { if ($_.budget) { $_.budget.actual_sales } else { $null } } } |
+  Format-Table -AutoSize
 Write-Host "OUTPUT_PATH=$outputPath"

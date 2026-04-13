@@ -7,6 +7,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$RepoRoot = Split-Path -Parent $PSScriptRoot
 
 Import-Module Microsoft.Xrm.Data.Powershell
 
@@ -17,7 +18,7 @@ function Resolve-RepoPath {
     return $Path
   }
 
-  return Join-Path (Get-Location) $Path
+  return Join-Path $RepoRoot $Path
 }
 
 function Ensure-Directory {
@@ -234,6 +235,14 @@ function Test-BackorderReadyToShipOnly {
   return $qtyOnDelivery -gt 0 -and $qtyNotOnDelivery -le 0
 }
 
+function Test-BackorderActionable {
+  param([object]$Row)
+
+  $qtyOnDelivery = Get-DecimalValue $Row.qfu_qtyondelnotpgid
+  $qtyNotOnDelivery = Get-DecimalValue $Row.qfu_qtynotondel
+  return $qtyNotOnDelivery -gt 0 -or $qtyOnDelivery -gt 0
+}
+
 function Get-BackorderOverdueDays {
   param(
     [object]$Row,
@@ -258,7 +267,7 @@ function Test-IsOverdueBackorder {
     [datetime]$Today
   )
 
-  return -not (Test-BackorderReadyToShipOnly -Row $Row) -and (Get-BackorderOverdueDays -Row $Row -Today $Today) -gt 0
+  return (Test-BackorderActionable -Row $Row) -and (Get-BackorderOverdueDays -Row $Row -Today $Today) -gt 0
 }
 
 function Select-CurrentBudgetRow {
@@ -432,6 +441,7 @@ foreach ($branchCode in $BranchCodes) {
 
   $activeQuotes = @($quoteRows | Where-Object { [string]$_.qfu_branchcode -eq $branchCode -and (Test-OperationalRowIsActive -Row $_) })
   $activeBackorders = @($backorderRows | Where-Object { [string]$_.qfu_branchcode -eq $branchCode -and (Test-OperationalRowIsActive -Row $_) })
+  $actionableBackorders = @($activeBackorders | Where-Object { Test-BackorderActionable -Row $_ })
   $openQuotes = @($activeQuotes | Where-Object { (Get-IntegerValue $_.qfu_status) -eq 1 })
   $overdueQuotes = @($openQuotes | Where-Object { (Get-QuoteAgeDays -Row $_ -Today $today) -gt 0 })
   $quotesLast30 = @($activeQuotes | Where-Object {
@@ -443,8 +453,8 @@ foreach ($branchCode in $BranchCodes) {
       $status = Get-IntegerValue $_.qfu_status
       $status -eq 3 -or $status -eq 4
     })
-  $overdueBackorders = @($activeBackorders | Where-Object { Test-IsOverdueBackorder -Row $_ -Today $today })
-  $currentMonthBackorders = @($activeBackorders | Where-Object {
+  $overdueBackorders = @($actionableBackorders | Where-Object { Test-IsOverdueBackorder -Row $_ -Today $today })
+  $currentMonthBackorders = @($actionableBackorders | Where-Object {
       $onTimeDate = Get-DateValue $_.qfu_ontimedate
       $onTimeDate -and $onTimeDate.Month -eq $today.Month -and $onTimeDate.Year -eq $today.Year
     })
@@ -475,11 +485,11 @@ foreach ($branchCode in $BranchCodes) {
     qfu_quoteslost30days = @($lostQuotes).Count
     qfu_quotesopen30days = [math]::Max(0, @($quotesLast30).Count - @($wonQuotes).Count - @($lostQuotes).Count)
     qfu_avgquotevalue30days = $averageQuoteValue
-    qfu_backordercount = @($activeBackorders).Count
+    qfu_backordercount = @($actionableBackorders).Count
     qfu_overduebackordercount = @($overdueBackorders).Count
     qfu_currentmonthforecastvalue = [math]::Round([decimal](@($currentMonthBackorders | Measure-Object -Property qfu_totalvalue -Sum).Sum), 2)
     qfu_currentmonthlatevalue = [math]::Round([decimal](@($currentMonthLateBackorders | Measure-Object -Property qfu_totalvalue -Sum).Sum), 2)
-    qfu_allbackordersvalue = [math]::Round([decimal](@($activeBackorders | Measure-Object -Property qfu_totalvalue -Sum).Sum), 2)
+    qfu_allbackordersvalue = [math]::Round([decimal](@($actionableBackorders | Measure-Object -Property qfu_totalvalue -Sum).Sum), 2)
     qfu_overduebackordersvalue = [math]::Round([decimal](@($overdueBackorders | Measure-Object -Property qfu_totalvalue -Sum).Sum), 2)
     qfu_budgetactual = [math]::Round($actualSales, 2)
     qfu_budgettarget = [math]::Round($targetSales, 2)

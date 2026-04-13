@@ -467,6 +467,10 @@ def parse_backorder_file(path, branch):
 
         material = as_text(row[headers.get("Material", -1)]) if "Material" in headers else None
         description = as_text(row[headers.get("Material Description", -1)]) if "Material Description" in headers else None
+        qty_on_delivery_not_pgid = round(as_float(row[headers.get("Qty on Del Not PGI'd", -1)]) if "Qty on Del Not PGI'd" in headers else 0.0, 2)
+        qty_not_on_delivery = round(as_float(row[headers.get("Qty Not On Del", -1)]) if "Qty Not On Del" in headers else 0.0, 2)
+        if qty_not_on_delivery <= 0 and qty_on_delivery_not_pgid <= 0:
+            continue
         source_id = f"{branch['branch_code']}|ZBO|{sales_doc}|{line or '0'}"
 
         results.append(
@@ -482,6 +486,9 @@ def parse_backorder_file(path, branch):
                 "qfu_material": material,
                 "qfu_description": description,
                 "qfu_quantity": round(as_float(row[headers.get("Unshipped Quantity", -1)]) if "Unshipped Quantity" in headers else 0.0, 2),
+                "qfu_qtybilled": round(as_float(row[headers.get("Qty Billed", -1)]) if "Qty Billed" in headers else 0.0, 2),
+                "qfu_qtyondelnotpgid": qty_on_delivery_not_pgid,
+                "qfu_qtynotondel": qty_not_on_delivery,
                 "qfu_branchcode": branch["branch_code"],
                 "qfu_branchslug": branch["branch_slug"],
                 "qfu_regionslug": branch["region_slug"],
