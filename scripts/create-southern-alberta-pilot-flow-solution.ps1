@@ -7,10 +7,14 @@ param(
   [string]$SolutionDisplayName = "QFU Southern Alberta Pilot Flows",
   [string]$SolutionVersion = "1.0.0.1",
   [string[]]$Families = @(),
+  [string]$FlowNameSuffixTag = "",
+  [switch]$UseGeneratedWorkflowIds = $false,
   [switch]$ImportToTarget = $false
 )
 
 $ErrorActionPreference = "Stop"
+
+. (Join-Path $PSScriptRoot "shared-mailbox-routing.ps1")
 
 $sourceWorkflowRoot = Join-Path $RepoRoot "results\source4171-solution-unpacked\Workflows"
 $solutionRoot = Join-Path $RepoRoot "results\sapilotflows"
@@ -21,9 +25,9 @@ $zipPath = Join-Path $RepoRoot "results\qfu-southern-alberta-pilot-flows.zip"
 $mapPath = Join-Path $RepoRoot "results\qfu-southern-alberta-pilot-flows-map.json"
 
 $branchSpecs = @(
-  [pscustomobject]@{ BranchCode = "4171"; BranchSlug = "4171-calgary"; BranchName = "Calgary"; MailboxAddress = "4171@applied.com"; SortOrder = 1; UsdOpsDailyRange = "'Daily Sales- Location'!A2:F500"; CadOpsDailyRange = "'Daily Sales- Location'!H2:M500" },
-  [pscustomobject]@{ BranchCode = "4172"; BranchSlug = "4172-lethbridge"; BranchName = "Lethbridge"; MailboxAddress = "4172@applied.com"; SortOrder = 2; UsdOpsDailyRange = $null; CadOpsDailyRange = "'Daily Sales- Location'!B2:G500" },
-  [pscustomobject]@{ BranchCode = "4173"; BranchSlug = "4173-medicine-hat"; BranchName = "Medicine Hat"; MailboxAddress = "4173@applied.com"; SortOrder = 3; UsdOpsDailyRange = $null; CadOpsDailyRange = "'Daily Sales- Location'!B2:G500" }
+  [pscustomobject]@{ BranchCode = "4171"; BranchSlug = "4171-calgary"; BranchName = "Calgary"; MailboxAddress = "4171@applied.com"; SharedMailboxFolderId = (Get-SouthernAlbertaSharedMailboxFolderId -BranchCode "4171"); SortOrder = 1; UsdOpsDailyRange = "'Daily Sales- Location'!A2:F500"; CadOpsDailyRange = "'Daily Sales- Location'!H2:M500" },
+  [pscustomobject]@{ BranchCode = "4172"; BranchSlug = "4172-lethbridge"; BranchName = "Lethbridge"; MailboxAddress = "4172@applied.com"; SharedMailboxFolderId = (Get-SouthernAlbertaSharedMailboxFolderId -BranchCode "4172"); SortOrder = 2; UsdOpsDailyRange = $null; CadOpsDailyRange = "'Daily Sales- Location'!B2:G500" },
+  [pscustomobject]@{ BranchCode = "4173"; BranchSlug = "4173-medicine-hat"; BranchName = "Medicine Hat"; MailboxAddress = "4173@applied.com"; SharedMailboxFolderId = (Get-SouthernAlbertaSharedMailboxFolderId -BranchCode "4173"); SortOrder = 3; UsdOpsDailyRange = $null; CadOpsDailyRange = "'Daily Sales- Location'!B2:G500" }
 )
 
 $templateSpecs = @(
@@ -34,13 +38,13 @@ $templateSpecs = @(
     TargetSuffix = "QuoteFollowUp-Import-Staging"
     SourceFamily = "SP830CA"
     TriggerKind = "SharedMailbox"
-    SubjectFilter = "SP830CA - Quote Follow Up Report"
+    SubjectFilter = "SP830"
   },
   [pscustomobject]@{
     Family = "Backorder"
     SourceFlowName = "BackOrder_Update_From_CA_ZBO_DEV"
     SourceFile = "BackOrder_Update_From_CA_ZBO_DEV-5C42C979-E2EB-F011-8406-000D3AF4C93E.json"
-    TargetSuffix = "BackOrder-Update-ZBO"
+    TargetSuffix = "BackOrder-Update-ZBO-Live"
     SourceFamily = "ZBO"
     TriggerKind = "SharedMailbox"
     SubjectFilter = "Daily Backorder Report"
@@ -66,13 +70,13 @@ if (@($Families | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count 
 
 $workflowIdMap = @{
   "4171|Quote" = "0aff92f1-a8f0-45d7-b05c-3afe5ade9ed1"
-  "4171|Backorder" = "94ae1bae-fe22-455e-bf63-24ba92644dc0"
+  "4171|Backorder" = "c3af4e9f-235a-4e03-b35a-01f83adefea4"
   "4171|Budget" = "6db19ff3-c313-4db6-9a57-f3335fe55558"
   "4172|Quote" = "3520a9d9-f40d-430b-aec8-56b9f4c5d96c"
-  "4172|Backorder" = "a5a911cc-1d2d-4e5a-b0ab-da6f52def8b0"
+  "4172|Backorder" = "5e11f5d1-dd65-4cbd-bc5d-24998c506cb5"
   "4172|Budget" = "078cea4c-84f6-4c4f-b73b-62ad838f7cae"
   "4173|Quote" = "490e1685-4623-461e-ba1c-6c0907a60e33"
-  "4173|Backorder" = "3277dd8e-14f6-4e7b-b627-ebc923ba86ef"
+  "4173|Backorder" = "78d68445-b3dc-4eda-a74b-5b14a2fd1812"
   "4173|Budget" = "3c2ebd80-35d9-4e3c-bdbe-70be98a82ae6"
 }
 
@@ -96,6 +100,46 @@ function Connect-Org {
   return $conn
 }
 
+function Test-IsRetryablePacImportFailure {
+  param([string[]]$OutputLines)
+
+  $joinedOutput = (@($OutputLines | ForEach-Object { [string]$_ }) -join "`n")
+  return (
+    $joinedOutput -match "Cannot start the requested operation \[Import\] because there is another \[Publish\] running" -or
+    $joinedOutput -match "another \[Publish\] running" -or
+    $joinedOutput -match "Please try again later"
+  )
+}
+
+function Invoke-PacSolutionImportWithRetry {
+  param(
+    [string]$EnvironmentUrl,
+    [string]$Path,
+    [int]$MaxAttempts = 6,
+    [int]$RetryDelaySeconds = 30
+  )
+
+  for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+    $outputLines = @(& pac solution import --environment $EnvironmentUrl --path $Path --force-overwrite --publish-changes 2>&1)
+    foreach ($line in $outputLines) {
+      Write-Host $line
+    }
+
+    $isRetryableFailure = Test-IsRetryablePacImportFailure -OutputLines $outputLines
+    if ($LASTEXITCODE -eq 0 -and -not $isRetryableFailure) {
+      return
+    }
+
+    if ($attempt -lt $MaxAttempts -and $isRetryableFailure) {
+      Write-Warning ("pac solution import hit a transient publish lock on attempt {0}/{1}; retrying in {2} seconds." -f $attempt, $MaxAttempts, $RetryDelaySeconds)
+      Start-Sleep -Seconds $RetryDelaySeconds
+      continue
+    }
+
+    throw "pac solution import failed for $Path on attempt $attempt."
+  }
+}
+
 function Activate-ImportedWorkflows {
   param(
     [string]$Url,
@@ -104,7 +148,21 @@ function Activate-ImportedWorkflows {
 
   $conn = Connect-Org -Url $Url
   foreach ($workflowId in @($WorkflowIds | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
-    Set-CrmRecordState -conn $conn -EntityLogicalName workflow -Id $workflowId -StateCode Activated -StatusCode Activated | Out-Null
+    $workflow = Get-CrmRecord -conn $conn -EntityLogicalName workflow -Id $workflowId -Fields workflowid, name
+    if (-not $workflow -or -not $workflow.workflowid) {
+      throw "Imported workflow $workflowId was not found in $Url after solution import."
+    }
+    try {
+      Set-CrmRecordState -conn $conn -EntityLogicalName workflow -Id $workflowId -StateCode Activated -StatusCode Activated | Out-Null
+    } catch {
+      $message = [string]$_.Exception.Message
+      if ($message -match "InvalidOpenApiFlow") {
+        Write-Warning "Skipping Dataverse SetState activation for cloud flow $workflowId; admin flow enablement will activate it."
+        continue
+      }
+
+      throw
+    }
   }
 }
 
@@ -159,6 +217,38 @@ function Add-Note {
   )
   if ($Text) {
     $Notes.Add($Text) | Out-Null
+  }
+}
+
+function Get-EffectiveTargetSuffix {
+  param([object]$Template)
+
+  if ([string]::IsNullOrWhiteSpace($FlowNameSuffixTag)) {
+    return [string]$Template.TargetSuffix
+  }
+
+  return "{0}-{1}" -f $Template.TargetSuffix, $FlowNameSuffixTag.Trim()
+}
+
+function Get-TargetFlowName {
+  param(
+    [object]$Branch,
+    [object]$Template
+  )
+
+  return "{0}-{1}" -f $Branch.BranchCode, (Get-EffectiveTargetSuffix -Template $Template)
+}
+
+function New-DeterministicGuidFromText {
+  param([string]$Text)
+
+  $md5 = [System.Security.Cryptography.MD5]::Create()
+  try {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($Text)
+    $hash = $md5.ComputeHash($bytes)
+    return [guid]::new($hash)
+  } finally {
+    $md5.Dispose()
   }
 }
 
@@ -325,7 +415,7 @@ function Add-BranchParameters {
   Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_BranchName" -DefaultValue $Branch.BranchName
   Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_RegionSlug" -DefaultValue "southern-alberta"
   Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_SharedMailboxAddress" -DefaultValue $Branch.MailboxAddress
-  Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_SharedMailboxFolderId" -DefaultValue "Inbox"
+  Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_SharedMailboxFolderId" -DefaultValue $(if ($Branch.PSObject.Properties["SharedMailboxFolderId"]) { [string]$Branch.SharedMailboxFolderId } else { "Inbox" })
 
   if ($Template.Family -eq "Budget") {
     Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_ActiveFiscalYear" -DefaultValue "FY26"
@@ -404,6 +494,28 @@ function Copy-DeepObject {
     return $null
   }
   return ($Source | ConvertTo-Json -Depth 100 | ConvertFrom-Json)
+}
+
+function Select-AllowedFlowParameters {
+  param(
+    [object]$Parameters,
+    [string[]]$AllowedKeys
+  )
+
+  $allowed = New-Object "System.Collections.Generic.HashSet[string]" ([System.StringComparer]::OrdinalIgnoreCase)
+  foreach ($key in @($AllowedKeys | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
+    [void]$allowed.Add([string]$key)
+  }
+
+  $filtered = [ordered]@{}
+  $source = Copy-OrderedMap $Parameters
+  foreach ($key in $source.Keys) {
+    if ($allowed.Contains([string]$key)) {
+      $filtered[[string]$key] = $source[$key]
+    }
+  }
+
+  return $filtered
 }
 
 function New-IngestionBatchSyncActionSet {
@@ -533,6 +645,218 @@ function New-IngestionBatchSyncActionSet {
     ListAction = [pscustomobject]$listAction
     ConditionActionName = $conditionActionName
     ConditionAction = [pscustomobject]$conditionAction
+  }
+}
+
+function New-BudgetSummarySyncActionSet {
+  param(
+    [object]$RunAfter,
+    [string]$ActualExpression,
+    [string]$TargetExpression,
+    [string]$CadSalesExpression,
+    [string]$UsdSalesExpression,
+    [string]$ConnectionName = "shared_commondataserviceforapps"
+  )
+
+  $summaryDateExpr = "@formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd')"
+  $summaryNameExpr = "@concat(parameters('qfu_QFU_BranchCode'), ' Daily Summary ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd'))"
+  $summarySourceIdExpr = "@concat(parameters('qfu_QFU_BranchCode'), '|summary|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd'))"
+  $latestSummarySelect = "qfu_branchdailysummaryid,qfu_openquotes,qfu_overduequotes,qfu_duetoday,qfu_unscheduledold,qfu_openquotevalue,qfu_quoteslast30days,qfu_quoteswon30days,qfu_quoteslost30days,qfu_quotesopen30days,qfu_avgquotevalue30days,qfu_backordercount,qfu_overduebackordercount,qfu_currentmonthforecastvalue,qfu_currentmonthlatevalue,qfu_allbackordersvalue,qfu_overduebackordersvalue,qfu_summarydate,qfu_lastcalculatedon,createdon"
+
+  $carryForwardFields = [ordered]@{
+    "item/qfu_openquotes" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_openquotes'], 0)"
+    "item/qfu_overduequotes" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_overduequotes'], 0)"
+    "item/qfu_duetoday" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_duetoday'], 0)"
+    "item/qfu_unscheduledold" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_unscheduledold'], 0)"
+    "item/qfu_openquotevalue" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_openquotevalue'], 0)"
+    "item/qfu_quoteslast30days" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_quoteslast30days'], 0)"
+    "item/qfu_quoteswon30days" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_quoteswon30days'], 0)"
+    "item/qfu_quoteslost30days" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_quoteslost30days'], 0)"
+    "item/qfu_quotesopen30days" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_quotesopen30days'], 0)"
+    "item/qfu_avgquotevalue30days" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_avgquotevalue30days'], 0)"
+    "item/qfu_backordercount" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_backordercount'], 0)"
+    "item/qfu_overduebackordercount" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_overduebackordercount'], 0)"
+    "item/qfu_currentmonthforecastvalue" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_currentmonthforecastvalue'], 0)"
+    "item/qfu_currentmonthlatevalue" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_currentmonthlatevalue'], 0)"
+    "item/qfu_allbackordersvalue" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_allbackordersvalue'], 0)"
+    "item/qfu_overduebackordersvalue" = "@coalesce(first(outputs('Get_Latest_Branch_Summary_For_Budget_Slice')?['body/value'])?['qfu_overduebackordersvalue'], 0)"
+  }
+
+  $composeActualName = "Compose_Budget_Summary_Actual"
+  $composeTargetName = "Compose_Budget_Summary_Target"
+  $composePaceName = "Compose_Budget_Summary_Pace"
+  $listCurrentName = "List_Current_Day_Branch_Summary_For_Budget_Slice"
+  $conditionCurrentName = "Condition_Current_Day_Branch_Summary_For_Budget_Slice_Exists"
+  $getLatestName = "Get_Latest_Branch_Summary_For_Budget_Slice"
+
+  $actions = [ordered]@{
+    $composeActualName = [ordered]@{
+      type = "Compose"
+      description = "Resolve the current SA1300 actual sales value for the branch summary budget slice."
+      inputs = $ActualExpression
+      runAfter = (Copy-OrderedMap -Source $RunAfter)
+      metadata = [ordered]@{
+        operationMetadataId = [guid]::NewGuid().Guid
+      }
+    }
+    $composeTargetName = [ordered]@{
+      type = "Compose"
+      description = "Resolve the current SA1300 target value for the branch summary budget slice."
+      inputs = $TargetExpression
+      runAfter = (Copy-OrderedMap -Source $RunAfter)
+      metadata = [ordered]@{
+        operationMetadataId = [guid]::NewGuid().Guid
+      }
+    }
+    $composePaceName = [ordered]@{
+      type = "Compose"
+      description = "Compute the current SA1300 pace percentage for the branch summary budget slice."
+      inputs = "@if(or(equals(outputs('$composeTargetName'), null), lessOrEquals(float(coalesce(outputs('$composeTargetName'), 0)), 0)), null, mul(div(float(coalesce(outputs('$composeActualName'), 0)), float(outputs('$composeTargetName'))), 100))"
+      runAfter = [ordered]@{
+        $composeActualName = @("Succeeded")
+        $composeTargetName = @("Succeeded")
+      }
+      metadata = [ordered]@{
+        operationMetadataId = [guid]::NewGuid().Guid
+      }
+    }
+    $listCurrentName = [ordered]@{
+      type = "OpenApiConnection"
+      description = "Load the current-day branch summary row so the SA1300 budget slice can be refreshed in place."
+      inputs = [ordered]@{
+        parameters = [ordered]@{
+          entityName = "qfu_branchdailysummaries"
+          '$select' = "qfu_branchdailysummaryid"
+          '$filter' = "qfu_branchcode eq '@{parameters('qfu_QFU_BranchCode')}' and qfu_summarydate eq '@{formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd')}'"
+          '$top' = 1
+          '$orderby' = "modifiedon desc, createdon desc"
+        }
+        host = [ordered]@{
+          apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+          operationId = "ListRecords"
+          connectionName = $ConnectionName
+        }
+      }
+      runAfter = [ordered]@{
+        $composePaceName = @("Succeeded")
+      }
+      metadata = [ordered]@{
+        operationMetadataId = [guid]::NewGuid().Guid
+      }
+    }
+    $conditionCurrentName = [ordered]@{
+      type = "If"
+      expression = [ordered]@{
+        greater = @(
+          "@length(outputs('$listCurrentName')?['body/value'])",
+          0
+        )
+      }
+      actions = [ordered]@{
+        Update_Current_Day_Branch_Summary_Budget_Slice = [ordered]@{
+          type = "OpenApiConnection"
+          description = "Refresh the SA1300 budget slice on the existing current-day branch summary row."
+          inputs = [ordered]@{
+            parameters = [ordered]@{
+              entityName = "qfu_branchdailysummaries"
+              recordId = "@first(outputs('$listCurrentName')?['body/value'])?['qfu_branchdailysummaryid']"
+              "item/qfu_name" = $summaryNameExpr
+              "item/qfu_sourceid" = $summarySourceIdExpr
+              "item/qfu_branchcode" = "@parameters('qfu_QFU_BranchCode')"
+              "item/qfu_branchslug" = "@parameters('qfu_QFU_BranchSlug')"
+              "item/qfu_regionslug" = "@parameters('qfu_QFU_RegionSlug')"
+              "item/qfu_summarydate" = $summaryDateExpr
+              "item/qfu_budgetactual" = "@outputs('$composeActualName')"
+              "item/qfu_budgettarget" = "@outputs('$composeTargetName')"
+              "item/qfu_budgetpace" = "@outputs('$composePaceName')"
+              "item/qfu_cadsales" = $CadSalesExpression
+              "item/qfu_usdsales" = $UsdSalesExpression
+              "item/qfu_lastcalculatedon" = "@utcNow()"
+            }
+            host = [ordered]@{
+              apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              operationId = "UpdateRecord"
+              connectionName = $ConnectionName
+            }
+          }
+          metadata = [ordered]@{
+            operationMetadataId = [guid]::NewGuid().Guid
+          }
+        }
+      }
+      else = [ordered]@{
+        actions = [ordered]@{
+          $getLatestName = [ordered]@{
+            type = "OpenApiConnection"
+            description = "Load the latest known branch summary row so non-budget summary fields can carry forward on a new day."
+            inputs = [ordered]@{
+              parameters = [ordered]@{
+                entityName = "qfu_branchdailysummaries"
+                '$select' = $latestSummarySelect
+                '$filter' = "qfu_branchcode eq '@{parameters('qfu_QFU_BranchCode')}'"
+                '$top' = 1
+                '$orderby' = "qfu_summarydate desc, qfu_lastcalculatedon desc, modifiedon desc, createdon desc"
+              }
+              host = [ordered]@{
+                apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                operationId = "ListRecords"
+                connectionName = $ConnectionName
+              }
+            }
+            metadata = [ordered]@{
+              operationMetadataId = [guid]::NewGuid().Guid
+            }
+          }
+          Create_Current_Day_Branch_Summary_Budget_Slice = [ordered]@{
+            type = "OpenApiConnection"
+            description = "Create the current-day branch summary row and seed non-budget fields from the latest prior summary."
+            inputs = [ordered]@{
+              parameters = [ordered]@{
+                entityName = "qfu_branchdailysummaries"
+                "item/qfu_name" = $summaryNameExpr
+                "item/qfu_sourceid" = $summarySourceIdExpr
+                "item/qfu_branchcode" = "@parameters('qfu_QFU_BranchCode')"
+                "item/qfu_branchslug" = "@parameters('qfu_QFU_BranchSlug')"
+                "item/qfu_regionslug" = "@parameters('qfu_QFU_RegionSlug')"
+                "item/qfu_summarydate" = $summaryDateExpr
+                "item/qfu_budgetactual" = "@outputs('$composeActualName')"
+                "item/qfu_budgettarget" = "@outputs('$composeTargetName')"
+                "item/qfu_budgetpace" = "@outputs('$composePaceName')"
+                "item/qfu_cadsales" = $CadSalesExpression
+                "item/qfu_usdsales" = $UsdSalesExpression
+                "item/qfu_lastcalculatedon" = "@utcNow()"
+              }
+              host = [ordered]@{
+                apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                operationId = "CreateRecord"
+                connectionName = $ConnectionName
+              }
+            }
+            runAfter = [ordered]@{
+              $getLatestName = @("Succeeded")
+            }
+            metadata = [ordered]@{
+              operationMetadataId = [guid]::NewGuid().Guid
+            }
+          }
+        }
+      }
+      runAfter = [ordered]@{
+        $listCurrentName = @("Succeeded")
+      }
+      metadata = [ordered]@{
+        operationMetadataId = [guid]::NewGuid().Guid
+      }
+    }
+  }
+
+  foreach ($pair in $carryForwardFields.GetEnumerator()) {
+    $actions.$conditionCurrentName.else.actions.Create_Current_Day_Branch_Summary_Budget_Slice.inputs.parameters[$pair.Key] = $pair.Value
+  }
+
+  return [pscustomobject]@{
+    Actions = [pscustomobject]$actions
+    FinalActionName = $conditionCurrentName
   }
 }
 
@@ -1336,8 +1660,8 @@ function Update-QuoteFlow {
     -Definition $definition `
     -Branch $Branch `
     -Template $Template `
-    -SharedMailboxDescription "Triggers when a new SP830CA workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." `
-    -PrimaryInboxDescription "Triggers when a new SP830CA workbook lands in the primary inbox for $($Branch.BranchCode) $($Branch.BranchName)."
+    -SharedMailboxDescription "Triggers when a new SP830 quote workbook lands in the $($Branch.BranchCode) $($Branch.BranchName) shared mailbox." `
+    -PrimaryInboxDescription "Triggers when a new SP830 quote workbook lands in the primary inbox for $($Branch.BranchCode) $($Branch.BranchName)."
 
   $existingTopLevelActions = $definition.actions
   $definition.actions = [pscustomobject]([ordered]@{
@@ -1403,6 +1727,22 @@ function Update-QuoteFlow {
   }
 
   $attachmentActions = $definition.actions.Check_if_weekday.actions.Apply_to_each_attachment.actions
+  $attachmentActions.Condition_Is_SP830CA_File.expression = [ordered]@{
+    and = @(
+      [ordered]@{
+        contains = @(
+          "@toLower(coalesce(items('Apply_to_each_attachment')?['name'], ''))",
+          ".xlsx"
+        )
+      },
+      [ordered]@{
+        contains = @(
+          "@toLower(coalesce(items('Apply_to_each_attachment')?['name'], ''))",
+          "sp830"
+        )
+      }
+    )
+  }
   $quoteActions = $attachmentActions.Condition_Is_SP830CA_File.actions
   $lineActions = $quoteActions.Guard_Quote_Rows.actions.Apply_to_each_quote_line.actions
   $quoteActions.Create_attachment_file.inputs.parameters.name = "@concat(parameters('qfu_QFU_BranchCode'), '_QuoteFollowUp_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '_', items('Apply_to_each_attachment')?['name'])"
@@ -1865,6 +2205,38 @@ function Update-BackorderFlow {
   Set-FieldValue -Map $backorderRecordParameters -Name "item/qfu_active" -Value $true
   Set-FieldValue -Map $backorderRecordParameters -Name "item/qfu_inactiveon" -Value $null
   Set-FieldValue -Map $backorderRecordParameters -Name "item/qfu_lastseenon" -Value "@variables('DeliverySnapshotProcessedOn')"
+  $backorderRecordParameters = Select-AllowedFlowParameters -Parameters $backorderRecordParameters -AllowedKeys @(
+    "entityName",
+    "item/qfu_name",
+    "item/qfu_sourceid",
+    "item/qfu_customername",
+    "item/qfu_totalvalue",
+    "item/qfu_ontimedate",
+    "item/qfu_cssrname",
+    "item/qfu_daysoverdue",
+    "item/qfu_salesdocnumber",
+    "item/qfu_material",
+    "item/qfu_description",
+    "item/qfu_quantity",
+    "item/qfu_qtybilled",
+    "item/qfu_qtyondelnotpgid",
+    "item/qfu_qtynotondel",
+    "item/qfu_branchcode",
+    "item/qfu_branchslug",
+    "item/qfu_regionslug",
+    "item/qfu_sourcefamily",
+    "item/qfu_sourcefile",
+    "item/qfu_sourceline",
+    "item/qfu_shipconddesc",
+    "item/qfu_lineitemcreatedon",
+    "item/qfu_delblockdesc",
+    "item/qfu_billblockdesc",
+    "item/qfu_reasonforrejection",
+    "item/qfu_importbatchid",
+    "item/qfu_active",
+    "item/qfu_inactiveon",
+    "item/qfu_lastseenon"
+  )
   $backorderUpdateParameters = Copy-OrderedMap $backorderRecordParameters
   Set-FieldValue -Map $backorderUpdateParameters -Name "recordId" -Value "@outputs('Check_Existing_Active_BackOrder')?['body/value'][0]['qfu_backorderid']"
   $guardActions.Condition_Has_New_Rows.actions = [pscustomobject]([ordered]@{
@@ -2259,15 +2631,15 @@ function Update-BackorderFlow {
     -ActionPrefix "Backorder" `
     -ImportNameSuffix "Backorder Workbook Import" `
     -SourceFamily "ZBO" `
-    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-BackOrder-Update-ZBO')" `
+    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-$(Get-EffectiveTargetSuffix -Template $Template)')" `
     -FileNameExpression "@items('Apply_to_each_Attachment')?['name']" `
     -StartedOnExpression "@variables('DeliverySnapshotProcessedOn')" `
     -RunAfter ([ordered]@{
-        Guard_BackOrder_Row_Limit = @("Succeeded")
-        Reset_CurrentBackorderSnapshotKeys = @("Succeeded")
+        Deactivate_Missing_BackOrders = @("Succeeded", "Skipped")
+        Deactivate_Missing_DeliveryNotPgi = @("Succeeded", "Skipped")
       })
-  Set-FieldValue -Map $conditionActions -Name $backorderBatchActions.ListActionName -Value $backorderBatchActions.ListAction
-  Set-FieldValue -Map $conditionActions -Name $backorderBatchActions.ConditionActionName -Value $backorderBatchActions.ConditionAction
+  Set-FieldValue -Map $guardActions -Name $backorderBatchActions.ListActionName -Value $backorderBatchActions.ListAction
+  Set-FieldValue -Map $guardActions -Name $backorderBatchActions.ConditionActionName -Value $backorderBatchActions.ConditionAction
 
   Add-Note -Notes $Notes -Text "Backorder flow now enforces trigger concurrency = 1, treats qfu_backorder as current-state with qfu_active/qfu_inactiveon/qfu_lastseenon, upserts actionable ZBO rows by canonical source id, marks missing rows inactive on rerun, syncs qfu_deliverynotpgi from the same workbook using branch-scoped upsert plus inactive marking, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
 }
@@ -2281,7 +2653,7 @@ function Update-BudgetFlow {
   )
 
   $definition = $Json.properties.definition
-  $flowName = "{0}-{1}" -f $Branch.BranchCode, $Template.TargetSuffix
+  $flowName = Get-TargetFlowName -Branch $Branch -Template $Template
   $budgetGoalFromPlanExpr = "@if(or(empty(body('Filter_Budget_Target_Rows')), empty(body('Filter_Budget_Target_Rows')?[0]?['Sales'])), null, float(replace(replace(coalesce(body('Filter_Budget_Target_Rows')?[0]?['Sales'], '0'), '$', ''), ',', '')))"
   $resolvedBudgetGoalExpr = "@coalesce(first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal'], outputs('Resolve_Budget_Goal_From_SA1300_Plan'), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_budgetgoal'])"
   $currentBudgetSourceIdExpr = "concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))"
@@ -2387,10 +2759,23 @@ function Update-BudgetFlow {
   $budgetActions.Get_Active_Budget.runAfter = [ordered]@{
     Get_Budget_Goal_From_Archives = @("Succeeded")
   }
+  $currentMonthRecordExistsAction = $null
+  if ($budgetActions.Condition_Check_Month_Changed.actions.PSObject.Properties["Condition_Current_Month_Budget_Record_Exists"]) {
+    $currentMonthRecordExistsAction = $budgetActions.Condition_Check_Month_Changed.actions.Condition_Current_Month_Budget_Record_Exists
+  }
+  $currentMonthCreateAction = $null
+  $currentMonthUpdateAction = $null
+  if ($currentMonthRecordExistsAction -and $currentMonthRecordExistsAction.else -and $currentMonthRecordExistsAction.else.actions) {
+    $currentMonthCreateAction = $currentMonthRecordExistsAction.else.actions.Create_New_Month_Budget_Record
+  }
+  if ($currentMonthRecordExistsAction -and $currentMonthRecordExistsAction.actions) {
+    $currentMonthUpdateAction = $currentMonthRecordExistsAction.actions.Update_Current_Month_Budget_Record
+  }
+
   foreach ($action in @(
-      $budgetActions.Condition_Check_Month_Changed.actions.Create_New_Month_Budget_Record,
+      $currentMonthCreateAction,
       $budgetActions.Condition_Check_Month_Changed.else.actions.Condition_Budget_Exists_Same_Month.else.actions.Create_First_Budget_Record
-    )) {
+    ) | Where-Object { $null -ne $_ }) {
     $parameters = Copy-OrderedMap $action.inputs.parameters
     Set-FieldValue -Map $parameters -Name "item/qfu_name" -Value "@concat(parameters('qfu_QFU_BranchCode'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM yyyy'), ' Budget')"
     Set-FieldValue -Map $parameters -Name "item/qfu_sourceid" -Value "@concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))"
@@ -2419,30 +2804,35 @@ function Update-BudgetFlow {
     $action.inputs.parameters.item = [pscustomobject]$itemMap
   }
 
-  $updateCurrent = Copy-OrderedMap $budgetActions.Condition_Check_Month_Changed.else.actions.Condition_Budget_Exists_Same_Month.actions.Update_Current_Month_Budget.inputs.parameters.item
-  Set-FieldValue -Map $updateCurrent -Name "qfu_sourcefile" -Value $preservedSourceFileExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_branchcode" -Value "@parameters('qfu_QFU_BranchCode')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_branchslug" -Value "@parameters('qfu_QFU_BranchSlug')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_regionslug" -Value "@parameters('qfu_QFU_RegionSlug')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_sourcefamily" -Value "SA1300"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_year" -Value "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'))"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_monthname" -Value "@formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_month" -Value "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MM'))"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_isactive" -Value $false
-  Set-FieldValue -Map $updateCurrent -Name "qfu_fiscalyear" -Value "@parameters('qfu_QFU_ActiveFiscalYear')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_budgetamount" -Value $resolvedBudgetGoalExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_customername" -Value "@parameters('qfu_QFU_BranchName')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_budgetgoal" -Value $resolvedBudgetGoalExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_budgetname" -Value "@concat(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'), ' Budget')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_name" -Value "@concat(parameters('qfu_QFU_BranchCode'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM yyyy'), ' Budget')"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_sourceid" -Value "@concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))"
-  Set-FieldValue -Map $updateCurrent -Name "qfu_actualsales" -Value $preservedActualSalesExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_cadsales" -Value $preservedCadSalesExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_usdsales" -Value $preservedUsdSalesExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_lastupdated" -Value $preservedLastUpdatedExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_opsdailycadjson" -Value $preservedCadOpsDailyExpr
-  Set-FieldValue -Map $updateCurrent -Name "qfu_opsdailyusdjson" -Value $preservedUsdOpsDailyExpr
-  $budgetActions.Condition_Check_Month_Changed.else.actions.Condition_Budget_Exists_Same_Month.actions.Update_Current_Month_Budget.inputs.parameters.item = [pscustomobject]$updateCurrent
+  foreach ($updateAction in @(
+      $currentMonthUpdateAction,
+      $budgetActions.Condition_Check_Month_Changed.else.actions.Condition_Budget_Exists_Same_Month.actions.Update_Current_Month_Budget
+    ) | Where-Object { $null -ne $_ }) {
+    $updateCurrent = Copy-OrderedMap $updateAction.inputs.parameters.item
+    Set-FieldValue -Map $updateCurrent -Name "qfu_sourcefile" -Value $preservedSourceFileExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_branchcode" -Value "@parameters('qfu_QFU_BranchCode')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_branchslug" -Value "@parameters('qfu_QFU_BranchSlug')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_regionslug" -Value "@parameters('qfu_QFU_RegionSlug')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_sourcefamily" -Value "SA1300"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_year" -Value "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'))"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_monthname" -Value "@formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_month" -Value "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MM'))"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_isactive" -Value $false
+    Set-FieldValue -Map $updateCurrent -Name "qfu_fiscalyear" -Value "@parameters('qfu_QFU_ActiveFiscalYear')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_budgetamount" -Value $resolvedBudgetGoalExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_customername" -Value "@parameters('qfu_QFU_BranchName')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_budgetgoal" -Value $resolvedBudgetGoalExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_budgetname" -Value "@concat(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'), ' Budget')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_name" -Value "@concat(parameters('qfu_QFU_BranchCode'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM yyyy'), ' Budget')"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_sourceid" -Value "@concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))"
+    Set-FieldValue -Map $updateCurrent -Name "qfu_actualsales" -Value $preservedActualSalesExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_cadsales" -Value $preservedCadSalesExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_usdsales" -Value $preservedUsdSalesExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_lastupdated" -Value $preservedLastUpdatedExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_opsdailycadjson" -Value $preservedCadOpsDailyExpr
+    Set-FieldValue -Map $updateCurrent -Name "qfu_opsdailyusdjson" -Value $preservedUsdOpsDailyExpr
+    $updateAction.inputs.parameters.item = [pscustomobject]$updateCurrent
+  }
 
   $archiveCreateAction = Copy-DeepObject $budgetActions.Condition_Check_Month_Changed.actions.Archive_Previous_Month_Budget
   $archiveRecord = Copy-OrderedMap $archiveCreateAction.inputs.parameters
@@ -2525,12 +2915,15 @@ function Update-BudgetFlow {
   $budgetActions.Condition_Check_Month_Changed.actions.Deactivate_Old_Budget_Record.runAfter = [ordered]@{
     Condition_Archive_Budget_Exists = @("Succeeded")
   }
-  $budgetActions.Condition_Check_Month_Changed.actions = [pscustomobject]([ordered]@{
+  $monthChangedActions = [ordered]@{
     Get_Existing_Archive_Budget = $getExistingArchive
     Condition_Archive_Budget_Exists = $archiveExistsCondition
     Deactivate_Old_Budget_Record = $budgetActions.Condition_Check_Month_Changed.actions.Deactivate_Old_Budget_Record
-    Condition_Current_Month_Budget_Record_Exists = $budgetActions.Condition_Check_Month_Changed.actions.Condition_Current_Month_Budget_Record_Exists
-  })
+  }
+  if ($null -ne $currentMonthRecordExistsAction) {
+    $monthChangedActions["Condition_Current_Month_Budget_Record_Exists"] = $currentMonthRecordExistsAction
+  }
+  $budgetActions.Condition_Check_Month_Changed.actions = [pscustomobject]$monthChangedActions
   $budgetActions.Ensure_Budget_Goal_Found.expression = [pscustomobject]([ordered]@{
       and = @(
         [ordered]@{
@@ -2578,7 +2971,7 @@ function Update-BudgetFlow {
     -ActionPrefix "Budget" `
     -ImportNameSuffix "Budget Workbook Import" `
     -SourceFamily "SA1300" `
-    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-Budget-Update-SA1300')" `
+    -FlowNameExpression "@concat(parameters('qfu_QFU_BranchCode'), '-$(Get-EffectiveTargetSuffix -Template $Template)')" `
     -FileNameExpression "@items('Apply_to_each_Attachment')?['name']" `
     -StartedOnExpression "@utcNow()" `
     -RunAfter ([ordered]@{
@@ -2590,7 +2983,19 @@ function Update-BudgetFlow {
   Set-FieldValue -Map $budgetRootActions -Name $budgetBatchActions.ListActionName -Value $budgetBatchActions.ListAction
   Set-FieldValue -Map $budgetRootActions -Name $budgetBatchActions.ConditionActionName -Value $budgetBatchActions.ConditionAction
 
-  Add-Note -Notes $Notes -Text "Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, blocks stale same-month SA1300 actuals from rolling back the live qfu_budget/qfu_branchopsdaily state, replaces the current branch's same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
+  $budgetSummaryActions = New-BudgetSummarySyncActionSet `
+    -RunAfter ([ordered]@{
+        $budgetBatchActions.ConditionActionName = @("Succeeded")
+      }) `
+    -ActualExpression $preservedActualSalesExpr `
+    -TargetExpression $resolvedBudgetGoalExpr `
+    -CadSalesExpression $preservedCadSalesExpr `
+    -UsdSalesExpression $preservedUsdSalesExpr
+  foreach ($summaryAction in @($budgetSummaryActions.Actions.PSObject.Properties)) {
+    Set-FieldValue -Map $budgetRootActions -Name $summaryAction.Name -Value $summaryAction.Value
+  }
+
+  Add-Note -Notes $Notes -Text "Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, blocks stale same-month SA1300 actuals from rolling back the live qfu_budget/qfu_branchopsdaily state, replaces the current branch's same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics, refreshes the stable qfu_ingestionbatch freshness row that analytics reads, and updates the current-day qfu_branchdailysummary budget slice from the live SA1300 import."
 }
 
 function New-WorkflowDataXml {
@@ -2614,8 +3019,8 @@ function New-WorkflowDataXml {
   <TriggerOnDelete>0</TriggerOnDelete>
   <AsyncAutodelete>0</AsyncAutodelete>
   <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-  <StateCode>0</StateCode>
-  <StatusCode>1</StatusCode>
+  <StateCode>1</StateCode>
+  <StatusCode>2</StatusCode>
   <RunAs>1</RunAs>
   <IsTransacted>1</IsTransacted>
   <IntroducedVersion>1.0</IntroducedVersion>
@@ -2631,9 +3036,111 @@ function New-WorkflowDataXml {
 "@
 }
 
+function Normalize-GeneratedFlowConnections {
+  param([object]$WorkflowJson)
+
+  $WorkflowJson.properties.connectionReferences = [pscustomobject]([ordered]@{
+      shared_office365 = [ordered]@{
+        api = [ordered]@{
+          name = "shared_office365"
+        }
+        connection = [ordered]@{
+          connectionReferenceLogicalName = "qfu_shared_office365"
+        }
+        runtimeSource = "embedded"
+      }
+      shared_onedriveforbusiness = [ordered]@{
+        api = [ordered]@{
+          name = "shared_onedriveforbusiness"
+        }
+        connection = [ordered]@{
+          connectionReferenceLogicalName = "qfu_shared_onedriveforbusiness"
+        }
+        runtimeSource = "embedded"
+      }
+      "shared_excelonlinebusiness-1" = [ordered]@{
+        api = [ordered]@{
+          name = "shared_excelonlinebusiness"
+        }
+        connection = [ordered]@{
+          connectionReferenceLogicalName = "qfu_shared_excelonlinebusiness"
+        }
+        runtimeSource = "embedded"
+      }
+      shared_commondataserviceforapps = [ordered]@{
+        api = [ordered]@{
+          name = "shared_commondataserviceforapps"
+        }
+        connection = [ordered]@{
+          connectionReferenceLogicalName = "qfu_shared_commondataserviceforapps"
+        }
+        runtimeSource = "embedded"
+      }
+    })
+
+  $hostConnectionMap = @{
+    "/providers/Microsoft.PowerApps/apis/shared_office365" = "shared_office365"
+    "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness" = "shared_onedriveforbusiness"
+    "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness" = "shared_excelonlinebusiness-1"
+    "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps" = "shared_commondataserviceforapps"
+  }
+
+  $stack = New-Object 'System.Collections.Generic.Stack[object]'
+  $visited = New-Object 'System.Collections.Generic.HashSet[int]'
+  $stack.Push($WorkflowJson.properties.definition)
+
+  while ($stack.Count -gt 0) {
+    $node = $stack.Pop()
+    if ($null -eq $node) {
+      continue
+    }
+
+    if ($node -is [System.Collections.IEnumerable] -and -not ($node -is [string])) {
+      foreach ($item in $node) {
+        if ($null -ne $item) {
+          $stack.Push($item)
+        }
+      }
+      continue
+    }
+
+    if ($node -isnot [System.Management.Automation.PSCustomObject]) {
+      continue
+    }
+
+    $nodeId = [System.Runtime.CompilerServices.RuntimeHelpers]::GetHashCode($node)
+    if (-not $visited.Add($nodeId)) {
+      continue
+    }
+
+    if (
+      $node.PSObject.Properties["inputs"] -and
+      $node.inputs -and
+      $node.inputs.PSObject.Properties["host"] -and
+      $node.inputs.host -and
+      $node.inputs.host.PSObject.Properties["apiId"]
+    ) {
+      $apiId = [string]$node.inputs.host.apiId
+      if ($hostConnectionMap.ContainsKey($apiId)) {
+        $node.inputs.host.connectionName = $hostConnectionMap[$apiId]
+      }
+    }
+
+    foreach ($property in $node.PSObject.Properties) {
+      if ($null -ne $property.Value) {
+        $stack.Push($property.Value)
+      }
+    }
+  }
+}
+
 Remove-IfExists $solutionRoot
 Remove-IfExists $zipPath
 Remove-IfExists $mapPath
+
+if ($UseGeneratedWorkflowIds -and [string]::IsNullOrWhiteSpace($FlowNameSuffixTag)) {
+  throw "UseGeneratedWorkflowIds requires FlowNameSuffixTag so replacement workflow IDs stay stable."
+}
 
 Ensure-Directory $otherRoot
 Ensure-Directory $workflowRoot
@@ -2649,12 +3156,16 @@ foreach ($branch in $branchSpecs) {
     }
 
     $json = Get-WorkflowTemplate -Path $sourcePath
-    $flowName = "$($branch.BranchCode)-$($template.TargetSuffix)"
+    $flowName = Get-TargetFlowName -Branch $branch -Template $template
     $workflowKey = "$($branch.BranchCode)|$($template.Family)"
-    if (-not $workflowIdMap.ContainsKey($workflowKey)) {
-      throw "No canonical workflow ID configured for $workflowKey"
+    if ($UseGeneratedWorkflowIds) {
+      $workflowId = [string](New-DeterministicGuidFromText -Text ("QFU-SAPILOT|{0}|{1}" -f $workflowKey, $FlowNameSuffixTag.Trim()))
+    } else {
+      if (-not $workflowIdMap.ContainsKey($workflowKey)) {
+        throw "No canonical workflow ID configured for $workflowKey"
+      }
+      $workflowId = $workflowIdMap[$workflowKey]
     }
-    $workflowId = $workflowIdMap[$workflowKey]
     $notes = New-Object System.Collections.Generic.List[string]
 
     switch ($template.Family) {
@@ -2663,6 +3174,8 @@ foreach ($branch in $branchSpecs) {
       "Budget" { Update-BudgetFlow -Json $json -Branch $branch -Template $template -Notes $notes }
       default { throw "Unsupported template family: $($template.Family)" }
     }
+
+    Normalize-GeneratedFlowConnections -WorkflowJson $json
 
     $jsonName = "$flowName-$($workflowId.ToUpperInvariant()).json"
     $dataXmlName = "$jsonName.data.xml"
@@ -2808,10 +3321,7 @@ if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $zipPath)) {
 }
 
 if ($ImportToTarget) {
-  & pac solution import --environment $TargetEnvironmentUrl --path $zipPath --force-overwrite --publish-changes
-  if ($LASTEXITCODE -ne 0) {
-    throw "pac solution import failed for $zipPath"
-  }
+  Invoke-PacSolutionImportWithRetry -EnvironmentUrl $TargetEnvironmentUrl -Path $zipPath
 
   $workflowIds = @($flowManifest | ForEach-Object { [string]$_.workflow_id })
   Activate-ImportedWorkflows -Url $TargetEnvironmentUrl -WorkflowIds $workflowIds
