@@ -95,7 +95,7 @@ function Repair-ZboBatchSync {
     throw "Condition_Backorder_Import_Batch_Exists action was not found."
   }
 
-  $expectedTriggerFlow = "@concat(parameters('qfu_QFU_BranchCode'), '-BackOrder-Update-ZBO-Live')"
+  $expectedTriggerFlow = "@concat(parameters('qfu_QFU_BranchCode'), '-BackOrder-Update-ZBO-Live-R2')"
   Set-OrderedRunAfter -ActionNode $actions.List_Existing_Backorder_Import_Batch
   $actions.Condition_Backorder_Import_Batch_Exists.actions.Update_Backorder_Import_Batch.inputs.parameters."item/qfu_triggerflow" = $expectedTriggerFlow
   $actions.Condition_Backorder_Import_Batch_Exists.else.actions.Create_Backorder_Import_Batch.inputs.parameters."item/qfu_triggerflow" = $expectedTriggerFlow
