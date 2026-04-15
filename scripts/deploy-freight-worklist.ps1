@@ -1,13 +1,56 @@
 param(
-  [string]$RepoRoot = "C:\Users\smcfarlane\Desktop\WorkBench\QuoteFollowUpRegion",
-  [string]$TargetEnvironmentUrl = "https://regionaloperationshub.crm.dynamics.com",
+  [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
+  [string]$TargetEnvironmentUrl = $env:QFU_TARGET_ENVIRONMENT_URL,
   [string]$Username = "smcfarlane@applied.com",
   [string]$OutputJson = "results\freight-worklist-schema-summary.json"
 )
 
 $ErrorActionPreference = "Stop"
 
-. (Join-Path $RepoRoot "scripts\deploy-southern-alberta-pilot.ps1")
+if ($MyInvocation.InvocationName -ne "." -and [string]::IsNullOrWhiteSpace($TargetEnvironmentUrl)) {
+  throw "Provide -TargetEnvironmentUrl or set QFU_TARGET_ENVIRONMENT_URL before running deploy-freight-worklist.ps1."
+}
+
+$resolvedRepoRoot = $RepoRoot
+$resolvedTargetEnvironmentUrl = $TargetEnvironmentUrl
+$resolvedUsername = $Username
+
+function Resolve-HelperScriptPath {
+  param(
+    [string]$RepoRootPath,
+    [string[]]$RelativePaths
+  )
+
+  foreach ($relativePath in @($RelativePaths)) {
+    if ([string]::IsNullOrWhiteSpace($relativePath)) {
+      continue
+    }
+    $candidate = Join-Path $RepoRootPath $relativePath
+    if (Test-Path -LiteralPath $candidate) {
+      return $candidate
+    }
+  }
+
+  throw "Helper script not found under $RepoRootPath. Looked for: $($RelativePaths -join ', ')"
+}
+
+$hadPriorLibraryFlag = Test-Path Variable:QfuLoadAsLibrary
+$priorLibraryFlagValue = if ($hadPriorLibraryFlag) { $QfuLoadAsLibrary } else { $null }
+$QfuLoadAsLibrary = $true
+$pilotHelperPath = Resolve-HelperScriptPath -RepoRootPath $RepoRoot -RelativePaths @(
+  "scripts\deploy-southern-alberta-pilot.ps1",
+  "RAW\scripts\deploy-southern-alberta-pilot.ps1"
+)
+. $pilotHelperPath -TargetEnvironmentUrl $resolvedTargetEnvironmentUrl -Username $resolvedUsername
+if ($hadPriorLibraryFlag) {
+  $QfuLoadAsLibrary = $priorLibraryFlagValue
+} else {
+  Remove-Variable QfuLoadAsLibrary -ErrorAction SilentlyContinue
+}
+
+$RepoRoot = $resolvedRepoRoot
+$TargetEnvironmentUrl = $resolvedTargetEnvironmentUrl
+$Username = $resolvedUsername
 
 $branchSpecs = @(
   [pscustomobject]@{ BranchCode = "4171"; BranchSlug = "4171-calgary"; RegionSlug = "southern-alberta"; MailboxAddress = "4171@applied.com"; EnableFeeds = $true },
@@ -193,7 +236,7 @@ function Get-FreightSourceFeedSeedRecords {
   return @($records.ToArray())
 }
 
-if ($MyInvocation.InvocationName -ne ".") {
+if (-not $QfuLoadAsLibrary -and $MyInvocation.InvocationName -ne ".") {
   $target = Connect-Org -Url $TargetEnvironmentUrl
   Write-Host "Connected target: $($target.ConnectedOrgFriendlyName)"
 

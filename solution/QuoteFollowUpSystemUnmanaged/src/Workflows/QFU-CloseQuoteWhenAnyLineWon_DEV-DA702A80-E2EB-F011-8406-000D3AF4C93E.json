@@ -1,0 +1,228 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_modified": {
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 2,
+              "subscriptionRequest/entityname": "qfu_quoteline",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "statuscode",
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Condition_Won": {
+          "actions": {
+            "Compose_QuoteNumber": {
+              "runAfter": {},
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/qfu_quotenumber']"
+            },
+            "List_Quote_Header": {
+              "runAfter": {
+                "Compose_QuoteNumber": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qfu_quotes",
+                  "$select": "qfu_quoteid,statecode,statuscode",
+                  "$filter": "qfu_quotenumber eq '@{outputs('Compose_QuoteNumber')}'",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition_Quote_Found": {
+              "actions": {
+                "Update_Quote_Header": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_quotes",
+                      "recordId": "@outputs('List_Quote_Header')?['body/value'][0]['qfu_quoteid']",
+                      "item/qfu_actionstate": 924500004,
+                      "item/qfu_closedon": "@utcNow()",
+                      "item/qfu_nextfollowup": null,
+                      "item/statecode": 1,
+                      "item/statuscode": 2
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Create_Activity_Log": {
+                  "runAfter": {
+                    "Update_Quote_Header": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_activitylogs",
+                      "item/qfu_quoteid@odata.bind": "@{concat('/qfu_quotes(', outputs('List_Quote_Header')?['body/value'][0]['qfu_quoteid'], ')')}",
+                      "item/qfu_activitytype": 4,
+                      "item/qfu_description": "Closed - Won (auto)",
+                      "item/qfu_notes": "@{concat('Line won: ', triggerOutputs()?['body/qfu_quotelineid'])}",
+                      "item/qfu_performedon": "@utcNow()",
+                      "item/qfu_performedbyname": "System"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "List_Open_Lines": {
+                  "runAfter": {
+                    "Update_Quote_Header": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_quotelines",
+                      "$select": "qfu_quotelineid",
+                      "$filter": "qfu_quotenumber eq '@{outputs('Compose_QuoteNumber')}' and statecode eq 0"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Apply_to_each_open_line": {
+                  "foreach": "@outputs('List_Open_Lines')?['body/value']",
+                  "actions": {
+                    "Update_Line_To_Lost": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "qfu_quotelines",
+                          "recordId": "@items('Apply_to_each_open_line')?['qfu_quotelineid']",
+                          "item/statuscode": 100000000,
+                          "item/statecode": 1,
+                          "item/qfu_rejectionreason": "Closed - Another line won"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "List_Open_Lines": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "List_Quote_Header": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {}
+              },
+              "expression": {
+                "and": [
+                  {
+                    "greater": [
+                      "@length(outputs('List_Quote_Header')?['body/value'])",
+                      0
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('List_Quote_Header')?['body/value'][0]['statecode']",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {},
+          "else": {
+            "actions": {}
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/statuscode']",
+              2
+            ]
+          },
+          "type": "If"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

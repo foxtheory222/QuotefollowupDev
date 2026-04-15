@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{0a33bd0e-e6ea-46ab-a90a-5c451da160e1}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qfu_name" select="1" icon="1" preview="1">
+        <row name="result" id="qfu_marginexceptionid">
+          <cell name="qfu_name" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>1</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="qfu_marginexception">
+          <attribute name="qfu_marginexceptionid" />
+          <attribute name="qfu_name" />
+          <attribute name="createdon" />
+          <order attribute="qfu_name" descending="false" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.28</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="QFU Margin Exception Advanced Find View" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

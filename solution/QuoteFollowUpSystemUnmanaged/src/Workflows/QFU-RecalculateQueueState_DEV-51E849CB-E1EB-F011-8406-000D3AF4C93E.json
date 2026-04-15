@@ -1,0 +1,517 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "qfu_QFU_OverdueDays": {
+          "defaultValue": "3",
+          "type": "String"
+        },
+        "qfu_QFU_ExpiringSoonDays": {
+          "defaultValue": "5",
+          "type": "String"
+        },
+        "qfu_QFU_ExpireDays": {
+          "defaultValue": "90",
+          "type": "String"
+        },
+        "qfu_QFU_DefaultNextFollowupDays": {
+          "defaultValue": "2",
+          "type": "String"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "timeZone": "Mountain Standard Time",
+            "startTime": "2026-02-25T07:00:00",
+            "schedule": {
+              "hours": [
+                7
+              ],
+              "minutes": [
+                0
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "1acf5905-0a5e-45bf-a9de-3e699fe1bb89"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Compose_TodayYmd": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "b7114bbc-f286-4b1d-95da-69755cb96445"
+          },
+          "type": "Compose",
+          "inputs": "@formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd')"
+        },
+        "Compose_OverdueDays": {
+          "runAfter": {
+            "Compose_TodayYmd": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e04e76a-2a7a-42e1-83ef-9c001ffd3811"
+          },
+          "type": "Compose",
+          "inputs": "@int(if(empty(parameters('qfu_QFU_OverdueDays')), '0', parameters('qfu_QFU_OverdueDays')))"
+        },
+        "Compose_ExpiringSoonDays": {
+          "runAfter": {
+            "Compose_OverdueDays": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3cafa4c0-8378-4cc9-a836-d721713b1cbc"
+          },
+          "type": "Compose",
+          "inputs": "@int(if(empty(parameters('qfu_QFU_ExpiringSoonDays')), '0', parameters('qfu_QFU_ExpiringSoonDays')))"
+        },
+        "Compose_ExpireDays": {
+          "runAfter": {
+            "Compose_ExpiringSoonDays": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "51be202f-9b83-42b0-9e7e-e71c818302de"
+          },
+          "type": "Compose",
+          "inputs": "@int(if(empty(parameters('qfu_QFU_ExpireDays')), '0', parameters('qfu_QFU_ExpireDays')))"
+        },
+        "Compose_DefaultNextFollowupDays": {
+          "runAfter": {
+            "Compose_ExpireDays": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "867bd725-fcbd-4daa-b1e6-b6532136e619"
+          },
+          "type": "Compose",
+          "inputs": "@int(if(empty(parameters('qfu_QFU_DefaultNextFollowupDays')), '0', parameters('qfu_QFU_DefaultNextFollowupDays')))"
+        },
+        "Compose_ExpiringCutoffYmd": {
+          "runAfter": {
+            "Compose_DefaultNextFollowupDays": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dbd283a3-9b90-4a5e-b714-fdb860c2ebd2"
+          },
+          "type": "Compose",
+          "inputs": "@formatDateTime(addDays(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), outputs('Compose_ExpiringSoonDays')), 'yyyy-MM-dd')"
+        },
+        "Initialize_HasMore": {
+          "runAfter": {
+            "Compose_ExpiringCutoffYmd": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "HasMore",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "Do_until_Open_Quotes": {
+          "type": "Until",
+          "expression": "@equals(variables('HasMore'), false)",
+          "limit": {
+            "count": 1000,
+            "timeout": "PT1H"
+          },
+          "actions": {
+            "List_Open_Quotes": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "618d47c5-e9f0-43dc-b571-cb6fd704fd58"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qfu_quotes",
+                  "$select": "qfu_quoteid,qfu_quotenumber,createdon,qfu_lastsapdate,qfu_expirydate,qfu_nextfollowup,qfu_overduesince,qfu_archivedon",
+                  "$filter": "statecode eq 0"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 5000
+                }
+              }
+            },
+            "Apply_to_each_quote": {
+              "foreach": "@outputs('List_Open_Quotes')?['body/value']",
+              "actions": {
+                "Compose_CreatedYmd": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "00aadb85-f6b7-4343-8bc0-23b1febf3084"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(empty(items('Apply_to_each_quote')?['createdon']), '', formatDateTime(items('Apply_to_each_quote')?['createdon'], 'yyyy-MM-dd'))"
+                },
+                "Compose_BaseDate": {
+                  "runAfter": {
+                    "Compose_CreatedYmd": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "78a0ba85-e460-412a-8b77-65c48139f160"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(empty(items('Apply_to_each_quote')?['qfu_lastsapdate']), items('Apply_to_each_quote')?['createdon'], items('Apply_to_each_quote')?['qfu_lastsapdate'])"
+                },
+                "Compose_NextFollowupYmd": {
+                  "runAfter": {
+                    "Compose_BaseDate": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d0ab0633-126e-4712-b32b-34728ee4b588"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(empty(items('Apply_to_each_quote')?['qfu_nextfollowup']), '', formatDateTime(items('Apply_to_each_quote')?['qfu_nextfollowup'], 'yyyy-MM-dd'))"
+                },
+                "Compose_ComputedExpiryIso": {
+                  "runAfter": {
+                    "Compose_NextFollowupYmd": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1b4a706f-9061-4676-baa2-4aec0b4f446a"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(and(greater(outputs('Compose_ExpireDays'), 0), not(empty(outputs('Compose_BaseDate')))), addDays(outputs('Compose_BaseDate'), outputs('Compose_ExpireDays')), '')"
+                },
+                "Compose_ExpiryYmd": {
+                  "runAfter": {
+                    "Compose_ComputedExpiryIso": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ae898a5b-268d-4be9-928d-d16b46d9eb4e"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(empty(items('Apply_to_each_quote')?['qfu_expirydate']), if(empty(outputs('Compose_ComputedExpiryIso')), '', formatDateTime(outputs('Compose_ComputedExpiryIso'), 'yyyy-MM-dd')), formatDateTime(items('Apply_to_each_quote')?['qfu_expirydate'], 'yyyy-MM-dd'))"
+                },
+                "Compose_AgeDays": {
+                  "runAfter": {
+                    "Compose_ExpiryYmd": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "26bba7d2-2c9f-4b53-a468-fb53b8c24319"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(empty(outputs('Compose_BaseDate')), 0, div(sub(ticks(startOfDay(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'))), ticks(startOfDay(convertTimeZone(outputs('Compose_BaseDate'), 'UTC', 'Mountain Standard Time')))), 864000000000))"
+                },
+                "Compose_IsExpired": {
+                  "runAfter": {
+                    "Compose_AgeDays": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bd5cf359-0261-4380-bbe6-e1b271589f5f"
+                  },
+                  "type": "Compose",
+                  "inputs": "@or(and(not(empty(outputs('Compose_ExpiryYmd'))), lessOrEquals(outputs('Compose_ExpiryYmd'), outputs('Compose_TodayYmd'))), and(greater(outputs('Compose_ExpireDays'), 0), greaterOrEquals(outputs('Compose_AgeDays'), outputs('Compose_ExpireDays'))))"
+                },
+                "Compose_ActionState": {
+                  "runAfter": {
+                    "Compose_IsExpired": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f817a930-63e4-43a3-8980-05b5cddb68f9"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(outputs('Compose_IsExpired'), 924500005, if(not(empty(outputs('Compose_NextFollowupYmd'))), if(less(outputs('Compose_NextFollowupYmd'), outputs('Compose_TodayYmd')), 924500002, if(equals(outputs('Compose_NextFollowupYmd'), outputs('Compose_TodayYmd')), 924500001, 924500003)), if(greaterOrEquals(outputs('Compose_AgeDays'), outputs('Compose_OverdueDays')), 924500002, 924500000)))"
+                },
+                "Compose_ExpiringSoonFlag": {
+                  "runAfter": {
+                    "Compose_ActionState": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a953c6e1-4a24-48d1-826b-b531e3044b51"
+                  },
+                  "type": "Compose",
+                  "inputs": "@and(not(empty(outputs('Compose_ExpiryYmd'))), greaterOrEquals(outputs('Compose_ExpiryYmd'), outputs('Compose_TodayYmd')), lessOrEquals(outputs('Compose_ExpiryYmd'), outputs('Compose_ExpiringCutoffYmd')))"
+                },
+                "Compose_OverdueSinceValue": {
+                  "runAfter": {
+                    "Compose_ExpiringSoonFlag": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f2d7bedd-b9bf-495f-9868-df609e60e868"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(equals(outputs('Compose_ActionState'), 924500002), if(empty(items('Apply_to_each_quote')?['qfu_overduesince']), utcNow(), items('Apply_to_each_quote')?['qfu_overduesince']), null)"
+                },
+                "Compose_ArchivedOnValue": {
+                  "runAfter": {
+                    "Compose_OverdueSinceValue": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3e1d5d69-dc70-4c48-b8f4-bf085e5c0f12"
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(equals(outputs('Compose_ActionState'), 924500005), if(empty(items('Apply_to_each_quote')?['qfu_archivedon']), utcNow(), items('Apply_to_each_quote')?['qfu_archivedon']), null)"
+                },
+                "Update_Quote": {
+                  "runAfter": {
+                    "Compose_ArchivedOnValue": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a7dc9c21-7f75-40fb-82c0-9aca82231cb0"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_quotes",
+                      "recordId": "@items('Apply_to_each_quote')?['qfu_quoteid']",
+                      "item/qfu_actionstate": "@outputs('Compose_ActionState')",
+                      "item/qfu_archivedon": "@outputs('Compose_ArchivedOnValue')",
+                      "item/qfu_expirydate": "@if(empty(items('Apply_to_each_quote')?['qfu_expirydate']), if(empty(outputs('Compose_ComputedExpiryIso')), null, outputs('Compose_ComputedExpiryIso')), items('Apply_to_each_quote')?['qfu_expirydate'])",
+                      "item/qfu_expiringsoon": "@outputs('Compose_ExpiringSoonFlag')",
+                      "item/qfu_overduesince": "@outputs('Compose_OverdueSinceValue')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Condition_Close_Expired": {
+                  "runAfter": {
+                    "Update_Quote": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "6f1937f7-d77b-4a32-a067-253ae8025cc0"
+                  },
+                  "type": "If",
+                  "expression": {
+                    "equals": [
+                      "@outputs('Compose_IsExpired')",
+                      true
+                    ]
+                  },
+                  "actions": {
+                    "Update_Quote_To_Expired": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "824fb35c-707e-4687-9fc6-140ff4fb42ae"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "qfu_quotes",
+                          "recordId": "@items('Apply_to_each_quote')?['qfu_quoteid']",
+                          "item/qfu_actionstate": 924500005,
+                          "item/qfu_status": "4",
+                          "item/qfu_closedon": "@utcNow()",
+                          "item/qfu_nextfollowup": null,
+                          "item/statecode": 1,
+                          "item/statuscode": 2
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Create_Activity_Log_Expired": {
+                      "runAfter": {
+                        "Update_Quote_To_Expired": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "20b6a4cd-75d3-4aac-95c3-4de6fb4b4e75"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "qfu_activitylogs",
+                          "item/qfu_quoteid@odata.bind": "@{concat('/qfu_quotes(', items('Apply_to_each_quote')?['qfu_quoteid'], ')')}",
+                          "item/qfu_activitytype": 6,
+                          "item/qfu_description": "Closed - Expired (auto)",
+                          "item/qfu_notes": "@{concat('Auto-expired after ', outputs('Compose_ExpireDays'), ' days from On Time Date.')}",
+                          "item/qfu_performedon": "@utcNow()",
+                          "item/qfu_performedbyname": "System",
+                          "item/qfu_name": "@{concat('Closed - Expired ', items('Apply_to_each_quote')?['qfu_quotenumber'])}"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "List_Open_Lines_Expired": {
+                      "runAfter": {
+                        "Update_Quote_To_Expired": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e3a8e348-a6c6-4292-aced-740b631f09fc"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "qfu_quotelines",
+                          "$select": "qfu_quotelineid",
+                          "$filter": "qfu_quotenumber eq '@{items('Apply_to_each_quote')?['qfu_quotenumber']}' and statecode eq 0 and qfu_status eq 1"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Apply_to_each_open_line": {
+                      "foreach": "@outputs('List_Open_Lines_Expired')?['body/value']",
+                      "actions": {
+                        "Update_Line_To_Expired": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "6f17fa35-4855-4b76-8768-8f82e31969c4"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "UpdateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "qfu_quotelines",
+                              "recordId": "@items('Apply_to_each_open_line')?['qfu_quotelineid']",
+                              "item/qfu_status": 4,
+                              "item/statuscode": 2,
+                              "item/statecode": 1,
+                              "item/qfu_rejectionreason": "Auto-expired"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "List_Open_Lines_Expired": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d567313c-6bf5-49b4-ad79-30a7805f4cdf"
+                      },
+                      "type": "Foreach"
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "List_Open_Quotes": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "907f3ba6-c3e9-4b0e-bdf2-a51b8a8b14ed"
+              },
+              "type": "Foreach"
+            },
+            "Set_HasMore": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "HasMore",
+                "value": false
+              },
+              "runAfter": {
+                "Apply_to_each_quote": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_HasMore": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

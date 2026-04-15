@@ -1,5 +1,7 @@
 param(
-  [string]$RepoRoot = "C:\Users\smcfarlane\Desktop\WorkBench\QuoteFollowUpRegion",
+  [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
+  [string]$TargetEnvironmentUrl = $env:QFU_TARGET_ENVIRONMENT_URL,
+  [string]$Username = "smcfarlane@applied.com",
   [string]$TaskName = "QFU-Freight-Inbox-Queue-Processor",
   [int]$IntervalMinutes = 15,
   [switch]$StartImmediately
@@ -12,7 +14,11 @@ if (-not (Test-Path -LiteralPath $processorScript)) {
   throw "Processor script not found: $processorScript"
 }
 
-$taskCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$processorScript`""
+if ([string]::IsNullOrWhiteSpace($TargetEnvironmentUrl)) {
+  throw "Provide -TargetEnvironmentUrl or set QFU_TARGET_ENVIRONMENT_URL before registering the freight processor task."
+}
+
+$taskCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$processorScript`" -RepoRoot `"$RepoRoot`" -TargetEnvironmentUrl `"$TargetEnvironmentUrl`" -Username `"$Username`""
 $arguments = @(
   "/Create",
   "/SC", "MINUTE",

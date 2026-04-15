@@ -1,5 +1,5 @@
 param(
-  [string]$TargetEnvironmentUrl = "https://regionaloperationshub.crm.dynamics.com",
+  [string]$TargetEnvironmentUrl = $env:QFU_TARGET_ENVIRONMENT_URL,
   [string]$Username = "smcfarlane@applied.com",
   [string[]]$BranchCodes = @("4171", "4172", "4173"),
   [switch]$Apply,
@@ -8,6 +8,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $RepoRoot = Split-Path -Parent $PSScriptRoot
+
+if ([string]::IsNullOrWhiteSpace($TargetEnvironmentUrl)) {
+  throw "Provide -TargetEnvironmentUrl or set QFU_TARGET_ENVIRONMENT_URL before running refresh-live-branch-daily-summaries.ps1."
+}
 
 Import-Module Microsoft.Xrm.Data.Powershell
 
@@ -121,6 +125,33 @@ function Get-IntegerValue {
   }
 }
 
+function Test-BackorderHasExplicitQuantitySplit {
+  param([object]$Row)
+
+  return ($null -ne $Row.qfu_qtynotondel -and -not [string]::IsNullOrWhiteSpace([string]$Row.qfu_qtynotondel)) -or
+    ($null -ne $Row.qfu_qtyondelnotpgid -and -not [string]::IsNullOrWhiteSpace([string]$Row.qfu_qtyondelnotpgid))
+}
+
+function Get-BackorderQtyNotOnDelivery {
+  param([object]$Row)
+
+  if (-not (Test-BackorderHasExplicitQuantitySplit -Row $Row)) {
+    return Get-DecimalValue $Row.qfu_quantity
+  }
+
+  return Get-DecimalValue $Row.qfu_qtynotondel
+}
+
+function Get-BackorderQtyOnDeliveryNotPgid {
+  param([object]$Row)
+
+  if (-not (Test-BackorderHasExplicitQuantitySplit -Row $Row)) {
+    return [decimal]0
+  }
+
+  return Get-DecimalValue $Row.qfu_qtyondelnotpgid
+}
+
 function Days-Between {
   param(
     [datetime]$Later,
@@ -230,16 +261,16 @@ function Get-QuoteAgeDays {
 function Test-BackorderReadyToShipOnly {
   param([object]$Row)
 
-  $qtyOnDelivery = Get-DecimalValue $Row.qfu_qtyondelnotpgid
-  $qtyNotOnDelivery = Get-DecimalValue $Row.qfu_qtynotondel
+  $qtyOnDelivery = Get-BackorderQtyOnDeliveryNotPgid -Row $Row
+  $qtyNotOnDelivery = Get-BackorderQtyNotOnDelivery -Row $Row
   return $qtyOnDelivery -gt 0 -and $qtyNotOnDelivery -le 0
 }
 
 function Test-BackorderActionable {
   param([object]$Row)
 
-  $qtyOnDelivery = Get-DecimalValue $Row.qfu_qtyondelnotpgid
-  $qtyNotOnDelivery = Get-DecimalValue $Row.qfu_qtynotondel
+  $qtyOnDelivery = Get-BackorderQtyOnDeliveryNotPgid -Row $Row
+  $qtyNotOnDelivery = Get-BackorderQtyNotOnDelivery -Row $Row
   return $qtyNotOnDelivery -gt 0 -or $qtyOnDelivery -gt 0
 }
 
@@ -384,6 +415,7 @@ $backorderRows = @(
       "qfu_daysoverdue",
       "qfu_ontimedate",
       "qfu_totalvalue",
+      "qfu_quantity",
       "qfu_qtynotondel",
       "qfu_qtyondelnotpgid",
       "qfu_active",

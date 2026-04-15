@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_OutlookFolderId">
+  <defaultvalue>disabled</defaultvalue>
+  <description default="Optional (deprecated). QFU no longer uses folder IDs.&#xD;&#xA;Leave disabled.">
+    <label description="Optional (deprecated). QFU no longer uses folder IDs.&#xD;&#xA;Leave disabled." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Deprecated Outlook Folder ID (Not Used)">
+    <label description="OPTIONAL: Deprecated Outlook Folder ID (Not Used)" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

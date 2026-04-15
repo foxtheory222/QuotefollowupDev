@@ -1,0 +1,209 @@
+{
+    "generated_on":  "2026-04-14T06:09:10.4283115Z",
+    "target_environment_url":  "https://orgad610d2c.crm3.dynamics.com",
+    "branch_codes":  [
+                         "4171",
+                         "4172",
+                         "4173"
+                     ],
+    "operational_tables":  [
+                               {
+                                   "entity":  "qfu_quote",
+                                   "canonical_key":  "qfu_sourceid (branch|SP830CA|quotenumber)",
+                                   "table_role":  "current-state",
+                                   "total_rows":  172,
+                                   "unique_source_ids":  172,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  36,
+                                   "inactive_row_count":  136,
+                                   "lifecycle_missing_count":  0,
+                                   "sample_groups":  [
+
+                                                     ]
+                               },
+                               {
+                                   "entity":  "qfu_backorder",
+                                   "canonical_key":  "qfu_sourceid (branch|ZBO|salesdoc|line)",
+                                   "table_role":  "current-state",
+                                   "total_rows":  1993,
+                                   "unique_source_ids":  1993,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  1047,
+                                   "inactive_row_count":  946,
+                                   "lifecycle_missing_count":  0,
+                                   "sample_groups":  [
+
+                                                     ]
+                               },
+                               {
+                                   "entity":  "qfu_marginexception",
+                                   "canonical_key":  "qfu_sourceid (branch|SA1300-MARGIN|snapshotdate|billingdoc|reviewtype)",
+                                   "table_role":  "snapshot",
+                                   "total_rows":  58,
+                                   "unique_source_ids":  58,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  null,
+                                   "inactive_row_count":  null,
+                                   "lifecycle_missing_count":  null,
+                                   "sample_groups":  [
+
+                                                     ]
+                               },
+                               {
+                                   "entity":  "qfu_deliverynotpgi",
+                                   "canonical_key":  "branch + delivery number + delivery line",
+                                   "table_role":  "snapshot with active/inactive lifecycle",
+                                   "total_rows":  590,
+                                   "unique_source_ids":  590,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  84,
+                                   "inactive_row_count":  506,
+                                   "lifecycle_missing_count":  0,
+                                   "sample_groups":  [
+
+                                                     ]
+                               }
+                           ],
+    "latest_imports":  [
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "SP830CA",
+                               "latest_status":  "ready",
+                               "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                               "source_startedon":  "2026-04-13 16:17:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4171-QuoteFollowUp-Import-Staging",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "ZBO",
+                               "latest_status":  "ready",
+                               "source_filename":  "4171_ZBO_20260410_132603_CA ZBO 20250320_72_1486460619880492027.xlsx",
+                               "source_startedon":  "2026-04-13 13:26:00",
+                               "source_completedon":  "2026-04-13 13:26:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4171-BackOrder-Update-ZBO",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "SA1300",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-13 16:18:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4171-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "SA1300-ABNORMALMARGIN",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-13 16:18:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4171-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "SP830CA",
+                               "latest_status":  "ready",
+                               "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                               "source_startedon":  "2026-04-13 16:17:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4172-QuoteFollowUp-Import-Staging",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "ZBO",
+                               "latest_status":  "ready",
+                               "source_filename":  "CA SC ZBO - 20260120_227_1520796141058127806.xlsx",
+                               "source_startedon":  "2026-04-13 16:17:00",
+                               "source_completedon":  "2026-04-13 16:25:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4172-BackOrder-Update-ZBO",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "SA1300",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-13 16:17:00",
+                               "source_completedon":  "2026-04-13 16:17:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4172-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "SA1300-ABNORMALMARGIN",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-13 16:17:00",
+                               "source_completedon":  "2026-04-13 16:17:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4172-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "SP830CA",
+                               "latest_status":  "ready",
+                               "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                               "source_startedon":  "2026-04-13 16:17:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4173-QuoteFollowUp-Import-Staging",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "ZBO",
+                               "latest_status":  "ready",
+                               "source_filename":  "CA SC ZBO - 20260120_239_4306963741963260235.xlsx",
+                               "source_startedon":  "2026-04-13 16:18:00",
+                               "source_completedon":  "2026-04-13 16:24:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4173-BackOrder-Update-ZBO",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "SA1300",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-13 16:18:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4173-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "SA1300-ABNORMALMARGIN",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-13 16:18:00",
+                               "source_completedon":  "2026-04-13 16:18:00",
+                               "row_createdon":  "2026-04-14 01:04:00",
+                               "trigger_flow":  "4173-Budget-Update-SA1300",
+                               "seeded":  false
+                           }
+                       ]
+}

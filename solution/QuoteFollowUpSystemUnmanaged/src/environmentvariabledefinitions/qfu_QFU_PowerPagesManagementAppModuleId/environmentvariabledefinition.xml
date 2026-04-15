@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_PowerPagesManagementAppModuleId">
+  <defaultvalue>disabled</defaultvalue>
+  <description default="Optional. Enables /debug deep link to Power Pages Management.&#xD;&#xA;Set after import: make.powerapps.com -&gt; Apps -&gt; Power Pages Management -&gt; Details -&gt; App ID.&#xD;&#xA;Leave disabled to skip.">
+    <label description="Optional. Enables /debug deep link to Power Pages Management.&#xD;&#xA;Set after import: make.powerapps.com -&gt; Apps -&gt; Power Pages Management -&gt; Details -&gt; App ID.&#xD;&#xA;Leave disabled to skip." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Power Pages Management App ID">
+    <label description="OPTIONAL: Power Pages Management App ID" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

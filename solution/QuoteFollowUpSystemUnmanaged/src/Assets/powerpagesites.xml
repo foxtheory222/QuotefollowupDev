@@ -1,0 +1,17 @@
+<powerpagesites>
+  <powerpagesite powerpagesiteid="7d15dda2-9ad5-430e-ae7e-0fdab0630b2f">
+    <content>{
+  "defaultbotconsumerid": "75503584-7a2c-f111-88b4-000d3a59294a",
+  "defaultlanguage": "ad09fee1-b57b-41f4-9f9f-1d3c64129ffd",
+  "footerwebtemplateid": "917fb941-a791-4e70-9f79-0fe0bd68c354",
+  "headerwebtemplateid": "c6667417-c7ef-4749-b35b-c150d1b69722",
+  "website_language": 1033
+}</content>
+    <datamodelversion>2.0</datamodelversion>
+    <iscustomizable>1</iscustomizable>
+    <name>QuoteFollowUp - QuoteFollowUp</name>
+    <primarydomainname>https://quoteoperations.powerappsportals.com</primarydomainname>
+    <statecode>0</statecode>
+    <statuscode>1</statuscode>
+  </powerpagesite>
+</powerpagesites>

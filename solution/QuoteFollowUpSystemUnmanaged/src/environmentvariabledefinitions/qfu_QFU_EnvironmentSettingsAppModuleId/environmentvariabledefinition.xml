@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_EnvironmentSettingsAppModuleId">
+  <defaultvalue>disabled</defaultvalue>
+  <description default="Optional. Enables /debug deep link to Environment Settings.&#xD;&#xA;Set after import: make.powerapps.com -&gt; Apps -&gt; Environment Settings -&gt; Details -&gt; App ID.&#xD;&#xA;Leave disabled to skip.">
+    <label description="Optional. Enables /debug deep link to Environment Settings.&#xD;&#xA;Set after import: make.powerapps.com -&gt; Apps -&gt; Environment Settings -&gt; Details -&gt; App ID.&#xD;&#xA;Leave disabled to skip." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Environment Settings App ID">
+    <label description="OPTIONAL: Environment Settings App ID" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_OrgUrl">
+  <defaultvalue>disabled</defaultvalue>
+  <description default="Optional. Used for /debug deep links.&#xD;&#xA;Set after import: Power Platform Admin Center -&gt; Environments -&gt; Details -&gt; Environment URL.&#xD;&#xA;Leave disabled to skip.">
+    <label description="Optional. Used for /debug deep links.&#xD;&#xA;Set after import: Power Platform Admin Center -&gt; Environments -&gt; Details -&gt; Environment URL.&#xD;&#xA;Leave disabled to skip." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Dataverse Org URL">
+    <label description="OPTIONAL: Dataverse Org URL" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

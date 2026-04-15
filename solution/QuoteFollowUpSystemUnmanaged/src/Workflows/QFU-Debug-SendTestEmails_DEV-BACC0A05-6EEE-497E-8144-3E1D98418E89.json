@@ -1,0 +1,530 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_office365"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerPages",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventData": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "eventData"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Parse_EventData": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@triggerBody()?['eventData']",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "recipientEmail": {
+                  "type": "string"
+                },
+                "recipientRosterEntryId": {
+                  "type": "string"
+                },
+                "scenarios": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "sendAll": {
+                  "type": "boolean"
+                },
+                "requestedAtUtc": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "Compose_CallerEmail": {
+          "runAfter": {
+            "Parse_EventData": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@coalesce(triggerOutputs()?['headers']?['x-ms-user-email'], triggerOutputs()?['headers']?['x-ms-user-emailaddress'], triggerBody()?['userEmail'], triggerBody()?['email'], '')"
+        },
+        "Initialize_CorrelationId": {
+          "runAfter": {
+            "Compose_CallerEmail": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "type": "string",
+                "value": "@guid()",
+                "name": "CorrelationId"
+              }
+            ]
+          }
+        },
+        "Initialize_SubjectsSent": {
+          "runAfter": {
+            "Initialize_CorrelationId": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "type": "array",
+                "value": "@createArray()",
+                "name": "SubjectsSent"
+              }
+            ]
+          }
+        },
+        "Initialize_ScenariosSent": {
+          "runAfter": {
+            "Initialize_SubjectsSent": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "type": "array",
+                "value": "@createArray()",
+                "name": "ScenariosSent"
+              }
+            ]
+          }
+        },
+        "Initialize_RecipientMatches": {
+          "runAfter": {
+            "Initialize_ScenariosSent": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "type": "array",
+                "value": "@createArray()",
+                "name": "RecipientMatches"
+              }
+            ]
+          }
+        },
+        "Compose_RecipientEmail": {
+          "runAfter": {
+            "Initialize_RecipientMatches": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@coalesce(body('Parse_EventData')?['recipientEmail'], '')"
+        },
+        "Compose_RecipientRosterId": {
+          "runAfter": {
+            "Compose_RecipientEmail": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@coalesce(body('Parse_EventData')?['recipientRosterEntryId'], '')"
+        },
+        "Compose_Scenarios": {
+          "runAfter": {
+            "Compose_RecipientRosterId": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@if(empty(body('Parse_EventData')?['scenarios']), createArray(), body('Parse_EventData')?['scenarios'])"
+        },
+        "Compose_RequestedAt": {
+          "runAfter": {
+            "Compose_Scenarios": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@coalesce(body('Parse_EventData')?['requestedAtUtc'], utcNow())"
+        },
+        "List_Caller_Roster": {
+          "runAfter": {
+            "Compose_RequestedAt": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qfu_rosterentries",
+              "$select": "qfu_rosterentryid,qfu_staffname,qfu_role,qfu_isactive,qfu_email",
+              "$filter": "@{concat('qfu_isactive eq true and contains(qfu_role,''Manager'') and qfu_email eq ''', outputs('Compose_CallerEmail'), '''')}",
+              "$top": 1
+            }
+          }
+        },
+        "Condition_Authorized": {
+          "runAfter": {
+            "List_Caller_Roster": [
+              "Succeeded"
+            ]
+          },
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "not": [
+                  {
+                    "equals": [
+                      "@outputs('Compose_CallerEmail')",
+                      ""
+                    ]
+                  }
+                ]
+              },
+              {
+                "greater": [
+                  "@length(body('List_Caller_Roster')?['value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "List_Recipient_Roster": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qfu_rosterentries",
+                  "$select": "qfu_rosterentryid,qfu_staffname,qfu_role,qfu_isactive,qfu_email",
+                  "$filter": "@{concat('qfu_isactive eq true and contains(qfu_role,''Manager'') and qfu_email eq ''', outputs('Compose_RecipientEmail'), '''')}",
+                  "$top": 1
+                }
+              }
+            },
+            "Condition_HasRosterId": {
+              "runAfter": {
+                "List_Recipient_Roster": [
+                  "Succeeded"
+                ]
+              },
+              "type": "If",
+              "expression": {
+                "not": [
+                  {
+                    "equals": [
+                      "@outputs('Compose_RecipientRosterId')",
+                      ""
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Filter_Recipient_By_Id": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('List_Recipient_Roster')?['value']",
+                    "where": "@equals(item()?['qfu_rosterentryid'], outputs('Compose_RecipientRosterId'))"
+                  }
+                },
+                "Set_RecipientMatches_From_Filter": {
+                  "runAfter": {
+                    "Filter_Recipient_By_Id": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "RecipientMatches",
+                    "value": "@body('Filter_Recipient_By_Id')"
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Set_RecipientMatches_From_List": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "RecipientMatches",
+                      "value": "@body('List_Recipient_Roster')?['value']"
+                    }
+                  }
+                }
+              }
+            },
+            "Condition_RecipientValid": {
+              "runAfter": {
+                "Condition_HasRosterId": [
+                  "Succeeded"
+                ]
+              },
+              "type": "If",
+              "expression": {
+                "greater": [
+                  "@length(variables('RecipientMatches'))",
+                  0
+                ]
+              },
+              "actions": {
+                "Condition_ScenariosValid": {
+                  "type": "If",
+                  "expression": {
+                    "greater": [
+                      "@length(outputs('Compose_Scenarios'))",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "Compose_RecipientName": {
+                      "type": "Compose",
+                      "inputs": "@coalesce(first(variables('RecipientMatches'))?['qfu_staffname'], outputs('Compose_RecipientEmail'))"
+                    },
+                    "For_Each_Scenario": {
+                      "runAfter": {
+                        "Compose_RecipientName": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "Foreach",
+                      "foreach": "@outputs('Compose_Scenarios')",
+                      "actions": {
+                        "Compose_Subject": {
+                          "type": "Compose",
+                          "inputs": "@concat('[QFU TEST] ', items('For_Each_Scenario'), ' - ', outputs('Compose_RecipientName'))"
+                        },
+                        "Compose_Body": {
+                          "runAfter": {
+                            "Compose_Subject": [
+                              "Succeeded"
+                            ]
+                          },
+                          "type": "Compose",
+                          "inputs": "@concat('<div style=\"padding:8px;border:2px solid #d00;color:#d00;font-weight:bold;\">THIS IS A TEST</div>', '<p>Scenario: ', items('For_Each_Scenario'), '</p>', '<p>Recipient: ', outputs('Compose_RecipientName'), ' (', outputs('Compose_RecipientEmail'), ')</p>', '<p>Requested: ', outputs('Compose_RequestedAt'), '</p>', '<p>Correlation: ', variables('CorrelationId'), '</p>')"
+                        },
+                        "Send_Test_Email": {
+                          "runAfter": {
+                            "Compose_Body": [
+                              "Succeeded"
+                            ]
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_office365",
+                              "operationId": "SendEmailV2",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            },
+                            "parameters": {
+                              "emailMessage/To": "@outputs('Compose_RecipientEmail')",
+                              "emailMessage/Subject": "@outputs('Compose_Subject')",
+                              "emailMessage/Body": "@outputs('Compose_Body')"
+                            }
+                          }
+                        },
+                        "Append_Scenario": {
+                          "runAfter": {
+                            "Send_Test_Email": [
+                              "Succeeded"
+                            ]
+                          },
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "ScenariosSent",
+                            "value": "@items('For_Each_Scenario')"
+                          }
+                        },
+                        "Append_Subject": {
+                          "runAfter": {
+                            "Append_Scenario": [
+                              "Succeeded"
+                            ]
+                          },
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "SubjectsSent",
+                            "value": "@outputs('Compose_Subject')"
+                          }
+                        }
+                      }
+                    },
+                    "Response_Success": {
+                      "runAfter": {
+                        "For_Each_Scenario": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "Response",
+                      "kind": "PowerPages",
+                      "inputs": {
+                        "statusCode": 200,
+                        "body": {
+                          "correlationId": "@variables('CorrelationId')",
+                          "recipientEmail": "@outputs('Compose_RecipientEmail')",
+                          "scenariosSent": "@variables('ScenariosSent')",
+                          "subjectsSent": "@variables('SubjectsSent')",
+                          "sentAtUtc": "@utcNow()"
+                        },
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "correlationId": {
+                              "type": "string"
+                            },
+                            "recipientEmail": {
+                              "type": "string"
+                            },
+                            "scenariosSent": {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "subjectsSent": {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "sentAtUtc": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Response_NoScenarios": {
+                        "type": "Response",
+                        "kind": "PowerPages",
+                        "inputs": {
+                          "statusCode": 400,
+                          "body": {
+                            "error": "No scenarios selected."
+                          },
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "error": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Response_InvalidRecipient": {
+                    "type": "Response",
+                    "kind": "PowerPages",
+                    "inputs": {
+                      "statusCode": 400,
+                      "body": {
+                        "error": "Recipient is not an active manager."
+                      },
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Response_Unauthorized": {
+                "type": "Response",
+                "kind": "PowerPages",
+                "inputs": {
+                  "statusCode": 403,
+                  "body": {
+                    "error": "Unauthorized."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

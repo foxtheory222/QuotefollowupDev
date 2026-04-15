@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_EnvironmentId">
+  <defaultvalue>disabled</defaultvalue>
+  <description default="Optional. Used for /debug deep links.&#xD;&#xA;Set after import: make.powerapps.com URL contains /environments/&lt;GUID&gt;/solutions.&#xD;&#xA;Leave disabled to skip.">
+    <label description="Optional. Used for /debug deep links.&#xD;&#xA;Set after import: make.powerapps.com URL contains /environments/&lt;GUID&gt;/solutions.&#xD;&#xA;Leave disabled to skip." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Environment ID (GUID)">
+    <label description="OPTIONAL: Environment ID (GUID)" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>
