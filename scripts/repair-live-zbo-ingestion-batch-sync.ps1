@@ -47,15 +47,31 @@ function Set-OrderedRunAfter {
   param([object]$ActionNode)
 
   $ActionNode.runAfter = [pscustomobject]([ordered]@{
-      Deactivate_Missing_BackOrders     = @("Succeeded", "Skipped")
+      Condition_Has_New_Rows            = @("Succeeded", "Skipped")
       Deactivate_Missing_DeliveryNotPgi = @("Succeeded", "Skipped")
     })
+}
+
+function Get-BackorderActionScope {
+  param([object]$Definition)
+
+  $conditionActions = $Definition.actions.Apply_to_each_Attachment.actions.Condition_Is_CA_ZBO_File.actions
+  if (-not $conditionActions) {
+    throw "Backorder attachment condition actions were not found."
+  }
+
+  $guardScope = $conditionActions.PSObject.Properties["Guard_BackOrder_Row_Limit"]
+  if ($guardScope -and $conditionActions.Guard_BackOrder_Row_Limit -and $conditionActions.Guard_BackOrder_Row_Limit.actions) {
+    return $conditionActions.Guard_BackOrder_Row_Limit.actions
+  }
+
+  return $conditionActions
 }
 
 function Get-ZboBatchSyncState {
   param([object]$Definition)
 
-  $actions = $Definition.actions.Apply_to_each_Attachment.actions.Condition_Is_CA_ZBO_File.actions
+  $actions = Get-BackorderActionScope -Definition $Definition
   return [pscustomobject]@{
     list_runafter = if ($actions.PSObject.Properties["List_Existing_Backorder_Import_Batch"]) { $actions.List_Existing_Backorder_Import_Batch.runAfter } else { $null }
     update_triggerflow = if ($actions.PSObject.Properties["Condition_Backorder_Import_Batch_Exists"]) { [string]$actions.Condition_Backorder_Import_Batch_Exists.actions.Update_Backorder_Import_Batch.inputs.parameters."item/qfu_triggerflow" } else { $null }
@@ -69,10 +85,7 @@ function Repair-ZboBatchSync {
     [string]$BranchCode
   )
 
-  $actions = $Definition.actions.Apply_to_each_Attachment.actions.Condition_Is_CA_ZBO_File.actions
-  if (-not $actions) {
-    throw "Backorder attachment condition was not found."
-  }
+  $actions = Get-BackorderActionScope -Definition $Definition
 
   if (-not $actions.PSObject.Properties["List_Existing_Backorder_Import_Batch"]) {
     throw "List_Existing_Backorder_Import_Batch action was not found."
@@ -93,63 +106,65 @@ function Repair-ZboBatchSync {
   }
 }
 
-Import-Module Microsoft.PowerApps.PowerShell
+function Connect-Org {
+  param([string]$Url)
 
-Add-PowerAppsAccount -Endpoint prod -Username $Username | Out-Null
+  Import-Module Microsoft.Xrm.Data.Powershell
+
+  $connection = Connect-CrmOnline -ServerUrl $Url -ForceOAuth -Username $Username
+  if (-not $connection -or -not $connection.IsReady) {
+    throw "Dataverse connection failed for $Url : $($connection.LastCrmError)"
+  }
+
+  return $connection
+}
 
 $targetFlows = @($flowCatalog | Where-Object { $_.BranchCode -in $BranchCodes })
-$adminFlows = @(Get-Flow -EnvironmentName $TargetEnvironmentName)
+$connection = Connect-Org -Url "https://regionaloperationshub.crm.dynamics.com"
 $reportRows = New-Object System.Collections.Generic.List[object]
 
 foreach ($targetFlow in $targetFlows) {
   try {
-    $adminFlow = $adminFlows | Where-Object { $_.DisplayName -eq $targetFlow.DisplayName } | Select-Object -First 1
-    if (-not $adminFlow) {
-      throw "Flow not found."
+    $workflowRecord = @(
+      (Get-CrmRecords -conn $connection -EntityLogicalName workflow -FilterAttribute name -FilterOperator eq -FilterValue $targetFlow.DisplayName -Fields workflowid, name, clientdata, modifiedon -TopCount 5).CrmRecords |
+        Sort-Object @{ Expression = { if ($_.modifiedon) { [datetime]$_.modifiedon } else { [datetime]::MinValue } }; Descending = $true }
+    ) | Select-Object -First 1
+    if (-not $workflowRecord -or -not $workflowRecord.workflowid) {
+      throw "Flow workflow record not found."
     }
 
-    $route = "https://{flowEndpoint}/providers/Microsoft.ProcessSimple/environments/{environment}/flows/{flowName}?api-version={apiVersion}" `
-      | ReplaceMacro -Macro "{environment}" -Value $TargetEnvironmentName `
-      | ReplaceMacro -Macro "{flowName}" -Value $adminFlow.FlowName
-
-    $flow = InvokeApi -Method GET -Route $route -ApiVersion "2016-11-01" -Verbose:$false
+    $flow = $workflowRecord.clientdata | ConvertFrom-Json
     $before = Get-ZboBatchSyncState -Definition $flow.properties.definition
     $repairState = Repair-ZboBatchSync -Definition $flow.properties.definition -BranchCode $targetFlow.BranchCode
-    $flow.properties.state = "Started"
     $flow.properties.definition.contentVersion = "1.0.{0}" -f (Get-Date -Format "yyyyMMddHHmmss")
-
-    InvokeApi -Method PATCH -Route $route -Body $flow -ApiVersion "2016-11-01" -ThrowOnFailure -Verbose:$false | Out-Null
-
+    Set-CrmRecord -conn $connection -EntityLogicalName workflow -Id $workflowRecord.workflowid -Fields @{ clientdata = (ConvertTo-JsonCompact -Object $flow) } | Out-Null
     if ($RestartAfterPatch) {
-      try {
-        Disable-Flow -EnvironmentName $TargetEnvironmentName -FlowName $adminFlow.FlowName | Out-Null
-        Start-Sleep -Seconds 2
-      } catch {
-      }
-
-      Enable-Flow -EnvironmentName $TargetEnvironmentName -FlowName $adminFlow.FlowName | Out-Null
-      Start-Sleep -Seconds 2
+      Set-CrmRecordState -conn $connection -EntityLogicalName workflow -Id $workflowRecord.workflowid -StateCode Activated -StatusCode Activated | Out-Null
     }
 
-    $afterFlow = InvokeApi -Method GET -Route $route -ApiVersion "2016-11-01" -Verbose:$false
+    $afterWorkflow = Get-CrmRecord -conn $connection -EntityLogicalName workflow -Id $workflowRecord.workflowid -Fields workflowid, name, clientdata, modifiedon, statecode, statuscode
+    $afterFlow = $afterWorkflow.clientdata | ConvertFrom-Json
     $after = Get-ZboBatchSyncState -Definition $afterFlow.properties.definition
 
     $reportRows.Add([pscustomobject]@{
       display_name = $targetFlow.DisplayName
       branch_code = $targetFlow.BranchCode
-      flow_name = $adminFlow.FlowName
+      workflow_id = [string]$workflowRecord.workflowid
+      workflow_name = [string]$afterWorkflow.name
       repair_state = $repairState
       before = $before
       after = $after
-      state_after = [string]$afterFlow.properties.state
       content_version_after = $afterFlow.properties.definition.contentVersion
-      last_modified_after = $afterFlow.properties.lastModifiedTime
+      restart_after_patch = [bool]$RestartAfterPatch
+      state_after = [string]$afterWorkflow.statecode
+      status_after = [string]$afterWorkflow.statuscode
+      last_modified_after = if ($afterWorkflow.modifiedon) { ([datetime]$afterWorkflow.modifiedon).ToString("o") } else { $null }
     }) | Out-Null
   } catch {
     $reportRows.Add([pscustomobject]@{
       display_name = $targetFlow.DisplayName
       branch_code = $targetFlow.BranchCode
-      flow_name = if ($adminFlow) { $adminFlow.FlowName } else { $null }
+      workflow_id = if ($workflowRecord) { [string]$workflowRecord.workflowid } else { $null }
       error = $_.Exception.Message
     }) | Out-Null
   }

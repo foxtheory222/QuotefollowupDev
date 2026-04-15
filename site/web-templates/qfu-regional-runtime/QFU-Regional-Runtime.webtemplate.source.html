@@ -210,7 +210,22 @@
     return !!(record && (record.qfu_active != null || record.qfu_inactiveon != null || record.qfu_lastseenon != null));
   }
 
+  function deliveryNotPgiRowIsActive(record) {
+    var inactiveOn = parseDate(record && record.qfu_inactiveon) || parseBusinessDate(record && record.qfu_inactiveon);
+    if (inactiveOn) {
+      return false;
+    }
+    var active = parseBoolean(record && record.qfu_active);
+    if (active !== null) {
+      return active === false;
+    }
+    return true;
+  }
+
   function operationalRowIsActive(record) {
+    if (record && (record.qfu_deliverynotpgiid || record.qfu_snapshotcapturedon != null && (record.qfu_deliverynumber != null || record.qfu_deliveryline != null))) {
+      return deliveryNotPgiRowIsActive(record);
+    }
     var inactiveOn = parseDate(record && record.qfu_inactiveon) || parseBusinessDate(record && record.qfu_inactiveon);
     if (inactiveOn) {
       return false;
@@ -1572,6 +1587,88 @@
     }).sort(deliveryNotPgiOrderSort);
   }
 
+  function buildBackorderReadyToShipOrderRows(rows, branch, today) {
+    var grouped = {};
+    var groupOrder = [];
+    (rows || []).filter(function (record) {
+      return backorderIsReadyToShipOnly(record);
+    }).map(function (record) {
+      return buildBackorderRow(record, today || startOfToday());
+    }).forEach(function (row, index) {
+      var identity = String(row.order || row.sourceId || row.id || ("backorder-order-" + index)).trim();
+      var key = normalizeConfigKey(identity || ("backorder-order-" + index));
+      if (!grouped[key]) {
+        grouped[key] = [];
+        groupOrder.push(key);
+      }
+      grouped[key].push(row);
+    });
+
+    return groupOrder.map(function (key) {
+      var lineRows = grouped[key].slice().sort(function (left, right) {
+        if (right.valueNumber !== left.valueNumber) {
+          return right.valueNumber - left.valueNumber;
+        }
+        return String(left.order || "").localeCompare(String(right.order || ""));
+      });
+      var firstRow = lineRows[0] || {};
+      var onTimeRows = lineRows.filter(function (row) { return row.onTimeDateValue; });
+      var createdRows = lineRows.filter(function (row) { return row.createdOnValue; });
+      var earliestOnTimeRow = onTimeRows.length ? onTimeRows.slice().sort(function (left, right) {
+        return left.onTimeDateValue - right.onTimeDateValue;
+      })[0] : null;
+      var earliestCreatedRow = createdRows.length ? createdRows.slice().sort(function (left, right) {
+        return left.createdOnValue - right.createdOnValue;
+      })[0] : null;
+      var totalValueNumber = lineRows.reduce(function (total, row) {
+        return total + toNumber(row.valueNumber);
+      }, 0);
+      var totalQtyNumber = lineRows.reduce(function (total, row) {
+        return total + toNumber(row.qtyOnDeliveryNotPgidNumber);
+      }, 0);
+      var maxDaysOverdue = lineRows.reduce(function (maxValue, row) {
+        return Math.max(maxValue, toNumber(row.daysOverdueNumber));
+      }, 0);
+      return {
+        id: firstRow.id || key,
+        orderKey: firstRow.order || key,
+        deliveryNumber: firstRow.order || "-",
+        onTimeDateValue: earliestOnTimeRow ? earliestOnTimeRow.onTimeDateValue : 0,
+        onTimeDate: earliestOnTimeRow ? earliestOnTimeRow.onTimeDate : "-",
+        daysLateNumber: maxDaysOverdue,
+        daysLate: String(maxDaysOverdue),
+        daysOnListNumber: maxDaysOverdue,
+        daysOnList: String(maxDaysOverdue),
+        createdOnValue: earliestCreatedRow ? earliestCreatedRow.createdOnValue : 0,
+        customer: summarizeDeliveryGroupValue(lineRows, function (row) { return row.customer; }, "-"),
+        soldTo: summarizeDeliveryGroupValue(lineRows, function (row) { return row.customer; }, "-"),
+        cssr: summarizeDeliveryGroupValue(lineRows, function (row) { return row.cssr; }, "Unassigned"),
+        totalValueNumber: totalValueNumber,
+        totalValue: formatCurrency(totalValueNumber),
+        unshippedValueNumber: totalValueNumber,
+        unshippedValue: formatCurrency(totalValueNumber),
+        qtyOnDeliveryNotPgidNumber: totalQtyNumber,
+        qtyOnDeliveryNotPgid: formatPlainNumber(totalQtyNumber),
+        lineCount: lineRows.length,
+        lineCountLabel: String(lineRows.length),
+        lineSummary: lineRows.length === 1 ? "1 line" : (String(lineRows.length) + " lines"),
+        lineRows: lineRows,
+        recordIds: lineRows.map(function (row) { return row.id; }).filter(function (value) { return !!value; }),
+        hasComment: false,
+        comment: "",
+        commentUpdatedOnValue: 0,
+        commentUpdatedOn: "No comment yet",
+        commentUpdatedByName: "No comment yet",
+        hasMixedComments: false,
+        commentStateLabel: "Backorder fallback",
+        lineHref: branch ? detailHrefWithParams(branch, "overdue-backorders", { order: firstRow.order || "" }) : "",
+        searchText: lineRows.map(function (row) {
+          return [row.order, row.customer, row.materialNumber, row.materialDescription, row.cssr].filter(function (value) { return !!value; }).join(" ");
+        }).join(" ")
+      };
+    }).sort(deliveryNotPgiOrderValueSort);
+  }
+
   function parseDeliveryPasteTokens(value) {
     var tokens = String(value || "")
       .split(/[\s,;\r\n\t]+/)
@@ -2120,6 +2217,16 @@
     var summaryTargetRaw = config.summaryIsCurrentMonth ? (summary && summary.qfu_budgettarget) : null;
     var budgetActualRaw = config.budgetRowHasActual ? config.budgetActualRaw : null;
     var summaryActualRaw = config.summaryHasActual ? config.summaryActualRaw : null;
+    var budgetActualUpdatedOn = latestDate(config.budgetUpdatedOn, budget && budget.qfu_lastupdated);
+    var summaryActualUpdatedOn = summaryMoment(summary);
+    var summaryActualLaggingBehindBudget = !!(
+      budgetValuePresent(budgetActualRaw) &&
+      budgetValuePresent(summaryActualRaw) &&
+      budgetValuesDiffer(budgetActualRaw, summaryActualRaw) &&
+      budgetActualUpdatedOn &&
+      summaryActualUpdatedOn &&
+      budgetActualUpdatedOn > summaryActualUpdatedOn
+    );
 
     if (budgetValuePresent(summary && summary.qfu_budgetactual) && !config.summaryIsCurrentMonth) {
       issues.push({
@@ -2148,7 +2255,7 @@
       });
     }
 
-    if (budgetValuePresent(budgetActualRaw) && budgetValuePresent(summaryActualRaw) && budgetValuesDiffer(budgetActualRaw, summaryActualRaw)) {
+    if (budgetValuePresent(budgetActualRaw) && budgetValuePresent(summaryActualRaw) && budgetValuesDiffer(budgetActualRaw, summaryActualRaw) && !summaryActualLaggingBehindBudget && !config.budgetRowHasActual) {
       issues.push({
         code: "budget-actual-mismatch",
         severity: "warning",
@@ -3190,7 +3297,8 @@
       budgetRowHasActual: budgetRowHasActual,
       summaryHasActual: summaryHasActual,
       budgetActualRaw: budgetActualRaw,
-      summaryActualRaw: summaryBudgetActualRaw
+      summaryActualRaw: summaryBudgetActualRaw,
+      budgetUpdatedOn: budget && budget.qfu_lastupdated
     });
     budgetDiagnostics.issues = (budgetDiagnostics.issues || []).concat(budgetConsistencyDiagnostics.issues || []);
     budgetDiagnostics.hasIssues = budgetDiagnostics.issues.length > 0;
@@ -3422,7 +3530,7 @@
       analyticsFreshness: {
         quotesUpdatedValue: importMoment(quoteImport) || latestQuoteMoment(quotes),
         opsUpdatedValue: importMoment(opsImport) || budgetUpdatedValue,
-        ordersUpdatedValue: importMoment(orderImport) || latestBackorderMoment(backorders)
+        ordersUpdatedValue: latestDate(importMoment(orderImport), latestBackorderMoment(backorders))
       },
       annualBudgetTarget: annualBudgetTarget,
       forecastValue: forecastValue,
@@ -3499,7 +3607,7 @@
     var authenticatedUser = portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]"));
     var needsOpsData = context.pageType === "ops";
     var needsFinanceVariances = context.pageType === "branch" || needsOpsData || (context.pageType === "detail" && context.viewKey === "analytics");
-    var needsDeliveryNotPgi = context.pageType === "branch" || needsOpsData || (context.pageType === "detail" && context.viewKey === "ready-to-ship-not-pgid");
+    var needsDeliveryNotPgi = context.pageType === "branch" || needsOpsData || (context.pageType === "detail" && (context.viewKey === "ready-to-ship-not-pgid" || context.viewKey === "analytics"));
     var needsFreightData = authenticatedUser && (context.pageType === "region" || context.pageType === "branch" || needsOpsData || (context.pageType === "detail" && context.viewKey === "freight-worklist"));
     var needsSourceFeeds = needsOpsData || (authenticatedUser && (context.pageType === "branch" || (context.pageType === "detail" && context.viewKey === "freight-worklist")));
     var runtimeDiagnostics = createRuntimeDiagnostics();
@@ -3786,6 +3894,13 @@
           branch.workspace.deliveryNotPgiOrderRows = buildDeliveryNotPgiOrderRows(branch.workspace.deliveryNotPgiActiveRows, branch);
           branch.workspace.deliveryNotPgiLatestSnapshotOn = latestDate.apply(null, branch.workspace.deliveryNotPgiRows.map(function (row) { return row.snapshotCapturedOnValue ? new Date(row.snapshotCapturedOnValue) : null; }));
           branch.workspace.deliveryNotPgiLatestBaseCreatedOn = latestDate.apply(null, branch.workspace.deliveryNotPgiRows.map(function (row) { return row.createdOnValue ? new Date(row.createdOnValue) : null; }));
+          if (branch.workspace.analyticsFreshness) {
+            branch.workspace.analyticsFreshness.ordersUpdatedValue = latestDate(
+              branch.workspace.analyticsFreshness.ordersUpdatedValue,
+              branch.workspace.deliveryNotPgiLatestSnapshotOn,
+              branch.workspace.deliveryNotPgiLatestBaseCreatedOn
+            );
+          }
           branch.workspace.deliveryNotPgiStaleHours = DELIVERY_NOT_PGI_STALE_HOURS;
           branch.workspace.deliveryNotPgiIsStale = !!(branch.workspace.deliveryNotPgiLatestBaseCreatedOn && hoursBetween(new Date(), branch.workspace.deliveryNotPgiLatestBaseCreatedOn) > DELIVERY_NOT_PGI_STALE_HOURS);
           branch.workspace.deliveryNotPgiStaleLabel = branch.workspace.deliveryNotPgiIsStale
@@ -3794,24 +3909,31 @@
           branch.workspace.readyToShip = (function () {
             var activeDeliveryRows = (branch.workspace.deliveryNotPgiActiveRows || []).slice();
             var activeOrderRows = (branch.workspace.deliveryNotPgiOrderRows || []).slice();
-            var totalValue = activeDeliveryRows.reduce(function (total, row) {
-              return total + toNumber(row.unshippedValueNumber);
+            var fallbackOrderRows = activeOrderRows.length ? [] : buildBackorderReadyToShipOrderRows(branchBackorders, branch, today);
+            var displayOrderRows = activeOrderRows.length ? activeOrderRows : fallbackOrderRows;
+            var displayLineCount = activeDeliveryRows.length ? activeDeliveryRows.length : fallbackOrderRows.reduce(function (total, row) {
+              return total + parseInteger(row.lineCount, 0);
             }, 0);
-            var hasData = branch.workspace.deliveryNotPgiHasData;
+            var totalValue = (activeDeliveryRows.length ? activeDeliveryRows : fallbackOrderRows).reduce(function (total, row) {
+              return total + toNumber(row.unshippedValueNumber || row.totalValueNumber);
+            }, 0);
+            var hasData = branch.workspace.deliveryNotPgiHasData || fallbackOrderRows.length > 0;
+            var isFallback = !activeDeliveryRows.length && fallbackOrderRows.length > 0;
+            var isStale = branch.workspace.deliveryNotPgiHasData && branch.workspace.deliveryNotPgiIsStale;
             return {
-              count: activeOrderRows.length,
-              lineCount: activeDeliveryRows.length,
+              count: displayOrderRows.length,
+              lineCount: displayLineCount,
               totalValue: totalValue,
-              countLabel: String(activeOrderRows.length),
-              lineCountLabel: String(activeDeliveryRows.length),
+              countLabel: String(displayOrderRows.length),
+              lineCountLabel: String(displayLineCount),
               commentCount: activeOrderRows.filter(function (row) { return row.hasComment; }).length,
               totalLabel: formatCurrency(totalValue),
-              snapshotLabel: branch.workspace.deliveryNotPgiLatestSnapshotOn ? formatDateTime(branch.workspace.deliveryNotPgiLatestSnapshotOn) : "Dispatch snapshot pending",
-              isStale: branch.workspace.deliveryNotPgiIsStale,
+              snapshotLabel: branch.workspace.deliveryNotPgiLatestSnapshotOn ? formatDateTime(branch.workspace.deliveryNotPgiLatestSnapshotOn) : (isFallback ? "Derived from live backorders" : "Dispatch snapshot pending"),
+              isStale: isStale,
               staleLabel: branch.workspace.deliveryNotPgiStaleLabel,
               hasData: hasData,
-              topRows: activeOrderRows.slice().sort(deliveryNotPgiOrderValueSort).slice(0, 5),
-              oldestRows: activeOrderRows.slice().sort(deliveryNotPgiOrderOldestSort).slice(0, 5)
+              topRows: displayOrderRows.slice().sort(deliveryNotPgiOrderValueSort).slice(0, 5),
+              oldestRows: displayOrderRows.slice().sort(deliveryNotPgiOrderOldestSort).slice(0, 5)
             };
           })();
           branch.workspace.freightRows = branchFreightRows.rows.map(function (record) {
@@ -9188,7 +9310,7 @@ a.qfu-phase0-ready-preview-row--ledger {
     var financeStatus = analyticsSourceStatus("Finance (GL060)", "GL060", "Monthly", workspace.financeSnapshot && (workspace.financeSnapshot.qfu_lastupdated || workspace.financeSnapshot.createdon), 45, "Closed-month finance comes from GL060 and should not be interpreted as same-day operational data.");
     var opsStatus = analyticsSourceStatus("Sales / OTD (SA1300)", "SA1300", "Daily", analyticsFreshness.opsUpdatedValue || opsSummary.asOf, 2, "Freshness uses the latest successful SA1300 import; the trend table still charts billing days from the workbook.");
     var quotesStatus = analyticsSourceStatus("Quotes (SP830)", "SP830", "Daily", analyticsFreshness.quotesUpdatedValue || quoteLines.reduce(function (latest, row) { return latestDate(latest, row.createdOn); }, null), 2, "Freshness uses the latest successful SP830 import; pipeline analysis still uses quote-line Created On dates.");
-    var ordersStatus = analyticsSourceStatus("Orders (ZBO)", "ZBO", "Daily", analyticsFreshness.ordersUpdatedValue || ordersSummary.asOf, 2, "Freshness uses the latest successful ZBO import; backlog aging inside the page still uses Line Item Created On instead of promised on-time date.");
+    var ordersStatus = analyticsSourceStatus("Orders (ZBO)", "ZBO", "Daily", analyticsFreshness.ordersUpdatedValue || ordersSummary.asOf, 2, "Freshness uses the newer of the latest successful ZBO import and the latest live backlog/dispatch snapshot; backlog aging inside the page still uses Line Item Created On instead of promised on-time date.");
     var freightStatus = analyticsSourceStatus("Freight Recovery (GL060)", "GL060", "Monthly", workspace.freightRecovery && workspace.freightRecovery.updatedValue, 45, "Closed-month freight recovery comes from qfu_financevariance and stays aligned to the latest GL060 close.");
     var marginStatus = analyticsSourceStatus("Abnormal Margin Review", "SA1300", "Daily", workspace.marginModule && workspace.marginModule.snapshotDate, 2, "Margin exceptions come from the SA1300 abnormal margin review snapshot.");
     var lateStatus = analyticsSourceStatus("Late Orders", "SA1300", "Daily", workspace.lateModule && workspace.lateModule.snapshotDate, 2, "Late orders come from the latest SA1300 late order review snapshot.");

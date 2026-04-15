@@ -467,8 +467,10 @@ def parse_backorder_file(path, branch):
 
         material = as_text(row[headers.get("Material", -1)]) if "Material" in headers else None
         description = as_text(row[headers.get("Material Description", -1)]) if "Material Description" in headers else None
-        qty_on_delivery_not_pgid = round(as_float(row[headers.get("Qty on Del Not PGI'd", -1)]) if "Qty on Del Not PGI'd" in headers else 0.0, 2)
-        qty_not_on_delivery = round(as_float(row[headers.get("Qty Not On Del", -1)]) if "Qty Not On Del" in headers else 0.0, 2)
+        raw_qty_on_delivery_not_pgid = round(as_float(row[headers.get("Qty on Del Not PGI'd", -1)]) if "Qty on Del Not PGI'd" in headers else 0.0, 2)
+        raw_qty_not_on_delivery = round(as_float(row[headers.get("Qty Not On Del", -1)]) if "Qty Not On Del" in headers else 0.0, 2)
+        qty_on_delivery_not_pgid = max(raw_qty_on_delivery_not_pgid, 0.0)
+        qty_not_on_delivery = max(raw_qty_not_on_delivery, 0.0)
         if qty_not_on_delivery <= 0 and qty_on_delivery_not_pgid <= 0:
             continue
         source_id = f"{branch['branch_code']}|ZBO|{sales_doc}|{line or '0'}"

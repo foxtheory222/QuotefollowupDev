@@ -2070,15 +2070,21 @@ function Update-BackorderFlow {
   $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_CA_ZBO_File.expression = [ordered]@{
     or = @(
       [ordered]@{
-        contains = @(
+        endsWith = @(
           "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
-          "zbo"
+          ".xlsx"
         )
       },
       [ordered]@{
-        contains = @(
+        endsWith = @(
           "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
-          "backorder"
+          ".xlsm"
+        )
+      },
+      [ordered]@{
+        endsWith = @(
+          "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
+          ".xls"
         )
       }
     )
@@ -2161,8 +2167,8 @@ function Update-BackorderFlow {
   Set-FieldValue -Map $selectBackorderParameters -Name "reasonForRejection" -Value "@item()?['Reason for Rejection']"
   Set-FieldValue -Map $selectBackorderParameters -Name "firstDate" -Value "@item()?['First date']"
   Set-FieldValue -Map $selectBackorderParameters -Name "qtyBilled" -Value "@if(or(empty(item()?['Qty Billed']), startsWith(string(item()?['Qty Billed']), '#')), float(0), float(coalesce(item()?['Qty Billed'], 0)))"
-  Set-FieldValue -Map $selectBackorderParameters -Name "qtyOnDelNotPgid" -Value "@if(or(empty(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d'])), startsWith(string(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d'])), '#')), float(0), float(coalesce(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d']), 0)))"
-  Set-FieldValue -Map $selectBackorderParameters -Name "qtyNotOnDel" -Value "@if(or(empty(item()?['Qty Not On Del']), startsWith(string(item()?['Qty Not On Del']), '#')), float(0), float(coalesce(item()?['Qty Not On Del'], 0)))"
+  Set-FieldValue -Map $selectBackorderParameters -Name "qtyOnDelNotPgid" -Value "@if(or(empty(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d'])), startsWith(string(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d'])), '#')), float(0), if(greater(float(coalesce(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d']), 0)), 0), float(coalesce(coalesce(item()?['Qty on Del Not PGI_x0027_d'], item()?['Qty on Del Not PGI''d']), 0)), float(0)))"
+  Set-FieldValue -Map $selectBackorderParameters -Name "qtyNotOnDel" -Value "@if(or(empty(item()?['Qty Not On Del']), startsWith(string(item()?['Qty Not On Del']), '#')), float(0), if(greater(float(coalesce(item()?['Qty Not On Del'], 0)), 0), float(coalesce(item()?['Qty Not On Del'], 0)), float(0)))"
   $guardActions.Select_BackOrder_Rows.inputs.select = [pscustomobject]$selectBackorderParameters
   $guardActions.Filter_BackOrder_Rows.description = "Keep only actionable current-state backorder rows for the configured branch."
   $guardActions.Filter_BackOrder_Rows.inputs.where = "@and(equals(item()?['branchCode'], parameters('qfu_QFU_BranchCode')), not(empty(item()?['salesDocNumber'])), not(empty(item()?['lineNumber'])), or(greater(item()?['qtyNotOnDel'], 0), greater(item()?['qtyOnDelNotPgid'], 0)))"
@@ -2635,7 +2641,7 @@ function Update-BackorderFlow {
     -FileNameExpression "@items('Apply_to_each_Attachment')?['name']" `
     -StartedOnExpression "@variables('DeliverySnapshotProcessedOn')" `
     -RunAfter ([ordered]@{
-        Deactivate_Missing_BackOrders = @("Succeeded", "Skipped")
+        Condition_Has_New_Rows = @("Succeeded", "Skipped")
         Deactivate_Missing_DeliveryNotPgi = @("Succeeded", "Skipped")
       })
   Set-FieldValue -Map $guardActions -Name $backorderBatchActions.ListActionName -Value $backorderBatchActions.ListAction
@@ -3036,102 +3042,18 @@ function New-WorkflowDataXml {
 "@
 }
 
-function Normalize-GeneratedFlowConnections {
-  param([object]$WorkflowJson)
+function Normalize-GeneratedFlowJsonText {
+  param([string]$JsonText)
 
-  $WorkflowJson.properties.connectionReferences = [pscustomobject]([ordered]@{
-      shared_office365 = [ordered]@{
-        api = [ordered]@{
-          name = "shared_office365"
-        }
-        connection = [ordered]@{
-          connectionReferenceLogicalName = "qfu_shared_office365"
-        }
-        runtimeSource = "embedded"
-      }
-      shared_onedriveforbusiness = [ordered]@{
-        api = [ordered]@{
-          name = "shared_onedriveforbusiness"
-        }
-        connection = [ordered]@{
-          connectionReferenceLogicalName = "qfu_shared_onedriveforbusiness"
-        }
-        runtimeSource = "embedded"
-      }
-      "shared_excelonlinebusiness-1" = [ordered]@{
-        api = [ordered]@{
-          name = "shared_excelonlinebusiness"
-        }
-        connection = [ordered]@{
-          connectionReferenceLogicalName = "qfu_shared_excelonlinebusiness"
-        }
-        runtimeSource = "embedded"
-      }
-      shared_commondataserviceforapps = [ordered]@{
-        api = [ordered]@{
-          name = "shared_commondataserviceforapps"
-        }
-        connection = [ordered]@{
-          connectionReferenceLogicalName = "qfu_shared_commondataserviceforapps"
-        }
-        runtimeSource = "embedded"
-      }
-    })
+  $normalized = [string]$JsonText
 
-  $hostConnectionMap = @{
-    "/providers/Microsoft.PowerApps/apis/shared_office365" = "shared_office365"
-    "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness" = "shared_onedriveforbusiness"
-    "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness" = "shared_excelonlinebusiness-1"
-    "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps" = "shared_commondataserviceforapps"
-  }
+  # Keep the generated replacement flows aligned with the connector keys the live service already accepts.
+  $normalized = [regex]::Replace($normalized, '"shared_excelonlinebusiness"\s*:', '"shared_excelonlinebusiness-1":')
+  $normalized = [regex]::Replace($normalized, '"shared_commondataserviceforapps-1"\s*:', '"shared_commondataserviceforapps":')
+  $normalized = [regex]::Replace($normalized, '"connectionName"\s*:\s*"shared_excelonlinebusiness"', '"connectionName": "shared_excelonlinebusiness-1"')
+  $normalized = [regex]::Replace($normalized, '"connectionName"\s*:\s*"shared_commondataserviceforapps-1"', '"connectionName": "shared_commondataserviceforapps"')
 
-  $stack = New-Object 'System.Collections.Generic.Stack[object]'
-  $visited = New-Object 'System.Collections.Generic.HashSet[int]'
-  $stack.Push($WorkflowJson.properties.definition)
-
-  while ($stack.Count -gt 0) {
-    $node = $stack.Pop()
-    if ($null -eq $node) {
-      continue
-    }
-
-    if ($node -is [System.Collections.IEnumerable] -and -not ($node -is [string])) {
-      foreach ($item in $node) {
-        if ($null -ne $item) {
-          $stack.Push($item)
-        }
-      }
-      continue
-    }
-
-    if ($node -isnot [System.Management.Automation.PSCustomObject]) {
-      continue
-    }
-
-    $nodeId = [System.Runtime.CompilerServices.RuntimeHelpers]::GetHashCode($node)
-    if (-not $visited.Add($nodeId)) {
-      continue
-    }
-
-    if (
-      $node.PSObject.Properties["inputs"] -and
-      $node.inputs -and
-      $node.inputs.PSObject.Properties["host"] -and
-      $node.inputs.host -and
-      $node.inputs.host.PSObject.Properties["apiId"]
-    ) {
-      $apiId = [string]$node.inputs.host.apiId
-      if ($hostConnectionMap.ContainsKey($apiId)) {
-        $node.inputs.host.connectionName = $hostConnectionMap[$apiId]
-      }
-    }
-
-    foreach ($property in $node.PSObject.Properties) {
-      if ($null -ne $property.Value) {
-        $stack.Push($property.Value)
-      }
-    }
-  }
+  return $normalized
 }
 
 Remove-IfExists $solutionRoot
@@ -3175,12 +3097,13 @@ foreach ($branch in $branchSpecs) {
       default { throw "Unsupported template family: $($template.Family)" }
     }
 
-    Normalize-GeneratedFlowConnections -WorkflowJson $json
-
     $jsonName = "$flowName-$($workflowId.ToUpperInvariant()).json"
     $dataXmlName = "$jsonName.data.xml"
 
-    Write-Utf8File -Path (Join-Path $workflowRoot $jsonName) -Content (Convert-ToJsonCompact -Object $json)
+    $jsonContent = Convert-ToJsonCompact -Object $json
+    $jsonContent = Normalize-GeneratedFlowJsonText -JsonText $jsonContent
+
+    Write-Utf8File -Path (Join-Path $workflowRoot $jsonName) -Content $jsonContent
     Write-Utf8File -Path (Join-Path $workflowRoot $dataXmlName) -Content (New-WorkflowDataXml -WorkflowId $workflowId -FlowName $flowName)
 
     $rootComponents.Add('      <RootComponent type="29" id="{' + $workflowId + '}" behavior="0" />') | Out-Null

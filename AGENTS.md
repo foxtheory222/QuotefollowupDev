@@ -118,21 +118,30 @@ Target architecture:
 - Avoid giant monolithic flows that mix trigger, parsing, transformation, upsert, and summary logic in one place.
 - Production ingestion must be Power Automate only. Do not reintroduce local scheduled-task or timer-based fallbacks for recurring branch imports, summary sync, or freshness repair.
 - Branch mail should continue to land in the main inbox. Do not move source reports to a separate mailbox folder unless the operating rule changes explicitly.
+- Replay helpers must assume Inbox-only routing and fail closed if a helper tries to target a moved folder or alternate mailbox.
+- Replay helpers must require an explicit branch filter and validate it before sending. Never infer the target branch from display name, subject suffix, or folder name.
 - Shared mailbox trigger logic must tolerate subject and attachment naming variants through configuration, not ad hoc branch-specific hard-coding.
+- ZBO quantity fields must be normalized before Dataverse upsert. Clamp source `qtyNotOnDel` and `qtyOnDelNotPgid` at zero in the flow/parser layer; SAP workbooks can emit negative `Qty Not On Del`, and `qfu_backorder.qfu_qtynotondel` rejects negatives.
+- For current-state writers such as ZBO and SP830, never leave legacy and replacement flows enabled together for the same branch/source family. Overlapping writers create duplicate canonical `qfu_quote` or `qfu_backorder` rows even when both flows individually succeed.
 - When the analytics page or budget pacing looks wrong, check Dataverse ingestion first. Do not assume a page defect until the source rows are proven present and fresh.
 - `qfu_ingestionbatch` is the canonical freshness source for analytics. If analytics freshness is wrong, fix the flow that writes the stable ingestion row, not the page text.
+- If a stable `qfu_ingestionbatch` row lags behind fresher live operational rows, treat that as an ingestion defect to repair and document. The analytics runtime may temporarily prefer the newer live backlog or dispatch snapshot to avoid lying about freshness, but the permanent fix is still the flow that should have refreshed the stable ingestion row.
 - Current-month SA1300 budget logic must treat a missing `qfu_budgetarchive` row as a normal case. The flow must be able to resolve the target from the workbook `Location Summary` Month-End Plan before failing.
 - Current-month SA1300 summary sync must treat a missing `qfu_budgetarchive` row as a normal case and resolve the target from the workbook month-end plan before failing.
 - Keep the flow generator, runtime readiness checks, and live repair scripts in sync. If a flow expression or action name changes in the generator, update every script that validates or patches that flow in the same change.
 - Prefer narrow live-flow patches over broad canonical branch replacement. Broad repairs can fail template validation if action dependencies are not on the live `runAfter` path.
 - If XRM workflow update or solution import fails with a Microsoft flow-server `NullReferenceException`, stop retrying the same path. Record the artifact, switch to a narrower Flow REST patch or create-new-flow path, and use a documented mitigation if production is blocked.
 - After any `TemplateValidationError`, stop retrying the same broad flow template import or update path. Switch to a narrow Flow REST patch or create-new-flow path, then validate the live artifact.
+- After any solution import for cloud flows, verify the imported workflow rows are actually `Activated` before disabling the legacy flow. `pac solution import` can succeed while the imported replacement still lands in `Draft`.
 - Time-box `Add-PowerAppsAccount` and other interactive auth steps. If shell auth stalls, do not treat that as proof the patch itself is invalid.
+- PAC auth and Dataverse XRM auth can still be healthy even when `Add-PowerAppsAccount` stalls. Check the local auth state before assuming the service path is broken.
 - For Dataverse/XRM work, use Windows PowerShell Desktop (`powershell`), not PowerShell Core, because `Microsoft.Xrm.Data.Powershell` is not reliably compatible with Core.
 - Verify flow-backed fixes in this order: generator/tests, Dataverse rows, portal render, then Power Automate run history. Run history and browser token fetches are supporting evidence, not the primary source of truth.
+- Chrome/CDP browser debugging is supporting evidence only. Use it to inspect the authenticated session and flow-network traces when the UI is opaque, but do not treat browser-local state as proof that a cloud flow is healthy or activated.
 - If an emergency monthly target seed is required to keep production live, save the seeded values, affected row ids, replay artifact, and validation artifact in `results` instead of treating it as an undocumented manual fix.
 - Legacy SA1300 or ZBO flows should only be disabled after the replacement flow is confirmed enabled and running. Do not leave production with both the legacy and replacement paths off.
 - Generated replacement flows must preserve the stable live connector names in both `properties.connectionReferences` and action `host.connectionName` values. Mixed suffix variants such as `shared_commondataserviceforapps-1` vs `shared_commondataserviceforapps`, or `shared_excelonlinebusiness` vs `shared_excelonlinebusiness-1`, can import a flow that cannot be started.
+- If a live repair starts changing `runAfter` topology or the workflow row remains Draft/Unpublished after import, stop patching the live graph in place. Regenerate, import, resave, and enable a replacement flow before retiring the legacy flow.
 
 ### Power Pages
 - Build dynamic templates and reusable components.
@@ -146,6 +155,9 @@ Target architecture:
 - The analytics view must explicitly load `qfu_deliverynotpgi` when it renders ready-to-ship or shipment-adjacent KPIs. Do not assume the branch page data load covers analytics.
 - If a KPI card shows zero but Dataverse has current rows, verify the page prefetch and permission scope before changing the KPI formula.
 - Analytics freshness, delivery readiness, and overdue counts must degrade gracefully, but they must never silently fall back to zero when source rows exist.
+- In this environment, `qfu_deliverynotpgi.qfu_active` can be inverted for live rows. Treat `qfu_inactiveon` as the hard inactive signal, and if `qfu_active` is explicitly `false` / `No` with no `qfu_inactiveon`, treat the row as active for runtime analytics until the writer path is proven fixed.
+- If `qfu_budget` is newer than the current-day `qfu_branchdailysummary` row, do not surface a budget actual mismatch as a business warning until Dataverse proves the summary is not simply lagging behind fresher budget data.
+- If `qfu_ingestionbatch` lags behind fresher `qfu_backorder` or `qfu_deliverynotpgi` rows, the analytics runtime may use the fresher live operational timestamp to avoid false stale labels, but the flow defect must still be repaired and documented.
 
 ### Security
 - Assume internal-only unless requirements say otherwise.

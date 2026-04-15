@@ -227,6 +227,16 @@ function Build-BackorderFields {
     [datetime]$CapturedOn
   )
 
+  $qtyOnDelivery = Get-NullableDecimal $Record.qfu_qtyondelnotpgid
+  if ($null -ne $qtyOnDelivery -and $qtyOnDelivery -lt 0) {
+    $qtyOnDelivery = [decimal]0
+  }
+
+  $qtyNotOnDelivery = Get-NullableDecimal $Record.qfu_qtynotondel
+  if ($null -ne $qtyNotOnDelivery -and $qtyNotOnDelivery -lt 0) {
+    $qtyNotOnDelivery = [decimal]0
+  }
+
   return @{
     qfu_name = [string]$Record.qfu_name
     qfu_sourceid = [string]$Record.qfu_sourceid
@@ -240,8 +250,8 @@ function Build-BackorderFields {
     qfu_description = [string]$Record.qfu_description
     qfu_quantity = Get-NullableDecimal $Record.qfu_quantity
     qfu_qtybilled = Get-NullableDecimal $Record.qfu_qtybilled
-    qfu_qtyondelnotpgid = Get-NullableDecimal $Record.qfu_qtyondelnotpgid
-    qfu_qtynotondel = Get-NullableDecimal $Record.qfu_qtynotondel
+    qfu_qtyondelnotpgid = $qtyOnDelivery
+    qfu_qtynotondel = $qtyNotOnDelivery
     qfu_branchcode = [string]$Record.qfu_branchcode
     qfu_branchslug = [string]$Record.qfu_branchslug
     qfu_regionslug = [string]$Record.qfu_regionslug
