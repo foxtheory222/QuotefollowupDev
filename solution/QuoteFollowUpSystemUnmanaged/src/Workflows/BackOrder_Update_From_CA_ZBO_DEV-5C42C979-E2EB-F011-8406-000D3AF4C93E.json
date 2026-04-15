@@ -1,0 +1,660 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_office365"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_onedriveforbusiness": {
+        "api": {
+          "name": "shared_onedriveforbusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_onedriveforbusiness"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_commondataserviceforapps": {
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_excelonlinebusiness-1": {
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_excelonlinebusiness"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "qfu_QFU_OneDriveDriveId": {
+          "defaultValue": "b!bA1jOZ9a1kOqTvvBLoCVwOuylE1sXrNHizJwXLwZBftmbGtREvxoR5hGDI_2okkg",
+          "type": "String"
+        },
+        "qfu_QFU_OneDriveFolderPath": {
+          "defaultValue": "/QuoteFollowUpTemp",
+          "type": "String"
+        },
+        "qfu_QFU_OutlookFolderId": {
+          "defaultValue": "Id::AAMkAGNkYWVhZGMyLTkzODUtNDE1ZC04ODEzLTA2NGQyODVhODBjOAAuAAAAAACSBjPte7XYR4uatFOgeQv_AQBWZQh-KPFZRYNAfAmRZfVWAAQWVGc0AAA=",
+          "type": "String"
+        },
+        "qfu_QFU_BranchCode": {
+          "defaultValue": "4171",
+          "type": "String"
+        },
+        "qfu_QFU_BranchSlug": {
+          "defaultValue": "4171-calgary",
+          "type": "String"
+        },
+        "qfu_QFU_RegionSlug": {
+          "defaultValue": "southern-alberta",
+          "type": "String"
+        },
+        "qfu_QFU_OfficeScriptId": {
+          "defaultValue": "ms-officescript://onedrive_business_itemlink/013WL7VQXLVGJMLMEWOFH3223OHW2FYSEV",
+          "type": "String"
+        }
+      },
+      "triggers": {
+        "When_email_arrives_(V3)": {
+          "type": "OpenApiConnectionNotification",
+          "description": "Triggers when email with CA ZBO Excel attachment arrives. You'll configure the folder after importing.",
+          "inputs": {
+            "parameters": {
+              "includeAttachments": true,
+              "subjectFilter": "Daily Backorder Report",
+              "importance": "Any",
+              "fetchOnlyWithAttachment": true,
+              "folderPath": "@parameters('qfu_QFU_OutlookFolderId')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "OnNewEmailV3",
+              "connectionName": "shared_office365"
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "9bdd59ed-dc38-4b31-92a2-2e67dd8eefb6"
+          }
+        }
+      },
+      "actions": {
+        "Initialize_FileID": {
+          "type": "InitializeVariable",
+          "description": "Store the OneDrive file ID for the uploaded Excel file",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FileID",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "4628d25a-2059-4070-8fbe-06501503a18f"
+          }
+        },
+        "Initialize_FilePath": {
+          "type": "InitializeVariable",
+          "description": "Store the OneDrive file path for Excel operations",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FilePath",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_FileID": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Apply_to_each_Attachment": {
+          "type": "Foreach",
+          "description": "Loop through email attachments to find CA ZBO Excel file",
+          "foreach": "@coalesce(triggerOutputs()?['body/attachments'], createArray())",
+          "actions": {
+            "Condition_Is_CA_ZBO_File": {
+              "type": "If",
+              "description": "Check if attachment is the CA ZBO Excel file",
+              "expression": {
+                "or": [
+                  {
+                    "contains": [
+                      "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
+                      "ca zbo"
+                    ]
+                  },
+                  {
+                    "contains": [
+                      "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
+                      "zbo"
+                    ]
+                  },
+                  {
+                    "contains": [
+                      "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
+                      "backorder"
+                    ]
+                  },
+                  {
+                    "contains": [
+                      "@toLower(coalesce(items('Apply_to_each_Attachment')?['name'], ''))",
+                      "sp830ca"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Create_File_in_OneDrive": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "folderPath": "@parameters('qfu_QFU_OneDriveFolderPath')",
+                      "name": "@concat('CA_ZBO_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '_', items('Apply_to_each_Attachment')?['name'])",
+                      "body": "@base64ToBinary(items('Apply_to_each_Attachment')?['contentBytes'])"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+                      "operationId": "CreateFile",
+                      "connectionName": "shared_onedriveforbusiness"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "88460117-44c4-4590-a891-b236bc28f891"
+                  }
+                },
+                "Set_FileID": {
+                  "type": "SetVariable",
+                  "description": "Store file ID for later use",
+                  "inputs": {
+                    "name": "FileID",
+                    "value": "@outputs('Create_File_in_OneDrive')?['body/Id']"
+                  },
+                  "runAfter": {
+                    "Create_File_in_OneDrive": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8bca0fe6-ae33-423e-843d-5e2dde723774"
+                  }
+                },
+                "Set_FilePath": {
+                  "type": "SetVariable",
+                  "description": "Store file path for Excel operations",
+                  "inputs": {
+                    "name": "FilePath",
+                    "value": "@concat(parameters('qfu_QFU_OneDriveFolderPath'), '/', outputs('Create_File_in_OneDrive')?['body/Name'])"
+                  },
+                  "runAfter": {
+                    "Set_FileID": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Delay_for_File_Availability": {
+                  "type": "Wait",
+                  "description": "Wait 5 seconds for file to be fully available",
+                  "inputs": {
+                    "interval": {
+                      "count": 5,
+                      "unit": "Second"
+                    }
+                  },
+                  "runAfter": {
+                    "Set_FilePath": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8b4932d3-05f4-4fd6-b8a5-e729314cdb80"
+                  }
+                },
+                "Get_BackOrder_Tables": {
+                  "type": "OpenApiConnection",
+                  "description": "Fetch table IDs for the uploaded backorder file.",
+                  "inputs": {
+                    "parameters": {
+                      "source": "me",
+                      "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                      "file": "@outputs('Create_File_in_OneDrive')?['body/Path']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "GetTables",
+                      "connectionName": "shared_excelonlinebusiness-1"
+                    }
+                  },
+                  "runAfter": {
+                    "Delay_for_File_Availability": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "List_BackOrder_Rows": {
+                  "type": "OpenApiConnection",
+                  "description": "List rows from the backorder table.",
+                  "inputs": {
+                    "parameters": {
+                      "source": "me",
+                      "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                      "file": "@outputs('Create_File_in_OneDrive')?['body/Path']",
+                      "table": "@coalesce(first(body('Get_BackOrder_Tables_AfterCreate')?['value'])?['id'], first(body('Get_BackOrder_Tables')?['value'])?['id'])",
+                      "dateTimeFormat": "ISO 8601"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "GetItems",
+                      "connectionName": "shared_excelonlinebusiness-1"
+                    }
+                  },
+                  "runAfter": {
+                    "Condition_Ensure_BackOrder_Table": [
+                      "Succeeded"
+                    ]
+                  },
+                  "runtimeConfiguration": {
+                    "paginationPolicy": {
+                      "minimumItemCount": 5000
+                    }
+                  }
+                },
+                "Debug_BackOrder_List_Count": {
+                  "type": "Compose",
+                  "description": "DEBUG: count rows returned by List_BackOrder_Rows",
+                  "inputs": "@length(coalesce(body('List_BackOrder_Rows')?['value'], createArray()))",
+                  "runAfter": {
+                    "List_BackOrder_Rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Debug_BackOrder_List_First": {
+                  "type": "Compose",
+                  "description": "DEBUG: first row returned by List_BackOrder_Rows",
+                  "inputs": "@if(greater(length(coalesce(body('List_BackOrder_Rows')?['value'], createArray())), 0), first(coalesce(body('List_BackOrder_Rows')?['value'], createArray())), null)",
+                  "runAfter": {
+                    "Debug_BackOrder_List_Count": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Guard_BackOrder_Row_Limit": {
+                  "type": "If",
+                  "description": "Stop if the row limit is reached (possible truncation).",
+                  "expression": "@less(length(coalesce(body('List_BackOrder_Rows')?['value'], createArray())), 20000)",
+                  "actions": {
+                    "Select_BackOrder_Rows": {
+                      "type": "Select",
+                      "description": "Normalize backorder rows into the expected schema without Office Scripts.",
+                      "inputs": {
+                        "from": "@coalesce(body('List_BackOrder_Rows')?['value'], createArray())",
+                        "select": {
+                          "branchCode": "@if(or(empty(coalesce(item()?['Soff_x002e_'], item()?['Soff.'])), startsWith(string(coalesce(item()?['Soff_x002e_'], item()?['Soff.'])), '#')), '', string(coalesce(item()?['Soff_x002e_'], item()?['Soff.'])))",
+                          "onTimeDate": "@item()?['On-Time Date']",
+                          "salesDocNumber": "@if(or(empty(coalesce(item()?['Sales Doc _x0023_'], item()?['Sales Doc #'])), startsWith(string(coalesce(item()?['Sales Doc _x0023_'], item()?['Sales Doc #'])), '#')), '', string(coalesce(item()?['Sales Doc _x0023_'], item()?['Sales Doc #'])))",
+                          "lineNumber": "@if(or(empty(item()?['Line']), startsWith(string(item()?['Line']), '#')), '', string(item()?['Line']))",
+                          "salesDocType": "@item()?['Sales Doc Type']",
+                          "customerPO": "@item()?['Customer PO Number']",
+                          "materialGroup": "@item()?['Mat Grp']",
+                          "material": "@if(or(empty(item()?['Material']), startsWith(string(item()?['Material']), '#')), '', string(item()?['Material']))",
+                          "description": "@item()?['Material Description']",
+                          "cmir": "@item()?['CMIR']",
+                          "accountManager": "@item()?['Acct Mgr']",
+                          "customerName": "@item()?['Sold To Name']",
+                          "shipToName": "@item()?['Ship To Name']",
+                          "totalValue": "@if(or(empty(item()?['Unshipped Net Value']), startsWith(string(item()?['Unshipped Net Value']), '#')), float(0), float(coalesce(replace(replace(string(item()?['Unshipped Net Value']), '$', ''), ',', ''), '0')))",
+                          "quantity": "@if(or(empty(item()?['Unshipped Quantity']), startsWith(string(item()?['Unshipped Quantity']), '#')), float(0), float(coalesce(item()?['Unshipped Quantity'], 0)))",
+                          "qtyOnDelNotPgid": "@if(or(empty(item()?['Qty on Del Not PGI''d']), startsWith(string(item()?['Qty on Del Not PGI''d']), '#')), float(0), float(coalesce(item()?['Qty on Del Not PGI''d'], 0)))",
+                          "qtyNotOnDel": "@if(or(empty(item()?['Qty Not On Del']), startsWith(string(item()?['Qty Not On Del']), '#')), float(0), float(coalesce(item()?['Qty Not On Del'], 0)))",
+                          "unitPrice": "@if(or(empty(item()?['Net Price']), startsWith(string(item()?['Net Price']), '#')), float(0), float(coalesce(replace(replace(string(item()?['Net Price']), '$', ''), ',', ''), '0')))",
+                          "uom": "@item()?['UOM']",
+                          "createdDate": "@item()?['Line Item Created On Date']",
+                          "cssrName": "@item()?['CSSR Name']",
+                          "status": "@item()?['User Status Description']",
+                          "daysOverdue": "@if(or(empty(item()?['On-Time Date']), startsWith(string(item()?['On-Time Date']), '#'), greater(ticks(item()?['On-Time Date']), ticks(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time')))), 0, int(div(sub(ticks(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time')), ticks(item()?['On-Time Date'])), 864000000000)))"
+                        }
+                      },
+                      "runAfter": {}
+                    },
+                    "Debug_BackOrder_Select_Count": {
+                      "type": "Compose",
+                      "description": "DEBUG: count rows after Select_BackOrder_Rows",
+                      "inputs": "@length(body('Select_BackOrder_Rows'))",
+                      "runAfter": {
+                        "Select_BackOrder_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Debug_BackOrder_Select_First": {
+                      "type": "Compose",
+                      "description": "DEBUG: first row after Select_BackOrder_Rows",
+                      "inputs": "@if(greater(length(coalesce(body('Select_BackOrder_Rows'), createArray())), 0), first(coalesce(body('Select_BackOrder_Rows'), createArray())), null)",
+                      "runAfter": {
+                        "Debug_BackOrder_Select_Count": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Filter_BackOrder_Rows": {
+                      "type": "Query",
+                      "description": "Keep only supported branch rows with valid keys and actionable backlog quantities.",
+                      "inputs": {
+                        "from": "@coalesce(body('Select_BackOrder_Rows'), createArray())",
+                        "where": "@and(or(equals(item()?['branchCode'], '4171'), equals(item()?['branchCode'], '4172'), equals(item()?['branchCode'], '4173')), not(empty(item()?['salesDocNumber'])), not(empty(item()?['lineNumber'])), or(greater(item()?['qtyNotOnDel'], 0), greater(item()?['qtyOnDelNotPgid'], 0)))"
+                      },
+                      "runAfter": {
+                        "Select_BackOrder_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Condition_Has_New_Rows": {
+                      "type": "If",
+                      "description": "Only delete and insert when filtered rows exist.",
+                      "expression": "@greater(length(coalesce(body('Filter_BackOrder_Rows'), createArray())), 0)",
+                      "actions": {
+                        "List_Old_BackOrders": {
+                          "type": "OpenApiConnection",
+                          "description": "Get all existing back order records to delete them",
+                          "inputs": {
+                            "parameters": {
+                              "entityName": "qfu_backorders",
+                              "$select": "qfu_backorderid",
+                              "$filter": "qfu_sourcefamily eq 'ZBO'"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "operationId": "ListRecords",
+                              "connectionName": "shared_commondataserviceforapps"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "e43dcbe5-3dfa-492d-9e44-4e0083534352"
+                          }
+                        },
+                        "Delete_Old_BackOrders": {
+                          "type": "Foreach",
+                          "description": "Loop through and delete all old back order records",
+                          "foreach": "@outputs('List_Old_BackOrders')?['body/value']",
+                          "actions": {
+                            "Delete_BackOrder_Record": {
+                              "type": "OpenApiConnection",
+                              "description": "Delete old back order record",
+                              "inputs": {
+                                "parameters": {
+                                  "entityName": "qfu_backorders",
+                                  "recordId": "@items('Delete_Old_BackOrders')?['qfu_backorderid']"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                  "operationId": "DeleteRecord",
+                                  "connectionName": "shared_commondataserviceforapps"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "da2fb731-cf82-4179-bf4c-9043f91ca4ac"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "List_Old_BackOrders": [
+                              "Succeeded"
+                            ]
+                          },
+                          "runtimeConfiguration": {
+                            "concurrency": {
+                              "repetitions": 50
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "873bf30e-a891-423c-a8d2-03f1ddcb3314"
+                          }
+                        },
+                        "Insert_New_BackOrders": {
+                          "type": "Foreach",
+                          "description": "Loop through new records from Excel table and insert into Dataverse",
+                          "foreach": "@body('Filter_BackOrder_Rows')",
+                          "actions": {
+                            "Create_BackOrder_Record": {
+                              "type": "OpenApiConnection",
+                              "description": "Insert new back order record into Dataverse",
+                              "inputs": {
+                                "parameters": {
+                                  "entityName": "qfu_backorders",
+                                  "item/qfu_name": "@{concat(items('Insert_New_BackOrders')?['branchCode'], '-BO-', items('Insert_New_BackOrders')?['salesDocNumber'], '-', items('Insert_New_BackOrders')?['lineNumber'])}",
+                                  "item/qfu_cssrname": "@items('Insert_New_BackOrders')?['cssrName']",
+                                  "item/qfu_customername": "@items('Insert_New_BackOrders')?['customerName']",
+                                  "item/qfu_customerpo": "@items('Insert_New_BackOrders')?['customerPO']",
+                                  "item/qfu_daysoverdue": "@items('Insert_New_BackOrders')?['daysOverdue']",
+                                  "item/qfu_description": "@items('Insert_New_BackOrders')?['description']",
+                                  "item/qfu_material": "@items('Insert_New_BackOrders')?['material']",
+                                  "item/qfu_ontimedate": "@if(equals(items('Insert_New_BackOrders')?['onTimeDate'], null), null, formatDateTime(items('Insert_New_BackOrders')?['onTimeDate'], 'yyyy-MM-dd'))",
+                                  "item/qfu_quantity": "@int(formatNumber(items('Insert_New_BackOrders')?['quantity'], '0'))",
+                                  "item/qfu_qtyondelnotpgid": "@items('Insert_New_BackOrders')?['qtyOnDelNotPgid']",
+                                  "item/qfu_qtynotondel": "@items('Insert_New_BackOrders')?['qtyNotOnDel']",
+                                  "item/qfu_salesdocnumber": "@items('Insert_New_BackOrders')?['salesDocNumber']",
+                                  "item/qfu_totalvalue": "@items('Insert_New_BackOrders')?['totalValue']",
+                                  "item/qfu_sourceid": "@concat(items('Insert_New_BackOrders')?['branchCode'], '|ZBO|', items('Insert_New_BackOrders')?['salesDocNumber'], '|', items('Insert_New_BackOrders')?['lineNumber'])",
+                                  "item/qfu_branchcode": "@items('Insert_New_BackOrders')?['branchCode']",
+                                  "item/qfu_branchslug": "@if(equals(items('Insert_New_BackOrders')?['branchCode'], '4171'), '4171-calgary', if(equals(items('Insert_New_BackOrders')?['branchCode'], '4172'), '4172-lethbridge', if(equals(items('Insert_New_BackOrders')?['branchCode'], '4173'), '4173-medicine-hat', parameters('qfu_QFU_BranchSlug'))))",
+                                  "item/qfu_regionslug": "@parameters('qfu_QFU_RegionSlug')",
+                                  "item/qfu_sourcefamily": "ZBO",
+                                  "item/qfu_sourcefile": "@items('Apply_to_each_Attachment')?['name']",
+                                  "item/qfu_sourceline": "@string(items('Insert_New_BackOrders')?['lineNumber'])"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                  "operationId": "CreateRecord",
+                                  "connectionName": "shared_commondataserviceforapps"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "2963466a-8a10-4096-8305-fd6bedf16ddf"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Delete_Old_BackOrders": [
+                              "Succeeded"
+                            ]
+                          },
+                          "runtimeConfiguration": {
+                            "concurrency": {
+                              "repetitions": 50
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "cee04b2e-6abf-4518-a778-80d6050afd60"
+                          }
+                        },
+                        "Delay_Before_File_Delete": {
+                          "type": "Wait",
+                          "description": "Wait 30 seconds before cleaning up temp file",
+                          "inputs": {
+                            "interval": {
+                              "count": 30,
+                              "unit": "Second"
+                            }
+                          },
+                          "runAfter": {
+                            "Insert_New_BackOrders": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "7be97ee9-158b-42c4-86a9-274c5d92cea7"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Compose_BackOrder_Skip_Delete": {
+                            "type": "Compose",
+                            "inputs": "Backorder import: 0 valid rows detected. Skipping delete to prevent wipe."
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Filter_BackOrder_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Debug_BackOrder_Filter_Count": {
+                      "type": "Compose",
+                      "description": "DEBUG: count rows after Filter_BackOrder_Rows",
+                      "inputs": "@length(coalesce(body('Filter_BackOrder_Rows'), createArray()))",
+                      "runAfter": {
+                        "Filter_BackOrder_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Debug_BackOrder_Filter_First": {
+                      "type": "Compose",
+                      "description": "DEBUG: first row after Filter_BackOrder_Rows",
+                      "inputs": "@if(greater(length(coalesce(body('Filter_BackOrder_Rows'), createArray())), 0), first(coalesce(body('Filter_BackOrder_Rows'), createArray())), null)",
+                      "runAfter": {
+                        "Debug_BackOrder_Filter_Count": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Compose_BackOrder_Row_Limit_Skip": {
+                        "type": "Compose",
+                        "description": "Skip delete/import when row count hits the max table range.",
+                        "inputs": "Backorder import stopped: row count hit the 20000-row limit. Skipping delete/import."
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Debug_BackOrder_List_First": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Condition_Ensure_BackOrder_Table": {
+                  "type": "If",
+                  "description": "Ensure an Excel table exists before listing rows.",
+                  "expression": {
+                    "equals": [
+                      "@length(coalesce(body('Get_BackOrder_Tables')?['value'], createArray()))",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "Create_BackOrder_Table": {
+                      "type": "OpenApiConnection",
+                      "description": "Create a table from the backorder worksheet so rows can be listed without Office Scripts.",
+                      "inputs": {
+                        "parameters": {
+                          "source": "me",
+                          "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                          "file": "@outputs('Create_File_in_OneDrive')?['body/Path']",
+                          "table/Range": "ZBO!A1:AM20000"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                          "operationId": "CreateTable",
+                          "connectionName": "shared_excelonlinebusiness-1"
+                        }
+                      }
+                    },
+                    "Get_BackOrder_Tables_AfterCreate": {
+                      "type": "OpenApiConnection",
+                      "description": "Fetch table IDs for the uploaded backorder file.",
+                      "inputs": {
+                        "parameters": {
+                          "source": "me",
+                          "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                          "file": "@outputs('Create_File_in_OneDrive')?['body/Path']"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                          "operationId": "GetTables",
+                          "connectionName": "shared_excelonlinebusiness-1"
+                        }
+                      },
+                      "runAfter": {
+                        "Create_BackOrder_Table": [
+                          "Succeeded",
+                          "Failed"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Get_BackOrder_Tables": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "metadata": {
+                "operationMetadataId": "30f2de4c-8640-4cea-99c2-0fff1804e3c8"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_FilePath": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cdcf4934-ec97-46e6-9c60-2ea5b4afac83"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

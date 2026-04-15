@@ -1,0 +1,259 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 15,
+            "timeZone": "Mountain Standard Time",
+            "startTime": "2026-04-01T08:50:00"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Compose_CurrentDateMountain": {
+          "runAfter": {},
+          "type": "Compose",
+          "inputs": "@convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time')"
+        },
+        "Compose_CurrentMonth": {
+          "runAfter": {
+            "Compose_CurrentDateMountain": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@int(formatDateTime(outputs('Compose_CurrentDateMountain'), 'MM'))"
+        },
+        "Compose_CurrentYear": {
+          "runAfter": {
+            "Compose_CurrentMonth": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@int(formatDateTime(outputs('Compose_CurrentDateMountain'), 'yyyy'))"
+        },
+        "Compose_CurrentMonthName": {
+          "runAfter": {
+            "Compose_CurrentYear": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@formatDateTime(outputs('Compose_CurrentDateMountain'), 'MMMM')"
+        },
+        "Compose_CurrentFiscalYear": {
+          "runAfter": {
+            "Compose_CurrentMonthName": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@concat('FY', formatDateTime(addToTime(outputs('Compose_CurrentDateMountain'), 4, 'Month'), 'yy'))"
+        },
+        "Get_Budget_Goal_From_Archives": {
+          "runAfter": {
+            "Compose_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qfu_budgetarchives",
+              "$select": "qfu_budgetgoal",
+              "$filter": "qfu_month eq @{outputs('Compose_CurrentMonth')} and qfu_fiscalyear eq '@{outputs('Compose_CurrentFiscalYear')}'",
+              "$orderby": "modifiedon desc",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition_Has_Goal": {
+          "runAfter": {
+            "Get_Budget_Goal_From_Archives": [
+              "Succeeded"
+            ]
+          },
+          "type": "If",
+          "expression": {
+            "greater": [
+              "@length(outputs('Get_Budget_Goal_From_Archives')?['body/value'])",
+              0
+            ]
+          },
+          "actions": {
+            "Get_Active_Budget": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qfu_budgets",
+                  "$select": "qfu_budgetid,qfu_month,qfu_year,qfu_isactive",
+                  "$filter": "qfu_isactive eq true",
+                  "$orderby": "modifiedon desc",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition_Needs_Rollover": {
+              "runAfter": {
+                "Get_Active_Budget": [
+                  "Succeeded"
+                ]
+              },
+              "type": "If",
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@length(outputs('Get_Active_Budget')?['body/value'])",
+                      0
+                    ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@int(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_month'], 0))",
+                        "@outputs('Compose_CurrentMonth')"
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@int(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_year'], 0))",
+                        "@outputs('Compose_CurrentYear')"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "actions": {
+                "Condition_Has_Active_Budget": {
+                  "runAfter": {},
+                  "type": "If",
+                  "expression": {
+                    "greater": [
+                      "@length(outputs('Get_Active_Budget')?['body/value'])",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "Deactivate_Old_Budget_Record": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "qfu_budgets",
+                          "recordId": "@outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_budgetid']",
+                          "item": {
+                            "qfu_isactive": false
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  }
+                },
+                "Create_Current_Month_Budget_Record": {
+                  "runAfter": {
+                    "Condition_Has_Active_Budget": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_budgets",
+                      "item/qfu_budgetname": "seed",
+                      "item/qfu_budgetamount": 1,
+                      "item/qfu_customername": "seed",
+                      "item": {
+                        "qfu_usdsales": 0,
+                        "qfu_year": "@outputs('Compose_CurrentYear')",
+                        "qfu_actualsales": 0,
+                        "qfu_monthname": "@outputs('Compose_CurrentMonthName')",
+                        "qfu_month": "@outputs('Compose_CurrentMonth')",
+                        "qfu_isactive": true,
+                        "qfu_fiscalyear": "@outputs('Compose_CurrentFiscalYear')",
+                        "qfu_budgetamount": "@first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal']",
+                        "qfu_customername": "Calgary Branch",
+                        "qfu_lastupdated": "@utcNow()",
+                        "qfu_sourcefile": "Scheduled month rollover",
+                        "qfu_budgetgoal": "@first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal']",
+                        "qfu_cadsales": 0,
+                        "qfu_budgetname": "@concat(outputs('Compose_CurrentMonthName'), ' ', string(outputs('Compose_CurrentYear')), ' Budget')"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

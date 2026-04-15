@@ -1,0 +1,126 @@
+{
+    "generated_on":  "2026-04-15T01:22:37.2332560Z",
+    "target_environment_url":  "https://orgad610d2c.crm3.dynamics.com",
+    "branch_code":  "4171",
+    "branch_slug":  "4171-calgary",
+    "region_slug":  "southern-alberta",
+    "latest_summary":  {
+                           "branchdailysummary_id":  "1674a57d-8e37-f111-88b4-000d3af4cf74",
+                           "summary_date":  "2026-04-13",
+                           "backorder_count":  476
+                       },
+    "candidate_count":  0,
+    "activation_candidate_count":  471,
+    "count_delta":  476,
+    "updated_count":  0,
+    "activated_count":  471,
+    "skipped_count":  0,
+    "updated_sample":  [
+
+                       ],
+    "activated_sample":  [
+                             {
+                                 "backorder_id":  "1f20c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522742269|11",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2020c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522743397|10",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2220c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522759836|10",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2320c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522816037|10",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2420c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522816037|20",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2620c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|10",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2720c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|20",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2920c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|30",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2a20c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|40",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2b20c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|50",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "2f20c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|60",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3020c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522861724|70",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3120c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522913886|10",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3220c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522913886|20",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3320c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522924504|20",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3420c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522999374|13",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3520c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522999374|14",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3620c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522967653|10",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3720c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522967653|100",
+                                 "branch_code":  "4171"
+                             },
+                             {
+                                 "backorder_id":  "3820c263-2a38-f111-88b4-000d3af4cf74",
+                                 "source_id":  "4171|ZBO|1522967653|110",
+                                 "branch_code":  "4171"
+                             }
+                         ],
+    "skipped":  [
+
+                ]
+}

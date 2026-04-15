@@ -1,0 +1,135 @@
+{
+    "generatedOn":  "2026-04-14T00:10:48",
+    "authoritativeFiles":  [
+                               "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                               "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                               "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                               "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\standardize-sa1300-budget-flows.py"
+                           ],
+    "suspiciousCount":  0,
+    "matches":  [
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  2051,
+                        "classification":  "active-aware",
+                        "text":  "Set-FieldValue -Map $getActiveBudgetParameters -Name \u0027$filter\u0027 -Value \"qfu_isactive eq false and qfu_branchcode eq \u0027@{parameters(\u0027qfu_QFU_BranchCode\u0027)}\u0027 and qfu_sourcefamily eq \u0027SA1300\u0027\""
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  2127,
+                        "classification":  "manual-review",
+                        "text":  "Set-FieldValue -Map $itemMap -Name \"qfu_isactive\" -Value $false"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  2148,
+                        "classification":  "manual-review",
+                        "text":  "Set-FieldValue -Map $updateCurrent -Name \"qfu_isactive\" -Value $false"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  2289,
+                        "classification":  "manual-review",
+                        "text":  "Add-Note -Notes $Notes -Text \"Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, replaces the current branch\u0027s same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, and stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics.\""
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  83,
+                        "classification":  "manual-review",
+                        "text":  "function Test-BudgetRowIsActive {"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  86,
+                        "classification":  "manual-review",
+                        "text":  "$value = if ($Row.PSObject.Properties[\u0027qfu_isactive\u0027]) { $Row.qfu_isactive } else { $null }"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  91,
+                        "classification":  "manual-review",
+                        "text":  "# Current portal/Web API evidence shows formatted \"Yes\" on rows where raw qfu_isactive = false."
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  114,
+                        "classification":  "manual-review",
+                        "text":  "@{ Expression = { if (Test-BudgetRowIsActive -Row $_) { 1 } else { 0 } }; Descending = $true }, `"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  150,
+                        "classification":  "manual-review",
+                        "text":  "\"qfu_isactive\","
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  177,
+                        "classification":  "active-aware",
+                        "text":  "qfu_isactive = $false"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  193,
+                        "classification":  "manual-review",
+                        "text":  "\"qfu_isactive\","
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  199,
+                        "classification":  "manual-review",
+                        "text":  "(Test-BudgetRowIsActive -Row $_) -and"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  212,
+                        "classification":  "explicit-inactive-write",
+                        "text":  "qfu_isactive = $true"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  98,
+                        "classification":  "manual-review",
+                        "text":  "function Test-BudgetRowIsActive {"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  101,
+                        "classification":  "manual-review",
+                        "text":  "$value = if ($Row.PSObject.Properties[\u0027qfu_isactive\u0027]) { $Row.qfu_isactive } else { $null }"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  106,
+                        "classification":  "manual-review",
+                        "text":  "# Current portal/Web API evidence shows formatted \"Yes\" on rows where raw qfu_isactive = false."
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  331,
+                        "classification":  "manual-review",
+                        "text":  "\"qfu_isactive\","
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  339,
+                        "classification":  "manual-review",
+                        "text":  "@{ Expression = { if (Test-BudgetRowIsActive -Row $_) { 1 } else { 0 } }; Descending = $true }, `"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  359,
+                        "classification":  "active-aware",
+                        "text":  "qfu_isactive = $false"
+                    },
+                    {
+                        "file":  "C:\\Dev\\QuoteFollowUpComplete\\RAW\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  367,
+                        "classification":  "explicit-inactive-write",
+                        "text":  "qfu_isactive = $true"
+                    }
+                ],
+    "probeEvidence":  [
+
+                      ]
+}

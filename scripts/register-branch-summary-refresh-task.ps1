@@ -1,5 +1,7 @@
 param(
-  [string]$RepoRoot = "C:\Users\smcfarlane\Desktop\WorkBench\QuoteFollowUpRegion",
+  [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
+  [string]$TargetEnvironmentUrl = $env:QFU_TARGET_ENVIRONMENT_URL,
+  [string]$Username = "smcfarlane@applied.com",
   [string]$TaskName = "QFU-Branch-Daily-Summary-Refresh",
   [int]$IntervalMinutes = 15,
   [switch]$StartImmediately
@@ -12,7 +14,11 @@ if (-not (Test-Path -LiteralPath $refreshScript)) {
   throw "Refresh script not found: $refreshScript"
 }
 
-$taskCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$refreshScript`" -Apply"
+if ([string]::IsNullOrWhiteSpace($TargetEnvironmentUrl)) {
+  throw "Provide -TargetEnvironmentUrl or set QFU_TARGET_ENVIRONMENT_URL before registering the branch summary refresh task."
+}
+
+$taskCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$refreshScript`" -Apply -TargetEnvironmentUrl `"$TargetEnvironmentUrl`" -Username `"$Username`""
 $arguments = @(
   "/Create",
   "/SC", "MINUTE",

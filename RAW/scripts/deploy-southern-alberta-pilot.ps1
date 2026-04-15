@@ -1762,7 +1762,7 @@ function Get-SeedVerificationSummary {
   }
 }
 
-if ($MyInvocation.InvocationName -ne ".") {
+if (-not $QfuLoadAsLibrary -and $MyInvocation.InvocationName -ne ".") {
   $target = Connect-Org -Url $TargetEnvironmentUrl
 
   Write-Host "Connected target: $($target.ConnectedOrgFriendlyName)"

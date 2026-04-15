@@ -1,0 +1,764 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_office365"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_onedriveforbusiness": {
+        "api": {
+          "name": "shared_onedriveforbusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_onedriveforbusiness"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_excelonlinebusiness": {
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_excelonlinebusiness"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_commondataserviceforapps-1": {
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "qfu_QFU_OneDriveDriveId": {
+          "defaultValue": "b!bA1jOZ9a1kOqTvvBLoCVwOuylE1sXrNHizJwXLwZBftmbGtREvxoR5hGDI_2okkg",
+          "type": "String"
+        },
+        "qfu_QFU_OneDriveFolderPath": {
+          "defaultValue": "/QuoteFollowUpTemp",
+          "type": "String"
+        },
+        "qfu_QFU_ActiveFiscalYear": {
+          "defaultValue": "FY26",
+          "type": "String"
+        },
+        "qfu_QFU_OutlookFolderId": {
+          "defaultValue": "Id::AAMkAGNkYWVhZGMyLTkzODUtNDE1ZC04ODEzLTA2NGQyODVhODBjOAAuAAAAAACSBjPte7XYR4uatFOgeQv_AQBWZQh-KPFZRYNAfAmRZfVWAAQWVGc0AAA=",
+          "type": "String"
+        },
+        "qfu_QFU_OfficeScriptId": {
+          "defaultValue": "ms-officescript://onedrive_business_itemlink/013WL7VQXLVGJMLMEWOFH3223OHW2FYSEV",
+          "type": "String"
+        }
+      },
+      "triggers": {
+        "When_email_arrives_(V3)": {
+          "type": "OpenApiConnectionNotification",
+          "inputs": {
+            "parameters": {
+              "includeAttachments": true,
+              "fetchOnlyWithAttachment": true,
+              "folderPath": "@parameters('qfu_QFU_OutlookFolderId')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "OnNewEmailV3",
+              "connectionName": "shared_office365"
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "18bcff42-2237-41bc-ab20-f38415e7bf02",
+            "Id::AAMkAGNkYWVhZGMyLTkzODUtNDE1ZC04ODEzLTA2NGQyODVhODBjOAAuAAAAAACSBjPte7XYR4uatFOgeQv_AQBWZQh-KPFZRYNAfAmRZfVWAAQWVGc0AAA=": "QuoteOps Imports"
+          }
+        }
+      },
+      "actions": {
+        "Initialize_Variable_Total_Sales": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TotalSales",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Variable_USD_Sales": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "94b0d08b-d268-483b-a884-d598e51f0555"
+          }
+        },
+        "Filter_SA1300_Attachments": {
+          "type": "Query",
+          "description": "Filter attachments to only get the SA1300.xlsx file, skipping signature images and other attachments.",
+          "inputs": {
+            "from": "@triggerOutputs()?['body/attachments']",
+            "where": "@and(or(endsWith(toLower(item()?['name']), '.xlsx'), endsWith(toLower(item()?['name']), '.xlsm')), contains(replace(replace(replace(toLower(item()?['name']), ' ', ''), '-', ''), '_', ''), 'sa1300'))"
+          },
+          "runAfter": {
+            "Initialize_Variable_BudgetGoalError": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f1e2d3c4-b5a6-7890-cdef-123456789abc"
+          }
+        },
+        "Apply_to_each_Attachment": {
+          "type": "Foreach",
+          "foreach": "@body('Filter_SA1300_Attachments')",
+          "actions": {
+            "Condition_Is_SA1300_File": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      1,
+                      1
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Delay_For_File_Release": {
+                  "type": "Wait",
+                  "inputs": {
+                    "interval": {
+                      "count": 5,
+                      "unit": "Second"
+                    }
+                  },
+                  "runAfter": {
+                    "Set_File_ID": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "61bf79d9-09e2-4be9-ab6d-67edee8ba82b"
+                  }
+                },
+                "Create_File_in_OneDrive": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "folderPath": "@parameters('qfu_QFU_OneDriveFolderPath')",
+                      "name": "@concat('SA1300_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.xlsx')",
+                      "body": "@base64ToBinary(items('Apply_to_each_Attachment')?['contentBytes'])"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+                      "operationId": "CreateFile",
+                      "connectionName": "shared_onedriveforbusiness"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cd590133-f7bd-48cc-9629-2832e96cc403"
+                  }
+                },
+                "Set_File_ID": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "FileID",
+                    "value": "@outputs('Create_File_in_OneDrive')?['body/Id']"
+                  },
+                  "runAfter": {
+                    "Create_File_in_OneDrive": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "92b4a0d4-ae2c-46f0-ae4c-23725fba7fe1"
+                  }
+                },
+                "Create_Budget_Table": {
+                  "type": "OpenApiConnection",
+                  "description": "Create table from column J only - J2=header, J3=CAD sales, J4=USD sales.",
+                  "inputs": {
+                    "parameters": {
+                      "source": "me",
+                      "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                      "file": "@variables('FileID')",
+                      "table/Range": "'Location Summary'!J2:J500"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "CreateTable",
+                      "connectionName": "shared_excelonlinebusiness"
+                    }
+                  },
+                  "runAfter": {
+                    "Delay_For_File_Release": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Get_Budget_Tables": {
+                  "type": "OpenApiConnection",
+                  "description": "Fetch table IDs for the SA1300 worksheet.",
+                  "inputs": {
+                    "parameters": {
+                      "source": "me",
+                      "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                      "file": "@variables('FileID')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "GetTables",
+                      "connectionName": "shared_excelonlinebusiness"
+                    }
+                  },
+                  "runAfter": {
+                    "Create_Budget_Table": [
+                      "Succeeded",
+                      "Failed"
+                    ]
+                  }
+                },
+                "List_Budget_Rows": {
+                  "type": "OpenApiConnection",
+                  "description": "List budget rows from the simplified table.",
+                  "inputs": {
+                    "parameters": {
+                      "source": "me",
+                      "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                      "file": "@variables('FileID')",
+                      "table": "@coalesce(outputs('Create_Budget_Table')?['body/id'], outputs('Create_Budget_Table')?['body/name'], last(coalesce(body('Get_Budget_Tables')?['value'], createArray()))?['id'], first(coalesce(body('Get_Budget_Tables')?['value'], createArray()))?['id'])"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "operationId": "GetItems",
+                      "connectionName": "shared_excelonlinebusiness"
+                    }
+                  },
+                  "runAfter": {
+                    "Get_Budget_Tables": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Filter_Budget_Rows": {
+                  "type": "Query",
+                  "description": "Keep only rows with Sales values.",
+                  "inputs": {
+                    "from": "@body('List_Budget_Rows')?['value']",
+                    "where": "@not(empty(item()?['Sales']))"
+                  },
+                  "runAfter": {
+                    "List_Budget_Rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Guard_Budget_Row_Limit": {
+                  "type": "If",
+                  "description": "Stop if the row limit is reached (possible truncation).",
+                  "expression": {
+                    "less": [
+                      "@length(body('Filter_Budget_Rows'))",
+                      500
+                    ]
+                  },
+                  "actions": {
+                    "Set_USD_Sales_Value": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "USDSales",
+                        "value": "@if(or(less(length(body('Filter_Budget_Rows')), 2), empty(body('Filter_Budget_Rows')?[1]?['Sales'])), 0, float(replace(replace(coalesce(body('Filter_Budget_Rows')?[1]?['Sales'], '0'), '$', ''), ',', '')))"
+                      },
+                      "runAfter": {
+                        "Set_CAD_Sales_Value": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "7362743b-21fa-43a3-bc38-29f43747018d"
+                      }
+                    },
+                    "Set_CAD_Sales_Value": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "CADSales",
+                        "value": "@if(or(empty(body('Filter_Budget_Rows')), empty(body('Filter_Budget_Rows')?[0]?['Sales'])), 0, float(replace(replace(coalesce(body('Filter_Budget_Rows')?[0]?['Sales'], '0'), '$', ''), ',', '')))"
+                      },
+                      "metadata": {
+                        "operationMetadataId": "c5a26215-6738-427b-b1e9-ddc2badf182c"
+                      }
+                    },
+                    "Calculate_Total_Sales": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "TotalSales",
+                        "value": "@add(variables('CADSales'), variables('USDSales'))"
+                      },
+                      "runAfter": {
+                        "Set_USD_Sales_Value": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "b731cc97-310c-4908-9264-1190947f6bb2"
+                      }
+                    },
+                    "Get_Budget_Goal_From_Archives": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "entityName": "qfu_budgetarchives",
+                          "$select": "qfu_budgetgoal",
+                          "$filter": "qfu_month eq @{int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MM'))} and qfu_fiscalyear eq '@{concat('FY', formatDateTime(addToTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 4, 'Month'), 'yy'))}'",
+                          "$orderby": "modifiedon desc",
+                          "$top": 1
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "connectionName": "shared_commondataserviceforapps-1"
+                        }
+                      },
+                      "runAfter": {
+                        "Calculate_Total_Sales": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "71f0d7c1-2f92-44f5-a7f4-87a8c902d8ee"
+                      }
+                    },
+                    "Get_Active_Budget": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "entityName": "qfu_budgets",
+                          "$select": "qfu_budgetid,qfu_month,qfu_year,qfu_isactive",
+                          "$filter": "qfu_isactive eq true",
+                          "$orderby": "modifiedon desc",
+                          "$top": 1
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "connectionName": "shared_commondataserviceforapps-1"
+                        }
+                      },
+                      "runAfter": {
+                        "Ensure_Budget_Goal_Found": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d2024404-0973-477d-86f2-42576ebfd1be"
+                      }
+                    },
+                    "Condition_Check_Month_Changed": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "greater": [
+                              "@length(outputs('Get_Active_Budget')?['body/value'])",
+                              0
+                            ]
+                          },
+                          {
+                            "or": [
+                              {
+                                "not": {
+                                  "equals": [
+                                    "@outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_month']",
+                                    "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MM'))"
+                                  ]
+                                }
+                              },
+                              {
+                                "not": {
+                                  "equals": [
+                                    "@outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_year']",
+                                    "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'))"
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Deactivate_Old_Budget_Record": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "entityName": "qfu_budgets",
+                              "recordId": "@outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_budgetid']",
+                              "item": {
+                                "qfu_isactive": false
+                              }
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "operationId": "UpdateRecord",
+                              "connectionName": "shared_commondataserviceforapps-1"
+                            }
+                          },
+                          "runAfter": {
+                            "Archive_Previous_Month_Budget": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "4ac9f0dc-d70b-4178-a2a4-3877eddcb43d"
+                          }
+                        },
+                        "Create_New_Month_Budget_Record": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "entityName": "qfu_budgets",
+                              "item/qfu_budgetname": "test",
+                              "item/qfu_budgetamount": 1,
+                              "item/qfu_customername": "test",
+                              "item": {
+                                "qfu_usdsales": "@variables('USDSales')",
+                                "qfu_year": "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'))",
+                                "qfu_actualsales": "@variables('TotalSales')",
+                                "qfu_monthname": "@formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM')",
+                                "qfu_month": "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MM'))",
+                                "qfu_isactive": true,
+                                "qfu_fiscalyear": "@concat('FY', formatDateTime(addToTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 4, 'Month'), 'yy'))",
+                                "qfu_budgetamount": "@first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal']",
+                                "qfu_customername": "Calgary Branch",
+                                "qfu_lastupdated": "@utcNow()",
+                                "qfu_sourcefile": "SA1300.xlsx",
+                                "qfu_budgetgoal": "@first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal']",
+                                "qfu_cadsales": "@variables('CADSales')",
+                                "qfu_budgetname": "@concat(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'), ' Budget')"
+                              }
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "operationId": "CreateRecord",
+                              "connectionName": "shared_commondataserviceforapps-1"
+                            }
+                          },
+                          "runAfter": {
+                            "Deactivate_Old_Budget_Record": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "2d1cc70d-7718-4fbf-a3ee-b1a385d86eab"
+                          }
+                        },
+                        "Archive_Previous_Month_Budget": {
+                          "type": "Compose",
+                          "inputs": "Budget goals already live in qfu_budgetarchive; rollover only seeds the new active qfu_budget row.",
+                          "metadata": {
+                            "operationMetadataId": "26413331-1e8b-4e76-9d33-fcbba7113a7e"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Condition_Budget_Exists_Same_Month": {
+                            "type": "If",
+                            "expression": {
+                              "and": [
+                                {
+                                  "greater": [
+                                    "@length(outputs('Get_Active_Budget')?['body/value'])",
+                                    0
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Update_Current_Month_Budget": {
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "parameters": {
+                                    "entityName": "qfu_budgets",
+                                    "recordId": "@outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_budgetid']",
+                                    "item": {
+                                      "qfu_cadsales": "@variables('CADSales')",
+                                      "qfu_usdsales": "@variables('USDSales')",
+                                      "qfu_lastupdated": "@utcNow()",
+                                      "qfu_sourcefile": "SA1300.xlsx",
+                                      "qfu_actualsales": "@variables('TotalSales')"
+                                    }
+                                  },
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                    "operationId": "UpdateRecord",
+                                    "connectionName": "shared_commondataserviceforapps-1"
+                                  }
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "edad028d-6f20-4c3c-a66b-f01ae280a716"
+                                }
+                              }
+                            },
+                            "else": {
+                              "actions": {
+                                "Create_First_Budget_Record": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "entityName": "qfu_budgets",
+                                      "item/qfu_budgetname": "test",
+                                      "item/qfu_budgetamount": 1,
+                                      "item/qfu_customername": "test",
+                                      "item": {
+                                        "qfu_usdsales": "@variables('USDSales')",
+                                        "qfu_year": "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'))",
+                                        "qfu_actualsales": "@variables('TotalSales')",
+                                        "qfu_monthname": "@formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM')",
+                                        "qfu_month": "@int(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MM'))",
+                                        "qfu_isactive": true,
+                                        "qfu_fiscalyear": "@concat('FY', formatDateTime(addToTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 4, 'Month'), 'yy'))",
+                                        "qfu_budgetamount": "@first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal']",
+                                        "qfu_customername": "Calgary Branch",
+                                        "qfu_lastupdated": "@utcNow()",
+                                        "qfu_sourcefile": "SA1300.xlsx",
+                                        "qfu_budgetgoal": "@first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal']",
+                                        "qfu_cadsales": "@variables('CADSales')",
+                                        "qfu_budgetname": "@concat(formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'MMMM'), ' ', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy'), ' Budget')"
+                                      }
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                      "operationId": "CreateRecord",
+                                      "connectionName": "shared_commondataserviceforapps-1"
+                                    }
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "d1876b8e-7693-403f-8e04-10146239b5ce"
+                                  }
+                                }
+                              }
+                            },
+                            "metadata": {
+                              "operationMetadataId": "3550451e-6371-404b-a430-3ca46ff7c428"
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Get_Active_Budget": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "a17dd0b9-49c5-445e-907c-51b816e5a08c"
+                      }
+                    },
+                    "Ensure_Budget_Goal_Found": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "greater": [
+                              "@length(outputs('Get_Budget_Goal_From_Archives')?['body/value'])",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Set_BudgetGoalError": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "BudgetGoalError",
+                              "value": true
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Get_Budget_Goal_From_Archives": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Compose_Budget_Row_Limit_Skip": {
+                        "type": "Compose",
+                        "description": "Skip budget import when row count hits the max table range.",
+                        "inputs": "Budget import stopped: row count hit the 500-row limit. Skipping updates."
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Filter_Budget_Rows": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "metadata": {
+                "operationMetadataId": "8c512fc2-d0be-434c-ae11-27d93cd59bf5"
+              }
+            }
+          },
+          "runAfter": {
+            "Filter_SA1300_Attachments": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36d6f078-1538-42a4-9405-c29b094011e7"
+          }
+        },
+        "Terminate_If_No_Budget_Goal": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@variables('BudgetGoalError')",
+                  true
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Terminate_No_Budget_Goal_Found": {
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed",
+                "runError": {
+                  "code": "BudgetGoalMissing",
+                  "message": "No budget archive record found for the active fiscal year and current month."
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Apply_to_each_Attachment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b2c3d4e5-f6a7-8901-bcde-f23456789012"
+          }
+        },
+        "Initialize_Variable_USD_Sales": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "USDSales",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Variable_CAD_Sales": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4fffb3ce-bd7c-441f-aae5-9a20d2d2bcf1"
+          }
+        },
+        "Initialize_Variable_File_ID": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FileID",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Variable_Total_Sales": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bf5b521c-7b38-414c-a1b8-0be55e02c3a8"
+          }
+        },
+        "Initialize_Variable_BudgetGoalError": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "BudgetGoalError",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Variable_File_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          }
+        },
+        "Initialize_Variable_CAD_Sales": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CADSales",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "249b0c94-22c7-43ee-b251-b2a15bc97a16"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

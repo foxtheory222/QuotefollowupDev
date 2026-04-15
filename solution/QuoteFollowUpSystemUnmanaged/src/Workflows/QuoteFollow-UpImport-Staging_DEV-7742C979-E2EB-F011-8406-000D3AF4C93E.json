@@ -1,0 +1,844 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_office365"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_onedriveforbusiness": {
+        "api": {
+          "name": "shared_onedriveforbusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_onedriveforbusiness"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_commondataserviceforapps": {
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_excelonlinebusiness-1": {
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_excelonlinebusiness"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "qfu_QFU_OneDriveDriveId": {
+          "defaultValue": "b!bA1jOZ9a1kOqTvvBLoCVwOuylE1sXrNHizJwXLwZBftmbGtREvxoR5hGDI_2okkg",
+          "type": "String"
+        },
+        "qfu_QFU_OneDriveFolderPath": {
+          "defaultValue": "/QuoteFollowUpTemp",
+          "type": "String"
+        },
+        "qfu_QFU_OutlookFolderId": {
+          "defaultValue": "Id::AAMkAGNkYWVhZGMyLTkzODUtNDE1ZC04ODEzLTA2NGQyODVhODBjOAAuAAAAAACSBjPte7XYR4uatFOgeQv_AQBWZQh-KPFZRYNAfAmRZfVWAAQWVGc0AAA=",
+          "type": "String"
+        },
+        "qfu_QFU_OfficeScriptId": {
+          "defaultValue": "ms-officescript://onedrive_business_itemlink/013WL7VQXLVGJMLMEWOFH3223OHW2FYSEV",
+          "type": "String"
+        }
+      },
+      "triggers": {
+        "When_email_arrives_(V3)": {
+          "type": "OpenApiConnectionNotification",
+          "description": "Triggers when email with SP830CA Excel attachment arrives",
+          "inputs": {
+            "parameters": {
+              "includeAttachments": true,
+              "subjectFilter": "SP830CA",
+              "importance": "Any",
+              "fetchOnlyWithAttachment": true,
+              "folderPath": "@parameters('qfu_QFU_OutlookFolderId')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "OnNewEmailV3",
+              "connectionName": "shared_office365"
+            }
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "cef05d13-0eef-4973-884b-fde029c34741"
+          }
+        }
+      },
+      "actions": {
+        "Check_if_weekday": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@dayOfWeek(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'))",
+                    0
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@dayOfWeek(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'))",
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          "actions": {
+            "Apply_to_each_attachment": {
+              "type": "Foreach",
+              "foreach": "@coalesce(triggerOutputs()?['body/attachments'], createArray())",
+              "actions": {
+                "Condition_Is_SP830CA_File": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "contains": [
+                          "@toLower(coalesce(items('Apply_to_each_attachment')?['name'], ''))",
+                          ".xlsx"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          "@toLower(coalesce(items('Apply_to_each_attachment')?['name'], ''))",
+                          "sp830ca"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Create_attachment_file": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "folderPath": "@parameters('qfu_QFU_OneDriveFolderPath')",
+                          "name": "@concat('QuoteFollowUp_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '_', items('Apply_to_each_attachment')?['name'])",
+                          "body": "@base64ToBinary(items('Apply_to_each_attachment')?['contentBytes'])"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+                          "operationId": "CreateFile",
+                          "connectionName": "shared_onedriveforbusiness"
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "contentTransfer": {
+                          "transferMode": "Chunked"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "549ae50c-1881-48dc-b04e-791996511bc0"
+                      }
+                    },
+                    "Delay_For_File_Sync": {
+                      "type": "Wait",
+                      "description": "Wait for Excel file to sync to OneDrive before creating table.",
+                      "inputs": {
+                        "interval": {
+                          "count": 5,
+                          "unit": "Second"
+                        }
+                      },
+                      "runAfter": {
+                        "Create_attachment_file": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Get_Quote_Tables": {
+                      "type": "OpenApiConnection",
+                      "description": "Fetch table IDs for the SP830CA file.",
+                      "inputs": {
+                        "parameters": {
+                          "source": "me",
+                          "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                          "file": "@outputs('Create_attachment_file')?['body/Path']"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                          "operationId": "GetTables",
+                          "connectionName": "shared_excelonlinebusiness-1"
+                        }
+                      },
+                      "runAfter": {
+                        "Delay_For_File_Sync": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "List_Quote_Rows": {
+                      "type": "OpenApiConnection",
+                      "description": "List quote lines from the SP830CA table.",
+                      "inputs": {
+                        "parameters": {
+                          "source": "me",
+                          "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                          "file": "@outputs('Create_attachment_file')?['body/Path']",
+                          "table": "@coalesce(first(body('Get_Quote_Tables_AfterCreate')?['value'])?['id'], first(body('Get_Quote_Tables')?['value'])?['id'])",
+                          "dateTimeFormat": "ISO 8601"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                          "operationId": "GetItems",
+                          "connectionName": "shared_excelonlinebusiness-1"
+                        }
+                      },
+                      "runAfter": {
+                        "Condition_Ensure_Quote_Table": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Select_Quote_Rows": {
+                      "type": "Select",
+                      "description": "Normalize quote rows into the expected schema without Office Scripts.",
+                      "inputs": {
+                        "from": "@body('List_Quote_Rows')?['value']",
+                        "select": {
+                          "quotenumber": "@string(item()?['Quote Number'])",
+                          "linenumber": "@string(item()?['Item Number '])",
+                          "soldtopartyname": "@item()?['Sold To Party Name']",
+                          "soldtopartycode": "@string(item()?['Sold-To Party'])",
+                          "material": "@item()?['Manufacturer Part Description']",
+                          "description": "@item()?['Manufacturer Part Description']",
+                          "quantity": "@float(1)",
+                          "unitprice": "@if(or(empty(item()?['Value']), startsWith(string(item()?['Value']), '#')), float(0), float(coalesce(replace(replace(string(item()?['Value']), '$', ''), ',', ''), '0')))",
+                          "totalvalue": "@if(or(empty(item()?['Value']), startsWith(string(item()?['Value']), '#')), float(0), float(coalesce(replace(replace(string(item()?['Value']), '$', ''), ',', ''), '0')))",
+                          "cssr": "@if(or(empty(item()?['CSSR']), startsWith(string(item()?['CSSR']), '#')), null, int(float(item()?['CSSR'])))",
+                          "cssrname": "@item()?['CSSR Name']",
+                          "status": "@item()?['Status (Won/Loss)']",
+                          "convertedquote": "@if(or(empty(item()?['$ Converted Quote']), startsWith(string(item()?['$ Converted Quote']), '#')), float(0), float(coalesce(replace(replace(string(item()?['$ Converted Quote']), '$', ''), ',', ''), '0')))",
+                          "rejectionreason": "@item()?['Rejection Reason']",
+                          "materialgroup": "@item()?['Material Group']",
+                          "location": "@if(or(empty(item()?['Location ']), startsWith(string(item()?['Location ']), '#')), null, int(float(item()?['Location '])))",
+                          "tsr": "@if(or(empty(item()?['AM Number']), startsWith(string(item()?['AM Number']), '#')), null, int(float(item()?['AM Number'])))",
+                          "tsrname": "@item()?['AM Name']",
+                          "gppercent": "@if(or(empty(item()?['GP% Rep']), startsWith(string(item()?['GP% Rep']), '#')), float(0), float(coalesce(replace(string(item()?['GP% Rep']), '%', ''), '0')))",
+                          "additionalinfo": "@item()?['Additional Information']",
+                          "followupowner": "@item()?['Follow up Owner ']",
+                          "sapcreatedon": "@item()?['Created On']"
+                        }
+                      },
+                      "runAfter": {
+                        "List_Quote_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Filter_Quote_Rows": {
+                      "type": "Query",
+                      "description": "Skip empty rows from the quote worksheet.",
+                      "inputs": {
+                        "from": "@coalesce(body('Select_Quote_Rows'), createArray())",
+                        "where": "@not(empty(item()?['quotenumber']))"
+                      },
+                      "runAfter": {
+                        "Select_Quote_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Guard_Quote_Rows": {
+                      "type": "If",
+                      "description": "Stop if the row limit is reached (possible truncation).",
+                      "expression": {
+                        "less": [
+                          "@length(coalesce(body('Filter_Quote_Rows'), createArray()))",
+                          5000
+                        ]
+                      },
+                      "actions": {
+                        "Apply_to_each_quote_line": {
+                          "type": "Foreach",
+                          "foreach": "@coalesce(body('Filter_Quote_Rows'), createArray())",
+                          "actions": {
+                            "Compose_UniqueKey": {
+                              "type": "Compose",
+                              "inputs": "@concat(items('Apply_to_each_quote_line')?['quotenumber'], '_', items('Apply_to_each_quote_line')?['linenumber'])",
+                              "metadata": {
+                                "operationMetadataId": "74d00eae-8f0b-4553-af8d-4702543e6a87"
+                              }
+                            },
+                            "Determine_Status_Code": {
+                              "type": "Compose",
+                              "description": "If convertedquote > 0, status = 2 (Won), else 1 (Open)",
+                              "inputs": "@if(greater(coalesce(items('Apply_to_each_quote_line')?['convertedquote'], 0), 0), 2, 1)",
+                              "runAfter": {
+                                "Compose_UniqueKey": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "3424085c-e96a-43a4-aa38-bddfd2669691"
+                              }
+                            },
+                            "Check_Quote_Exists": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "entityName": "qfu_quotes",
+                                  "$filter": "qfu_quotenumber eq '@{items('Apply_to_each_quote_line')?['quotenumber']}'",
+                                  "$top": 1,
+                                  "$select": "qfu_quoteid,qfu_lastsapdate,statecode,statuscode"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                  "operationId": "ListRecords",
+                                  "connectionName": "shared_commondataserviceforapps"
+                                }
+                              },
+                              "runAfter": {
+                                "Determine_Status_Code": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "14a6521e-ca46-4c05-b432-9fe018917bd4"
+                              }
+                            },
+                            "Condition_Quote_Exists": {
+                              "type": "If",
+                              "expression": {
+                                "greater": [
+                                  "@length(outputs('Check_Quote_Exists')?['body/value'])",
+                                  0
+                                ]
+                              },
+                              "actions": {
+                                "Update_Quote_Header": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "entityName": "qfu_quotes",
+                                      "recordId": "@outputs('Check_Quote_Exists')?['body/value'][0]['qfu_quoteid']",
+                                      "item/qfu_customername": "@items('Apply_to_each_quote_line')?['soldtopartyname']",
+                                      "item/qfu_cssr": "@if(equals(items('Apply_to_each_quote_line')?['cssr'], null), null, string(items('Apply_to_each_quote_line')?['cssr']))",
+                                      "item/qfu_cssrname": "@items('Apply_to_each_quote_line')?['cssrname']",
+                                      "item/qfu_tsr": "@if(equals(items('Apply_to_each_quote_line')?['tsr'], null), null, string(items('Apply_to_each_quote_line')?['tsr']))",
+                                      "item/qfu_tsrname": "@items('Apply_to_each_quote_line')?['tsrname']",
+                                      "item/qfu_lastsapdate": "@if(empty(items('Apply_to_each_quote_line')?['sapcreatedon']), if(empty(outputs('Check_Quote_Exists')?['body/value'][0]?['qfu_lastsapdate']), formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd'), formatDateTime(outputs('Check_Quote_Exists')?['body/value'][0]?['qfu_lastsapdate'], 'yyyy-MM-dd')), formatDateTime(items('Apply_to_each_quote_line')?['sapcreatedon'], 'yyyy-MM-dd'))",
+                                      "item/statecode": "@if(equals(outputs('Determine_Status_Code'), 2), 1, if(equals(outputs('Check_Quote_Exists')?['body/value'][0]?['statecode'], null), 0, outputs('Check_Quote_Exists')?['body/value'][0]?['statecode']))",
+                                      "item/statuscode": "@if(equals(outputs('Determine_Status_Code'), 2), 2, if(equals(outputs('Check_Quote_Exists')?['body/value'][0]?['statuscode'], null), 1, outputs('Check_Quote_Exists')?['body/value'][0]?['statuscode']))"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                      "operationId": "UpdateRecord",
+                                      "connectionName": "shared_commondataserviceforapps"
+                                    }
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "0992d10c-ec40-4e9c-b07b-92d10a5fa9ab"
+                                  }
+                                },
+                                "Set_Quote_GUID": {
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "CurrentQuoteGUID",
+                                    "value": "@outputs('Check_Quote_Exists')?['body/value'][0]['qfu_quoteid']"
+                                  },
+                                  "runAfter": {
+                                    "Update_Quote_Header": [
+                                      "Succeeded",
+                                      "Failed",
+                                      "TimedOut",
+                                      "Skipped"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "ddd3134c-be23-4655-a6f9-a09784296716"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {
+                                  "Create_Quote_Header": {
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "entityName": "qfu_quotes",
+                                        "item/qfu_quotenumber": "@items('Apply_to_each_quote_line')?['quotenumber']",
+                                        "item/qfu_amount": "@items('Apply_to_each_quote_line')?['totalvalue']",
+                                        "item/qfu_customername": "@items('Apply_to_each_quote_line')?['soldtopartyname']",
+                                        "item/qfu_cssr": "@if(equals(items('Apply_to_each_quote_line')?['cssr'], null), null, string(items('Apply_to_each_quote_line')?['cssr']))",
+                                        "item/qfu_cssrname": "@items('Apply_to_each_quote_line')?['cssrname']",
+                                        "item/qfu_tsr": "@if(equals(items('Apply_to_each_quote_line')?['tsr'], null), null, string(items('Apply_to_each_quote_line')?['tsr']))",
+                                        "item/qfu_tsrname": "@items('Apply_to_each_quote_line')?['tsrname']",
+                                        "item/qfu_lastsapdate": "@if(empty(items('Apply_to_each_quote_line')?['sapcreatedon']), formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM-dd'), formatDateTime(items('Apply_to_each_quote_line')?['sapcreatedon'], 'yyyy-MM-dd'))",
+                                        "item/qfu_status": "@outputs('Determine_Status_Code')"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                        "operationId": "CreateRecord",
+                                        "connectionName": "shared_commondataserviceforapps"
+                                      }
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "576d9006-8164-459b-a2a0-3009dd6d0ede"
+                                    }
+                                  },
+                                  "Set_New_Quote_GUID": {
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "CurrentQuoteGUID",
+                                      "value": "@outputs('Create_Quote_Header')?['body/qfu_quoteid']"
+                                    },
+                                    "runAfter": {
+                                      "Create_Quote_Header": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "bc97e8af-3c72-4f1b-a9cf-f0c5a7ee9223"
+                                    }
+                                  }
+                                }
+                              },
+                              "runAfter": {
+                                "Check_Quote_Exists": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "50318ef7-41bb-4e55-b96b-36ab533a5589"
+                              }
+                            },
+                            "Resolve_Quote_For_Line": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "entityName": "qfu_quotes",
+                                  "$filter": "qfu_quotenumber eq '@{items('Apply_to_each_quote_line')?['quotenumber']}'",
+                                  "$top": 1,
+                                  "$select": "qfu_quoteid"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                  "operationId": "ListRecords",
+                                  "connectionName": "shared_commondataserviceforapps"
+                                }
+                              },
+                              "runAfter": {
+                                "Condition_Quote_Exists": [
+                                  "Succeeded",
+                                  "Failed",
+                                  "TimedOut",
+                                  "Skipped"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "5ed5f6e0-42f6-4f01-a69d-b6ac91827e0e"
+                              }
+                            },
+                            "Set_Quote_GUID_From_Resolved": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "CurrentQuoteGUID",
+                                "value": "@outputs('Resolve_Quote_For_Line')?['body/value'][0]['qfu_quoteid']"
+                              },
+                              "runAfter": {
+                                "Resolve_Quote_For_Line": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "111f43b9-e2e8-49ac-8f95-099c89b05516"
+                              }
+                            },
+                            "Check_Line_Exists": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "entityName": "qfu_quotelines",
+                                  "$filter": "qfu_uniquekey eq '@{outputs('Compose_UniqueKey')}'",
+                                  "$top": 1
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                  "operationId": "ListRecords",
+                                  "connectionName": "shared_commondataserviceforapps"
+                                }
+                              },
+                              "runAfter": {
+                                "Set_Quote_GUID_From_Resolved": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "4747f294-651c-4e3a-b9f0-179bced71bce"
+                              }
+                            },
+                            "Condition_Line_Exists": {
+                              "type": "If",
+                              "expression": {
+                                "greater": [
+                                  "@length(outputs('Check_Line_Exists')?['body/value'])",
+                                  0
+                                ]
+                              },
+                              "actions": {
+                                "Update_Quote_Line": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "entityName": "qfu_quotelines",
+                                      "recordId": "@outputs('Check_Line_Exists')?['body/value'][0]['qfu_quotelineid']",
+                                      "item/qfu_quoteid@odata.bind": "@{concat('/qfu_quotes(', variables('CurrentQuoteGUID'), ')')}",
+                                      "item/qfu_additionalinfo": "@items('Apply_to_each_quote_line')?['additionalinfo']",
+                                      "item/qfu_amount": "@items('Apply_to_each_quote_line')?['totalvalue']",
+                                      "item/qfu_cssr": "@items('Apply_to_each_quote_line')?['cssr']",
+                                      "item/qfu_cssrname": "@items('Apply_to_each_quote_line')?['cssrname']",
+                                      "item/qfu_description": "@items('Apply_to_each_quote_line')?['description']",
+                                      "item/qfu_dollarconnected": "@items('Apply_to_each_quote_line')?['convertedquote']",
+                                      "item/qfu_followupowner": "@items('Apply_to_each_quote_line')?['followupowner']",
+                                      "item/qfu_gppercent": "@items('Apply_to_each_quote_line')?['gppercent']",
+                                      "item/qfu_itemnumber": "@items('Apply_to_each_quote_line')?['material']",
+                                      "item/qfu_lastimportdate": "@utcNow()",
+                                      "item/qfu_linetotal": "@items('Apply_to_each_quote_line')?['totalvalue']",
+                                      "item/qfu_location": "@items('Apply_to_each_quote_line')?['location']",
+                                      "item/qfu_manufacturerpart": "@items('Apply_to_each_quote_line')?['material']",
+                                      "item/qfu_materialgroup": "@items('Apply_to_each_quote_line')?['materialgroup']",
+                                      "item/qfu_productcode": "@items('Apply_to_each_quote_line')?['material']",
+                                      "item/qfu_productname": "@items('Apply_to_each_quote_line')?['description']",
+                                      "item/qfu_quantity": "@items('Apply_to_each_quote_line')?['quantity']",
+                                      "item/qfu_quotenumber": "@items('Apply_to_each_quote_line')?['quotenumber']",
+                                      "item/qfu_rejectionreason": "@items('Apply_to_each_quote_line')?['rejectionreason']",
+                                      "item/qfu_soldtopartycode": "@items('Apply_to_each_quote_line')?['soldtopartycode']",
+                                      "item/qfu_soldtopartyname": "@items('Apply_to_each_quote_line')?['soldtopartyname']",
+                                      "item/qfu_status": "@outputs('Determine_Status_Code')",
+                                      "item/statecode": "@if(equals(outputs('Determine_Status_Code'), 2), 1, 0)",
+                                      "item/statuscode": "@if(equals(outputs('Determine_Status_Code'), 2), 2, 1)",
+                                      "item/qfu_tsr": "@items('Apply_to_each_quote_line')?['tsr']",
+                                      "item/qfu_tsrname": "@items('Apply_to_each_quote_line')?['tsrname']",
+                                      "item/qfu_unitprice": "@items('Apply_to_each_quote_line')?['unitprice']"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                      "operationId": "UpdateRecord",
+                                      "connectionName": "shared_commondataserviceforapps"
+                                    }
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "50d50741-a310-44fd-9b6a-9d1fdeab0015"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {
+                                  "Create_Quote_Line": {
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "entityName": "qfu_quotelines",
+                                        "item/qfu_quoteid@odata.bind": "@{concat('/qfu_quotes(', variables('CurrentQuoteGUID'), ')')}",
+                                        "item/qfu_uniquekey": "@outputs('Compose_UniqueKey')",
+                                        "item/qfu_additionalinfo": "@items('Apply_to_each_quote_line')?['additionalinfo']",
+                                        "item/qfu_amount": "@items('Apply_to_each_quote_line')?['totalvalue']",
+                                        "item/qfu_cssr": "@items('Apply_to_each_quote_line')?['cssr']",
+                                        "item/qfu_cssrname": "@items('Apply_to_each_quote_line')?['cssrname']",
+                                        "item/qfu_description": "@items('Apply_to_each_quote_line')?['description']",
+                                        "item/qfu_dollarconnected": "@items('Apply_to_each_quote_line')?['convertedquote']",
+                                        "item/qfu_followupowner": "@items('Apply_to_each_quote_line')?['followupowner']",
+                                        "item/qfu_gppercent": "@items('Apply_to_each_quote_line')?['gppercent']",
+                                        "item/qfu_itemnumber": "@items('Apply_to_each_quote_line')?['material']",
+                                        "item/qfu_lastimportdate": "@utcNow()",
+                                        "item/qfu_linenumber": "@items('Apply_to_each_quote_line')?['linenumber']",
+                                        "item/qfu_linetotal": "@items('Apply_to_each_quote_line')?['totalvalue']",
+                                        "item/qfu_location": "@items('Apply_to_each_quote_line')?['location']",
+                                        "item/qfu_manufacturerpart": "@items('Apply_to_each_quote_line')?['material']",
+                                        "item/qfu_materialgroup": "@items('Apply_to_each_quote_line')?['materialgroup']",
+                                        "item/qfu_productcode": "@items('Apply_to_each_quote_line')?['material']",
+                                        "item/qfu_productname": "@items('Apply_to_each_quote_line')?['description']",
+                                        "item/qfu_quantity": "@items('Apply_to_each_quote_line')?['quantity']",
+                                        "item/qfu_quotenumber": "@items('Apply_to_each_quote_line')?['quotenumber']",
+                                        "item/qfu_rejectionreason": "@items('Apply_to_each_quote_line')?['rejectionreason']",
+                                        "item/qfu_soldtopartycode": "@items('Apply_to_each_quote_line')?['soldtopartycode']",
+                                        "item/qfu_soldtopartyname": "@items('Apply_to_each_quote_line')?['soldtopartyname']",
+                                        "item/qfu_status": "@outputs('Determine_Status_Code')",
+                                        "item/qfu_tsr": "@items('Apply_to_each_quote_line')?['tsr']",
+                                        "item/qfu_tsrname": "@items('Apply_to_each_quote_line')?['tsrname']",
+                                        "item/qfu_unitprice": "@items('Apply_to_each_quote_line')?['unitprice']"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                        "operationId": "CreateRecord",
+                                        "connectionName": "shared_commondataserviceforapps"
+                                      }
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "847aef3c-5d3e-45d1-8011-0f67f2ae2f8a"
+                                    }
+                                  }
+                                }
+                              },
+                              "runAfter": {
+                                "Check_Line_Exists": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "f033e4a7-abd9-4b10-a4d3-fc33d1b9ec1c"
+                              }
+                            },
+                            "Condition_Close_When_Won": {
+                              "type": "If",
+                              "expression": {
+                                "equals": [
+                                  "@outputs('Determine_Status_Code')",
+                                  2
+                                ]
+                              },
+                              "actions": {
+                                "List_Upserted_Line": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "ListRecords",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "qfu_quotelines",
+                                      "$select": "qfu_quotelineid",
+                                      "$top": 1,
+                                      "$filter": "qfu_uniquekey eq '@{outputs('Compose_UniqueKey')}'"
+                                    }
+                                  }
+                                },
+                                "Condition_Line_Found_For_Close": {
+                                  "type": "If",
+                                  "expression": {
+                                    "greater": [
+                                      "@length(outputs('List_Upserted_Line')?['body/value'])",
+                                      0
+                                    ]
+                                  },
+                                  "actions": {
+                                    "Close_Upserted_Line": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "connectionName": "shared_commondataserviceforapps",
+                                          "operationId": "UpdateRecord",
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                        },
+                                        "parameters": {
+                                          "entityName": "qfu_quotelines",
+                                          "recordId": "@outputs('List_Upserted_Line')?['body/value'][0]['qfu_quotelineid']",
+                                          "item/statuscode": 2,
+                                          "item/statecode": 1
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "else": {
+                                    "actions": {}
+                                  },
+                                  "runAfter": {
+                                    "List_Upserted_Line": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Close_Quote_Header_When_Won": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "UpdateRecord",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "qfu_quotes",
+                                      "recordId": "@variables('CurrentQuoteGUID')",
+                                      "item/qfu_actionstate": 924500004,
+                                      "item/qfu_status": "@outputs('Determine_Status_Code')",
+                                      "item/qfu_closedon": "@utcNow()",
+                                      "item/qfu_nextfollowup": null,
+                                      "item/statecode": 1,
+                                      "item/statuscode": 2
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Condition_Line_Found_For_Close": [
+                                      "Succeeded",
+                                      "Failed",
+                                      "Skipped",
+                                      "TimedOut"
+                                    ]
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Condition_Line_Exists": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "runAfter": {},
+                          "runtimeConfiguration": {
+                            "concurrency": {
+                              "repetitions": 1
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "8679664d-f067-4709-87c0-08149903f69a"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Compose_Quote_Row_Limit_Skip": {
+                            "type": "Compose",
+                            "description": "Skip quote import when row count hits the max table range.",
+                            "inputs": "Quote import stopped: row count hit the 5000-row limit. Skipping import."
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Filter_Quote_Rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Condition_Ensure_Quote_Table": {
+                      "type": "If",
+                      "description": "Ensure an Excel table exists before listing rows.",
+                      "expression": {
+                        "equals": [
+                          "@length(coalesce(body('Get_Quote_Tables')?['value'], createArray()))",
+                          0
+                        ]
+                      },
+                      "actions": {
+                        "Create_Quote_Table": {
+                          "type": "OpenApiConnection",
+                          "description": "Create a table from the SP830CA worksheet.",
+                          "inputs": {
+                            "parameters": {
+                              "source": "me",
+                              "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                              "file": "@outputs('Create_attachment_file')?['body/Path']",
+                              "table/Range": "Daily!B2:U5001"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                              "operationId": "CreateTable",
+                              "connectionName": "shared_excelonlinebusiness-1"
+                            }
+                          }
+                        },
+                        "Get_Quote_Tables_AfterCreate": {
+                          "type": "OpenApiConnection",
+                          "description": "Fetch table IDs for the SP830CA file.",
+                          "inputs": {
+                            "parameters": {
+                              "source": "me",
+                              "drive": "@parameters('qfu_QFU_OneDriveDriveId')",
+                              "file": "@outputs('Create_attachment_file')?['body/Path']"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                              "operationId": "GetTables",
+                              "connectionName": "shared_excelonlinebusiness-1"
+                            }
+                          },
+                          "runAfter": {
+                            "Create_Quote_Table": [
+                              "Succeeded",
+                              "Failed"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Get_Quote_Tables": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3eba1ce8-9719-43bd-889a-ec29ac4b8743"
+                  }
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "dbd7557a-7456-4491-8fa2-28ef0d83d2d6"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Initialize_CurrentQuoteGUID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bbf62c30-f725-499e-b780-52b483c8444f"
+          }
+        },
+        "Initialize_CurrentQuoteGUID": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CurrentQuoteGUID",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "6995da8c-5867-4315-b65e-3bbbfac6df81"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

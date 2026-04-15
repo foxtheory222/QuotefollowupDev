@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_DebugTestEmailFlowTriggerId">
+  <defaultvalue>disabled</defaultvalue>
+  <description default="Optional. Enables /debug test email button.&#xD;&#xA;Set after import: Solutions -&gt; QFU -&gt; Cloud flows -&gt; QFU-Debug-SendTestEmails -&gt; copy GUID from browser URL.&#xD;&#xA;Leave disabled to skip.">
+    <label description="Optional. Enables /debug test email button.&#xD;&#xA;Set after import: Solutions -&gt; QFU -&gt; Cloud flows -&gt; QFU-Debug-SendTestEmails -&gt; copy GUID from browser URL.&#xD;&#xA;Leave disabled to skip." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Debug Test Email Flow ID">
+    <label description="OPTIONAL: Debug Test Email Flow ID" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

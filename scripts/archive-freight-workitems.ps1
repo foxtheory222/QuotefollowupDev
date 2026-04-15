@@ -1,5 +1,5 @@
 param(
-  [string]$RepoRoot = "C:\Users\smcfarlane\Desktop\WorkBench\QuoteFollowUpRegion",
+  [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
   [string]$TargetEnvironmentUrl = "https://regionaloperationshub.crm.dynamics.com",
   [string]$Username = "smcfarlane@applied.com",
   [int]$ArchiveAfterDays = 60,
@@ -8,8 +8,50 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-. (Join-Path $RepoRoot "scripts\deploy-southern-alberta-pilot.ps1")
-. (Join-Path $RepoRoot "scripts\deploy-freight-worklist.ps1")
+$resolvedRepoRoot = $RepoRoot
+$resolvedTargetEnvironmentUrl = $TargetEnvironmentUrl
+$resolvedUsername = $Username
+
+function Resolve-HelperScriptPath {
+  param(
+    [string]$RepoRootPath,
+    [string[]]$RelativePaths
+  )
+
+  foreach ($relativePath in @($RelativePaths)) {
+    if ([string]::IsNullOrWhiteSpace($relativePath)) {
+      continue
+    }
+    $candidate = Join-Path $RepoRootPath $relativePath
+    if (Test-Path -LiteralPath $candidate) {
+      return $candidate
+    }
+  }
+
+  throw "Helper script not found under $RepoRootPath. Looked for: $($RelativePaths -join ', ')"
+}
+
+$hadPriorLibraryFlag = Test-Path Variable:QfuLoadAsLibrary
+$priorLibraryFlagValue = if ($hadPriorLibraryFlag) { $QfuLoadAsLibrary } else { $null }
+$QfuLoadAsLibrary = $true
+$pilotHelperPath = Resolve-HelperScriptPath -RepoRootPath $resolvedRepoRoot -RelativePaths @(
+  "scripts\deploy-southern-alberta-pilot.ps1",
+  "RAW\scripts\deploy-southern-alberta-pilot.ps1"
+)
+. $pilotHelperPath -TargetEnvironmentUrl $resolvedTargetEnvironmentUrl -Username $resolvedUsername
+$freightHelperPath = Resolve-HelperScriptPath -RepoRootPath $resolvedRepoRoot -RelativePaths @(
+  "scripts\deploy-freight-worklist.ps1"
+)
+. $freightHelperPath -RepoRoot $resolvedRepoRoot -TargetEnvironmentUrl $resolvedTargetEnvironmentUrl -Username $resolvedUsername
+if ($hadPriorLibraryFlag) {
+  $QfuLoadAsLibrary = $priorLibraryFlagValue
+} else {
+  Remove-Variable QfuLoadAsLibrary -ErrorAction SilentlyContinue
+}
+
+$RepoRoot = $resolvedRepoRoot
+$TargetEnvironmentUrl = $resolvedTargetEnvironmentUrl
+$Username = $resolvedUsername
 
 function Convert-FreightArchiveBoolean {
   param($Value)
@@ -39,9 +81,8 @@ function Convert-FreightArchiveBoolean {
 }
 
 $target = Connect-Org -Url $TargetEnvironmentUrl
-Write-Host "Connected target: $($target.ConnectedOrgFriendlyName)"
 
-Ensure-FreightSchema -Connection $target
+Ensure-FreightSchemaQuietly -Connection $target
 
 $now = [datetime]::UtcNow
 $cutoff = $now.AddDays(-1 * [Math]::Abs($ArchiveAfterDays))

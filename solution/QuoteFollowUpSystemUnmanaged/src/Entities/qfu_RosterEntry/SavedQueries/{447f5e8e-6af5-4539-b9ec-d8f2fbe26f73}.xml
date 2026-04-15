@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{447f5e8e-6af5-4539-b9ec-d8f2fbe26f73}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qfu_staffname" select="1" icon="1" preview="1">
+        <row name="result" id="qfu_rosterentryid">
+          <cell name="qfu_staffname" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="qfu_rosterentry">
+          <attribute name="qfu_rosterentryid" />
+          <attribute name="qfu_staffname" />
+          <attribute name="createdon" />
+          <order attribute="qfu_staffname" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active qfu_rosterentries" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

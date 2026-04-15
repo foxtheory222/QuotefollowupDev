@@ -59,7 +59,7 @@
   adx_value: true
 - adx_name: Authentication/Registration/Enabled
   adx_sitesettingid: 3a5bfb4e-d9f8-4c0d-8821-0f5f27434e54
-  adx_value: true
+  adx_value: false
 - adx_name: Authentication/OpenAuth/LinkedIn/ConsumerKey
   adx_sitesettingid: 3b23ea41-048d-4db0-9041-0c0fb8f0087c
 - adx_name: Webapi/qfu_branch/fields
@@ -167,10 +167,10 @@
   adx_value: 00:15:00
 - adx_name: Authentication/Registration/OpenRegistrationEnabled
   adx_sitesettingid: 99b82daa-bdba-4810-9b58-8a8e97f5f46d
-  adx_value: true
+  adx_value: false
 - adx_name: Authentication/Registration/EmailConfirmationEnabled
   adx_sitesettingid: 9aa05b2f-0b04-4c8d-8054-c8ccb881c0bd
-  adx_value: true
+  adx_value: false
 - adx_description: Site setting that determines if the language code is included in the portal URL.
   adx_name: MultiLanguage/DisplayLanguageCodeInURL
   adx_sitesettingid: a5178e48-ecbd-484f-944e-80edd56d5fe1
@@ -192,7 +192,7 @@
   adx_value: true
 - adx_name: Webapi/qfu_freightworkitem/fields
   adx_sitesettingid: d2d3fd15-fb7a-45f3-92ef-f675991f6732
-  adx_value: qfu_freightworkitemid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_sourcecarrier,qfu_importbatchid,qfu_trackingnumber,qfu_pronumber,qfu_invoicenumber,qfu_controlnumber,qfu_reference,qfu_shipdate,qfu_invoicedate,qfu_closedate,qfu_billtype,qfu_service,qfu_servicecode,qfu_sender,qfu_destination,qfu_zone,qfu_actualweight,qfu_billedweight,qfu_quantity,qfu_totalamount,qfu_freightamount,qfu_fuelamount,qfu_taxamount,qfu_gstamount,qfu_hstamount,qfu_qstamount,qfu_accessorialamount,qfu_accessorialpresent,qfu_unrealizedsavings,qfu_chargebreakdowntext,qfu_direction,qfu_status,qfu_priorityband,qfu_ownername,qfu_owneridentifier,qfu_claimedon,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_lastactivityon,qfu_isarchived,qfu_archivedon,qfu_lastseenon,createdon,modifiedon
+  adx_value: qfu_freightworkitemid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_sourcecarrier,qfu_importbatchid,qfu_trackingnumber,qfu_pronumber,qfu_invoicenumber,qfu_controlnumber,qfu_reference,qfu_shipdate,qfu_invoicedate,qfu_closedate,qfu_billtype,qfu_service,qfu_servicecode,qfu_sender,qfu_destination,qfu_actualweight,qfu_billedweight,qfu_quantity,qfu_totalamount,qfu_freightamount,qfu_fuelamount,qfu_taxamount,qfu_gstamount,qfu_hstamount,qfu_qstamount,qfu_accessorialamount,qfu_accessorialpresent,qfu_unrealizedsavings,qfu_chargebreakdowntext,qfu_direction,qfu_status,qfu_priorityband,qfu_ownername,qfu_owneridentifier,qfu_claimedon,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_lastactivityon,qfu_isarchived,qfu_archivedon,qfu_lastseenon,createdon,modifiedon
 - adx_description: A date/time value in GMT format to represent the effective date of the current published terms and conditions. If the terms agreement is enabled, portal users that have not accepted the terms after this date will be asked to accept them the next time they sign in. If the date is not provided, and the terms agreement is enabled, the terms will be presented every time portal users sign in.
   adx_name: Authentication/Registration/TermsPublicationDate
   adx_sitesettingid: b76fc9e2-5239-4d09-a368-f7eeb2d89702
@@ -214,10 +214,10 @@
   adx_value: sharepoint.com;microsoftonline.com
 - adx_name: Authentication/Registration/ExternalLoginEnabled
   adx_sitesettingid: c9579a8d-6314-4387-bdd5-a6e99551501c
-  adx_value: true
+  adx_value: false
 - adx_name: Authentication/Registration/InvitationEnabled
   adx_sitesettingid: cd8dff1d-6368-452b-9bdd-90519183e159
-  adx_value: true
+  adx_value: false
 - adx_name: Webapi/qfu_budget/enabled
   adx_sitesettingid: d5caa203-641f-45a0-bc70-1009c13ef18f
   adx_value: true
@@ -238,7 +238,7 @@
 - adx_description: Enables or disables Azure AD as an external identity provider. By default, it is set to true.
   adx_name: Authentication/Registration/AzureADLoginEnabled
   adx_sitesettingid: db2a0dbb-1363-4580-8352-38ad30fe32ec
-  adx_value: true
+  adx_value: false
 - adx_description: 'The Prefix entered here will be used to filter Notes Text, allowing you to control notes exposed on the Portal ex: *WEB*'
   adx_name: KnowledgeManagement/NotesFilter
   adx_sitesettingid: dc409896-2fa2-4e4f-95df-ddf8a30e8754
@@ -266,7 +266,7 @@
   adx_value: qfu_sourcefeedid,qfu_name,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_mailboxaddress,qfu_filenamepattern,qfu_subjectfilter,qfu_folderid,qfu_enabled,createdon,modifiedon
 - adx_name: Profile/Enabled
   adx_sitesettingid: f6a52e92-cac5-460a-a10e-aa71bcfed924
-  adx_value: true
+  adx_value: false
 - adx_name: Webapi/qfu_deliverynotpgi/fields
   adx_sitesettingid: fd8a4c22-9243-4b9c-9519-e61f156cf5bf
   adx_value: qfu_deliverynotpgiid,qfu_name,qfu_sourceid,qfu_deliverynumber,qfu_deliveryline,qfu_ontimedate,qfu_dayslate,qfu_shiptocustomername,qfu_soldtocustomername,qfu_material,qfu_description,qfu_qtyondelnotpgid,qfu_unshippednetvalue,qfu_cssrname,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_snapshotcapturedon,qfu_active,qfu_inactiveon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_importbatchid,createdon,modifiedon

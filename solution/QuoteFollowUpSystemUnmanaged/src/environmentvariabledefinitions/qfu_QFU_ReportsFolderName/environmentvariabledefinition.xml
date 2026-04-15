@@ -1,0 +1,14 @@
+<environmentvariabledefinition schemaname="qfu_QFU_ReportsFolderName">
+  <defaultvalue>QFU Reports</defaultvalue>
+  <description default="Optional. After processing, QFU tries to move the email to this folder.&#xD;&#xA;Set in the QFU Setup app after install (default: QFU Reports).&#xD;&#xA;Set to disabled to skip auto-move and rely on Outlook rules.">
+    <label description="Optional. After processing, QFU tries to move the email to this folder.&#xD;&#xA;Set in the QFU Setup app after install (default: QFU Reports).&#xD;&#xA;Set to disabled to skip auto-move and rely on Outlook rules." languagecode="1033" />
+  </description>
+  <displayname default="OPTIONAL: Reports Folder Name">
+    <label description="OPTIONAL: Reports Folder Name" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

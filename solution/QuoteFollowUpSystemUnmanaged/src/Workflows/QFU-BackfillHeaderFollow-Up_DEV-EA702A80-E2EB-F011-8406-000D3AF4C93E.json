@@ -1,0 +1,135 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "List_Quotes_Needing_Backfill": {
+          "runAfter": {},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qfu_quotes",
+              "$filter": "qfu_followupnotes eq null and qfu_nextfollowup eq null",
+              "$select": "qfu_quoteid,qfu_quotenumber,qfu_followupnotes,qfu_nextfollowup,qfu_followupcount,qfu_firsttouchedon,qfu_lasttouchedon"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_quote": {
+          "foreach": "@outputs('List_Quotes_Needing_Backfill')?['body/value']",
+          "actions": {
+            "List_Lines_With_Followup": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qfu_quotelines",
+                  "$filter": "qfu_quotenumber eq '@{items('Apply_to_each_quote')?['qfu_quotenumber']}' and (qfu_followupnotes ne null or qfu_followupdate ne null)",
+                  "$select": "qfu_followupnotes,qfu_followupdate",
+                  "$orderby": "qfu_followupdate desc",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition_Line_Found": {
+              "actions": {
+                "Update_Quote_Header": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_quotes",
+                      "recordId": "@items('Apply_to_each_quote')?['qfu_quoteid']",
+                      "item/qfu_followupnotes": "@outputs('List_Lines_With_Followup')?['body/value'][0]['qfu_followupnotes']",
+                      "item/qfu_nextfollowup": "@outputs('List_Lines_With_Followup')?['body/value'][0]['qfu_followupdate']",
+                      "item/qfu_followupcount": "@if(or(empty(items('Apply_to_each_quote')?['qfu_followupcount']), equals(items('Apply_to_each_quote')?['qfu_followupcount'], 0)), 1, items('Apply_to_each_quote')?['qfu_followupcount'])",
+                      "item/qfu_firsttouchedon": "@if(empty(items('Apply_to_each_quote')?['qfu_firsttouchedon']), utcNow(), items('Apply_to_each_quote')?['qfu_firsttouchedon'])",
+                      "item/qfu_lasttouchedon": "@utcNow()"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "List_Lines_With_Followup": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {}
+              },
+              "expression": {
+                "greater": [
+                  "@length(outputs('List_Lines_With_Followup')?['body/value'])",
+                  0
+                ]
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "List_Quotes_Needing_Backfill": [
+              "Succeeded"
+            ]
+          },
+          "type": "Foreach"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

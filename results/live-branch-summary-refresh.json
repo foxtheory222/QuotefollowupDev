@@ -1,0 +1,64 @@
+{
+    "generated_on":  "2026-04-15T05:14:08.9936722Z",
+    "target_environment_url":  "https://orgad610d2c.crm3.dynamics.com/",
+    "branch_codes":  [
+                         "4171",
+                         "4172",
+                         "4173"
+                     ],
+    "apply":  true,
+    "current_fiscal_year":  "FY26",
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "branch_slug":  "4171-calgary",
+                         "region_slug":  "southern-alberta",
+                         "source_id":  "4171|summary|2026-04-14",
+                         "status":  "updated",
+                         "record_id":  "586e1cf0-7a38-f111-88b4-000d3af4cf74",
+                         "open_quotes":  16,
+                         "overdue_quotes":  0,
+                         "backorder_count":  471,
+                         "overdue_backorder_count":  115,
+                         "budget_actual":  217177.00,
+                         "budget_target":  945500.00,
+                         "budget_pace":  22.97,
+                         "budget_actual_source":  "qfu_budget",
+                         "budget_target_source":  "qfu_budgetarchive"
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "branch_slug":  "4172-lethbridge",
+                         "region_slug":  "southern-alberta",
+                         "source_id":  "4172|summary|2026-04-14",
+                         "status":  "updated",
+                         "record_id":  "596e1cf0-7a38-f111-88b4-000d3af4cf74",
+                         "open_quotes":  12,
+                         "overdue_quotes":  0,
+                         "backorder_count":  0,
+                         "overdue_backorder_count":  0,
+                         "budget_actual":  181608.01,
+                         "budget_target":  388540.00,
+                         "budget_pace":  46.74,
+                         "budget_actual_source":  "qfu_budget",
+                         "budget_target_source":  "qfu_budgetarchive"
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "branch_slug":  "4173-medicine-hat",
+                         "region_slug":  "southern-alberta",
+                         "source_id":  "4173|summary|2026-04-14",
+                         "status":  "updated",
+                         "record_id":  "5a6e1cf0-7a38-f111-88b4-000d3af4cf74",
+                         "open_quotes":  4,
+                         "overdue_quotes":  0,
+                         "backorder_count":  0,
+                         "overdue_backorder_count":  0,
+                         "budget_actual":  274640.18,
+                         "budget_target":  411990.00,
+                         "budget_pace":  66.66,
+                         "budget_actual_source":  "qfu_budget",
+                         "budget_target_source":  "qfu_budgetarchive"
+                     }
+                 ]
+}

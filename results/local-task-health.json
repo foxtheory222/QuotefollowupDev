@@ -1,0 +1,32 @@
+{
+    "generated_at":  "2026-04-14T21:46:29.7299129-06:00",
+    "issue_count":  0,
+    "tasks":  [
+                  {
+                      "task_name":  "QFU-Freight-Inbox-Queue-Processor",
+                      "purpose":  "Clears queued freight raw documents into processed or duplicate ingestion states.",
+                      "exists":  true,
+                      "enabled":  true,
+                      "state":  "Ready",
+                      "last_run_time":  "2026-04-14 21:44:10",
+                      "next_run_time":  "2026-04-14 21:59:00",
+                      "last_task_result":  "0",
+                      "issues":  [
+
+                                 ]
+                  },
+                  {
+                      "task_name":  "QFU-Branch-Daily-Summary-Refresh",
+                      "purpose":  "Keeps qfu_branchdailysummary aligned with live qfu_budget and current-state rows.",
+                      "exists":  true,
+                      "enabled":  true,
+                      "state":  "Ready",
+                      "last_run_time":  "2026-04-14 21:44:10",
+                      "next_run_time":  "2026-04-14 21:59:00",
+                      "last_task_result":  "0",
+                      "issues":  [
+
+                                 ]
+                  }
+              ]
+}

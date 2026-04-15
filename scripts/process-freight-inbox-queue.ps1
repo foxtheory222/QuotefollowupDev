@@ -1,6 +1,6 @@
 param(
-  [string]$RepoRoot = "C:\Users\smcfarlane\Desktop\WorkBench\QuoteFollowUpRegion",
-  [string]$TargetEnvironmentUrl = "https://regionaloperationshub.crm.dynamics.com",
+  [string]$RepoRoot = (Split-Path -Parent $PSScriptRoot),
+  [string]$TargetEnvironmentUrl = $env:QFU_TARGET_ENVIRONMENT_URL,
   [string]$Username = "smcfarlane@applied.com",
   [string]$OutputJson = "results\freight-inbox-queue-summary.json",
   [int]$TopCount = 50
@@ -8,12 +8,58 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-. (Join-Path $RepoRoot "scripts\deploy-southern-alberta-pilot.ps1")
-. (Join-Path $RepoRoot "scripts\deploy-freight-worklist.ps1")
+if ([string]::IsNullOrWhiteSpace($TargetEnvironmentUrl)) {
+  throw "Provide -TargetEnvironmentUrl or set QFU_TARGET_ENVIRONMENT_URL before running process-freight-inbox-queue.ps1."
+}
+
+$resolvedRepoRoot = $RepoRoot
+$resolvedTargetEnvironmentUrl = $TargetEnvironmentUrl
+$resolvedUsername = $Username
+
+function Resolve-HelperScriptPath {
+  param(
+    [string]$RepoRootPath,
+    [string[]]$RelativePaths
+  )
+
+  foreach ($relativePath in @($RelativePaths)) {
+    if ([string]::IsNullOrWhiteSpace($relativePath)) {
+      continue
+    }
+    $candidate = Join-Path $RepoRootPath $relativePath
+    if (Test-Path -LiteralPath $candidate) {
+      return $candidate
+    }
+  }
+
+  throw "Helper script not found under $RepoRootPath. Looked for: $($RelativePaths -join ', ')"
+}
+
+$hadPriorLibraryFlag = Test-Path Variable:QfuLoadAsLibrary
+$priorLibraryFlagValue = if ($hadPriorLibraryFlag) { $QfuLoadAsLibrary } else { $null }
+$QfuLoadAsLibrary = $true
+$pilotHelperPath = Resolve-HelperScriptPath -RepoRootPath $RepoRoot -RelativePaths @(
+  "scripts\deploy-southern-alberta-pilot.ps1",
+  "RAW\scripts\deploy-southern-alberta-pilot.ps1"
+)
+. $pilotHelperPath -TargetEnvironmentUrl $resolvedTargetEnvironmentUrl -Username $resolvedUsername
+$freightHelperPath = Resolve-HelperScriptPath -RepoRootPath $RepoRoot -RelativePaths @(
+  "scripts\deploy-freight-worklist.ps1"
+)
+. $freightHelperPath -RepoRoot $resolvedRepoRoot -TargetEnvironmentUrl $resolvedTargetEnvironmentUrl -Username $resolvedUsername
+if ($hadPriorLibraryFlag) {
+  $QfuLoadAsLibrary = $priorLibraryFlagValue
+} else {
+  Remove-Variable QfuLoadAsLibrary -ErrorAction SilentlyContinue
+}
+
+$RepoRoot = $resolvedRepoRoot
+$TargetEnvironmentUrl = $resolvedTargetEnvironmentUrl
+$Username = $resolvedUsername
 
 function Ensure-FreightProcessorSchema {
   param([Microsoft.Xrm.Tooling.Connector.CrmServiceClient]$Connection)
-  Ensure-FreightSchema -Connection $Connection
+  Ensure-FreightSchemaQuietly -Connection $Connection
 }
 
 function Get-QueuedFreightDocuments {
@@ -386,7 +432,6 @@ function Upsert-FreightWorkItems {
 }
 
 $target = Connect-Org -Url $TargetEnvironmentUrl
-Write-Host "Connected target: $($target.ConnectedOrgFriendlyName)"
 
 Ensure-FreightProcessorSchema -Connection $target
 

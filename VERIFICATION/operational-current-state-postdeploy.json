@@ -1,0 +1,498 @@
+{
+    "generated_on":  "2026-04-09T23:33:14.4493977Z",
+    "target_environment_url":  "https://regionaloperationshub.crm.dynamics.com",
+    "branch_codes":  [
+                         "4171",
+                         "4172",
+                         "4173"
+                     ],
+    "operational_tables":  [
+                               {
+                                   "entity":  "qfu_quote",
+                                   "canonical_key":  "qfu_sourceid (branch|SP830CA|quotenumber)",
+                                   "table_role":  "current-state",
+                                   "total_rows":  71,
+                                   "unique_source_ids":  71,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  30,
+                                   "inactive_row_count":  41,
+                                   "lifecycle_missing_count":  0,
+                                   "sample_groups":  [
+
+                                                     ]
+                               },
+                               {
+                                   "entity":  "qfu_backorder",
+                                   "canonical_key":  "qfu_sourceid (branch|ZBO|salesdoc|line)",
+                                   "table_role":  "current-state",
+                                   "total_rows":  1726,
+                                   "unique_source_ids":  1726,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  1141,
+                                   "inactive_row_count":  585,
+                                   "lifecycle_missing_count":  0,
+                                   "sample_groups":  [
+
+                                                     ]
+                               },
+                               {
+                                   "entity":  "qfu_marginexception",
+                                   "canonical_key":  "qfu_sourceid (branch|SA1300-MARGIN|snapshotdate|billingdoc|reviewtype)",
+                                   "table_role":  "snapshot",
+                                   "total_rows":  38,
+                                   "unique_source_ids":  38,
+                                   "duplicate_group_count":  0,
+                                   "duplicate_row_count":  0,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  null,
+                                   "inactive_row_count":  null,
+                                   "lifecycle_missing_count":  null,
+                                   "sample_groups":  [
+
+                                                     ]
+                               },
+                               {
+                                   "entity":  "qfu_deliverynotpgi",
+                                   "canonical_key":  "branch + delivery number + delivery line",
+                                   "table_role":  "snapshot with active/inactive lifecycle",
+                                   "total_rows":  571,
+                                   "unique_source_ids":  513,
+                                   "duplicate_group_count":  58,
+                                   "duplicate_row_count":  116,
+                                   "active_duplicate_group_count":  0,
+                                   "active_row_count":  266,
+                                   "inactive_row_count":  305,
+                                   "lifecycle_missing_count":  0,
+                                   "sample_groups":  [
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522978429|10",
+                                                             "count":  2,
+                                                             "winner_id":  "76ad8224-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "76ad8224-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522978429|10",
+                                                                              "createdon":  "2026-04-08 16:08:00",
+                                                                              "modifiedon":  "2026-04-09 22:34:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522978429",
+                                                                              "detail_2":  "10"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "1a24538a-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522978429|10",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522978429",
+                                                                              "detail_2":  "10"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522915717|20",
+                                                             "count":  2,
+                                                             "winner_id":  "03ab8224-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "03ab8224-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522915717|20",
+                                                                              "createdon":  "2026-04-08 16:08:00",
+                                                                              "modifiedon":  "2026-04-09 22:34:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522915717",
+                                                                              "detail_2":  "20"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "481a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522915717|20",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522915717",
+                                                                              "detail_2":  "20"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522915717|30",
+                                                             "count":  2,
+                                                             "winner_id":  "19ab8224-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "19ab8224-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522915717|30",
+                                                                              "createdon":  "2026-04-08 16:08:00",
+                                                                              "modifiedon":  "2026-04-09 22:34:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522915717",
+                                                                              "detail_2":  "30"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "491a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522915717|30",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522915717",
+                                                                              "detail_2":  "30"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522915717|40",
+                                                             "count":  2,
+                                                             "winner_id":  "d6ab8224-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "d6ab8224-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522915717|40",
+                                                                              "createdon":  "2026-04-08 16:08:00",
+                                                                              "modifiedon":  "2026-04-09 22:34:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522915717",
+                                                                              "detail_2":  "40"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "4a1a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522915717|40",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522915717",
+                                                                              "detail_2":  "40"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522963047|40",
+                                                             "count":  2,
+                                                             "winner_id":  "6ead8224-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "6ead8224-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522963047|40",
+                                                                              "createdon":  "2026-04-08 16:08:00",
+                                                                              "modifiedon":  "2026-04-09 22:34:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522963047",
+                                                                              "detail_2":  "40"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "4d1a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522963047|40",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522963047",
+                                                                              "detail_2":  "40"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522963047|50",
+                                                             "count":  2,
+                                                             "winner_id":  "70ad8224-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "70ad8224-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522963047|50",
+                                                                              "createdon":  "2026-04-08 16:08:00",
+                                                                              "modifiedon":  "2026-04-09 22:34:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522963047",
+                                                                              "detail_2":  "50"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "4e1a9f90-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522963047|50",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522963047",
+                                                                              "detail_2":  "50"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1522993700|10",
+                                                             "count":  2,
+                                                             "winner_id":  "73d9170c-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "73d9170c-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522993700|10",
+                                                                              "createdon":  "2026-04-08 16:07:00",
+                                                                              "modifiedon":  "2026-04-09 22:33:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1522993700",
+                                                                              "detail_2":  "10"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "188eaf96-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1522993700|10",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1522993700",
+                                                                              "detail_2":  "10"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1523026752|10",
+                                                             "count":  2,
+                                                             "winner_id":  "76d9170c-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "76d9170c-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1523026752|10",
+                                                                              "createdon":  "2026-04-08 16:07:00",
+                                                                              "modifiedon":  "2026-04-09 22:33:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1523026752",
+                                                                              "detail_2":  "10"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "198eaf96-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1523026752|10",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1523026752",
+                                                                              "detail_2":  "10"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1523026752|20",
+                                                             "count":  2,
+                                                             "winner_id":  "79d9170c-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "79d9170c-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1523026752|20",
+                                                                              "createdon":  "2026-04-08 16:07:00",
+                                                                              "modifiedon":  "2026-04-09 22:33:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1523026752",
+                                                                              "detail_2":  "20"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "1a8eaf96-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1523026752|20",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1523026752",
+                                                                              "detail_2":  "20"
+                                                                          }
+                                                                      ]
+                                                         },
+                                                         {
+                                                             "key":  "4171, 4171|ZBO|1523026752|30",
+                                                             "count":  2,
+                                                             "winner_id":  "05451512-6533-f111-88b4-000d3a59294a",
+                                                             "rows":  [
+                                                                          {
+                                                                              "record_id":  "05451512-6533-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1523026752|30",
+                                                                              "createdon":  "2026-04-08 16:07:00",
+                                                                              "modifiedon":  "2026-04-09 22:33:00",
+                                                                              "snapshot_on":  "2026-04-09 22:31:00",
+                                                                              "active":  true,
+                                                                              "detail_1":  "1523026752",
+                                                                              "detail_2":  "30"
+                                                                          },
+                                                                          {
+                                                                              "record_id":  "86f2109d-da2e-f111-88b4-000d3a59294a",
+                                                                              "branch_code":  "4171",
+                                                                              "source_id":  "4171|ZBO|1523026752|30",
+                                                                              "createdon":  "2026-04-02 21:26:00",
+                                                                              "modifiedon":  "2026-04-09 20:43:00",
+                                                                              "snapshot_on":  "2026-04-02 21:39:00",
+                                                                              "active":  false,
+                                                                              "detail_1":  "1523026752",
+                                                                              "detail_2":  "30"
+                                                                          }
+                                                                      ]
+                                                         }
+                                                     ]
+                               }
+                           ],
+    "latest_imports":  [
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "SP830CA",
+                               "latest_status":  "ready",
+                               "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "ZBO",
+                               "latest_status":  "ready",
+                               "source_filename":  "CA ZBO 20250320_719_2965954137580406575.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "SA1300",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4171",
+                               "source_family":  "SA1300-ABNORMALMARGIN",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-09 01:20:00",
+                               "source_completedon":  "2026-04-09 01:20:00",
+                               "row_createdon":  "2026-04-09 01:20:00",
+                               "trigger_flow":  "4171-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "SP830CA",
+                               "latest_status":  "ready",
+                               "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "ZBO",
+                               "latest_status":  "ready",
+                               "source_filename":  "CA SC ZBO - 20260120_243_4269750294371077189.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "SA1300",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4172",
+                               "source_family":  "SA1300-ABNORMALMARGIN",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-09 01:20:00",
+                               "source_completedon":  "2026-04-09 01:20:00",
+                               "row_createdon":  "2026-04-09 01:20:00",
+                               "trigger_flow":  "4172-Budget-Update-SA1300",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "SP830CA",
+                               "latest_status":  "ready",
+                               "source_filename":  "SP830CA - Quote Follow Up Report.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "ZBO",
+                               "latest_status":  "ready",
+                               "source_filename":  "CA SC ZBO - 20260120_30_5427988465983970409.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "SA1300",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-09 16:29:00",
+                               "source_completedon":  "2026-04-09 16:29:00",
+                               "row_createdon":  "2026-04-08 23:51:00",
+                               "trigger_flow":  "Captured workbook replay",
+                               "seeded":  false
+                           },
+                           {
+                               "branch_code":  "4173",
+                               "source_family":  "SA1300-ABNORMALMARGIN",
+                               "latest_status":  "ready",
+                               "source_filename":  "SA1300.xlsx",
+                               "source_startedon":  "2026-04-09 01:19:00",
+                               "source_completedon":  "2026-04-09 01:19:00",
+                               "row_createdon":  "2026-04-09 01:19:00",
+                               "trigger_flow":  "4173-Budget-Update-SA1300",
+                               "seeded":  false
+                           }
+                       ]
+}
