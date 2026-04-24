@@ -89,6 +89,47 @@ $runtimeText = Get-Content -LiteralPath $RuntimePath -Raw
 $siteSettingLines = Get-Content -LiteralPath $SiteSettingsPath
 
 $runtimeFieldsByTable = @{}
+
+function Ensure-RuntimeFieldSet {
+  param([string]$Table)
+
+  if (-not $runtimeFieldsByTable.ContainsKey($Table)) {
+    $runtimeFieldsByTable[$Table] = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+  }
+}
+
+function Add-RuntimeField {
+  param(
+    [string]$Table,
+    [string]$Field
+  )
+
+  $trimmed = if ($null -ne $Field) { $Field.Trim() } else { "" }
+  if (-not $trimmed) {
+    return
+  }
+
+  Ensure-RuntimeFieldSet -Table $Table
+  [void]$runtimeFieldsByTable[$Table].Add($trimmed)
+}
+
+function Add-RuntimeFieldsFromArrayVariable {
+  param(
+    [string]$Table,
+    [string]$VariableName
+  )
+
+  $pattern = "var\s+$([regex]::Escape($VariableName))\s*=\s*\[(?<body>.*?)\]\.join\(`"\s*,\s*`"\);"
+  $match = [regex]::Match($runtimeText, $pattern, [System.Text.RegularExpressions.RegexOptions]::Singleline)
+  if (-not $match.Success) {
+    return
+  }
+
+  foreach ($fieldMatch in [regex]::Matches($match.Groups["body"].Value, '"(?<field>[a-zA-Z0-9_]+)"')) {
+    Add-RuntimeField -Table $Table -Field $fieldMatch.Groups["field"].Value
+  }
+}
+
 $runtimeMatches = [regex]::Matches($runtimeText, '/_api/(?<entity>qfu_[a-z0-9]+)\?\$select=(?<fields>[^"&]+)')
 foreach ($match in $runtimeMatches) {
   $entitySet = $match.Groups["entity"].Value
@@ -97,17 +138,16 @@ foreach ($match in $runtimeMatches) {
   }
 
   $table = $entityMap[$entitySet]
-  if (-not $runtimeFieldsByTable.ContainsKey($table)) {
-    $runtimeFieldsByTable[$table] = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-  }
-
   foreach ($field in ($match.Groups["fields"].Value -split ",")) {
-    $trimmed = $field.Trim()
-    if ($trimmed) {
-      [void]$runtimeFieldsByTable[$table].Add($trimmed)
-    }
+    Add-RuntimeField -Table $table -Field $field
   }
 }
+
+Add-RuntimeFieldsFromArrayVariable -Table "qfu_deliverynotpgi" -VariableName "DELIVERY_NOT_PGI_DETAIL_FIELDS"
+Add-RuntimeFieldsFromArrayVariable -Table "qfu_deliverynotpgi" -VariableName "DELIVERY_NOT_PGI_SUMMARY_FIELDS"
+Add-RuntimeFieldsFromArrayVariable -Table "qfu_deliverynotpgi" -VariableName "DELIVERY_NOT_PGI_ANALYTICS_FIELDS"
+Add-RuntimeFieldsFromArrayVariable -Table "qfu_freightworkitem" -VariableName "FREIGHT_DETAIL_FIELDS"
+Add-RuntimeFieldsFromArrayVariable -Table "qfu_freightworkitem" -VariableName "FREIGHT_SUMMARY_FIELDS"
 
 $allowListByTable = @{}
 for ($i = 0; $i -lt $siteSettingLines.Length; $i += 1) {

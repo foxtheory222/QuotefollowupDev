@@ -1,0 +1,404 @@
+﻿{
+    "captured_on":  "2026-04-20T11:05:27.0978805-06:00",
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "quote_count":  142,
+                         "quoteline_count":  392,
+                         "quotes_missing_any_lines":  15,
+                         "active_quotes_missing_lines":  0,
+                         "archived_quotes_missing_lines":  15,
+                         "sample_missing":  [
+                                                {
+                                                    "qfu_quoteid":  "181be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437699",
+                                                    "qfu_customername":  "NOV CANADA ULC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515437699",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "1a1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437955",
+                                                    "qfu_customername":  "AGRIUM CANADA PARTNERSHIP",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515437955",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "1c1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438113",
+                                                    "qfu_customername":  "CERTARUS LTD",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515438113",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "1e1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438128",
+                                                    "qfu_customername":  "BUNGE CANADA INC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515438128",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "201be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438274",
+                                                    "qfu_customername":  "PROPELL (ALBERTA) LTD",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515438274",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "231be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438681",
+                                                    "qfu_customername":  "FOREMOST INDUSTRIES",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515438681",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "251be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438811",
+                                                    "qfu_customername":  "CGC INC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515438811",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "271be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439263",
+                                                    "qfu_customername":  "EMCO CORPORATION",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515439263",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "291be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439677",
+                                                    "qfu_customername":  "APPLIED CALGARY",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515439677",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "2b1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439822",
+                                                    "qfu_customername":  "INTERPRO PIPE \u0026 STEEL INC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515439822",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "2d1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515440886",
+                                                    "qfu_customername":  "WAJAX LIMITED (INDUSTRIAL COMPONENT",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515440886",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "2f1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441248",
+                                                    "qfu_customername":  "AMRIZE CANADA INC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515441248",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "311be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441354",
+                                                    "qfu_customername":  "AMRIZE CANADA INC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515441354",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "321be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441418",
+                                                    "qfu_customername":  "CGC INC",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515441418",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "341be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441439",
+                                                    "qfu_customername":  "PROSTAR WELL SERVICE",
+                                                    "qfu_sourceid":  "4171|SP830CA|0515441439",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:21 PM"
+                                                }
+                                            ]
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "quote_count":  143,
+                         "quoteline_count":  363,
+                         "quotes_missing_any_lines":  18,
+                         "active_quotes_missing_lines":  0,
+                         "archived_quotes_missing_lines":  18,
+                         "sample_missing":  [
+                                                {
+                                                    "qfu_quoteid":  "361be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515392155",
+                                                    "qfu_customername":  "CARMANGAY COLONY",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515392155",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "381be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437073",
+                                                    "qfu_customername":  "MCCAIN FOODS CANADA A DIVISION OF M",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515437073",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "3a1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437106",
+                                                    "qfu_customername":  "MCCAIN FOODS CANADA A DIVISION OF M",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515437106",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "3c1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437182",
+                                                    "qfu_customername":  "HANDSHAKE SERVICES",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515437182",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "3e1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437516",
+                                                    "qfu_customername":  "LETHBRIDGE IRON WORKS CO LIMITED",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515437516",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "401be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437866",
+                                                    "qfu_customername":  "SUMMIT MOTORS LTD",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515437866",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "421be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438942",
+                                                    "qfu_customername":  "MCCAIN FOODS CANADA A DIVISION OF M",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515438942",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "441be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438999",
+                                                    "qfu_customername":  "AGRI-FLOW EQUIPMENT AND SUPPLY LTD",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515438999",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "461be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439746",
+                                                    "qfu_customername":  "RICHARDSON OILSEED LIMITED",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515439746",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "491be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439869",
+                                                    "qfu_customername":  "INTERPRO PIPE \u0026 STEEL INC",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515439869",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "4b1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439968",
+                                                    "qfu_customername":  "APPLIED CALGARY",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515439968",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "4c1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515440441",
+                                                    "qfu_customername":  "HANDSHAKE SERVICES",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515440441",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "4f1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515440863",
+                                                    "qfu_customername":  "RIVER RD FARMING CO LTD",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515440863",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "501be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441004",
+                                                    "qfu_customername":  "MCCAIN FOODS CANADA A DIVISION OF M",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515441004",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "521be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441160",
+                                                    "qfu_customername":  "MCCAIN FOODS CANADA A DIVISION OF M",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515441160",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "541be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441186",
+                                                    "qfu_customername":  "CHARLTON AND HILL WELDING LTD",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515441186",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "561be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441209",
+                                                    "qfu_customername":  "LAMB WESTON CANADA ULC",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515441209",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "581be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441419",
+                                                    "qfu_customername":  "KAWNEER CO CANADA LIMITED",
+                                                    "qfu_sourceid":  "4172|SP830CA|0515441419",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                }
+                                            ]
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "quote_count":  51,
+                         "quoteline_count":  85,
+                         "quotes_missing_any_lines":  8,
+                         "active_quotes_missing_lines":  0,
+                         "archived_quotes_missing_lines":  8,
+                         "sample_missing":  [
+                                                {
+                                                    "qfu_quoteid":  "5b1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437490",
+                                                    "qfu_customername":  "AECON TRANSPORTATION WEST LTD",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515437490",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "5d1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515437523",
+                                                    "qfu_customername":  "AECON TRANSPORTATION WEST LTD",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515437523",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "5f1be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515438820",
+                                                    "qfu_customername":  "EDON MANAGEMENT SERVICES",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515438820",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "611be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515439139",
+                                                    "qfu_customername":  "MARTY\u0027S ENGINE \u0026 COMPRESSOR",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515439139",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "631be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515440471",
+                                                    "qfu_customername":  "HYDRACO INDUSTRIES LIMITED",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515440471",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "641be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515440839",
+                                                    "qfu_customername":  "BROOKS BEARING \u0026 POWER TRANSMISSION",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515440839",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "671be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441337",
+                                                    "qfu_customername":  "BROOKS BEARING \u0026 POWER TRANSMISSION",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515441337",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                },
+                                                {
+                                                    "qfu_quoteid":  "691be77a-a533-f111-88b4-000d3a59294a",
+                                                    "qfu_quotenumber":  "0515441484",
+                                                    "qfu_customername":  "PINE CLIFF ENERGY LTD",
+                                                    "qfu_sourceid":  "4173|SP830CA|0515441484",
+                                                    "active":  false,
+                                                    "qfu_inactiveon":  "4/9/2026 10:21 PM",
+                                                    "modifiedon":  "4/9/2026 10:22 PM"
+                                                }
+                                            ]
+                     }
+                 ]
+}

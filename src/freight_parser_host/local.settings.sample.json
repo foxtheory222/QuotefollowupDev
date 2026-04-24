@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "QFU_DATAVERSE_URL": "https://<org>.crm.dynamics.com",
+    "AZURE_TENANT_ID": "<tenant-guid>",
+    "AZURE_CLIENT_ID": "<app-or-managed-identity-client-id>",
+    "AZURE_CLIENT_SECRET": "<client-secret-for-local-dev-only>"
+  }
+}
+

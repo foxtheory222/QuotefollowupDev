@@ -417,6 +417,10 @@ function Add-BranchParameters {
   Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_SharedMailboxAddress" -DefaultValue $Branch.MailboxAddress
   Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_SharedMailboxFolderId" -DefaultValue $(if ($Branch.PSObject.Properties["SharedMailboxFolderId"]) { [string]$Branch.SharedMailboxFolderId } else { "Inbox" })
 
+  if ($Template.Family -eq "Quote") {
+    Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_EnableQuoteCleanup" -DefaultValue $false -Type "boolean"
+  }
+
   if ($Template.Family -eq "Budget") {
     Set-ParameterDefault -ParametersObject $params -Name "qfu_QFU_ActiveFiscalYear" -DefaultValue "FY26"
   }
@@ -1231,6 +1235,345 @@ function Add-Sa1300AbnormalMarginActions {
   $Definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions = [pscustomobject]$orderedBudgetRootActions
 }
 
+function Add-Sa1300LateOrderActions {
+  param(
+    [object]$Definition,
+    [object]$BudgetRootActions,
+    [string]$FlowName
+  )
+
+  $snapshotActionNames = @(
+    "Create_Late_Order_Table",
+    "List_Late_Order_Rows",
+    "Filter_Late_Order_Rows",
+    "List_Existing_Late_Order_Snapshot",
+    "Filter_Existing_Late_Order_Snapshot",
+    "Delete_Existing_Late_Order_Snapshot",
+    "Apply_to_each_Late_Order_Row",
+    "List_Existing_Late_Order_Batches",
+    "Filter_Existing_Late_Order_Batches",
+    "Delete_Existing_Late_Order_Batches",
+    "Create_Late_Order_Batch"
+  )
+  $snapshotActionSet = New-Object "System.Collections.Generic.HashSet[string]" ([System.StringComparer]::OrdinalIgnoreCase)
+  foreach ($name in $snapshotActionNames) {
+    [void]$snapshotActionSet.Add($name)
+  }
+
+  $excelConnectionName = [string]$BudgetRootActions.Create_Budget_Table.inputs.host.connectionName
+  $dataverseConnectionName = [string]$BudgetRootActions.Guard_Budget_Row_Limit.actions.Get_Budget_Goal_From_Archives.inputs.host.connectionName
+$lateOrderSnapshotPrefixInner = "concat(parameters('qfu_QFU_BranchCode'), '|SA1300-LATEORDER|', variables('SA1300SnapshotDate'), '|')"
+$lateOrderBatchSourceIdInner = "concat(parameters('qfu_QFU_BranchCode'), '|batch|SA1300-LATEORDER|', variables('SA1300SnapshotDate'))"
+$lateOrderBatchSourceIdExpr = "@concat(parameters('qfu_QFU_BranchCode'), '|batch|SA1300-LATEORDER|', variables('SA1300SnapshotDate'))"
+$lateOrderMaterialGroupKeyExpr = "replace(replace(replace(replace(replace(toLower(coalesce(items('Apply_to_each_Late_Order_Row')?['Material Group'], 'material')), ' ', '-'), '$', 'dollars'), '(', ''), ')', ''), '/', '-')"
+$lateOrderItemCategoryKeyExpr = "replace(replace(replace(replace(replace(toLower(coalesce(items('Apply_to_each_Late_Order_Row')?['Item Category'], 'line')), ' ', '-'), '$', 'dollars'), '(', ''), ')', ''), '/', '-')"
+$lateOrderSourceIdExpr = "@concat(parameters('qfu_QFU_BranchCode'), '|SA1300-LATEORDER|', variables('SA1300SnapshotDate'), '|', string(items('Apply_to_each_Late_Order_Row')?['Billing Document Number']), '|', $lateOrderMaterialGroupKeyExpr, '|', $lateOrderItemCategoryKeyExpr)"
+$lateOrderBillingDateExpr = "@if(empty(items('Apply_to_each_Late_Order_Row')?['Billing Date']), null, if(or(contains(string(items('Apply_to_each_Late_Order_Row')?['Billing Date']), '-'), contains(string(items('Apply_to_each_Late_Order_Row')?['Billing Date']), '/')), formatDateTime(items('Apply_to_each_Late_Order_Row')?['Billing Date'], 'yyyy-MM-dd'), formatDateTime(addDays('1899-12-30', int(float(items('Apply_to_each_Late_Order_Row')?['Billing Date']))), 'yyyy-MM-dd')))"
+
+  $createLateOrderTable = [ordered]@{
+    type = "OpenApiConnection"
+    description = "Create a temporary Excel table over the On-Time Late Order Review sheet."
+    inputs = [ordered]@{
+      parameters = [ordered]@{
+        source = "me"
+        drive = "@parameters('qfu_QFU_OneDriveDriveId')"
+        file = "@variables('FileID')"
+        "table/Range" = "'On-Time_ Late Order Review '!A2:Q5000"
+      }
+      host = [ordered]@{
+        apiId = "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+        operationId = "CreateTable"
+        connectionName = $excelConnectionName
+      }
+    }
+    runAfter = [ordered]@{
+      Create_Abnormal_Margin_Batch = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $listLateOrderRows = [ordered]@{
+    type = "OpenApiConnection"
+    description = "Read late-order rows from the temporary Excel table."
+    inputs = [ordered]@{
+      parameters = [ordered]@{
+        source = "me"
+        drive = "@parameters('qfu_QFU_OneDriveDriveId')"
+        file = "@variables('FileID')"
+        table = "@coalesce(body('Create_Late_Order_Table')?['name'], body('Create_Late_Order_Table')?['id'], body('Create_Late_Order_Table')?['Id'])"
+      }
+      host = [ordered]@{
+        apiId = "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+        operationId = "GetItems"
+        connectionName = $excelConnectionName
+      }
+    }
+    runAfter = [ordered]@{
+      Create_Late_Order_Table = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $filterLateOrderRows = [ordered]@{
+    type = "Query"
+    description = "Keep only late-order rows for the current branch with a billing document number."
+    inputs = [ordered]@{
+      from = "@coalesce(outputs('List_Late_Order_Rows')?['body/value'], json('[]'))"
+      where = "@and(not(empty(item()?['Billing Document Number'])), equals(string(item()?['Location']), parameters('qfu_QFU_BranchCode')))"
+    }
+    runAfter = [ordered]@{
+      List_Late_Order_Rows = @("Succeeded")
+    }
+  }
+
+  $listExistingLateOrderSnapshot = [ordered]@{
+    type = "OpenApiConnection"
+    description = "Load existing late-order rows for this branch."
+    inputs = [ordered]@{
+      parameters = [ordered]@{
+        entityName = "qfu_lateorderexceptions"
+        '$select' = "qfu_lateorderexceptionid,qfu_sourceid"
+        '$filter' = "qfu_branchcode eq '@{parameters('qfu_QFU_BranchCode')}' and qfu_sourcefamily eq 'SA1300-LATEORDER'"
+        '$top' = 5000
+        '$orderby' = "createdon desc"
+      }
+      host = [ordered]@{
+        apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        operationId = "ListRecords"
+        connectionName = $dataverseConnectionName
+      }
+    }
+    runAfter = [ordered]@{
+      Filter_Late_Order_Rows = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $filterExistingLateOrderSnapshot = [ordered]@{
+    type = "Query"
+    description = "Keep only late-order rows for this branch and today's snapshot date."
+    inputs = [ordered]@{
+      from = "@coalesce(outputs('List_Existing_Late_Order_Snapshot')?['body/value'], json('[]'))"
+      where = "@startsWith(item()?['qfu_sourceid'], $lateOrderSnapshotPrefixInner)"
+    }
+    runAfter = [ordered]@{
+      List_Existing_Late_Order_Snapshot = @("Succeeded")
+    }
+  }
+
+  $deleteExistingLateOrderSnapshot = [ordered]@{
+    type = "Foreach"
+    description = "Delete today's late-order rows before reloading the latest workbook snapshot."
+    foreach = "@coalesce(body('Filter_Existing_Late_Order_Snapshot'), json('[]'))"
+    actions = [ordered]@{
+      Delete_Late_Order_Record = [ordered]@{
+        type = "OpenApiConnection"
+        inputs = [ordered]@{
+          parameters = [ordered]@{
+            entityName = "qfu_lateorderexceptions"
+            recordId = "@items('Delete_Existing_Late_Order_Snapshot')?['qfu_lateorderexceptionid']"
+          }
+          host = [ordered]@{
+            apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            operationId = "DeleteRecord"
+            connectionName = $dataverseConnectionName
+          }
+        }
+        metadata = [ordered]@{
+          operationMetadataId = [guid]::NewGuid().Guid
+        }
+      }
+    }
+    runAfter = [ordered]@{
+      Filter_Existing_Late_Order_Snapshot = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $applyToEachLateOrderRow = [ordered]@{
+    type = "Foreach"
+    description = "Create late-order snapshot rows for the current branch from the SA1300 workbook."
+    foreach = "@coalesce(body('Filter_Late_Order_Rows'), json('[]'))"
+    actions = [ordered]@{
+      Create_Late_Order_Record = [ordered]@{
+        type = "OpenApiConnection"
+        inputs = [ordered]@{
+          parameters = [ordered]@{
+            entityName = "qfu_lateorderexceptions"
+            "item/qfu_name" = "@concat(parameters('qfu_QFU_BranchCode'), ' Late Order ', string(items('Apply_to_each_Late_Order_Row')?['Billing Document Number']))"
+            "item/qfu_sourceid" = $lateOrderSourceIdExpr
+            "item/qfu_branchcode" = "@parameters('qfu_QFU_BranchCode')"
+            "item/qfu_branchslug" = "@parameters('qfu_QFU_BranchSlug')"
+            "item/qfu_regionslug" = "@parameters('qfu_QFU_RegionSlug')"
+            "item/qfu_sourcefamily" = "SA1300-LATEORDER"
+            "item/qfu_sourcefile" = "@items('Apply_to_each_Attachment')?['name']"
+            "item/qfu_snapshotdate" = "@variables('SA1300SnapshotDate')"
+            "item/qfu_billingdate" = $lateOrderBillingDateExpr
+            "item/qfu_cssr" = "@string(items('Apply_to_each_Late_Order_Row')?['CSSR'])"
+            "item/qfu_cssrname" = "@string(items('Apply_to_each_Late_Order_Row')?['CSSR (Heading)'])"
+            "item/qfu_soldtocustomername" = "@string(items('Apply_to_each_Late_Order_Row')?['Sold-To Customer Name'])"
+            "item/qfu_shiptocustomername" = "@string(items('Apply_to_each_Late_Order_Row')?['Ship-To Customer Name'])"
+            "item/qfu_billingdocumentnumber" = "@string(items('Apply_to_each_Late_Order_Row')?['Billing Document Number'])"
+            "item/qfu_materialgroup" = "@string(items('Apply_to_each_Late_Order_Row')?['Material Group'])"
+            "item/qfu_itemcategory" = "@string(items('Apply_to_each_Late_Order_Row')?['Item Category'])"
+            "item/qfu_itemcategorydescription" = "@string(items('Apply_to_each_Late_Order_Row')?['Item Category Description'])"
+            "item/qfu_sales" = "@float(replace(replace(string(coalesce(items('Apply_to_each_Late_Order_Row')?['Sales'], 0)), '$', ''), ',', ''))"
+          }
+          host = [ordered]@{
+            apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            operationId = "CreateRecord"
+            connectionName = $dataverseConnectionName
+          }
+        }
+        metadata = [ordered]@{
+          operationMetadataId = [guid]::NewGuid().Guid
+        }
+      }
+    }
+    runAfter = [ordered]@{
+      Delete_Existing_Late_Order_Snapshot = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $listExistingLateOrderBatches = [ordered]@{
+    type = "OpenApiConnection"
+    description = "Load any existing late-order snapshot batch rows for today's SA1300 workbook."
+    inputs = [ordered]@{
+      parameters = [ordered]@{
+        entityName = "qfu_ingestionbatchs"
+        '$select' = "qfu_ingestionbatchid,qfu_sourceid"
+        '$filter' = "qfu_branchcode eq '@{parameters('qfu_QFU_BranchCode')}' and qfu_sourcefamily eq 'SA1300-LATEORDER'"
+        '$top' = 100
+        '$orderby' = "createdon desc"
+      }
+      host = [ordered]@{
+        apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        operationId = "ListRecords"
+        connectionName = $dataverseConnectionName
+      }
+    }
+    runAfter = [ordered]@{
+      Apply_to_each_Late_Order_Row = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $filterExistingLateOrderBatches = [ordered]@{
+    type = "Query"
+    description = "Keep only today's late-order snapshot batch rows."
+    inputs = [ordered]@{
+      from = "@coalesce(outputs('List_Existing_Late_Order_Batches')?['body/value'], json('[]'))"
+      where = "@equals(item()?['qfu_sourceid'], $lateOrderBatchSourceIdInner)"
+    }
+    runAfter = [ordered]@{
+      List_Existing_Late_Order_Batches = @("Succeeded")
+    }
+  }
+
+  $deleteExistingLateOrderBatches = [ordered]@{
+    type = "Foreach"
+    description = "Delete today's late-order batch audit rows before creating the replacement audit row."
+    foreach = "@coalesce(body('Filter_Existing_Late_Order_Batches'), json('[]'))"
+    actions = [ordered]@{
+      Delete_Late_Order_Batch = [ordered]@{
+        type = "OpenApiConnection"
+        inputs = [ordered]@{
+          parameters = [ordered]@{
+            entityName = "qfu_ingestionbatchs"
+            recordId = "@items('Delete_Existing_Late_Order_Batches')?['qfu_ingestionbatchid']"
+          }
+          host = [ordered]@{
+            apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            operationId = "DeleteRecord"
+            connectionName = $dataverseConnectionName
+          }
+        }
+        metadata = [ordered]@{
+          operationMetadataId = [guid]::NewGuid().Guid
+        }
+      }
+    }
+    runAfter = [ordered]@{
+      Filter_Existing_Late_Order_Batches = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $createLateOrderBatch = [ordered]@{
+    type = "OpenApiConnection"
+    description = "Create the late-order snapshot batch audit row for today's SA1300 workbook."
+    inputs = [ordered]@{
+      parameters = [ordered]@{
+        entityName = "qfu_ingestionbatchs"
+        "item/qfu_name" = "@concat(parameters('qfu_QFU_BranchCode'), ' SA1300 Late Order Snapshot')"
+        "item/qfu_sourceid" = $lateOrderBatchSourceIdExpr
+        "item/qfu_branchcode" = "@parameters('qfu_QFU_BranchCode')"
+        "item/qfu_branchslug" = "@parameters('qfu_QFU_BranchSlug')"
+        "item/qfu_regionslug" = "@parameters('qfu_QFU_RegionSlug')"
+        "item/qfu_sourcefamily" = "SA1300-LATEORDER"
+        "item/qfu_sourcefilename" = "@items('Apply_to_each_Attachment')?['name']"
+        "item/qfu_status" = "ready"
+        "item/qfu_insertedcount" = "@length(body('Filter_Late_Order_Rows'))"
+        "item/qfu_updatedcount" = 0
+        "item/qfu_startedon" = "@utcNow()"
+        "item/qfu_completedon" = "@utcNow()"
+        "item/qfu_triggerflow" = $FlowName
+        "item/qfu_notes" = "Parsed from the SA1300 late order review sheet."
+      }
+      host = [ordered]@{
+        apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        operationId = "CreateRecord"
+        connectionName = $dataverseConnectionName
+      }
+    }
+    runAfter = [ordered]@{
+      Delete_Existing_Late_Order_Batches = @("Succeeded")
+    }
+    metadata = [ordered]@{
+      operationMetadataId = [guid]::NewGuid().Guid
+    }
+  }
+
+  $orderedBudgetRootActions = [ordered]@{}
+  foreach ($property in $BudgetRootActions.PSObject.Properties) {
+    if ($snapshotActionSet.Contains($property.Name)) {
+      continue
+    }
+
+    $orderedBudgetRootActions[$property.Name] = $property.Value
+    if ($property.Name -eq "Create_Abnormal_Margin_Batch") {
+      $orderedBudgetRootActions.Create_Late_Order_Table = $createLateOrderTable
+      $orderedBudgetRootActions.List_Late_Order_Rows = $listLateOrderRows
+      $orderedBudgetRootActions.Filter_Late_Order_Rows = $filterLateOrderRows
+      $orderedBudgetRootActions.List_Existing_Late_Order_Snapshot = $listExistingLateOrderSnapshot
+      $orderedBudgetRootActions.Filter_Existing_Late_Order_Snapshot = $filterExistingLateOrderSnapshot
+      $orderedBudgetRootActions.Delete_Existing_Late_Order_Snapshot = $deleteExistingLateOrderSnapshot
+      $orderedBudgetRootActions.Apply_to_each_Late_Order_Row = $applyToEachLateOrderRow
+      $orderedBudgetRootActions.List_Existing_Late_Order_Batches = $listExistingLateOrderBatches
+      $orderedBudgetRootActions.Filter_Existing_Late_Order_Batches = $filterExistingLateOrderBatches
+      $orderedBudgetRootActions.Delete_Existing_Late_Order_Batches = $deleteExistingLateOrderBatches
+      $orderedBudgetRootActions.Create_Late_Order_Batch = $createLateOrderBatch
+    }
+  }
+
+  $Definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions = [pscustomobject]$orderedBudgetRootActions
+}
+
 function Add-Sa1300OpsDailyActions {
   param(
     [object]$Definition,
@@ -1240,12 +1583,10 @@ function Add-Sa1300OpsDailyActions {
 
   $excelConnectionName = [string]$BudgetRootActions.Create_Budget_Table.inputs.host.connectionName
   $dataverseConnectionName = [string]$BudgetRootActions.Guard_Budget_Row_Limit.actions.Get_Budget_Goal_From_Archives.inputs.host.connectionName
-  $currentBudgetSourceIdExpr = "concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))"
-  $sameMonthActualRollbackBody = "and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], $currentBudgetSourceIdExpr), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0))))"
   $incomingCadOpsDailyBody = "string(coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]')))"
   $incomingUsdOpsDailyBody = "string(coalesce(outputs('Filter_USD_Ops_Daily_Rows')?['body'], json('[]')))"
-  $preservedCadOpsDailyExpr = "@if($sameMonthActualRollbackBody, coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailycadjson'], string(json('[]'))), $incomingCadOpsDailyBody)"
-  $preservedUsdOpsDailyExpr = "@if($sameMonthActualRollbackBody, coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailyusdjson'], string(json('[]'))), $incomingUsdOpsDailyBody)"
+  $preservedCadOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailycadjson'], string(json('[]'))), string(coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]'))))"
+  $preservedUsdOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailyusdjson'], string(json('[]'))), string(coalesce(outputs('Filter_USD_Ops_Daily_Rows')?['body'], json('[]'))))"
   $usdDateIsoExpr = "if(or(contains(string(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']), '-'), contains(string(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']), '/')), formatDateTime(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day'], 'yyyy-MM-dd'), formatDateTime(addDays('1899-12-30', int(float(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']))), 'yyyy-MM-dd'))"
   $usdDateKeyExpr = "if(or(contains(string(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']), '-'), contains(string(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']), '/')), formatDateTime(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day'], 'yyyyMMdd'), formatDateTime(addDays('1899-12-30', int(float(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']))), 'yyyyMMdd'))"
   $usdDateDayExpr = "if(or(contains(string(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']), '-'), contains(string(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']), '/')), int(formatDateTime(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day'], 'dd')), int(formatDateTime(addDays('1899-12-30', int(float(items('Apply_to_each_USD_Ops_Daily_Row')?['Billing Day']))), 'dd')))"
@@ -1281,7 +1622,7 @@ function Add-Sa1300OpsDailyActions {
       }
     }
     runAfter = [ordered]@{
-      Create_Abnormal_Margin_Batch = @("Succeeded")
+      Create_Late_Order_Batch = @("Succeeded")
     }
     metadata = [ordered]@{
       operationMetadataId = [guid]::NewGuid().Guid
@@ -1333,7 +1674,7 @@ function Add-Sa1300OpsDailyActions {
         where = "@equals(1, 2)"
       }
       runAfter = [ordered]@{
-        Create_Abnormal_Margin_Batch = @("Succeeded")
+        Create_Late_Order_Batch = @("Succeeded")
       }
     }
   }
@@ -1424,7 +1765,7 @@ function Add-Sa1300OpsDailyActions {
   $deleteExistingOpsDaily = [ordered]@{
     type = "Foreach"
     description = "Delete prior branch ops daily rows before loading the latest SA1300 snapshot."
-    foreach = "@if($sameMonthActualRollbackBody, json('[]'), coalesce(outputs('List_Existing_Branch_Ops_Daily')?['body/value'], json('[]')))"
+    foreach = "@coalesce(outputs('List_Existing_Branch_Ops_Daily')?['body/value'], json('[]'))"
     actions = [ordered]@{
       Delete_Branch_Ops_Daily_Record = [ordered]@{
         type = "OpenApiConnection"
@@ -1456,7 +1797,7 @@ function Add-Sa1300OpsDailyActions {
   $applyUsdOpsRows = [ordered]@{
     type = "Foreach"
     description = "Create USD branch ops daily rows from the SA1300 workbook."
-    foreach = "@if($sameMonthActualRollbackBody, json('[]'), coalesce(body('Filter_USD_Ops_Daily_Rows'), json('[]')))"
+    foreach = "@coalesce(body('Filter_USD_Ops_Daily_Rows'), json('[]'))"
     actions = [ordered]@{
       Create_USD_Branch_Ops_Daily_Record = [ordered]@{
         type = "OpenApiConnection"
@@ -1505,7 +1846,7 @@ function Add-Sa1300OpsDailyActions {
   $applyCadOpsRows = [ordered]@{
     type = "Foreach"
     description = "Create CAD branch ops daily rows from the SA1300 workbook."
-    foreach = "@if($sameMonthActualRollbackBody, json('[]'), coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]')))"
+    foreach = "@coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]'))"
     actions = [ordered]@{
       Create_CAD_Branch_Ops_Daily_Record = [ordered]@{
         type = "OpenApiConnection"
@@ -1843,6 +2184,7 @@ function Update-QuoteFlow {
   Set-FieldValue -Map $updateHeader -Name "item/qfu_lastseenon" -Value "@variables('QuoteSnapshotProcessedOn')"
   Set-FieldValue -Map $updateHeader -Name "item/qfu_closedon" -Value "@if(greaterOrEquals(int(outputs('Determine_Status_Code')), 2), variables('QuoteSnapshotProcessedOn'), null)"
   Set-FieldValue -Map $updateHeader -Name "item/qfu_cssr" -Value "@if(equals(items('Apply_to_each_quote_line')?['cssr'], null), null, string(items('Apply_to_each_quote_line')?['cssr']))"
+  Set-FieldValue -Map $updateHeader -Name "item/qfu_assignedto" -Value "@if(empty(items('Apply_to_each_quote_line')?['tsrname']), null, items('Apply_to_each_quote_line')?['tsrname'])"
   Set-FieldValue -Map $updateHeader -Name "item/qfu_tsr" -Value "@if(equals(items('Apply_to_each_quote_line')?['tsr'], null), null, string(items('Apply_to_each_quote_line')?['tsr']))"
   $lineActions.Condition_Quote_Exists.actions.Update_Quote_Header.inputs.parameters = [pscustomobject]$updateHeader
 
@@ -1861,6 +2203,7 @@ function Update-QuoteFlow {
   Set-FieldValue -Map $createHeader -Name "item/qfu_lastseenon" -Value "@variables('QuoteSnapshotProcessedOn')"
   Set-FieldValue -Map $createHeader -Name "item/qfu_closedon" -Value "@if(greaterOrEquals(int(outputs('Determine_Status_Code')), 2), variables('QuoteSnapshotProcessedOn'), null)"
   Set-FieldValue -Map $createHeader -Name "item/qfu_cssr" -Value "@if(equals(items('Apply_to_each_quote_line')?['cssr'], null), null, string(items('Apply_to_each_quote_line')?['cssr']))"
+  Set-FieldValue -Map $createHeader -Name "item/qfu_assignedto" -Value "@if(empty(items('Apply_to_each_quote_line')?['tsrname']), null, items('Apply_to_each_quote_line')?['tsrname'])"
   Set-FieldValue -Map $createHeader -Name "item/qfu_tsr" -Value "@if(equals(items('Apply_to_each_quote_line')?['tsr'], null), null, string(items('Apply_to_each_quote_line')?['tsr']))"
   $lineActions.Condition_Quote_Exists.else.actions.Create_Quote_Header.inputs.parameters = [pscustomobject]$createHeader
 
@@ -1924,8 +2267,8 @@ function Update-QuoteFlow {
       }))
   Set-FieldValue -Map $quoteActions -Name "Deactivate_Missing_Quotes" -Value ([pscustomobject]([ordered]@{
         type = "Foreach"
-        description = "Mark previously-active quote headers inactive when they are absent from the latest workbook."
-        foreach = "@coalesce(body('Filter_Missing_Active_Quotes'), json('[]'))"
+        description = "Mark previously-active quote headers inactive when quote cleanup is enabled and they are absent from the latest workbook."
+        foreach = "@if(equals(parameters('qfu_QFU_EnableQuoteCleanup'), true), coalesce(body('Filter_Missing_Active_Quotes'), json('[]')), json('[]'))"
         actions = [ordered]@{
           Update_Quote_Inactive = [ordered]@{
             type = "OpenApiConnection"
@@ -1969,7 +2312,7 @@ function Update-QuoteFlow {
   Set-FieldValue -Map $quoteActions -Name $quoteBatchActions.ListActionName -Value $quoteBatchActions.ListAction
   Set-FieldValue -Map $quoteActions -Name $quoteBatchActions.ConditionActionName -Value $quoteBatchActions.ConditionAction
 
-  Add-Note -Notes $Notes -Text "Quote flow now enforces trigger concurrency = 1, stamps a branch-scoped import batch id on headers and lines, treats qfu_quote as current-state with qfu_active/qfu_inactiveon/qfu_lastseenon, uses qfu_quote line source ids in the canonical branch|SP830CA|quote|line format, closes lost/rejected rows explicitly, marks previously-active headers inactive when they disappear from the latest SP830CA workbook, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
+  Add-Note -Notes $Notes -Text "Quote flow now enforces trigger concurrency = 1, stamps a branch-scoped import batch id on headers and lines, defaults qfu_QFU_EnableQuoteCleanup to false so quotes remain visible until cleanup is explicitly enabled, uses qfu_quote line source ids in the canonical branch|SP830CA|quote|line format, closes lost/rejected rows explicitly, and refreshes the stable qfu_ingestionbatch freshness row that analytics reads."
 }
 
 function Update-BackorderFlow {
@@ -2662,17 +3005,18 @@ function Update-BudgetFlow {
   $flowName = Get-TargetFlowName -Branch $Branch -Template $Template
   $budgetGoalFromPlanExpr = "@if(or(empty(body('Filter_Budget_Target_Rows')), empty(body('Filter_Budget_Target_Rows')?[0]?['Sales'])), null, float(replace(replace(coalesce(body('Filter_Budget_Target_Rows')?[0]?['Sales'], '0'), '$', ''), ',', '')))"
   $resolvedBudgetGoalExpr = "@coalesce(first(outputs('Get_Budget_Goal_From_Archives')?['body/value'])?['qfu_budgetgoal'], outputs('Resolve_Budget_Goal_From_SA1300_Plan'), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_budgetgoal'])"
-  $currentBudgetSourceIdExpr = "concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))"
-  $sameMonthActualRollbackBody = "and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], $currentBudgetSourceIdExpr), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0))))"
-  $preservedActualSalesExpr = "@if($sameMonthActualRollbackBody, outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], variables('TotalSales'))"
-  $preservedCadSalesExpr = "@if($sameMonthActualRollbackBody, outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_cadsales'], variables('CADSales'))"
-  $preservedUsdSalesExpr = "@if($sameMonthActualRollbackBody, outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_usdsales'], variables('USDSales'))"
-  $preservedLastUpdatedExpr = "@if($sameMonthActualRollbackBody, outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_lastupdated'], utcNow())"
-  $preservedSourceFileExpr = "@if($sameMonthActualRollbackBody, outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourcefile'], items('Apply_to_each_Attachment')?['name'])"
+  $preservedActualSalesExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], variables('TotalSales'))"
+  $preservedCadSalesExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_cadsales'], variables('CADSales'))"
+  $preservedUsdSalesExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_usdsales'], variables('USDSales'))"
+  $preservedLastUpdatedExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_lastupdated'], utcNow())"
+  $preservedSourceFileExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourcefile'], items('Apply_to_each_Attachment')?['name'])"
   $incomingCadOpsDailyExpr = "@string(coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]')))"
   $incomingUsdOpsDailyExpr = "@string(coalesce(outputs('Filter_USD_Ops_Daily_Rows')?['body'], json('[]')))"
-  $preservedCadOpsDailyExpr = "@if($sameMonthActualRollbackBody, coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailycadjson'], string(json('[]'))), string(coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]'))))"
-  $preservedUsdOpsDailyExpr = "@if($sameMonthActualRollbackBody, coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailyusdjson'], string(json('[]'))), string(coalesce(outputs('Filter_USD_Ops_Daily_Rows')?['body'], json('[]'))))"
+  $preservedCadOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailycadjson'], string(json('[]'))), string(coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]'))))"
+  $preservedUsdOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_opsdailyusdjson'], string(json('[]'))), string(coalesce(outputs('Filter_USD_Ops_Daily_Rows')?['body'], json('[]'))))"
+  $skipDeleteExistingOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), json('[]'), coalesce(outputs('List_Existing_Branch_Ops_Daily')?['body/value'], json('[]')))"
+  $skipApplyUsdOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), json('[]'), coalesce(body('Filter_USD_Ops_Daily_Rows'), json('[]')))"
+  $skipApplyCadOpsDailyExpr = "@if(and(equals(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_sourceid'], concat(parameters('qfu_QFU_BranchCode'), '|SA1300|', formatDateTime(convertTimeZone(utcNow(), 'UTC', 'Mountain Standard Time'), 'yyyy-MM'))), greater(float(coalesce(outputs('Get_Active_Budget')?['body/value']?[0]?['qfu_actualsales'], 0)), float(coalesce(variables('TotalSales'), 0)))), json('[]'), coalesce(body('Filter_CAD_Ops_Daily_Rows'), json('[]')))"
   Add-BranchParameters -Definition $definition -Branch $Branch -Template $Template
   Set-TemplateTrigger `
     -Definition $definition `
@@ -2715,7 +3059,6 @@ function Update-BudgetFlow {
     Set-FieldValue -Map $currentMonthBudgetParameters -Name '$orderby' -Value "createdon desc"
     $budgetActions.Get_Current_Month_Budget_Record.inputs.parameters = [pscustomobject]$currentMonthBudgetParameters
   }
-
   $createBudgetTargetTable = Copy-DeepObject $budgetRootActions.Create_Budget_Table
   $createBudgetTargetTable.description = "Create a dedicated Month-End Plan table for the SA1300 attachment."
   $createBudgetTargetTable.inputs.parameters."table/Range" = "'Location Summary'!H2:H500"
@@ -2972,7 +3315,27 @@ function Update-BudgetFlow {
   }
 
   Add-Sa1300AbnormalMarginActions -Definition $definition -BudgetRootActions $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions -FlowName $flowName
+  Add-Sa1300LateOrderActions -Definition $definition -BudgetRootActions $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions -FlowName $flowName
   Add-Sa1300OpsDailyActions -Definition $definition -BudgetRootActions $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions -Branch $Branch
+  $budgetRootActions = $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions
+  if ($budgetRootActions.PSObject.Properties["Delete_Existing_Branch_Ops_Daily"]) {
+    $budgetRootActions.Delete_Existing_Branch_Ops_Daily.foreach = $skipDeleteExistingOpsDailyExpr
+  }
+  if ($budgetRootActions.PSObject.Properties["Apply_to_each_USD_Ops_Daily_Row"]) {
+    $budgetRootActions.Apply_to_each_USD_Ops_Daily_Row.foreach = $skipApplyUsdOpsDailyExpr
+  }
+  if ($budgetRootActions.PSObject.Properties["Apply_to_each_CAD_Ops_Daily_Row"]) {
+    $budgetRootActions.Apply_to_each_CAD_Ops_Daily_Row.foreach = $skipApplyCadOpsDailyExpr
+  }
+  if (
+    $budgetRootActions.PSObject.Properties["Condition_Current_Month_Budget_Record_For_Analytics_Exists"] -and
+    $budgetRootActions.Condition_Current_Month_Budget_Record_For_Analytics_Exists.actions.PSObject.Properties["Update_Current_Month_Budget_Analytics_Payload"]
+  ) {
+    $analyticsItem = Copy-OrderedMap $budgetRootActions.Condition_Current_Month_Budget_Record_For_Analytics_Exists.actions.Update_Current_Month_Budget_Analytics_Payload.inputs.parameters.item
+    Set-FieldValue -Map $analyticsItem -Name "qfu_opsdailycadjson" -Value $preservedCadOpsDailyExpr
+    Set-FieldValue -Map $analyticsItem -Name "qfu_opsdailyusdjson" -Value $preservedUsdOpsDailyExpr
+    $budgetRootActions.Condition_Current_Month_Budget_Record_For_Analytics_Exists.actions.Update_Current_Month_Budget_Analytics_Payload.inputs.parameters.item = [pscustomobject]$analyticsItem
+  }
   $budgetBatchActions = New-IngestionBatchSyncActionSet `
     -ActionPrefix "Budget" `
     -ImportNameSuffix "Budget Workbook Import" `
@@ -2981,11 +3344,10 @@ function Update-BudgetFlow {
     -FileNameExpression "@items('Apply_to_each_Attachment')?['name']" `
     -StartedOnExpression "@utcNow()" `
     -RunAfter ([ordered]@{
-        Create_Abnormal_Margin_Batch = @("Succeeded")
+        Create_Late_Order_Batch = @("Succeeded")
         Apply_to_each_CAD_Ops_Daily_Row = @("Succeeded", "Skipped")
         Condition_Current_Month_Budget_Record_For_Analytics_Exists = @("Succeeded")
       })
-  $budgetRootActions = $definition.actions.Apply_to_each_Attachment.actions.Condition_Is_SA1300_File.actions
   Set-FieldValue -Map $budgetRootActions -Name $budgetBatchActions.ListActionName -Value $budgetBatchActions.ListAction
   Set-FieldValue -Map $budgetRootActions -Name $budgetBatchActions.ConditionActionName -Value $budgetBatchActions.ConditionAction
 
@@ -3001,7 +3363,7 @@ function Update-BudgetFlow {
     Set-FieldValue -Map $budgetRootActions -Name $summaryAction.Name -Value $summaryAction.Value
   }
 
-  Add-Note -Notes $Notes -Text "Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, blocks stale same-month SA1300 actuals from rolling back the live qfu_budget/qfu_branchopsdaily state, replaces the current branch's same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics, refreshes the stable qfu_ingestionbatch freshness row that analytics reads, and updates the current-day qfu_branchdailysummary budget slice from the live SA1300 import."
+  Add-Note -Notes $Notes -Text "Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, overwrites current-month qfu_budget/qfu_branchopsdaily values with the latest workbook totals instead of preserving stale higher actuals, replaces the current branch's same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, replaces the current branch's same-day qfu_lateorderexception snapshot directly from the SA1300 late order review sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics, refreshes the stable qfu_ingestionbatch freshness row that analytics reads, and updates the current-day qfu_branchdailysummary budget slice from the live SA1300 import."
 }
 
 function New-WorkflowDataXml {

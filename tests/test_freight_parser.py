@@ -11,7 +11,20 @@ if str(SCRIPTS_ROOT) not in sys.path:
 from freight_parser import parse_freight_file  # noqa: E402
 
 
-ATTACHMENTS_ROOT = REPO_ROOT / "output" / "freight-samples" / "attachments"
+def resolve_existing_path(*candidates: Path) -> Path:
+    sentinel = Path("4171") / "Applied Canada 417100 Invoice Report.xlsx"
+    for candidate in candidates:
+        if candidate.exists() and (candidate / sentinel).exists():
+            return candidate
+
+    searched = ", ".join(str(candidate) for candidate in candidates)
+    raise FileNotFoundError(f"Fixture root not found. Checked: {searched}")
+
+
+ATTACHMENTS_ROOT = resolve_existing_path(
+    REPO_ROOT / "output" / "freight-samples" / "attachments",
+    REPO_ROOT.parent / "output" / "freight-samples" / "attachments",
+)
 
 
 class FreightParserTests(unittest.TestCase):

@@ -7482,7 +7482,7 @@ main,
   gap: 0.4rem;
 }
 
-.qfu-phase0-freight-workbench .qfu-phase0-inline-button:not(.qfu-phase0-freight-action) {
+.qfu-phase0-freight-workbench .qfu-phase0-inline-button {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(0, 109, 119, 0.12);
 }
@@ -7981,20 +7981,6 @@ main,
 
 .qfu-phase0-branch-home-board .qfu-phase0-summary-table--freight-review .qfu-phase0-admin-subtext {
   font-size: 0.7rem;
-}
-
-.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row {
-  cursor: pointer;
-  outline: none;
-}
-
-.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row:hover td,
-.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row:focus-visible td {
-  background: rgba(239, 246, 250, 0.94);
-}
-
-.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row:focus-visible td {
-  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.22);
 }
 
 .qfu-phase0-ready-preview-panel--dense .qfu-phase0-ready-preview-notes {

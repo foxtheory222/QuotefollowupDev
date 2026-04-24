@@ -15,6 +15,12 @@ The implementation preserved the existing stack:
 - Power Automate inbox/queue orchestration
 - scriptable local regression path for legacy `.xls` parsing and replay
 
+Update as of April 21, 2026:
+
+- the local queue processor is no longer the intended unattended production path
+- the durable replacement is a hosted freight parser contract under `src/freight_parser_host`
+- mailbox ingress should create audit rows, call the hosted parser, and stamp `qfu_rawdocument` / `qfu_ingestionbatch` from the hosted result
+
 ## What Was Added
 
 ### Dataverse
@@ -79,15 +85,16 @@ Processing / replay / diagnostics scripts:
 - `scripts/queue-freight-samples.ps1`
 - `scripts/process-freight-inbox-queue.ps1`
 - `scripts/archive-freight-workitems.ps1`
-- `scripts/register-freight-processor-task.ps1`
 - `scripts/seed-freight-verification-rows.ps1`
 - `scripts/verify-freight-portal.cjs`
 - `tests/test_freight_parser.py`
+- `tests/test_freight_hosted_parser_contracts.py`
+- `src/freight_parser_host/`
 
 Processing model:
 
 - mailbox/flow stage logs raw attachment + ingestion batch
-- queue processor handles real parsing and normalization
+- hosted parser is the durable unattended parser/upsert target
 - deterministic `qfu_sourceid` drives upsert/idempotency
 - history is preserved; rows are not snapshot-deleted just because a later weekly file omits them
 - archive flow moves only `Closed` / `No Action` rows with 60 idle days into archived state
@@ -95,8 +102,8 @@ Processing model:
 Local processor task:
 
 - scheduled task `QFU-Freight-Inbox-Queue-Processor`
-- current observed state: `Ready`
-- role: consumes queued raw freight documents so legacy `.xls` sources are processed automatically after mailbox ingress
+- current observed state from April 21, 2026 repair audit: missing
+- role going forward: emergency repair only until the hosted parser path is deployed live
 
 ## Deployment Notes
 

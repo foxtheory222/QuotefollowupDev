@@ -1,5 +1,8 @@
 import json
 import unittest
+from email import policy
+from email.parser import BytesParser
+from io import BytesIO
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -7,7 +10,10 @@ from openpyxl import load_workbook
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_ROOT = REPO_ROOT / "results" / "sapilotflows" / "src" / "Workflows"
-EXAMPLE_ROOT = REPO_ROOT / "example"
+EXAMPLE_ROOT_CANDIDATES = (
+    REPO_ROOT / "example",
+    REPO_ROOT.parent / "example",
+)
 
 WORKFLOW_IDS = {
     "4171": "6DB19FF3-C313-4DB6-9A57-F3335FE55558",
@@ -106,6 +112,51 @@ EXPECTED_ACTIVE_BUDGET_SELECT = (
 )
 
 
+def resolve_example_root() -> Path:
+    for candidate in EXAMPLE_ROOT_CANDIDATES:
+        if candidate.exists():
+            return candidate
+
+    searched = ", ".join(str(candidate) for candidate in EXAMPLE_ROOT_CANDIDATES)
+    raise FileNotFoundError(f"Example workbook root not found. Checked: {searched}")
+
+
+EXAMPLE_ROOT = resolve_example_root()
+
+
+def branch_example_dirs(branch_code: str) -> tuple[Path, ...]:
+    return (
+        EXAMPLE_ROOT / branch_code,
+        EXAMPLE_ROOT / "April 9" / branch_code,
+    )
+
+
+def resolve_sa1300_workbook_source(branch_code: str):
+    for directory in branch_example_dirs(branch_code):
+        if not directory.exists():
+            continue
+        workbook_matches = sorted(directory.glob("*SA1300*.xlsx"))
+        if workbook_matches:
+            return workbook_matches[0]
+
+    for directory in branch_example_dirs(branch_code):
+        if not directory.exists():
+            continue
+        for message_path in sorted(directory.glob("*SA1300*.eml")):
+            with message_path.open("rb") as handle:
+                message = BytesParser(policy=policy.default).parse(handle)
+            for attachment in message.iter_attachments():
+                filename = (attachment.get_filename() or "").lower()
+                content_type = (attachment.get_content_type() or "").lower()
+                if filename.endswith(".xlsx") or "spreadsheet" in content_type:
+                    payload = attachment.get_payload(decode=True)
+                    if payload:
+                        return BytesIO(payload)
+
+    searched = ", ".join(str(directory) for directory in branch_example_dirs(branch_code))
+    raise FileNotFoundError(f"SA1300 workbook or workbook email attachment not found for {branch_code}. Checked: {searched}")
+
+
 def workflow_root_actions(branch_code: str) -> dict:
     workflow_id = WORKFLOW_IDS[branch_code]
     path = WORKFLOW_ROOT / f"{branch_code}-Budget-Update-SA1300-{workflow_id}.json"
@@ -127,12 +178,15 @@ def workflow_same_month_update(branch_code: str) -> dict:
 
 
 def month_end_plan_from_example(branch_code: str) -> float:
-    workbook_path = EXAMPLE_ROOT / branch_code / "SA1300.xlsx"
-    workbook = load_workbook(workbook_path, data_only=True, read_only=True)
-    sheet = workbook["Location Summary"]
-    for row in sheet.iter_rows(values_only=True):
-        if len(row) > 7 and str(row[4]).strip() == branch_code and str(row[6]).strip() == "CAD":
-            return float(row[7])
+    workbook_source = resolve_sa1300_workbook_source(branch_code)
+    workbook = load_workbook(workbook_source, data_only=True, read_only=True)
+    try:
+        sheet = workbook["Location Summary"]
+        for row in sheet.iter_rows(values_only=True):
+            if len(row) > 7 and str(row[4]).strip() == branch_code and str(row[6]).strip() == "CAD":
+                return float(row[7])
+    finally:
+        workbook.close()
     raise AssertionError(f"Month-End Plan CAD row not found for {branch_code}")
 
 

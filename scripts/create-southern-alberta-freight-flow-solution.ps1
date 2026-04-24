@@ -11,6 +11,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+. (Join-Path $PSScriptRoot "shared-mailbox-routing.ps1")
+
 $solutionRoot = Join-Path $RepoRoot "results\safreightflows"
 $sourceRoot = Join-Path $solutionRoot "src"
 $otherRoot = Join-Path $sourceRoot "Other"
@@ -23,6 +25,7 @@ $flowSpecs = @(
     BranchCode = "4171"
     BranchSlug = "4171-calgary"
     BranchName = "Calgary"
+    SharedMailboxFolderId = (Get-SouthernAlbertaSharedMailboxFolderId -BranchCode "4171")
     FlowName = "4171-Freight-Inbox-Ingress"
     WorkflowId = "cf9dbe3d-e0a8-4257-9b97-e21f34a39119"
   },
@@ -31,6 +34,7 @@ $flowSpecs = @(
     BranchCode = "4172"
     BranchSlug = "4172-lethbridge"
     BranchName = "Lethbridge"
+    SharedMailboxFolderId = (Get-SouthernAlbertaSharedMailboxFolderId -BranchCode "4172")
     FlowName = "4172-Freight-Inbox-Ingress"
     WorkflowId = "f1a3e7b2-7a34-4bc7-8cfa-20e4d9350f56"
   },
@@ -39,6 +43,7 @@ $flowSpecs = @(
     BranchCode = "4173"
     BranchSlug = "4173-medicine-hat"
     BranchName = "Medicine Hat"
+    SharedMailboxFolderId = (Get-SouthernAlbertaSharedMailboxFolderId -BranchCode "4173")
     FlowName = "4173-Freight-Inbox-Ingress"
     WorkflowId = "b6cd0d55-c3d8-4d83-a2e0-53ef2dd19d24"
   },
@@ -164,11 +169,18 @@ function Enable-ImportedAdminFlows {
 function New-IngressWorkflowJson {
   param([object]$Flow)
 
+  $sharedMailboxRoute = Get-SouthernAlbertaSharedMailboxRoute -BranchCode $Flow.BranchCode -MailboxAddress ("{0}@applied.com" -f $Flow.BranchCode)
+
   $filterMetadataId = [guid]::NewGuid().Guid
   $familyMetadataId = [guid]::NewGuid().Guid
   $sourceIdMetadataId = [guid]::NewGuid().Guid
   $rawMetadataId = [guid]::NewGuid().Guid
   $batchMetadataId = [guid]::NewGuid().Guid
+  $hostedInvokeMetadataId = [guid]::NewGuid().Guid
+  $rawProcessedMetadataId = [guid]::NewGuid().Guid
+  $batchProcessedMetadataId = [guid]::NewGuid().Guid
+  $rawErrorMetadataId = [guid]::NewGuid().Guid
+  $batchErrorMetadataId = [guid]::NewGuid().Guid
 
   $jsonObject = [ordered]@{
     properties = [ordered]@{
@@ -213,18 +225,26 @@ function New-IngressWorkflowJson {
             type = "String"
           }
           qfu_Freight_SharedMailboxAddress = [ordered]@{
-            defaultValue = "$($Flow.BranchCode)@applied.com"
+            defaultValue = $sharedMailboxRoute.MailboxAddress
             type = "String"
           }
           qfu_Freight_SharedMailboxFolderId = [ordered]@{
-            defaultValue = "Inbox"
+            defaultValue = $sharedMailboxRoute.FolderId
+            type = "String"
+          }
+          qfu_Freight_HostedParserUrl = [ordered]@{
+            defaultValue = "https://<set-freight-parser-host>/api/processfreightdocument"
+            type = "String"
+          }
+          qfu_Freight_HostedParserKey = [ordered]@{
+            defaultValue = "__SET_FREIGHT_HOSTED_PARSER_KEY__"
             type = "String"
           }
         }
         triggers = [ordered]@{
           Shared_Mailbox_New_Email = [ordered]@{
             type = "OpenApiConnection"
-            description = "Queues weekly freight report attachments from the $($Flow.BranchCode) $($Flow.BranchName) shared mailbox. Legacy .xls parsing is handled by the downstream controlled processor."
+            description = "Queues weekly freight report attachments from the configured $($Flow.BranchCode) $($Flow.BranchName) shared mailbox folder, then calls the hosted freight parser for legacy .xls and .xlsx normalization."
             inputs = [ordered]@{
               parameters = [ordered]@{
                 mailboxAddress = "@parameters('qfu_Freight_SharedMailboxAddress')"
@@ -301,7 +321,7 @@ function New-IngressWorkflowJson {
                     "item/qfu_status" = "queued"
                     "item/qfu_receivedon" = "@utcNow()"
                     "item/qfu_rawcontentbase64" = "@base64(base64ToBinary(items('Apply_to_each_Freight_Attachment')?['contentBytes']))"
-                    "item/qfu_processingnotes" = "Queued from shared mailbox Inbox by freight ingress flow. Controlled queue processor handles legacy .xls normalization."
+                    "item/qfu_processingnotes" = "Queued from the configured shared mailbox folder by freight ingress flow. Hosted parser call is pending."
                   }
                   host = [ordered]@{
                     apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
@@ -333,7 +353,7 @@ function New-IngressWorkflowJson {
                     "item/qfu_updatedcount" = 0
                     "item/qfu_startedon" = "@utcNow()"
                     "item/qfu_triggerflow" = $Flow.FlowName
-                    "item/qfu_notes" = "Queued from shared mailbox Inbox. Freight queue processor normalizes the workbook and upserts qfu_freightworkitem."
+                    "item/qfu_notes" = "Queued from the configured shared mailbox folder. Hosted freight parser call is pending."
                   }
                   host = [ordered]@{
                     apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
@@ -346,6 +366,130 @@ function New-IngressWorkflowJson {
                 }
                 metadata = [ordered]@{
                   operationMetadataId = $batchMetadataId
+                }
+              }
+              Invoke_Hosted_Freight_Processor = [ordered]@{
+                type = "Http"
+                inputs = [ordered]@{
+                  method = "POST"
+                  uri = "@parameters('qfu_Freight_HostedParserUrl')"
+                  headers = [ordered]@{
+                    "Content-Type" = "application/json"
+                    "x-functions-key" = "@parameters('qfu_Freight_HostedParserKey')"
+                  }
+                  body = [ordered]@{
+                    document = [ordered]@{
+                      source_id = "@outputs('Compose_Source_Id')"
+                      branch_code = "@parameters('qfu_Freight_BranchCode')"
+                      branch_slug = "@parameters('qfu_Freight_BranchSlug')"
+                      region_slug = "@parameters('qfu_Freight_RegionSlug')"
+                      source_family = "@outputs('Compose_Source_Family')"
+                      source_filename = "@items('Apply_to_each_Freight_Attachment')?['name']"
+                      raw_content_base64 = "@base64(base64ToBinary(items('Apply_to_each_Freight_Attachment')?['contentBytes']))"
+                    }
+                  }
+                }
+                runAfter = [ordered]@{
+                  Create_Ingestion_Batch = @("Succeeded")
+                }
+                metadata = [ordered]@{
+                  operationMetadataId = $hostedInvokeMetadataId
+                }
+              }
+              Update_Raw_Document_Processed = [ordered]@{
+                type = "OpenApiConnection"
+                inputs = [ordered]@{
+                  parameters = [ordered]@{
+                    entityName = "qfu_rawdocuments"
+                    recordId = "@outputs('Create_Raw_Document')?['body/qfu_rawdocumentid']"
+                    "item/qfu_status" = "@coalesce(body('Invoke_Hosted_Freight_Processor')?['status'], 'processed')"
+                    "item/qfu_processingnotes" = "@coalesce(body('Invoke_Hosted_Freight_Processor')?['batch_note'], 'Hosted freight parser completed.')"
+                    "item/qfu_processedon" = "@utcNow()"
+                  }
+                  host = [ordered]@{
+                    apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    operationId = "UpdateOnlyRecord"
+                    connectionName = "shared_commondataserviceforapps-1"
+                  }
+                }
+                runAfter = [ordered]@{
+                  Invoke_Hosted_Freight_Processor = @("Succeeded")
+                }
+                metadata = [ordered]@{
+                  operationMetadataId = $rawProcessedMetadataId
+                }
+              }
+              Update_Ingestion_Batch_Processed = [ordered]@{
+                type = "OpenApiConnection"
+                inputs = [ordered]@{
+                  parameters = [ordered]@{
+                    entityName = "qfu_ingestionbatchs"
+                    recordId = "@outputs('Create_Ingestion_Batch')?['body/qfu_ingestionbatchid']"
+                    "item/qfu_status" = "@coalesce(body('Invoke_Hosted_Freight_Processor')?['status'], 'processed')"
+                    "item/qfu_insertedcount" = "@int(coalesce(body('Invoke_Hosted_Freight_Processor')?['inserted'], 0))"
+                    "item/qfu_updatedcount" = "@int(coalesce(body('Invoke_Hosted_Freight_Processor')?['updated'], 0))"
+                    "item/qfu_completedon" = "@utcNow()"
+                    "item/qfu_notes" = "@coalesce(body('Invoke_Hosted_Freight_Processor')?['batch_note'], 'Hosted freight parser completed.')"
+                  }
+                  host = [ordered]@{
+                    apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    operationId = "UpdateOnlyRecord"
+                    connectionName = "shared_commondataserviceforapps-1"
+                  }
+                }
+                runAfter = [ordered]@{
+                  Invoke_Hosted_Freight_Processor = @("Succeeded")
+                }
+                metadata = [ordered]@{
+                  operationMetadataId = $batchProcessedMetadataId
+                }
+              }
+              Update_Raw_Document_Error = [ordered]@{
+                type = "OpenApiConnection"
+                inputs = [ordered]@{
+                  parameters = [ordered]@{
+                    entityName = "qfu_rawdocuments"
+                    recordId = "@outputs('Create_Raw_Document')?['body/qfu_rawdocumentid']"
+                    "item/qfu_status" = "error"
+                    "item/qfu_processingnotes" = "@concat('Hosted freight parser invocation failed for ', items('Apply_to_each_Freight_Attachment')?['name'], '. Review the flow run and hosted parser logs.')"
+                    "item/qfu_processedon" = "@utcNow()"
+                  }
+                  host = [ordered]@{
+                    apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    operationId = "UpdateOnlyRecord"
+                    connectionName = "shared_commondataserviceforapps-1"
+                  }
+                }
+                runAfter = [ordered]@{
+                  Invoke_Hosted_Freight_Processor = @("Failed", "TimedOut")
+                }
+                metadata = [ordered]@{
+                  operationMetadataId = $rawErrorMetadataId
+                }
+              }
+              Update_Ingestion_Batch_Error = [ordered]@{
+                type = "OpenApiConnection"
+                inputs = [ordered]@{
+                  parameters = [ordered]@{
+                    entityName = "qfu_ingestionbatchs"
+                    recordId = "@outputs('Create_Ingestion_Batch')?['body/qfu_ingestionbatchid']"
+                    "item/qfu_status" = "error"
+                    "item/qfu_insertedcount" = 0
+                    "item/qfu_updatedcount" = 0
+                    "item/qfu_completedon" = "@utcNow()"
+                    "item/qfu_notes" = "@concat('Hosted freight parser invocation failed for ', items('Apply_to_each_Freight_Attachment')?['name'], '. Review the flow run and hosted parser logs.')"
+                  }
+                  host = [ordered]@{
+                    apiId = "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    operationId = "UpdateOnlyRecord"
+                    connectionName = "shared_commondataserviceforapps-1"
+                  }
+                }
+                runAfter = [ordered]@{
+                  Invoke_Hosted_Freight_Processor = @("Failed", "TimedOut")
+                }
+                metadata = [ordered]@{
+                  operationMetadataId = $batchErrorMetadataId
                 }
               }
             }

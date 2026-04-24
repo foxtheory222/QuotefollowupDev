@@ -36,7 +36,7 @@
   - latest quote freshness
   - latest backorder freshness
   - latest successful SP830CA/ZBO import
-- Delivery-not-PGI stale detection uses base-row `createdon`, not comment-update time.
+- Delivery-not-PGI stale detection prefers `qfu_snapshotcapturedon`, with base-row `createdon` only as the last fallback.
 
 ## Runtime Outcomes
 

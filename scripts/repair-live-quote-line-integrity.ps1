@@ -5,7 +5,9 @@ param(
   [string]$ParserScript = "scripts\parse-southern-alberta-workbooks.py",
   [string]$ParsedWorkbookJson = "results\live-quote-line-integrity\parsed-workbooks.json",
   [string]$OutputJson = "results\live-quote-line-integrity\repair-summary.json",
-  [switch]$Apply
+  [switch]$Apply,
+  [bool]$ReactivateQuotesWithRecoveredLines = $true,
+  [switch]$AllowQuoteCleanup
 )
 
 $ErrorActionPreference = "Stop"
@@ -43,6 +45,40 @@ function Resolve-LocalPath {
   }
 
   return Join-Path (Get-Location).Path $Path
+}
+
+function ConvertTo-PlainHashtable {
+  param([object]$Value)
+
+  if ($null -eq $Value) {
+    return $null
+  }
+
+  if ($Value -is [System.Collections.IDictionary]) {
+    $result = @{}
+    foreach ($key in $Value.Keys) {
+      $result[[string]$key] = ConvertTo-PlainHashtable -Value $Value[$key]
+    }
+    return $result
+  }
+
+  if ($Value -is [System.Management.Automation.PSCustomObject]) {
+    $result = @{}
+    foreach ($property in $Value.PSObject.Properties) {
+      $result[$property.Name] = ConvertTo-PlainHashtable -Value $property.Value
+    }
+    return $result
+  }
+
+  if ($Value -is [System.Collections.IEnumerable] -and -not ($Value -is [string])) {
+    $items = New-Object System.Collections.Generic.List[object]
+    foreach ($item in $Value) {
+      $items.Add((ConvertTo-PlainHashtable -Value $item)) | Out-Null
+    }
+    return @($items)
+  }
+
+  return $Value
 }
 
 function Connect-Org {
@@ -86,6 +122,24 @@ function Parse-DateValue {
   }
 
   return [datetime]$Value
+}
+
+function Normalize-QuoteLineCreateFields {
+  param([hashtable]$Fields)
+
+  if ($Fields.ContainsKey("qfu_sourcedate") -and -not [string]::IsNullOrWhiteSpace([string]$Fields["qfu_sourcedate"])) {
+    $Fields["qfu_sourcedate"] = [datetime]$Fields["qfu_sourcedate"]
+  }
+
+  if ($Fields.ContainsKey("qfu_lastimportdate") -and -not [string]::IsNullOrWhiteSpace([string]$Fields["qfu_lastimportdate"])) {
+    $Fields["qfu_lastimportdate"] = [datetime]$Fields["qfu_lastimportdate"]
+  }
+
+  if ($Fields.ContainsKey("qfu_status") -and -not [string]::IsNullOrWhiteSpace([string]$Fields["qfu_status"])) {
+    $Fields["qfu_status"] = [int]$Fields["qfu_status"]
+  }
+
+  return $Fields
 }
 
 function Test-QuoteActive {
@@ -153,6 +207,60 @@ function Get-LatestRecord {
         @{ Expression = { if ($_.createdon) { [datetime]$_.createdon } else { [datetime]::MinValue } }; Descending = $true }, `
         @{ Expression = { [string]$_.qfu_quotelineid } }
   ) | Select-Object -First 1
+}
+
+function Get-QuoteWorkingSet {
+  param([object[]]$LiveQuotes)
+
+  $groups = @{}
+  $workingSet = New-Object System.Collections.Generic.List[object]
+  $deletedDuplicateIds = New-Object System.Collections.Generic.List[string]
+  $normalizedGroups = New-Object System.Collections.Generic.List[object]
+
+  foreach ($quote in @($LiveQuotes)) {
+    $sourceId = [string]$quote.qfu_sourceid
+    if ([string]::IsNullOrWhiteSpace($sourceId)) {
+      $workingSet.Add($quote) | Out-Null
+      continue
+    }
+
+    if (-not $groups.ContainsKey($sourceId)) {
+      $groups[$sourceId] = New-Object System.Collections.Generic.List[object]
+    }
+
+    $groups[$sourceId].Add($quote) | Out-Null
+  }
+
+  foreach ($canonicalSourceId in ($groups.Keys | Sort-Object)) {
+    $winner = Get-LatestRecord -Records @($groups[$canonicalSourceId].ToArray())
+    $duplicates = @($groups[$canonicalSourceId].ToArray() | Where-Object { [string]$_.qfu_quoteid -ne [string]$winner.qfu_quoteid })
+
+    foreach ($duplicate in $duplicates) {
+      $duplicateId = [string]$duplicate.qfu_quoteid
+      if ([string]::IsNullOrWhiteSpace($duplicateId)) {
+        continue
+      }
+
+      $deletedDuplicateIds.Add($duplicateId) | Out-Null
+    }
+
+    $workingSet.Add($winner) | Out-Null
+    $normalizedGroups.Add([pscustomobject]@{
+      canonical_source_id = $canonicalSourceId
+      winner_id = [string]$winner.qfu_quoteid
+      removed_duplicate_ids = @($duplicates | ForEach-Object { [string]$_.qfu_quoteid })
+    }) | Out-Null
+  }
+
+  $workingSetValues = foreach ($item in $workingSet) { $item }
+  $removedDuplicateIds = foreach ($item in $deletedDuplicateIds) { [string]$item }
+  $normalizedGroupValues = foreach ($item in $normalizedGroups) { $item }
+
+  return [pscustomobject]@{
+    working_set = @($workingSetValues)
+    removed_duplicate_ids = @($removedDuplicateIds)
+    normalized_groups = @($normalizedGroupValues)
+  }
 }
 
 $parserPath = Resolve-LocalPath -Path $ParserScript
@@ -255,7 +363,9 @@ foreach ($branchPayload in @($parsedPayload.branches)) {
       continue
     }
     if ($Apply) {
-      New-CrmRecord -conn $connection -EntityLogicalName "qfu_quoteline" -Fields $parsedLineMap[$canonicalSourceId] | Out-Null
+      $insertFields = ConvertTo-PlainHashtable -Value $parsedLineMap[$canonicalSourceId]
+      $insertFields = Normalize-QuoteLineCreateFields -Fields $insertFields
+      New-CrmRecord -conn $connection -EntityLogicalName "qfu_quoteline" -Fields $insertFields | Out-Null
     }
     $canonicalLiveIds.Add($canonicalSourceId) | Out-Null
     $insertedLineSourceIds.Add($canonicalSourceId) | Out-Null
@@ -287,15 +397,47 @@ foreach ($branchPayload in @($parsedPayload.branches)) {
       ) -TopCount 5000).CrmRecords
   )
 
+  $quoteWorkingSet = Get-QuoteWorkingSet -LiveQuotes $liveQuotes
   $deactivatedQuotes = New-Object System.Collections.Generic.List[object]
+  $reactivatedQuotes = New-Object System.Collections.Generic.List[object]
+  $preservedQuotes = New-Object System.Collections.Generic.List[object]
   $remainingMissingQuotes = New-Object System.Collections.Generic.List[object]
 
-  foreach ($quote in @($liveQuotes | Where-Object { Test-QuoteActive -Record $_ })) {
+  if ($Apply) {
+    foreach ($removedQuoteId in @($quoteWorkingSet.removed_duplicate_ids)) {
+      if ([string]::IsNullOrWhiteSpace([string]$removedQuoteId)) {
+        continue
+      }
+      $connection.Delete("qfu_quote", [guid]$removedQuoteId)
+    }
+  }
+
+  foreach ($quote in @($quoteWorkingSet.working_set)) {
+    $quoteIsActive = Test-QuoteActive -Record $quote
     $quoteNumber = [string]$quote.qfu_quotenumber
     if ([string]::IsNullOrWhiteSpace($quoteNumber)) {
       continue
     }
     if ($lineQuoteNumbers.Contains($quoteNumber)) {
+      if ($ReactivateQuotesWithRecoveredLines -and -not $quoteIsActive) {
+        if ($Apply) {
+          Set-CrmRecord -conn $connection -EntityLogicalName "qfu_quote" -Id $quote.qfu_quoteid -Fields @{
+            qfu_active = $true
+            qfu_inactiveon = $null
+          } | Out-Null
+        }
+        $reactivatedQuotes.Add([pscustomobject]@{
+          qfu_quoteid = [string]$quote.qfu_quoteid
+          qfu_quotenumber = $quoteNumber
+          qfu_sourceid = [string]$quote.qfu_sourceid
+          qfu_sourcefile = [string]$quote.qfu_sourcefile
+          reason = "quote header was reactivated because line history was recovered from the parsed workbook seed"
+        }) | Out-Null
+      }
+      continue
+    }
+
+    if (-not $quoteIsActive) {
       continue
     }
 
@@ -303,19 +445,29 @@ foreach ($branchPayload in @($parsedPayload.branches)) {
     $matchesCurrentSeed = $currentQuoteNumbers.Contains($quoteNumber)
 
     if ($seedStyleSourceId -and -not $matchesCurrentSeed) {
-      if ($Apply) {
-        Set-CrmRecord -conn $connection -EntityLogicalName "qfu_quote" -Id $quote.qfu_quoteid -Fields @{
-          qfu_active = $false
-          qfu_inactiveon = $repairTimestamp
-        } | Out-Null
+      if ($AllowQuoteCleanup) {
+        if ($Apply) {
+          Set-CrmRecord -conn $connection -EntityLogicalName "qfu_quote" -Id $quote.qfu_quoteid -Fields @{
+            qfu_active = $false
+            qfu_inactiveon = $repairTimestamp
+          } | Out-Null
+        }
+        $deactivatedQuotes.Add([pscustomobject]@{
+          qfu_quoteid = [string]$quote.qfu_quoteid
+          qfu_quotenumber = $quoteNumber
+          qfu_sourceid = [string]$quote.qfu_sourceid
+          qfu_sourcefile = [string]$quote.qfu_sourcefile
+          reason = "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+        }) | Out-Null
+      } else {
+        $preservedQuotes.Add([pscustomobject]@{
+          qfu_quoteid = [string]$quote.qfu_quoteid
+          qfu_quotenumber = $quoteNumber
+          qfu_sourceid = [string]$quote.qfu_sourceid
+          qfu_sourcefile = [string]$quote.qfu_sourcefile
+          reason = "quote cleanup is disabled, so the header stayed visible even though no parsed line rows were found"
+        }) | Out-Null
       }
-      $deactivatedQuotes.Add([pscustomobject]@{
-        qfu_quoteid = [string]$quote.qfu_quoteid
-        qfu_quotenumber = $quoteNumber
-        qfu_sourceid = [string]$quote.qfu_sourceid
-        qfu_sourcefile = [string]$quote.qfu_sourcefile
-        reason = "active quote header had no line rows and is absent from the current parsed SP830 workbook"
-      }) | Out-Null
       continue
     }
 
@@ -331,6 +483,8 @@ foreach ($branchPayload in @($parsedPayload.branches)) {
   $removedDuplicateLineIds = foreach ($item in $deletedDuplicateIds) { [string]$item }
   $insertedLineSourceIdValues = foreach ($item in $insertedLineSourceIds) { [string]$item }
   $deactivatedOrphanQuotes = foreach ($item in $deactivatedQuotes) { $item }
+  $reactivatedQuoteHeaders = foreach ($item in $reactivatedQuotes) { $item }
+  $preservedOrphanQuotes = foreach ($item in $preservedQuotes) { $item }
   $remainingMissingQuoteHeaders = foreach ($item in $remainingMissingQuotes) { $item }
 
   $branchResult = @{}
@@ -339,11 +493,16 @@ foreach ($branchPayload in @($parsedPayload.branches)) {
   $branchResult["parsed_quote_count"] = $branchPayload.quotes.records.Count
   $branchResult["parsed_quote_line_count"] = $branchPayload.quote_lines.records.Count
   $branchResult["live_quote_count"] = $liveQuotes.Count
+  $branchResult["normalized_quote_count"] = $quoteWorkingSet.working_set.Count
+  $branchResult["removed_duplicate_quote_ids"] = @($quoteWorkingSet.removed_duplicate_ids)
+  $branchResult["normalized_quote_groups"] = @($quoteWorkingSet.normalized_groups)
   $branchResult["live_quote_line_count"] = $liveLines.Count
   $branchResult["normalized_line_groups"] = $normalized.Count
   $branchResult["removed_duplicate_line_ids"] = $removedDuplicateLineIds
   $branchResult["inserted_line_source_ids"] = $insertedLineSourceIdValues
   $branchResult["deactivated_orphan_quotes"] = $deactivatedOrphanQuotes
+  $branchResult["reactivated_quotes"] = $reactivatedQuoteHeaders
+  $branchResult["preserved_orphan_quotes"] = $preservedOrphanQuotes
   $branchResult["remaining_missing_quote_headers"] = $remainingMissingQuoteHeaders
   $branchResult["parsed_quote_source_file"] = $quoteFileName
   $branchResults[$branchCode] = $branchResult
@@ -353,6 +512,8 @@ $result = [pscustomobject]@{
   captured_at = (Get-Date).ToUniversalTime().ToString("o")
   target_environment = $TargetEnvironmentUrl
   apply = [bool]$Apply
+  reactivate_quotes_with_recovered_lines = [bool]$ReactivateQuotesWithRecoveredLines
+  allow_quote_cleanup = [bool]$AllowQuoteCleanup
   parsed_workbook_json = $parsedWorkbookJsonPath
   branches = @($branchResults.Values)
 }
@@ -364,8 +525,12 @@ $result.branches |
     parsed_quote_count,
     parsed_quote_line_count,
     live_quote_count,
+    normalized_quote_count,
+    @{ Name = "removed_quote_duplicates"; Expression = { @($_.removed_duplicate_quote_ids).Count } },
     live_quote_line_count,
     @{ Name = "inserted_lines"; Expression = { @($_.inserted_line_source_ids).Count } },
+    @{ Name = "reactivated_quotes"; Expression = { @($_.reactivated_quotes).Count } },
+    @{ Name = "preserved_quotes"; Expression = { @($_.preserved_orphan_quotes).Count } },
     @{ Name = "deactivated_quotes"; Expression = { @($_.deactivated_orphan_quotes).Count } },
     @{ Name = "remaining_missing"; Expression = { @($_.remaining_missing_quote_headers).Count } } |
   Format-Table -AutoSize
