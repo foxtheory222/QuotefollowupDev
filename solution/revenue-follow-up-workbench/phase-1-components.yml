@@ -1,0 +1,129 @@
+solution:
+  status: dedicated_local_scaffold_only_not_live_export
+  live_solution_decision: dedicated_solution_confirmed
+  display_name: Revenue Follow-Up Workbench
+  unique_name: qfu_revenuefollowupworkbench
+  publisher_prefix: qfu
+  initial_version: 1.0.0.0
+  target_environment:
+    name: <target-environment>
+    url: <environment-url>
+
+model_driven_app:
+  display_name: Revenue Follow-Up Workbench
+  areas:
+    - name: My Work
+      phase: later
+      notes: Staff-facing daily work custom page after Admin MVP data is proven.
+    - name: Manager Panel
+      phase: later
+      notes: Manager workload, exceptions, reassignment, and roadblocks.
+    - name: Admin Panel
+      phase: phase_1
+      notes: Table-driven MVP for staff, aliases, memberships, policy, exceptions, work items, and alert logs.
+    - name: GM Review
+      phase: later
+      notes: Escalations, roadblocks, and GM review.
+
+phase_1_tables:
+  - logical_name: qfu_staff
+    purpose: One row per staff person.
+    primary_name: qfu_name
+  - logical_name: qfu_staffalias
+    purpose: Source alias to staff mapping.
+    primary_name: qfu_name
+    recommended_key: qfu_sourcesystem + qfu_aliastype + qfu_normalizedalias + qfu_scopekey
+  - logical_name: qfu_branchmembership
+    purpose: Staff to branch and role membership.
+    primary_name: qfu_name
+    recommended_key: qfu_branch + qfu_staff + qfu_role
+  - logical_name: qfu_policy
+    purpose: Branch/global work policies for thresholds, generation mode, first follow-up, attempts, CC modes, digest, targeted alert, and escalation.
+    primary_name: qfu_name
+    prebuild_schema_hardened_fields:
+      - qfu_thresholdoperator
+      - qfu_workitemgenerationmode
+      - qfu_firstfollowupbasis
+      - qfu_firstfollowupbusinessdays
+      - qfu_gmccmode
+      - qfu_managerccmode
+      - qfu_cssralertmode
+    phase_1_2_confirmed_defaults:
+      quote_threshold: 3000
+      threshold_operator: GreaterThanOrEqual
+      low_value_behavior: ReportingOnly
+      required_attempts_for_high_value_quotes: 3
+  - logical_name: qfu_workitem
+    purpose: Workflow/control layer referencing imported source records.
+    primary_name: qfu_workitemnumber
+    recommended_key: qfu_worktype + qfu_sourceexternalkey
+    prebuild_schema_hardened_fields:
+      - qfu_sourcesystem
+    phase_1_2_hardened_fields:
+      - qfu_lastfollowedupon
+      - qfu_stickynote
+      - qfu_stickynoteupdatedon
+      - qfu_stickynoteupdatedby
+  - logical_name: qfu_workitemaction
+    purpose: Follow-up and user action history.
+    primary_name: qfu_name
+    prebuild_schema_hardened_fields:
+      - qfu_countsasattempt
+    phase_1_2_hardened_behavior:
+      actionon_label_for_attempts: Followed Up On
+      default_attempt_actions:
+        - Call
+        - Email
+        - Customer Advised
+      default_non_attempt_actions:
+        - Note
+        - Roadblock
+        - Escalated
+        - Due Date Updated
+        - Won
+        - Lost
+        - Cancelled
+        - Assignment/Reassignment
+        - Sticky Note Updated
+  - logical_name: qfu_alertlog
+    purpose: Alert history and dedupe.
+    primary_name: qfu_name
+    recommended_key: qfu_dedupekey
+  - logical_name: qfu_assignmentexception
+    purpose: Missing, invalid, ambiguous, or unresolved mapping queue.
+    primary_name: qfu_name
+    recommended_key: qfu_exceptionkey
+    prebuild_schema_hardened_fields:
+      - qfu_sourcequoteline
+
+source_relationships:
+  imported_tables_remain_source_of_truth:
+    - qfu_quote
+    - qfu_quoteline
+    - qfu_backorder
+  workitem_source_lookups:
+    - qfu_sourcequote -> qfu_quote
+    - qfu_sourcequoteline -> qfu_quoteline
+    - qfu_sourcebackorder -> qfu_backorder
+    - qfu_sourcefreightworkitem -> qfu_freightworkitem
+    - qfu_sourcedeliverynotpgi -> qfu_deliverynotpgi
+
+confirmed_sp830ca_fields:
+  quote_line:
+    quote_number: qfu_quotenumber
+    branch_code: qfu_branchcode
+    line_value: qfu_amount
+    am_number_tsr_alias: qfu_tsr
+    am_name_tsr_display: qfu_tsrname
+    cssr_number_alias: qfu_cssr
+    cssr_name_display: qfu_cssrname
+
+do_not:
+  - Create live Dataverse tables during Phase 1.2 prebuild hardening.
+  - Create or publish the model-driven app during Phase 1.2 prebuild hardening.
+  - Create custom pages during Phase 1.2 prebuild hardening.
+  - Modify old Power Pages ops-admin workflow for this feature.
+  - Replace qfu_quote, qfu_quoteline, or qfu_backorder.
+  - Hardcode staff, emails, managers, GMs, branch IDs, AM numbers, CSSR numbers, or thresholds.
+  - Treat FLOW_AUDIT_MATRIX.cleaned.csv as Revenue Follow-Up implementation progress.
+  - Send live alerts in Phase 1.2.

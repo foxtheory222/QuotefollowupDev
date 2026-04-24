@@ -218,6 +218,19 @@ def build_source_id(branch_code, source_family, control_number, invoice_number, 
     return "|".join(parts)
 
 
+def build_invoice_source_id(branch_code, source_family, invoice_number):
+    invoice = normalize_text(invoice_number)
+    if not invoice:
+        return ""
+    parts = [
+        normalize_slug_component(branch_code, 16),
+        normalize_slug_component(source_family, 40),
+        "invoice",
+        normalize_slug_component(invoice, 96),
+    ]
+    return "|".join(parts)
+
+
 def dump_raw_payload(payload):
     return json.dumps(payload, ensure_ascii=True, default=str, separators=(",", ":"))
 
@@ -280,7 +293,7 @@ def build_redwood_records(rows, branch_code, branch_slug, region_slug, source_fi
         ref1 = normalize_text(row.get("Ref1"))
         pro_number = normalize_text(row.get("PRO"))
         control_number = normalize_text(row.get("BOL")) or normalize_text(row.get("Check Number")) or normalize_text(row.get("Extract Number"))
-        source_id = build_source_id(
+        source_id = build_invoice_source_id(branch_code, "FREIGHT_REDWOOD", invoice_number) or build_source_id(
             branch_code,
             "FREIGHT_REDWOOD",
             control_number or branch_code,
@@ -474,7 +487,7 @@ def build_carrier_record(group_key, rows, branch_code, branch_slug, region_slug,
     }
 
     return OrderedDict(
-        qfu_name=f"{branch_code} Freight {invoice_number or tracking_number}",
+        qfu_name=f"{branch_code} Freight {tracking_number or reference_value or invoice_number}",
         qfu_sourceid=source_id,
         qfu_branchcode=branch_code,
         qfu_branchslug=branch_slug,
@@ -531,12 +544,15 @@ def build_carrier_record(group_key, rows, branch_code, branch_slug, region_slug,
 def build_grouped_carrier_records(rows, branch_code, branch_slug, region_slug, source_filename, import_batch_id, source_family, datemode):
     groups = OrderedDict()
     for row in rows:
-        key = (
-            normalize_text(row.get("Invoice")),
-            normalize_text(row.get("Tracking")),
-            normalize_text(row.get("Reference")),
-            normalize_text(row.get("Shipper")),
-        )
+        invoice = normalize_text(row.get("Invoice"))
+        tracking = normalize_text(row.get("Tracking"))
+        reference = normalize_text(row.get("Reference"))
+        shipper = normalize_text(row.get("Shipper"))
+        service_key = normalize_text(row.get("Code")) or normalize_text(row.get("Service"))
+        if tracking:
+            key = ("shipment", invoice, tracking)
+        else:
+            key = ("fallback", invoice, reference, shipper, service_key)
         groups.setdefault(key, []).append(row)
 
     records = [

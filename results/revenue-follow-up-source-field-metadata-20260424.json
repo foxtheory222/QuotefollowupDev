@@ -1,0 +1,973 @@
+{
+    "qfu_backorder":  [
+                          {
+                              "logical_name":  "createdbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "createdbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "createdonbehalfbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "createdonbehalfbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedonbehalfbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedonbehalfbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "organizationidname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_accountmanager",
+                              "display_name":  "Account Manager",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_accountmanagername",
+                              "display_name":  "Account Manager Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_activename",
+                              "display_name":  null,
+                              "type":  "Virtual",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_branchcode",
+                              "display_name":  "Branch Code",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_branchslug",
+                              "display_name":  "Branch Slug",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_cssrname",
+                              "display_name":  "CSSR Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_customername",
+                              "display_name":  "Customer Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_name",
+                              "display_name":  "Name",
+                              "type":  "String",
+                              "required":  "ApplicationRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_salesdocnumber",
+                              "display_name":  "Sales Document Number",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_salesdoctype",
+                              "display_name":  "Sales Document Type",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_shiptoname",
+                              "display_name":  "Ship To Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourcefamily",
+                              "display_name":  "Source Family",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourcefile",
+                              "display_name":  "Source File",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourceid",
+                              "display_name":  "Source Id",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourceline",
+                              "display_name":  "Source Line",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_totalvalue",
+                              "display_name":  "Total Value",
+                              "type":  "Decimal",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "statecodename",
+                              "display_name":  null,
+                              "type":  "Virtual",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "statuscodename",
+                              "display_name":  null,
+                              "type":  "Virtual",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          }
+                      ],
+    "qfu_branch":  [
+                       {
+                           "logical_name":  "createdbyname",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "createdbyyominame",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "SystemRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "createdonbehalfbyname",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "createdonbehalfbyyominame",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "SystemRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "modifiedbyname",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "modifiedbyyominame",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "SystemRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "modifiedonbehalfbyname",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "modifiedonbehalfbyyominame",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "SystemRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "organizationidname",
+                           "display_name":  null,
+                           "type":  "String",
+                           "required":  "SystemRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_activename",
+                           "display_name":  null,
+                           "type":  "Virtual",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_branchcode",
+                           "display_name":  "Branch Code",
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_branchid",
+                           "display_name":  "QFU Branch",
+                           "type":  "Uniqueidentifier",
+                           "required":  "SystemRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_branchname",
+                           "display_name":  "Branch Name",
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_branchslug",
+                           "display_name":  "Branch Slug",
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_branchstate",
+                           "display_name":  "Branch State",
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_name",
+                           "display_name":  "Name",
+                           "type":  "String",
+                           "required":  "ApplicationRequired",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_overduequotewarningcount",
+                           "display_name":  "Overdue Quote Warning Count",
+                           "type":  "Integer",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_regionname",
+                           "display_name":  "Region Name",
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "qfu_sourceid",
+                           "display_name":  "Source Id",
+                           "type":  "String",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "statecodename",
+                           "display_name":  null,
+                           "type":  "Virtual",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       },
+                       {
+                           "logical_name":  "statuscodename",
+                           "display_name":  null,
+                           "type":  "Virtual",
+                           "required":  "None",
+                           "targets":  {
+
+                                       }
+                       }
+                   ],
+    "qfu_quote":  [
+                      {
+                          "logical_name":  "createdbyname",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "createdbyyominame",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "SystemRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "createdonbehalfbyname",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "createdonbehalfbyyominame",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "SystemRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "modifiedbyname",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "modifiedbyyominame",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "SystemRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "modifiedonbehalfbyname",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "modifiedonbehalfbyyominame",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "SystemRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "organizationidname",
+                          "display_name":  null,
+                          "type":  "String",
+                          "required":  "SystemRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_activename",
+                          "display_name":  null,
+                          "type":  "Virtual",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_amount",
+                          "display_name":  "Amount",
+                          "type":  "Decimal",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_assignedto",
+                          "display_name":  "Assigned To",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_branchcode",
+                          "display_name":  "Branch Code",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_branchslug",
+                          "display_name":  "Branch Slug",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_cssr",
+                          "display_name":  "CSSR",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_cssrname",
+                          "display_name":  "CSSR Name",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_customername",
+                          "display_name":  "Customer Name",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_name",
+                          "display_name":  "Name",
+                          "type":  "String",
+                          "required":  "ApplicationRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_quoteid",
+                          "display_name":  "QFU Quote",
+                          "type":  "Uniqueidentifier",
+                          "required":  "SystemRequired",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_quotenumber",
+                          "display_name":  "Quote Number",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_source_row_count",
+                          "display_name":  "Source Row Count",
+                          "type":  "Integer",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_sourcedate",
+                          "display_name":  "Source Created On",
+                          "type":  "DateTime",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_sourcefamily",
+                          "display_name":  "Source Family",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_sourcefile",
+                          "display_name":  "Source File",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_sourceid",
+                          "display_name":  "Source Id",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_sourceupdatedon",
+                          "display_name":  "Source Updated On",
+                          "type":  "DateTime",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_sourceworksheet",
+                          "display_name":  "Source Worksheet",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "qfu_tsr",
+                          "display_name":  "TSR",
+                          "type":  "String",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "statecodename",
+                          "display_name":  null,
+                          "type":  "Virtual",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      },
+                      {
+                          "logical_name":  "statuscodename",
+                          "display_name":  null,
+                          "type":  "Virtual",
+                          "required":  "None",
+                          "targets":  {
+
+                                      }
+                      }
+                  ],
+    "qfu_quoteline":  [
+                          {
+                              "logical_name":  "createdbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "createdbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "createdonbehalfbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "createdonbehalfbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedonbehalfbyname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "modifiedonbehalfbyyominame",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "organizationidname",
+                              "display_name":  null,
+                              "type":  "String",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_amount",
+                              "display_name":  "Amount",
+                              "type":  "Decimal",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_branchcode",
+                              "display_name":  "Branch Code",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_branchslug",
+                              "display_name":  "Branch Slug",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_cssr",
+                              "display_name":  "CSSR",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_cssrname",
+                              "display_name":  "CSSR Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_followupowner",
+                              "display_name":  "Follow Up Owner",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_name",
+                              "display_name":  "Name",
+                              "type":  "String",
+                              "required":  "ApplicationRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_productname",
+                              "display_name":  "Product Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_quotelineid",
+                              "display_name":  "QFU Quote Line",
+                              "type":  "Uniqueidentifier",
+                              "required":  "SystemRequired",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_quotenumber",
+                              "display_name":  "Quote Number",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_soldtopartyname",
+                              "display_name":  "Sold To Party Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourcedate",
+                              "display_name":  "Source Date",
+                              "type":  "DateTime",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourcefamily",
+                              "display_name":  "Source Family",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourcefile",
+                              "display_name":  "Source File",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourceid",
+                              "display_name":  "Source Id",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_sourceworksheet",
+                              "display_name":  "Source Worksheet",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_tsr",
+                              "display_name":  "TSR",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "qfu_tsrname",
+                              "display_name":  "TSR Name",
+                              "type":  "String",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "statecodename",
+                              "display_name":  null,
+                              "type":  "Virtual",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          },
+                          {
+                              "logical_name":  "statuscodename",
+                              "display_name":  null,
+                              "type":  "Virtual",
+                              "required":  "None",
+                              "targets":  {
+
+                                          }
+                          }
+                      ]
+}

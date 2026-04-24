@@ -69,11 +69,12 @@ def _latest_activity_value(existing, observed_on):
     return max(candidates).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def _query_existing_record(client, source_id):
-    rows = client.list_records(
+def _query_freight_rows(client, filter_expr):
+    return client.list_records(
         ENTITY_SET,
         select=[
             "qfu_freightworkitemid",
+            "qfu_sourceid",
             "qfu_status",
             "qfu_ownername",
             "qfu_owneridentifier",
@@ -86,11 +87,15 @@ def _query_existing_record(client, source_id):
             "qfu_archivedon",
             "modifiedon",
         ],
-        filter_expr=f"qfu_sourceid eq '{_escape_odata_string(source_id)}'",
+        filter_expr=filter_expr,
         top=5,
         orderby="modifiedon desc",
     )
-    return rows
+
+
+def _query_existing_record(client, record):
+    source_id = str(record.get("qfu_sourceid", "")).strip()
+    return _query_freight_rows(client, f"qfu_sourceid eq '{_escape_odata_string(source_id)}'")
 
 
 def upsert_freight_workitems(client, records):
@@ -104,10 +109,10 @@ def upsert_freight_workitems(client, records):
         if not source_id:
             raise ValueError("Parsed freight record is missing qfu_sourceid.")
 
-        existing_rows = _query_existing_record(client, source_id)
+        existing_rows = _query_existing_record(client, record)
         existing = existing_rows[0] if existing_rows else None
         if len(existing_rows) > 1:
-            warnings.append(f"Duplicate freight rows already existed for source id {source_id}; updated latest row only.")
+            warnings.append(f"Duplicate freight rows already existed for freight identity {source_id}; updated latest row only.")
 
         fields = _coerce_record_fields(record)
         fields["qfu_lastseenon"] = observed_on

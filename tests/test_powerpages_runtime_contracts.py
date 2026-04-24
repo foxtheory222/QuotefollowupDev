@@ -5,13 +5,14 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_TEMPLATE = (
     REPO_ROOT
-    / "site"
+    / "powerpages-live"
+    / "operations-hub---operationhub"
     / "web-templates"
     / "qfu-regional-runtime"
     / "QFU-Regional-Runtime.webtemplate.source.html"
 )
-SITE_SETTINGS = REPO_ROOT / "site" / "sitesetting.yml"
-PHASE0_CSS = REPO_ROOT / "site" / "web-files" / "qfu-phase0.css"
+SITE_SETTINGS = REPO_ROOT / "powerpages-live" / "operations-hub---operationhub" / "sitesetting.yml"
+PHASE0_CSS = REPO_ROOT / "powerpages-live" / "operations-hub---operationhub" / "web-files" / "qfu-phase0.css"
 
 
 class PowerPagesRuntimeContractTests(unittest.TestCase):
@@ -216,9 +217,22 @@ class PowerPagesRuntimeContractTests(unittest.TestCase):
         self.assertIn("deliveryStatus: deliveryStatus", template)
         self.assertIn("freightQueueStatus: freightQueueStatus", template)
         self.assertIn(".qfu-phase0-analytics-command-grid", template)
+        self.assertIn("analyticsBackorderRecords: backorders", template)
         detail_section = template.split("async function renderAnalyticsDetail(branch, filters) {", 1)[1].split(
             "async function renderQuoteDetailLive", 1
         )[0]
+        self.assertIn(
+            "var runtimeBackorders = Array.isArray(workspace.analyticsBackorderRecords) ? workspace.analyticsBackorderRecords : null;",
+            detail_section,
+        )
+        self.assertIn(
+            "runtimeBackorders ? Promise.resolve(runtimeBackorders) : safeGetAll(withFilter(backorderPath, branchFilter))",
+            detail_section,
+        )
+        self.assertIn(
+            "var analyticsBackorders = runtimeBackorders ? runtimeBackorders.slice() : dedupeOperationalRows(fetched[1] || [], {",
+            detail_section,
+        )
         self.assertIn("var attentionItems = buildAnalyticsAttentionFocus(branch, payload, revenueMotion, readyToShip, freightRecovery, financeSnapshot, latestOpsTrend, workspace);", detail_section)
         self.assertIn("var focusKpis = buildAnalyticsFocusKpis(workspace, payload, quoteFocus, revenueMotion, readyToShip, financeSnapshot);", detail_section)
         self.assertLess(
@@ -230,6 +244,28 @@ class PowerPagesRuntimeContractTests(unittest.TestCase):
             detail_section.index("renderAnalyticsActionTables(branch, quoteFocus, payload, readyToShip, workspace)"),
         )
         self.assertNotIn("renderAnalyticsRevenueMotion(revenueMotion, watchItems)", detail_section)
+
+    def test_analytics_backorder_reuse_keeps_required_webapi_fields(self) -> None:
+        template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")
+        settings = SITE_SETTINGS.read_text(encoding="utf-8")
+        runtime_select = template.split(
+            'needsBackorderData ? safeGetAll(withFilter("/_api/qfu_backorders?$select=',
+            1,
+        )[1].split("&$top=", 1)[0]
+        for field in [
+            "qfu_accountmanagername",
+            "qfu_shipconddesc",
+            "qfu_delblockdesc",
+            "qfu_billblockdesc",
+            "qfu_lineitemcreatedon",
+        ]:
+            self.assertIn(field, runtime_select)
+            self.assertIn(field, settings)
+        detail_section = template.split("async function renderAnalyticsDetail(branch, filters) {", 1)[1].split(
+            "async function renderQuoteDetailLive",
+            1,
+        )[0]
+        self.assertIn("qfu_accountmanagername,qfu_shipconddesc,qfu_lineitemcreatedon,qfu_delblockdesc,qfu_billblockdesc", detail_section)
 
     def test_analytics_page_keeps_stitch_visual_refresh_contract(self) -> None:
         template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")
@@ -270,7 +306,7 @@ class PowerPagesRuntimeContractTests(unittest.TestCase):
         template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")
         self.assertIn("function inferredRegionSlug(context)", template)
         self.assertIn("function regionDisplayNameForSlug(slug)", template)
-        self.assertIn('var RUNTIME_CACHE_VERSION = "20260423a";', template)
+        self.assertIn('var RUNTIME_CACHE_VERSION = "20260424-freight-row-grain";', template)
         self.assertIn("function readSessionRowsCache(cacheKey, ttlMs)", template)
         self.assertIn("function writeSessionRowsCache(cacheKey, rows, allowEmptyCache)", template)
         self.assertIn("function isLegacyRuntimeCacheKey(key)", template)
@@ -314,12 +350,25 @@ class PowerPagesRuntimeContractTests(unittest.TestCase):
         self.assertIn(": FREIGHT_SUMMARY_FIELDS", template)
         self.assertIn('"/_api/qfu_deliverynotpgis?$select=" + deliveryNotPgiFields', template)
         self.assertIn('"/_api/qfu_freightworkitems?$select=" + freightFields', template)
+        self.assertIn('var needsFreightData = context.pageType === "region" || context.pageType === "branch" || needsOpsData || (isDetailPage && (detailViewKey === "freight-worklist" || detailViewKey === "analytics"));', template)
+        self.assertNotIn('var needsFreightData = authenticatedUser &&', template)
+        self.assertIn('var hasFreightRuntimeData = !!((workspace.freightRows || []).length || (workspace.freightImportRows || []).length || (workspace.freightFeedRows || []).length);', template)
+        self.assertIn('if (!portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]")) && !hasFreightRuntimeData) {', template)
         summary_section = template.split("var DELIVERY_NOT_PGI_SUMMARY_FIELDS =", 1)[1].split("var DELIVERY_NOT_PGI_ANALYTICS_FIELDS =", 1)[0]
         self.assertIn('"qfu_comment"', summary_section)
         self.assertNotIn('"qfu_material"', summary_section)
         self.assertNotIn('"qfu_description"', summary_section)
         analytics_section = template.split("var DELIVERY_NOT_PGI_ANALYTICS_FIELDS =", 1)[1].split("var FREIGHT_DETAIL_FIELDS =", 1)[0]
+        self.assertIn('"qfu_shiptocustomername"', analytics_section)
+        self.assertIn('"qfu_soldtocustomername"', analytics_section)
+        self.assertIn('"qfu_cssrname"', analytics_section)
         self.assertNotIn('"qfu_comment"', analytics_section)
+        self.assertNotIn('"qfu_material"', analytics_section)
+        self.assertNotIn('"qfu_description"', analytics_section)
+        settings = SITE_SETTINGS.read_text(encoding="utf-8")
+        self.assertIn("qfu_shiptocustomername", settings)
+        self.assertIn("qfu_soldtocustomername", settings)
+        self.assertIn("qfu_cssrname", settings)
         freight_summary_section = template.split("var FREIGHT_SUMMARY_FIELDS =", 1)[1].split("var REGION_ROUTE_MAP =", 1)[0]
         self.assertIn('"qfu_totalamount"', freight_summary_section)
         self.assertNotIn('"qfu_chargebreakdowntext"', freight_summary_section)
@@ -439,6 +488,21 @@ class PowerPagesRuntimeContractTests(unittest.TestCase):
             template,
         )
 
+    def test_freight_ledger_renders_shipment_level_entries_not_invoice_groups(self) -> None:
+        template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")
+        reference_section = template.split("function freightPrimaryReferenceLabel(row) {", 1)[1].split(
+            "function freightPrimaryGroupingReference(row) {", 1
+        )[0]
+        self.assertLess(
+            reference_section.index("freightVisibleIdentityValue(row.trackingNumber)"),
+            reference_section.index("freightVisibleIdentityValue(row.invoiceNumber)"),
+        )
+        self.assertIn("branch.workspace.freightRows = branch.workspace.freightSourceRows.slice().sort(freightSort);", template)
+        self.assertNotIn("branch.workspace.freightRows = groupFreightWorkItemRows(branch.workspace.freightSourceRows, branch);", template)
+        self.assertIn("matching ledger entries", template)
+        self.assertIn("Link to This Entry", template)
+        self.assertNotIn("bill groups", template)
+
     def test_freight_ledger_date_filters_use_selected_date_field(self) -> None:
         template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")
         self.assertIn('{ value: "invoice", label: "Invoice Date" }', template)
@@ -495,6 +559,19 @@ class PowerPagesRuntimeContractTests(unittest.TestCase):
         self.assertIn("<th>Billing Date</th>", template)
         self.assertIn("qfu-phase0-region-exception__billing-date", template)
         self.assertIn("billingDate: row.billingDate,", template)
+
+    def test_regional_exceptions_link_to_branch_analytics_margin_drillthrough(self) -> None:
+        template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")
+        self.assertIn('href: detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" })', template)
+        self.assertIn("qfu-phase0-region-exception__cell-link", template)
+        self.assertIn("data-qfu-dashboard-href", template)
+        self.assertIn("Click any exception row to open that branch analytics page filtered to abnormal margins.", template)
+        self.assertIn("function renderAnalyticsExceptionDrillthrough(exceptionFilter, windowFilter, workspace)", template)
+        self.assertIn('if (exceptionFilter === "margin") {', template)
+        self.assertIn("Full branch margin review list from SA1300 for the selected analytics route.", template)
+        self.assertIn("renderMarginExceptionTable(rows)", template)
+        self.assertIn("var exceptionDrillthrough = renderAnalyticsExceptionDrillthrough(exceptionFilter, windowFilter, workspace);", template)
+        self.assertIn("exceptionDrillthrough +", template)
 
     def test_region_page_pairs_quotes_with_cssr_and_uses_clickable_quote_links(self) -> None:
         template = RUNTIME_TEMPLATE.read_text(encoding="utf-8")

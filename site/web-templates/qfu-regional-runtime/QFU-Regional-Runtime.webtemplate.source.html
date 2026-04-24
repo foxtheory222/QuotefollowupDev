@@ -33,7 +33,7 @@
   var FREIGHT_STALE_HOURS = 192;
   var FREIGHT_HIGH_VALUE_THRESHOLD = 250;
   var FREIGHT_ARCHIVE_AFTER_DAYS = 60;
-  var RUNTIME_CACHE_VERSION = "20260423a";
+  var RUNTIME_CACHE_VERSION = "20260424-freight-row-grain";
   var FLASH_MESSAGE = null;
   var RUNTIME_PROMISE = null;
   var RUNTIME_STATE = null;
@@ -57,10 +57,10 @@
   ].join(",");
   var DELIVERY_NOT_PGI_ANALYTICS_FIELDS = [
     "qfu_deliverynotpgiid", "qfu_sourceid", "qfu_deliverynumber", "qfu_deliveryline",
-    "qfu_ontimedate", "qfu_dayslate", "qfu_qtyondelnotpgid", "qfu_unshippednetvalue",
-    "qfu_snapshotcapturedon", "qfu_active", "qfu_inactiveon", "qfu_branchcode",
-    "qfu_branchslug", "qfu_regionslug", "qfu_sourcefamily", "qfu_sourcefile",
-    "qfu_importbatchid", "createdon", "modifiedon"
+    "qfu_ontimedate", "qfu_dayslate", "qfu_shiptocustomername", "qfu_soldtocustomername",
+    "qfu_qtyondelnotpgid", "qfu_unshippednetvalue", "qfu_cssrname", "qfu_snapshotcapturedon",
+    "qfu_active", "qfu_inactiveon", "qfu_branchcode", "qfu_branchslug", "qfu_regionslug",
+    "qfu_sourcefamily", "qfu_sourcefile", "qfu_importbatchid", "createdon", "modifiedon"
   ].join(",");
   var FREIGHT_DETAIL_FIELDS = [
     "qfu_freightworkitemid", "qfu_name", "qfu_sourceid", "qfu_branchcode",
@@ -81,7 +81,7 @@
     "qfu_freightworkitemid", "qfu_name", "qfu_sourceid", "qfu_branchcode",
     "qfu_branchslug", "qfu_regionslug", "qfu_sourcefamily", "qfu_sourcefilename",
     "qfu_sourcecarrier", "qfu_importbatchid", "qfu_trackingnumber", "qfu_pronumber",
-    "qfu_invoicenumber", "qfu_reference", "qfu_shipdate", "qfu_invoicedate",
+    "qfu_invoicenumber", "qfu_controlnumber", "qfu_reference", "qfu_shipdate", "qfu_invoicedate",
     "qfu_closedate", "qfu_billtype", "qfu_service", "qfu_sender", "qfu_destination",
     "qfu_totalamount", "qfu_direction", "qfu_status", "qfu_priorityband",
     "qfu_ownername", "qfu_owneridentifier", "qfu_claimedon", "qfu_commentupdatedon",
@@ -2051,6 +2051,7 @@
     var tracking = String(record && record.qfu_trackingnumber || "").trim();
     var proNumber = String(record && record.qfu_pronumber || "").trim();
     var invoiceNumber = String(record && record.qfu_invoicenumber || "").trim();
+    var controlNumber = String(record && record.qfu_controlnumber || "").trim();
     var reference = String(record && record.qfu_reference || "").trim();
     var ownerName = String(record && record.qfu_ownername || "").trim();
     var comment = String(record && record.qfu_comment || "");
@@ -2094,6 +2095,7 @@
       trackingNumber: tracking || "-",
       proNumber: proNumber || "-",
       invoiceNumber: invoiceNumber || "-",
+      controlNumber: controlNumber || "-",
       reference: reference || "-",
       sender: sender,
       destination: destination,
@@ -2143,6 +2145,7 @@
         tracking,
         proNumber,
         invoiceNumber,
+        controlNumber,
         reference,
         sender,
         destination,
@@ -2338,6 +2341,177 @@
       rows: dedupedRows,
       duplicates: duplicates
     };
+  }
+
+  function freightVisibleIdentityValue(value) {
+    var text = String(value == null ? "" : value).trim();
+    return text && text !== "-" ? text : "";
+  }
+
+  function freightPrimaryReferenceLabel(row) {
+    if (!row) {
+      return "-";
+    }
+    return freightVisibleIdentityValue(row.trackingNumber)
+      || freightVisibleIdentityValue(row.proNumber)
+      || freightVisibleIdentityValue(row.reference)
+      || freightVisibleIdentityValue(row.controlNumber)
+      || freightVisibleIdentityValue(row.invoiceNumber)
+      || freightVisibleIdentityValue(row.sourceId)
+      || "-";
+  }
+
+  function freightPrimaryGroupingReference(row) {
+    if (!row) {
+      return "";
+    }
+    var references = [
+      ["tracking", row.trackingNumber],
+      ["pro", row.proNumber],
+      ["reference", row.reference],
+      ["control", row.controlNumber],
+      ["invoice", row.invoiceNumber]
+    ];
+    for (var index = 0; index < references.length; index += 1) {
+      var part = references[index];
+      var value = freightVisibleIdentityValue(part[1]);
+      if (value) {
+        return part[0] + ":" + value;
+      }
+    }
+    return "";
+  }
+
+  function freightRowBranchKey(row, branch) {
+    var record = row && row.record || {};
+    return freightVisibleIdentityValue(branch && (branch.slug || branch.code))
+      || freightVisibleIdentityValue(row && row.branchCode)
+      || freightVisibleIdentityValue(record.qfu_branchslug)
+      || freightVisibleIdentityValue(record.qfu_branchcode)
+      || "";
+  }
+
+  function freightRowGroupKey(row, branch) {
+    if (!row) {
+      return "freight-empty";
+    }
+    var primaryReference = freightPrimaryGroupingReference(row);
+    if (!primaryReference) {
+      return normalizeConfigKey("source|" + (row.sourceId || row.id || freightPrimaryReferenceLabel(row)));
+    }
+    return normalizeConfigKey([
+      "branch:" + freightRowBranchKey(row, branch),
+      "carrier:" + (row.carrierKey || row.carrier || ""),
+      primaryReference
+    ].join("|"));
+  }
+
+  function uniqueFreightGroupValues(rows, selector) {
+    var seen = {};
+    var values = [];
+    (rows || []).forEach(function (row) {
+      var rawValue = typeof selector === "function" ? selector(row) : row && row[selector];
+      var nextValues = Array.isArray(rawValue) ? rawValue : [rawValue];
+      nextValues.forEach(function (value) {
+        var text = String(value == null ? "" : value).trim();
+        if (!text) {
+          return;
+        }
+        var key = normalizeConfigKey(text);
+        if (seen[key]) {
+          return;
+        }
+        seen[key] = true;
+        values.push(text);
+      });
+    });
+    return values;
+  }
+
+  function freightGroupedRowCount(rows) {
+    return (rows || []).reduce(function (total, row) {
+      return total + Math.max(1, parseInteger(row && row.groupCount, 1));
+    }, 0);
+  }
+
+  function freightGroupCountLabel(row) {
+    var count = parseInteger(row && row.groupCount, 1);
+    return count > 1 ? (String(count) + " rows grouped") : "";
+  }
+
+  function freightLatestGroupedValue(rows, valueField) {
+    return (rows || []).reduce(function (latest, row) {
+      return Math.max(latest, toNumber(row && row[valueField]));
+    }, 0);
+  }
+
+  function summarizeFreightRowGroup(rows, groupKey, branch) {
+    var groupRows = (rows || []).slice().sort(freightSort);
+    var winner = groupRows[0];
+    var statusRow = groupRows.filter(function (row) { return !row.archived; })[0] || winner;
+    var statuses = uniqueFreightGroupValues(groupRows, function (row) { return row.status; });
+    var owners = uniqueFreightGroupValues(groupRows, function (row) { return row.ownerName || "Unowned"; });
+    var ownerNames = uniqueFreightGroupValues(groupRows, function (row) { return row.ownerName; });
+    var groupRecordIds = uniqueFreightGroupValues(groupRows, function (row) { return row.id; });
+    var groupSourceIds = uniqueFreightGroupValues(groupRows, function (row) { return row.sourceId; });
+    var hasUnownedMember = owners.indexOf("Unowned") >= 0;
+    var allArchived = groupRows.every(function (row) { return row.archived; });
+    var anyActionable = groupRows.some(function (row) { return row.actionable; });
+    var lastActivityOnValue = freightLatestGroupedValue(groupRows, "lastActivityOnValue");
+    var lastSeenOnValue = freightLatestGroupedValue(groupRows, "lastSeenOnValue");
+    var commentUpdatedOnValue = freightLatestGroupedValue(groupRows, "commentUpdatedOnValue");
+    var claimedOnValue = freightLatestGroupedValue(groupRows, "claimedOnValue");
+    var display = Object.assign({}, winner, {
+      id: groupRecordIds[0] || winner.id,
+      freightGroupKey: groupKey,
+      groupCount: groupRows.length,
+      groupedRows: groupRows,
+      groupRecordIds: groupRecordIds,
+      groupSourceIds: groupSourceIds,
+      status: statusRow.status,
+      statusKey: statusRow.statusKey,
+      statusFilterValues: statuses,
+      statusSummary: statuses.join(" + "),
+      owner: owners.length === 1 ? owners[0] : "Mixed owners",
+      ownerName: owners.length === 1 && ownerNames.length === 1 ? ownerNames[0] : "",
+      ownerInitials: owners.length === 1 ? winner.ownerInitials : "MX",
+      ownerFilterValues: owners,
+      ownerSummary: owners.join(" + "),
+      hasUnownedMember: hasUnownedMember,
+      archived: allArchived,
+      actionable: !allArchived && anyActionable,
+      highValue: groupRows.some(function (row) { return row.highValue; }),
+      lastActivityOnValue: lastActivityOnValue,
+      lastActivityOn: lastActivityOnValue ? formatDateTime(new Date(lastActivityOnValue)) : "Not touched",
+      lastSeenOnValue: lastSeenOnValue,
+      lastSeenOn: lastSeenOnValue ? formatDateTime(new Date(lastSeenOnValue)) : "Not imported yet",
+      commentUpdatedOnValue: commentUpdatedOnValue,
+      commentUpdatedOn: commentUpdatedOnValue ? formatDateTime(new Date(commentUpdatedOnValue)) : "No comment yet",
+      claimedOnValue: claimedOnValue,
+      claimedOn: claimedOnValue ? formatDateTime(new Date(claimedOnValue)) : "Unclaimed",
+      searchText: uniqueFreightGroupValues(groupRows, function (row) {
+        return [row.searchText, row.sourceId, row.id].join(" ");
+      }).join(" ").toLowerCase(),
+      detailHref: branch ? detailHrefWithParams(branch, "freight-worklist", { item: groupKey }) : winner.detailHref,
+      ledgerHref: branch ? detailHrefWithParams(branch, "freight-worklist", { item: groupKey }) : winner.ledgerHref
+    });
+    return display;
+  }
+
+  function groupFreightWorkItemRows(rows, branch) {
+    var grouped = {};
+    var groupOrder = [];
+    (rows || []).forEach(function (row) {
+      var key = freightRowGroupKey(row, branch);
+      if (!grouped[key]) {
+        grouped[key] = [];
+        groupOrder.push(key);
+      }
+      grouped[key].push(row);
+    });
+    return groupOrder.map(function (key) {
+      return summarizeFreightRowGroup(grouped[key], key, branch);
+    }).sort(freightSort);
   }
 
   function formatPlainNumber(value) {
@@ -3138,17 +3312,13 @@
     var clauses = [];
     var params = new URLSearchParams(window.location.search);
     var search = String(params.get("search") || "").trim();
-    var item = String(params.get("item") || "").trim();
     if (baseFilter) {
       clauses.push("(" + baseFilter + ")");
     }
     if (!(context && context.pageType === "detail" && context.viewKey === "freight-worklist")) {
       return clauses.join(" and ");
     }
-    if (item) {
-      clauses.push("(qfu_sourceid eq " + odataString(item) + ")");
-      return clauses.join(" and ");
-    }
+    // Grouped item links use synthetic keys, so fetch the branch scope and filter after grouping.
     if (search.length >= 3) {
       var searchValue = odataString(search);
       clauses.push("(" + [
@@ -3618,6 +3788,7 @@
       quoteArchiveRows: quoteArchiveRows,
       overdueQuoteRows: overdueQuoteRows,
       overdueBackorderRows: overdueBackorderRows,
+      analyticsBackorderRecords: backorders,
       unfollowedQuoteRows: unfollowedQuoteRows,
       unfollowedQuoteFootnote: unfollowedSelection.note,
       cssrLeaderboardRows: cssrLeaderboardRows,
@@ -4118,7 +4289,6 @@
     var context = runtimeContext();
     var isDetailPage = context.pageType === "detail";
     var detailViewKey = isDetailPage ? normalizeDetailViewKey(context.viewKey || "follow-up-queue") : "";
-    var authenticatedUser = portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]"));
     var routeRegionSlug = inferredRegionSlug(context);
     var needsOpsData = context.pageType === "ops";
     var needsRegionConfig = context.pageType === "hub" || context.pageType === "region" || needsOpsData;
@@ -4129,8 +4299,8 @@
     var needsFinanceVariances = context.pageType === "branch" || needsOpsData || (isDetailPage && detailViewKey === "analytics");
     var needsFinanceData = !isDetailPage || detailViewKey === "analytics";
     var needsDeliveryNotPgi = context.pageType === "branch" || needsOpsData || (isDetailPage && (detailViewKey === "ready-to-ship-not-pgid" || detailViewKey === "analytics"));
-    var needsFreightData = authenticatedUser && (context.pageType === "region" || context.pageType === "branch" || needsOpsData || (isDetailPage && detailViewKey === "freight-worklist"));
-    var needsSourceFeeds = needsOpsData || (authenticatedUser && (context.pageType === "branch" || (isDetailPage && detailViewKey === "freight-worklist")));
+    var needsFreightData = context.pageType === "region" || context.pageType === "branch" || needsOpsData || (isDetailPage && (detailViewKey === "freight-worklist" || detailViewKey === "analytics"));
+    var needsSourceFeeds = needsOpsData || context.pageType === "branch" || (isDetailPage && detailViewKey === "freight-worklist");
     var needsQuoteLineFallback = context.pageType === "region" || context.pageType === "branch" || (isDetailPage && detailViewKey === "quotes");
     var runtimeDiagnostics = createRuntimeDiagnostics();
     var scopedFilter = context.branchSlug
@@ -4178,7 +4348,7 @@
     var runtimeResultsPromise = cachedRuntimeResults ? Promise.resolve(cachedRuntimeResults) : Promise.all([
       needsQuoteData ? safeGetAll(withFilter("/_api/qfu_quotes?$select=qfu_quoteid,qfu_sourceid,qfu_quotenumber,qfu_customername,qfu_amount,qfu_assignedto,qfu_tsr,qfu_cssrname,qfu_nextfollowup,qfu_overduesince,qfu_lasttouchedon,qfu_priorityscore,qfu_status,qfu_sourcedate,qfu_sourceupdatedon,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,createdon,modifiedon&$top=" + QUOTES_FETCH_TOP, scopedFilter), "qfu_quotes", runtimeDiagnostics, { top: QUOTES_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsQuoteLineFallback ? safeGetAll(withFilter("/_api/qfu_quotelines?$select=qfu_quotelineid,qfu_quotenumber,qfu_amount,qfu_status,qfu_cssrname,qfu_tsr,qfu_tsrname,qfu_soldtopartyname,qfu_sourcedate,qfu_lastimportdate,qfu_branchcode,qfu_branchslug,qfu_regionslug,createdon,modifiedon&$top=2500", scopedFilter), "qfu_quotelines", runtimeDiagnostics, { top: 2500, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
-      needsBackorderData ? safeGetAll(withFilter("/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_qtyondelnotpgid,qfu_qtynotondel,qfu_reasonforrejection,qfu_sourceline,qfu_lineitemcreatedon,createdon,modifiedon&$top=" + BACKORDERS_FETCH_TOP, scopedFilter), "qfu_backorders", runtimeDiagnostics, { top: BACKORDERS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
+      needsBackorderData ? safeGetAll(withFilter("/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,qfu_accountmanagername,qfu_shipconddesc,qfu_delblockdesc,qfu_billblockdesc,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_qtyondelnotpgid,qfu_qtynotondel,qfu_reasonforrejection,qfu_sourceline,qfu_lineitemcreatedon,createdon,modifiedon&$top=" + BACKORDERS_FETCH_TOP, scopedFilter), "qfu_backorders", runtimeDiagnostics, { top: BACKORDERS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsBudgetData ? safeGetAll(withFilter("/_api/qfu_budgets?$select=qfu_budgetid,qfu_budgetname,qfu_actualsales,qfu_budgetgoal,qfu_lastupdated,qfu_cadsales,qfu_usdsales,qfu_month,qfu_monthname,qfu_year,qfu_fiscalyear,qfu_isactive,qfu_sourcefamily,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_opsdailycadjson,qfu_opsdailyusdjson,createdon&$top=" + BUDGETS_FETCH_TOP, scopedFilter), "qfu_budgets", runtimeDiagnostics, { top: BUDGETS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsBudgetData ? safeGetAll(withFilter("/_api/qfu_budgetarchives?$select=qfu_budgetarchiveid,qfu_name,qfu_sourceid,qfu_budgetgoal,qfu_actualsales,qfu_month,qfu_monthname,qfu_year,qfu_fiscalyear,qfu_lastupdated,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon,modifiedon&$top=" + BUDGET_ARCHIVES_FETCH_TOP, scopedFilter), "qfu_budgetarchives", runtimeDiagnostics, { top: BUDGET_ARCHIVES_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsBranchSummaries ? safeGetAll(withFilter("/_api/qfu_branchdailysummaries?$select=qfu_branchdailysummaryid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_summarydate,qfu_openquotes,qfu_overduequotes,qfu_duetoday,qfu_unscheduledold,qfu_openquotevalue,qfu_quoteslast30days,qfu_quoteswon30days,qfu_quoteslost30days,qfu_quotesopen30days,qfu_avgquotevalue30days,qfu_backordercount,qfu_overduebackordercount,qfu_currentmonthforecastvalue,qfu_currentmonthlatevalue,qfu_allbackordersvalue,qfu_overduebackordersvalue,qfu_budgetactual,qfu_budgettarget,qfu_budgetpace,qfu_cadsales,qfu_usdsales,qfu_lastcalculatedon,createdon&$top=" + BRANCH_SUMMARY_FETCH_TOP, scopedFilter), "qfu_branchdailysummaries", runtimeDiagnostics, { top: BRANCH_SUMMARY_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
@@ -4197,7 +4367,7 @@
         if (typeof sessionStorage !== "undefined") {
           sessionStorage.setItem(RUNTIME_CACHE_KEY, JSON.stringify({ ts: Date.now(), results: results }));
         }
-      } catch (cacheWriteErr) { /* quota or serialization issue ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ignore */ }
+      } catch (cacheWriteErr) { /* ignore cache quota or serialization failures */ }
       return results;
     });
 
@@ -4521,9 +4691,10 @@
               oldestRows: displayOrderRows.slice().sort(deliveryNotPgiOrderOldestSort).slice(0, 5)
             };
           })();
-          branch.workspace.freightRows = branchFreightRows.rows.map(function (record) {
+          branch.workspace.freightSourceRows = branchFreightRows.rows.map(function (record) {
             return buildFreightWorkItemRow(record, branch);
           }).sort(freightSort);
+          branch.workspace.freightRows = branch.workspace.freightSourceRows.slice().sort(freightSort);
           branch.workspace.freightFeedRows = sourceFeeds.filter(function (record) {
             return record.qfu_branchslug === branch.slug && String(record.qfu_sourcefamily || "").trim().toUpperCase().indexOf("FREIGHT_") === 0;
           });
@@ -4566,8 +4737,10 @@
               reviewCount: unresolvedRows.length,
               ledgerCount: ledgerRows.length,
               archivedCount: archivedRows.length,
+              sourceRowCount: branch.workspace.freightSourceRows.length,
+              groupedDuplicateCount: Math.max(0, branch.workspace.freightSourceRows.length - rows.length),
               highValueCount: highValueRows.length,
-              unownedCount: unresolvedRows.filter(function (row) { return !row.ownerName; }).length,
+              unownedCount: unresolvedRows.filter(function (row) { return !row.ownerName || row.hasUnownedMember; }).length,
               totalAmountValue: unresolvedRows.reduce(function (total, row) { return total + row.totalAmountNumber; }, 0),
               openRows: unresolvedRows,
               ledgerRows: ledgerRows,
@@ -5176,12 +5349,13 @@
 
     return '<div class="qfu-phase0-home-feed qfu-phase0-home-feed--freight">' + rows.map(function (row) {
       var href = detailFallbackHref || row.ledgerHref || row.detailHref || "#";
-      var label = row.invoiceNumber !== "-" ? row.invoiceNumber : (row.proNumber !== "-" ? row.proNumber : (row.trackingNumber !== "-" ? row.trackingNumber : (row.sourceId || "-")));
+      var label = freightPrimaryReferenceLabel(row);
+      var groupLabel = freightGroupCountLabel(row);
       var rowLabel = "Open freight ledger for " + label;
       var routeBits = [row.carrier, row.service, row.direction].filter(function (value) {
         return !!(value && value !== "-");
       });
-      return '<a class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--freight" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(rowLabel) + '"><div class="qfu-phase0-home-feed__main"><strong>' + escapeHtml(label) + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.owner || "Unowned") + ' | ' + escapeHtml(row.status || "Unreviewed") + '</div><div class="qfu-phase0-home-feed__submeta">' + escapeHtml((routeBits.length ? routeBits.join(" | ") : "-") + ' | Last ' + (row.lastActivityOn || row.lastSeenOn || "Not touched")) + '</div></div><div class="qfu-phase0-home-feed__metric is-money"><span>Total</span><strong>' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</strong></div></a>';
+      return '<a class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--freight" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(rowLabel) + '"><div class="qfu-phase0-home-feed__main"><strong>' + escapeHtml(label) + (groupLabel ? '<span class="qfu-phase0-home-feed__badge">' + escapeHtml(groupLabel) + '</span>' : '') + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.owner || "Unowned") + ' | ' + escapeHtml(row.statusSummary || row.status || "Unreviewed") + '</div><div class="qfu-phase0-home-feed__submeta">' + escapeHtml((routeBits.length ? routeBits.join(" | ") : "-") + ' | Last ' + (row.lastActivityOn || row.lastSeenOn || "Not touched")) + '</div></div><div class="qfu-phase0-home-feed__metric is-money"><span>Total</span><strong>' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</strong></div></a>';
     }).join("") + '</div>';
   }
 
@@ -5437,9 +5611,29 @@
       '.qfu-phase0-delivery-detail__stage .qfu-phase0-admin-input{background:#ffffff;border:0;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(15,23,42,0.08);min-height:39px;padding:0.48rem 0.68rem;}' +
       '.qfu-phase0-summary-table-shell--delivery-board{background:linear-gradient(180deg,rgba(240,244,246,0.98) 0%,rgba(236,240,242,0.98) 100%);border-radius:22px;box-shadow:inset 0 0 0 1px rgba(15,23,42,0.05);overflow:hidden;padding:0.48rem;}' +
       '.qfu-phase0-summary-table-shell--delivery-board .qfu-phase0-table-wrap{background:#ffffff;border-radius:18px;overflow:auto;}' +
-      '.qfu-phase0-summary-table--delivery-board{font-size:0.75rem;line-height:1.38;min-width:0;table-layout:fixed;width:100%;}' +
-      '.qfu-phase0-summary-table--delivery-board thead th{background:linear-gradient(180deg,rgba(13,148,136,0.07) 0%,rgba(100,116,139,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#607582;font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;}' +
-      '.qfu-phase0-summary-table--delivery-board tbody td{padding-bottom:0.82rem;padding-top:0.82rem;vertical-align:top;}' +
+      '.qfu-phase0-summary-table-shell--delivery-board .qfu-phase0-table-wrap{scrollbar-color:rgba(96,117,130,0.4) transparent;scrollbar-width:thin;}' +
+      '.qfu-phase0-summary-table--delivery-board{font-size:0.75rem;line-height:1.38;table-layout:fixed;}' +
+      '.qfu-phase0-summary-table--delivery-orders{min-width:1450px;width:1450px;}' +
+      '.qfu-phase0-summary-table--delivery-lines{min-width:1570px;width:1570px;}' +
+      '.qfu-phase0-summary-table--delivery-board thead th{background:linear-gradient(180deg,rgba(13,148,136,0.07) 0%,rgba(100,116,139,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#607582;font-size:0.64rem;font-weight:800;letter-spacing:0.035em;line-height:1.16;padding:0.7rem 0.55rem;text-transform:uppercase;white-space:normal;}' +
+      '.qfu-phase0-summary-table--delivery-board tbody td{overflow-wrap:anywhere;padding:0.82rem 0.55rem;vertical-align:top;word-break:normal;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__date{width:96px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__days{width:74px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__delivery{width:116px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__line{width:62px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__customer{width:174px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__material{width:106px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__description{width:180px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__qty{width:112px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__value{width:132px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__cssr{width:136px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__days-on-list{width:88px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__comment{width:232px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__updated{width:122px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__action{width:100px;}' +
+      '.qfu-phase0-summary-table--delivery-lines th.qfu-phase0-delivery-board__comment{width:190px;}' +
+      '.qfu-phase0-delivery-board__qty,.qfu-phase0-delivery-board__value,.qfu-phase0-delivery-board__days,.qfu-phase0-delivery-board__line,.qfu-phase0-delivery-board__updated,.qfu-phase0-summary-table--delivery-board .qfu-phase0-table__numeric{white-space:nowrap;}' +
+      '.qfu-phase0-delivery-board__description{color:#30424d;line-height:1.34;}' +
       '.qfu-phase0-summary-table--delivery-board tbody tr:nth-child(odd){background:rgba(248,250,251,0.84);}' +
       '.qfu-phase0-summary-table--delivery-board tbody tr:hover{background:rgba(237,243,246,0.95);}' +
       '.qfu-phase0-summary-table--delivery-board tbody tr.is-critical{background:rgba(255,241,236,0.9);}' +
@@ -5476,7 +5670,7 @@
       return '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(emptyTitle) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy) + "</p></div>";
     }
 
-    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Lines</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Order Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th><th>Action</th></tr></thead><tbody>' + rows.map(function (row) {
+    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board qfu-phase0-summary-table--delivery-orders"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Lines</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Order Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th><th class="qfu-phase0-delivery-board__action">Action</th></tr></thead><tbody>' + rows.map(function (row) {
       var params = activeDeliveryNotPgiFilterParams(filters);
       params.order = row.deliveryNumber;
       var viewLinesHref = detailHrefWithParams(branch, "ready-to-ship-not-pgid", params);
@@ -5491,7 +5685,7 @@
       return '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(emptyTitle) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy) + "</p></div>";
     }
 
-    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Line</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__material">Material</th><th class="qfu-phase0-delivery-board__description">Description</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Current Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th></tr></thead><tbody>' + rows.map(function (row) {
+    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board qfu-phase0-summary-table--delivery-lines"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Line</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__material">Material</th><th class="qfu-phase0-delivery-board__description">Description</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Current Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th></tr></thead><tbody>' + rows.map(function (row) {
       var rowTone = deliveryLateTone(row.daysLateNumber);
       return '<tr class="is-' + escapeHtml(rowTone) + '"><td><div class="qfu-phase0-delivery-board__date-stack"><strong>' + escapeHtml(row.onTimeDate) + '</strong><div class="qfu-phase0-admin-subtext">due date</div></div></td><td>' + renderDeliveryAgeChip(row.daysLate + 'd', rowTone) + '</td><td class="qfu-phase0-delivery-board__order"><strong>' + escapeHtml(row.deliveryNumber) + '</strong></td><td><strong>' + escapeHtml(row.line) + '</strong></td><td class="qfu-phase0-delivery-board__customer"><strong>' + escapeHtml(row.customer) + '</strong></td><td class="qfu-phase0-delivery-board__material"><strong>' + escapeHtml(row.material) + '</strong></td><td class="qfu-phase0-delivery-board__description">' + escapeHtml(row.description) + '</td><td>' + escapeHtml(formatPlainNumber(row.qtyOnDeliveryNotPgidNumber)) + '</td><td class="qfu-phase0-table__numeric"><strong>' + escapeHtml(row.unshippedValue) + '</strong></td><td class="qfu-phase0-delivery-board__cssr"><strong>' + escapeHtml(row.cssr) + '</strong></td><td>' + renderDeliveryAgeChip(row.daysOnList + 'd', row.daysOnListNumber >= 8 ? 'warning' : 'steady') + '</td><td>' + escapeHtml(row.comment || "No comment yet") + '</td><td class="qfu-phase0-delivery-board__updated"><strong>' + escapeHtml(row.commentUpdatedOn) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.commentUpdatedByName) + '</div></td></tr>';
     }).join("") + "</tbody></table></div></div>";
@@ -5800,21 +5994,23 @@
 
   function uniqueFreightValues(rows, selector) {
     var seen = {};
-    return (rows || []).map(function (row) {
-      return typeof selector === "function" ? selector(row) : row[selector];
-    }).map(function (value) {
-      return String(value || "").trim();
-    }).filter(function (value) {
-      if (!value) {
-        return false;
-      }
-      var key = value.toLowerCase();
-      if (seen[key]) {
-        return false;
-      }
-      seen[key] = true;
-      return true;
-    }).sort(function (left, right) {
+    var values = [];
+    (rows || []).forEach(function (row) {
+      var selected = typeof selector === "function" ? selector(row) : row[selector];
+      (Array.isArray(selected) ? selected : [selected]).forEach(function (value) {
+        var text = String(value || "").trim();
+        if (!text) {
+          return;
+        }
+        var key = text.toLowerCase();
+        if (seen[key]) {
+          return;
+        }
+        seen[key] = true;
+        values.push(text);
+      });
+    });
+    return values.sort(function (left, right) {
       return String(left || "").localeCompare(String(right || ""));
     });
   }
@@ -5833,15 +6029,11 @@
       if (filters.carrier && row.carrier !== filters.carrier) {
         return false;
       }
-      if (filters.status && row.status !== filters.status) {
+      if (filters.status && (row.statusFilterValues || [row.status]).indexOf(filters.status) === -1) {
         return false;
       }
       if (filters.owner) {
-        if (filters.owner === "Unowned") {
-          if (row.ownerName) {
-            return false;
-          }
-        } else if (row.owner !== filters.owner) {
+        if ((row.ownerFilterValues || [row.ownerName ? row.owner : "Unowned"]).indexOf(filters.owner) === -1) {
           return false;
         }
       }
@@ -5875,7 +6067,7 @@
       if (search && row.searchText.indexOf(search) === -1) {
         return false;
       }
-      if (filters.item && row.sourceId !== filters.item) {
+      if (filters.item && row.sourceId !== filters.item && row.freightGroupKey !== filters.item && (row.groupSourceIds || []).indexOf(filters.item) === -1) {
         return false;
       }
       return true;
@@ -5897,7 +6089,10 @@
       { label: "Tracking", value: function (row) { return row.trackingNumber; } },
       { label: "PRO", value: function (row) { return row.proNumber; } },
       { label: "Invoice", value: function (row) { return row.invoiceNumber; } },
+      { label: "Control", value: function (row) { return row.controlNumber; } },
       { label: "Reference", value: function (row) { return row.reference; } },
+      { label: "Source Row Count", value: function (row) { return String(Math.max(1, parseInteger(row.groupCount, 1))); } },
+      { label: "Source IDs", value: function (row) { return (row.groupSourceIds || [row.sourceId]).join(" | "); } },
       { label: "Sender", value: function (row) { return row.sender; } },
       { label: "Destination", value: function (row) { return row.destination; } },
       { label: "Service", value: function (row) { return row.service; } },
@@ -5964,19 +6159,20 @@
 
   function renderFreightHero(branch, freight, latestImportRow, latestImportSummary, filteredRows, totalFilteredAmount) {
     var reviewRows = filteredRows.filter(function (row) { return row.actionable && !row.archived; });
-    var unownedRows = filteredRows.filter(function (row) { return !row.ownerName && !row.archived; });
+    var unownedRows = filteredRows.filter(function (row) { return (!row.ownerName || row.hasUnownedMember) && !row.archived; });
     var highValueRows = filteredRows.filter(function (row) { return row.highValue && !row.archived; });
+    var ledgerSourceRows = freightGroupedRowCount(filteredRows);
     var health = freightQueueHealthState(freight, latestImportRow);
     var metrics = [
       {
         label: "Value",
         value: formatCompactCurrency(totalFilteredAmount),
-        note: String(filteredRows.length) + " bills"
+        note: String(filteredRows.length) + " ledger entries" + (ledgerSourceRows > filteredRows.length ? (" / " + String(ledgerSourceRows) + " source rows") : "")
       },
       {
         label: "Needs Review",
         value: String(reviewRows.length),
-        note: "unresolved"
+        note: "unresolved entries"
       },
       {
         label: "Unowned",
@@ -6013,8 +6209,8 @@
 
   function renderFreightToolbar(branch, filters, filteredRows, allRows) {
     var carrierOptions = uniqueFreightValues(allRows, function (row) { return row.carrier; });
-    var statusOptions = uniqueFreightValues(allRows, function (row) { return row.status; });
-    var ownerOptions = uniqueFreightValues(allRows, function (row) { return row.ownerName || "Unowned"; });
+    var statusOptions = uniqueFreightValues(allRows, function (row) { return row.statusFilterValues || row.status; });
+    var ownerOptions = uniqueFreightValues(allRows, function (row) { return row.ownerFilterValues || (row.ownerName || "Unowned"); });
     var billTypeOptions = uniqueFreightValues(allRows, function (row) { return row.billType; });
     var serviceOptions = uniqueFreightValues(allRows, function (row) { return row.service; });
     var directionOptions = uniqueFreightValues(allRows, function (row) { return row.direction; });
@@ -6037,7 +6233,7 @@
     if (filters.search) { chips.push(buildFilterChip("Search", filters.search)); }
     return '<form class="qfu-phase0-delivery-toolbar qfu-phase0-freight-toolbar" method="get" action="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">' +
       '<input type="hidden" name="view" value="freight-worklist" />' +
-      '<div class="qfu-phase0-freight-toolbar__hero"><div class="qfu-phase0-freight-toolbar__copy"><span class="qfu-phase0-panel__eyebrow">Ledger filters</span><strong>Filter the ledger</strong><p>Carrier, owner, status, amount, date range, and text search keep the freight bill investigation tight.</p></div><div class="qfu-phase0-freight-toolbar__actions"><div class="qfu-phase0-delivery-toolbar__chips">' + chips.join("") + (!hasExtraFilters ? '<span class="qfu-phase0-admin-subtext">Default sort is highest value first. Switch to newest or oldest using invoice date, ship date, or last activity.</span>' : '') + '</div><div class="qfu-phase0-delivery-toolbar__buttons"><button class="qfu-phase0-action" type="submit">Apply</button><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">Clear</a><button class="qfu-phase0-secondary-action" type="button" data-qfu-copy-freight-list="1">Copy List</button><button class="qfu-phase0-secondary-action" type="button" data-qfu-export-freight-csv="1">Export CSV</button></div></div></div>' +
+      '<div class="qfu-phase0-freight-toolbar__hero"><div class="qfu-phase0-freight-toolbar__copy"><span class="qfu-phase0-panel__eyebrow">Ledger filters</span><strong>Filter the ledger</strong><p>Carrier, owner, status, amount, date range, and text search keep the shipment-level freight investigation tight.</p></div><div class="qfu-phase0-freight-toolbar__actions"><div class="qfu-phase0-delivery-toolbar__chips">' + chips.join("") + (!hasExtraFilters ? '<span class="qfu-phase0-admin-subtext">Default sort is highest value first. Switch to newest or oldest using invoice date, ship date, or last activity.</span>' : '') + '</div><div class="qfu-phase0-delivery-toolbar__buttons"><button class="qfu-phase0-action" type="submit">Apply</button><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">Clear</a><button class="qfu-phase0-secondary-action" type="button" data-qfu-copy-freight-list="1">Copy List</button><button class="qfu-phase0-secondary-action" type="button" data-qfu-export-freight-csv="1">Export CSV</button></div></div></div>' +
       '<div class="qfu-phase0-delivery-toolbar__filters">' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Sort</span><select class="qfu-phase0-admin-input" name="sort">' + renderFreightSortOptions(filters.sort) + '</select></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Date Field</span><select class="qfu-phase0-admin-input" name="dateField">' + renderFreightDateFieldOptions(filters.dateField) + '</select></label>' +
@@ -6051,10 +6247,10 @@
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Max $</span><input class="qfu-phase0-admin-input" name="maxAmount" value="' + escapeHtml(filters.maxAmount || "") + '" inputmode="decimal" /></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Date From</span><input class="qfu-phase0-admin-input" type="date" name="dateFrom" value="' + escapeHtml(filters.dateFrom || "") + '" /></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Date To</span><input class="qfu-phase0-admin-input" type="date" name="dateTo" value="' + escapeHtml(filters.dateTo || "") + '" /></label>' +
-      '<label class="qfu-phase0-delivery-toolbar__field qfu-phase0-delivery-toolbar__field--wide"><span>Search</span><input class="qfu-phase0-admin-input" name="search" value="' + escapeHtml(filters.search || "") + '" placeholder="Tracking, PRO, invoice, reference, sender, destination" /></label>' +
+      '<label class="qfu-phase0-delivery-toolbar__field qfu-phase0-delivery-toolbar__field--wide"><span>Search</span><input class="qfu-phase0-admin-input" name="search" value="' + escapeHtml(filters.search || "") + '" placeholder="Tracking, PRO, invoice, control, reference, sender, destination" /></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field qfu-phase0-freight-toolbar__toggle"><span>Archived</span><label class="qfu-phase0-admin-checkbox"><input type="checkbox" name="archived" value="1"' + checkedAttr(filters.includeArchived) + ' /><span>Include archived</span></label></label>' +
       '</div>' +
-      '<div class="qfu-phase0-summary-foot qfu-phase0-freight-toolbar__foot">' + escapeHtml(String(filteredRows.length) + " matching bills | Sort " + sortLabel + " | Date field " + dateFieldLabel + " | High value threshold $" + FREIGHT_HIGH_VALUE_THRESHOLD.toFixed(0) + " | Closed / No Action rows auto-archive after " + FREIGHT_ARCHIVE_AFTER_DAYS + " idle days") + '</div>' +
+      '<div class="qfu-phase0-summary-foot qfu-phase0-freight-toolbar__foot">' + escapeHtml(String(filteredRows.length) + " matching ledger entries" + (freightGroupedRowCount(filteredRows) > filteredRows.length ? (" from " + String(freightGroupedRowCount(filteredRows)) + " source rows") : "") + " | Sort " + sortLabel + " | Date field " + dateFieldLabel + " | High value threshold $" + FREIGHT_HIGH_VALUE_THRESHOLD.toFixed(0) + " | Closed / No Action rows auto-archive after " + FREIGHT_ARCHIVE_AFTER_DAYS + " idle days") + '</div>' +
       '</form>';
   }
 
@@ -6063,11 +6259,26 @@
       return '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(emptyTitle) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy) + '</p></div>';
     }
 
-    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--freight"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--freight"><thead><tr><th>Status / Owner</th><th>Carrier / Route</th><th>Tracking / Invoice</th><th>Shipment Dates</th><th>Total / Charges</th><th>Activity</th><th>Workbench</th></tr></thead><tbody>' + rows.map(function (row) {
-      var highlighted = highlightedSourceId && row.sourceId === highlightedSourceId;
+    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--freight"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--freight"><thead><tr><th>Status / Owner</th><th>Carrier / Route</th><th>Shipment IDs</th><th>Shipment Dates</th><th>Total / Charges</th><th>Activity</th><th>Workbench</th></tr></thead><tbody>' + rows.map(function (row) {
+      var highlighted = highlightedSourceId && (row.sourceId === highlightedSourceId || row.freightGroupKey === highlightedSourceId || (row.groupSourceIds || []).indexOf(highlightedSourceId) >= 0);
+      var groupCountLabel = freightGroupCountLabel(row);
+      var actionRecordIds = ((row.groupRecordIds && row.groupRecordIds.length) ? row.groupRecordIds : [row.id]).join(",");
+      var primaryReference = freightPrimaryReferenceLabel(row);
+      var ownerSubtext = row.groupCount > 1 ? (row.ownerSummary || "Multiple source rows") : (row.ownerName ? ('Claimed ' + row.claimedOn) : 'Unowned');
+      var groupDetailsMarkup = row.groupCount > 1
+        ? '<div class="qfu-phase0-freight-group-detail">' + (row.groupedRows || []).map(function (item, index) {
+          return '<div class="qfu-phase0-freight-group-detail__row"><strong>' + escapeHtml(String(index + 1) + ". " + freightPrimaryReferenceLabel(item)) + '</strong><span>' + escapeHtml((item.owner || "Unowned") + " | " + (item.status || "Unreviewed") + " | Source Id: " + (item.sourceId || "-")) + '</span></div>';
+        }).join("") + '</div>'
+        : "";
+      var workbenchStatusText = row.groupCount > 1
+        ? (groupCountLabel + "; updates apply to every source row in this entry")
+        : (row.archived ? ('Archived ' + row.archivedOn) : 'Visible in active ledger');
       var badges = [
         '<span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(freightStatusTone(row.statusKey)) + '">' + escapeHtml(row.status) + '</span>'
       ];
+      if (groupCountLabel) {
+        badges.push('<span class="qfu-phase0-pill qfu-phase0-pill--info">' + escapeHtml(groupCountLabel) + '</span>');
+      }
       if (row.highValue) {
         badges.push('<span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(freightPriorityTone(row.priorityKey)) + '">High Value</span>');
       }
@@ -6081,7 +6292,7 @@
       if (row.highValue && !row.archived) {
         rowClasses.push("is-high-value");
       }
-      if (!row.ownerName && !row.archived) {
+      if ((!row.ownerName || row.hasUnownedMember) && !row.archived) {
         rowClasses.push("is-unowned");
       }
       if (row.archived) {
@@ -6090,7 +6301,7 @@
       if (row.actionable) {
         rowClasses.push("is-actionable");
       }
-      return '<tr data-qfu-freight-row="' + escapeHtml(row.id) + '"' + (rowClasses.length ? ' class="' + escapeHtml(rowClasses.join(" ")) + '"' : "") + '><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--status"><div class="qfu-phase0-summary-pills">' + badges.join("") + '</div><div class="qfu-phase0-freight-owner"><span class="qfu-phase0-freight-owner__avatar">' + escapeHtml(row.ownerInitials) + '</span><div><strong>' + escapeHtml(row.owner) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.ownerName ? ('Claimed ' + row.claimedOn) : 'Unowned') + '</div></div></div><div class="qfu-phase0-admin-subtext">Priority ' + escapeHtml(row.priorityBand) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--route"><strong>' + escapeHtml(row.carrier) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.direction + ' | ' + row.billType + ' | Zone ' + row.zone) + '</div><div class="qfu-phase0-freight-route"><span>' + escapeHtml(row.sender) + '</span><span class="qfu-phase0-freight-route__arrow">to</span><span>' + escapeHtml(row.destination) + '</span></div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--ids"><strong>' + escapeHtml(row.trackingNumber) + '</strong><div class="qfu-phase0-admin-subtext">PRO ' + escapeHtml(row.proNumber) + '</div><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceNumber) + '</div><div class="qfu-phase0-admin-subtext">Ref ' + escapeHtml(row.reference) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--dates"><strong>Ship ' + escapeHtml(row.shipDate) + '</strong><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceDate) + ' | Close ' + escapeHtml(row.closeDate) + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.service + (row.serviceCode && row.serviceCode !== "-" ? ' (' + row.serviceCode + ')' : '')) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--money"><strong class="qfu-phase0-freight-cell__amount">' + escapeHtml(row.totalAmount) + '</strong><div class="qfu-phase0-admin-subtext">Freight ' + escapeHtml(row.freightAmount) + ' | Accessorials ' + escapeHtml(row.accessorialAmount) + '</div><div class="qfu-phase0-admin-subtext">Savings ' + escapeHtml(row.unrealizedSavings) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--activity"><strong>' + escapeHtml(row.lastActivityOn) + '</strong><div class="qfu-phase0-admin-subtext">Last seen ' + escapeHtml(row.lastSeenOn) + '</div><div class="qfu-phase0-admin-subtext">Comment ' + escapeHtml(row.commentUpdatedOn) + ' by ' + escapeHtml(row.commentUpdatedByName) + '</div></div></td><td><div class="qfu-phase0-freight-workbench"><label class="qfu-phase0-delivery-toolbar__field"><span>Status</span><select class="qfu-phase0-admin-input" data-qfu-freight-status-select data-original-value="' + escapeHtml(row.status) + '">' + renderFreightStatusOptions(row.status) + '</select></label><label class="qfu-phase0-delivery-toolbar__field"><span>Note</span><textarea class="qfu-phase0-admin-input qfu-phase0-admin-input--memo" rows="2" data-qfu-freight-comment data-original-value="' + escapeHtml(row.comment || "") + '">' + escapeHtml(row.comment || "") + '</textarea></label><div class="qfu-phase0-freight-workbench__actions"><button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary" type="button" data-qfu-save-freight="' + escapeHtml(row.id) + '" disabled>Save</button>' + (row.ownerName ? '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--secondary" type="button" data-qfu-release-freight="' + escapeHtml(row.id) + '">Release</button>' : '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary-soft" type="button" data-qfu-take-freight="' + escapeHtml(row.id) + '">Claim</button>') + '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--ghost" type="button" data-qfu-toggle-freight-archive="' + escapeHtml(row.id) + '" data-qfu-archive-state="' + escapeHtml(row.archived ? "1" : "0") + '">' + escapeHtml(row.archived ? "Unarchive" : "Archive") + '</button></div><div class="qfu-phase0-freight-workbench__statusline"><span class="qfu-phase0-freight-status-message" data-qfu-freight-status-message>' + escapeHtml(row.archived ? ('Archived ' + row.archivedOn) : 'Visible in active ledger') + '</span><span class="qfu-phase0-freight-dirty" data-qfu-freight-dirty hidden>Unsaved changes</span></div><details class="qfu-phase0-ledger-drawer"><summary class="qfu-phase0-ledger-drawer__summary"><strong>Row details</strong><span class="qfu-phase0-ledger-drawer__hint">source / debug</span></summary><div class="qfu-phase0-ledger-drawer__body"><div class="qfu-phase0-admin-subtext">Source Id: ' + escapeHtml(row.sourceId) + '</div><div class="qfu-phase0-admin-subtext">Branch import batch: ' + escapeHtml(row.record.qfu_importbatchid || "None") + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.chargebreakdowntext || "No charge breakdown text") + '</div><div class="qfu-phase0-actions"><a class="qfu-phase0-secondary-action" href="' + escapeHtml(row.detailHref || detailHref(branch, "freight-worklist")) + '">Link to This Row</a></div></div></details></div></td></tr>';
+      return '<tr data-qfu-freight-row="' + escapeHtml(actionRecordIds) + '"' + (rowClasses.length ? ' class="' + escapeHtml(rowClasses.join(" ")) + '"' : "") + '><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--status"><div class="qfu-phase0-summary-pills">' + badges.join("") + '</div><div class="qfu-phase0-freight-owner"><span class="qfu-phase0-freight-owner__avatar">' + escapeHtml(row.ownerInitials) + '</span><div><strong>' + escapeHtml(row.owner) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(ownerSubtext) + '</div></div></div><div class="qfu-phase0-admin-subtext">Priority ' + escapeHtml(row.priorityBand) + (row.statusSummary && row.statusSummary !== row.status ? (' | Statuses ' + escapeHtml(row.statusSummary)) : '') + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--route"><strong>' + escapeHtml(row.carrier) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.direction + ' | ' + row.billType + ' | Zone ' + row.zone) + '</div><div class="qfu-phase0-freight-route"><span>' + escapeHtml(row.sender) + '</span><span class="qfu-phase0-freight-route__arrow">to</span><span>' + escapeHtml(row.destination) + '</span></div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--ids"><strong>' + escapeHtml(primaryReference) + '</strong><div class="qfu-phase0-admin-subtext">Track ' + escapeHtml(row.trackingNumber) + ' | PRO ' + escapeHtml(row.proNumber) + '</div><div class="qfu-phase0-admin-subtext">Ref ' + escapeHtml(row.reference) + '</div><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceNumber) + ' | Control ' + escapeHtml(row.controlNumber) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--dates"><strong>Ship ' + escapeHtml(row.shipDate) + '</strong><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceDate) + ' | Close ' + escapeHtml(row.closeDate) + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.service + (row.serviceCode && row.serviceCode !== "-" ? ' (' + row.serviceCode + ')' : '')) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--money"><strong class="qfu-phase0-freight-cell__amount">' + escapeHtml(row.totalAmount) + '</strong><div class="qfu-phase0-admin-subtext">Freight ' + escapeHtml(row.freightAmount) + ' | Accessorials ' + escapeHtml(row.accessorialAmount) + '</div><div class="qfu-phase0-admin-subtext">Savings ' + escapeHtml(row.unrealizedSavings) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--activity"><strong>' + escapeHtml(row.lastActivityOn) + '</strong><div class="qfu-phase0-admin-subtext">Last seen ' + escapeHtml(row.lastSeenOn) + '</div><div class="qfu-phase0-admin-subtext">Comment ' + escapeHtml(row.commentUpdatedOn) + ' by ' + escapeHtml(row.commentUpdatedByName) + '</div></div></td><td><div class="qfu-phase0-freight-workbench"><label class="qfu-phase0-delivery-toolbar__field"><span>Status</span><select class="qfu-phase0-admin-input" data-qfu-freight-status-select data-original-value="' + escapeHtml(row.status) + '">' + renderFreightStatusOptions(row.status) + '</select></label><label class="qfu-phase0-delivery-toolbar__field"><span>Note</span><textarea class="qfu-phase0-admin-input qfu-phase0-admin-input--memo" rows="2" data-qfu-freight-comment data-original-value="' + escapeHtml(row.comment || "") + '">' + escapeHtml(row.comment || "") + '</textarea></label><div class="qfu-phase0-freight-workbench__actions"><button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary" type="button" data-qfu-save-freight="' + escapeHtml(actionRecordIds) + '" disabled>Save</button>' + (row.ownerName ? '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--secondary" type="button" data-qfu-release-freight="' + escapeHtml(actionRecordIds) + '">Release</button>' : '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary-soft" type="button" data-qfu-take-freight="' + escapeHtml(actionRecordIds) + '">Claim</button>') + '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--ghost" type="button" data-qfu-toggle-freight-archive="' + escapeHtml(actionRecordIds) + '" data-qfu-archive-state="' + escapeHtml(row.archived ? "1" : "0") + '">' + escapeHtml(row.archived ? "Unarchive" : "Archive") + '</button></div><div class="qfu-phase0-freight-workbench__statusline"><span class="qfu-phase0-freight-status-message" data-qfu-freight-status-message>' + escapeHtml(workbenchStatusText) + '</span><span class="qfu-phase0-freight-dirty" data-qfu-freight-dirty hidden>Unsaved changes</span></div><details class="qfu-phase0-ledger-drawer"><summary class="qfu-phase0-ledger-drawer__summary"><strong>Row details</strong><span class="qfu-phase0-ledger-drawer__hint">' + escapeHtml(row.groupCount > 1 ? "entry sources" : "source / debug") + '</span></summary><div class="qfu-phase0-ledger-drawer__body">' + groupDetailsMarkup + '<div class="qfu-phase0-admin-subtext">Source Id: ' + escapeHtml(row.sourceId) + '</div><div class="qfu-phase0-admin-subtext">Branch import batch: ' + escapeHtml(row.record.qfu_importbatchid || "None") + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.chargebreakdowntext || "No charge breakdown text") + '</div><div class="qfu-phase0-actions"><a class="qfu-phase0-secondary-action" href="' + escapeHtml(row.detailHref || detailHref(branch, "freight-worklist")) + '">Link to This Entry</a></div></div></details></div></td></tr>';
     }).join("") + '</tbody></table></div></div>';
   }
 
@@ -6118,13 +6329,35 @@
     }
   }
 
+  function freightActionRecordIds(value) {
+    var seen = {};
+    return String(value || "").split(",").map(function (part) {
+      return part.trim();
+    }).filter(function (part) {
+      if (!part || seen[part]) {
+        return false;
+      }
+      seen[part] = true;
+      return true;
+    });
+  }
+
+  async function patchFreightActionRecords(recordIds, payload) {
+    var ids = freightActionRecordIds(recordIds);
+    var index;
+    for (index = 0; index < ids.length; index += 1) {
+      await patchRecord("qfu_freightworkitems", ids[index], payload);
+    }
+    return ids.length;
+  }
+
   async function saveFreightRow(root, button) {
     var row = button.closest("[data-qfu-freight-row]");
     var recordId = button.getAttribute("data-qfu-save-freight");
     var note = row ? row.querySelector("[data-qfu-freight-comment]") : null;
     var statusSelect = row ? row.querySelector("[data-qfu-freight-status-select]") : null;
     var status = row ? row.querySelector("[data-qfu-freight-status-message]") : null;
-    if (!row || !recordId || !note || !statusSelect) {
+    if (!row || !recordId || !freightActionRecordIds(recordId).length || !note || !statusSelect) {
       return;
     }
 
@@ -6138,52 +6371,52 @@
     if (status) {
       status.textContent = "Saving...";
     }
-    await patchRecord("qfu_freightworkitems", recordId, payload);
-    await rerenderAfterSave(root, "success", "Freight row updated.");
+    var updatedCount = await patchFreightActionRecords(recordId, payload);
+    await rerenderAfterSave(root, "success", updatedCount > 1 ? "Freight group updated." : "Freight row updated.");
   }
 
   async function takeFreightOwnership(root, button) {
     var recordId = button.getAttribute("data-qfu-take-freight");
-    if (!recordId) {
+    if (!freightActionRecordIds(recordId).length) {
       return;
     }
     var now = new Date().toISOString();
     var userName = currentPortalUserName(root);
-    await patchRecord("qfu_freightworkitems", recordId, {
+    var updatedCount = await patchFreightActionRecords(recordId, {
       qfu_ownername: userName,
       qfu_owneridentifier: userName,
       qfu_claimedon: now,
       qfu_lastactivityon: now
     });
-    await rerenderAfterSave(root, "success", "Freight row claimed.");
+    await rerenderAfterSave(root, "success", updatedCount > 1 ? "Freight group claimed." : "Freight row claimed.");
   }
 
   async function releaseFreightOwnership(root, button) {
     var recordId = button.getAttribute("data-qfu-release-freight");
-    if (!recordId) {
+    if (!freightActionRecordIds(recordId).length) {
       return;
     }
-    await patchRecord("qfu_freightworkitems", recordId, {
+    var updatedCount = await patchFreightActionRecords(recordId, {
       qfu_ownername: "",
       qfu_owneridentifier: "",
       qfu_claimedon: null,
       qfu_lastactivityon: new Date().toISOString()
     });
-    await rerenderAfterSave(root, "success", "Freight ownership released.");
+    await rerenderAfterSave(root, "success", updatedCount > 1 ? "Freight group ownership released." : "Freight ownership released.");
   }
 
   async function toggleFreightArchive(root, button) {
     var recordId = button.getAttribute("data-qfu-toggle-freight-archive");
     var archiveState = button.getAttribute("data-qfu-archive-state") === "1";
-    if (!recordId) {
+    if (!freightActionRecordIds(recordId).length) {
       return;
     }
-    await patchRecord("qfu_freightworkitems", recordId, {
+    var updatedCount = await patchFreightActionRecords(recordId, {
       qfu_isarchived: !archiveState,
       qfu_archivedon: archiveState ? null : new Date().toISOString(),
       qfu_lastactivityon: new Date().toISOString()
     });
-    await rerenderAfterSave(root, "success", archiveState ? "Freight row restored to the active queue." : "Freight row archived.");
+    await rerenderAfterSave(root, "success", archiveState ? (updatedCount > 1 ? "Freight group restored to the active queue." : "Freight row restored to the active queue.") : (updatedCount > 1 ? "Freight group archived." : "Freight row archived."));
   }
 
   function bindFreightWorklistActions(root, branch) {
@@ -6437,12 +6670,16 @@
       return '<div class="qfu-phase0-empty-state"><strong>No Live Data Yet</strong><p class="qfu-phase0-empty-copy">No low or negative margin rows are available for the live Southern Alberta branches.</p></div>';
     }
     return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--regional-exceptions"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--regional-margins"><thead><tr><th>Branch</th><th>Type</th><th>Billing Date</th><th>Billing Doc</th><th>Customer</th><th>CSSR</th><th class="qfu-phase0-table__numeric">Margin Sold At</th></tr></thead><tbody>' + rows.map(function (row) {
-      return '<tr><td class="qfu-phase0-region-exception__branch"><span class="qfu-phase0-region-branch-tag">' + escapeHtml(row.branchCode) + '</span></td><td class="qfu-phase0-region-exception__type">' + renderMarginBadge(row.reviewType, row.tone) + '</td><td class="qfu-phase0-region-exception__billing-date">' + escapeHtml(row.billingDate || "-") + '</td><td class="qfu-phase0-region-exception__document"><strong>' + escapeHtml(row.document) + '</strong></td><td class="qfu-phase0-region-exception__customer"><strong>' + escapeHtml(row.customer) + '</strong></td><td class="qfu-phase0-region-exception__cssr">' + escapeHtml(row.cssr) + '</td><td class="qfu-phase0-table__numeric qfu-phase0-region-exception__margin">' + escapeHtml(row.marginPct) + '</td></tr>';
+      var href = row.href || "";
+      var linkLabel = "Open branch " + (row.branchCode || "") + " analytics margin exceptions";
+      var linkStart = href ? '<a class="qfu-phase0-region-exception__cell-link" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(linkLabel) + '">' : "";
+      var linkEnd = href ? "</a>" : "";
+      return '<tr class="qfu-phase0-region-exception__row' + (href ? ' is-link' : '') + '"' + (href ? ' data-qfu-dashboard-href="' + escapeHtml(href) + '"' : '') + '><td class="qfu-phase0-region-exception__branch">' + linkStart + '<span class="qfu-phase0-region-branch-tag">' + escapeHtml(row.branchCode) + '</span>' + linkEnd + '</td><td class="qfu-phase0-region-exception__type">' + linkStart + renderMarginBadge(row.reviewType, row.tone) + linkEnd + '</td><td class="qfu-phase0-region-exception__billing-date">' + linkStart + escapeHtml(row.billingDate || "-") + linkEnd + '</td><td class="qfu-phase0-region-exception__document">' + linkStart + '<strong>' + escapeHtml(row.document) + '</strong>' + linkEnd + '</td><td class="qfu-phase0-region-exception__customer">' + linkStart + '<strong>' + escapeHtml(row.customer) + '</strong>' + linkEnd + '</td><td class="qfu-phase0-region-exception__cssr">' + linkStart + escapeHtml(row.cssr) + linkEnd + '</td><td class="qfu-phase0-table__numeric qfu-phase0-region-exception__margin">' + linkStart + escapeHtml(row.marginPct) + linkEnd + '</td></tr>';
     }).join("") + "</tbody></table></div>";
   }
 
   function renderRegionExceptionsWorkbench(rows) {
-    return '<section class="qfu-phase0-region-support-panel qfu-phase0-region-support-panel--exceptions"><div class="qfu-phase0-region-support-panel__header"><div class="qfu-phase0-region-support-panel__copy"><div class="qfu-phase0-region-support-panel__eyebrow">Low + negative margin only</div><h2 class="qfu-phase0-region-support-panel__title">Regional exceptions</h2><p class="qfu-phase0-region-support-panel__note">Exception rows stay presented as an operational reading table instead of a generic grid, so branch, customer, owner, and margin tone are easier to scan at a glance.</p></div><div class="qfu-phase0-region-support-panel__meta"><span>' + escapeHtml(String(rows.length)) + ' rows</span><span>Live Southern Alberta slice</span></div></div>' + renderRegionMarginExceptionTable(rows) + '<div class="qfu-phase0-summary-foot">Top ' + escapeHtml(String(Math.min(rows.length, 8))) + ' current low and negative margin rows across 4171, 4172, and 4173.</div></section>';
+    return '<section class="qfu-phase0-region-support-panel qfu-phase0-region-support-panel--exceptions"><div class="qfu-phase0-region-support-panel__header"><div class="qfu-phase0-region-support-panel__copy"><div class="qfu-phase0-region-support-panel__eyebrow">Low + negative margin only</div><h2 class="qfu-phase0-region-support-panel__title">Regional exceptions</h2><p class="qfu-phase0-region-support-panel__note">Exception rows stay presented as an operational reading table instead of a generic grid, so branch, customer, owner, and margin tone are easier to scan at a glance.</p></div><div class="qfu-phase0-region-support-panel__meta"><span>' + escapeHtml(String(rows.length)) + ' rows</span><span>Live Southern Alberta slice</span></div></div>' + renderRegionMarginExceptionTable(rows) + '<div class="qfu-phase0-summary-foot">Top ' + escapeHtml(String(Math.min(rows.length, 8))) + ' current low and negative margin rows across 4171, 4172, and 4173. Click any exception row to open that branch analytics page filtered to abnormal margins.</div></section>';
   }
 
   function renderRegionalCssrWorkbench(rows) {
@@ -6887,7 +7124,8 @@
     return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--freight-review"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--freight-review"><thead><tr>' +
       (includeBranch ? '<th>Branch</th>' : '') +
       '<th>Invoice / PRO</th><th>Carrier / Route</th><th>Status / Owner</th><th>Last Activity</th><th class="qfu-phase0-table__numeric">Total</th></tr></thead><tbody>' + rows.map(function (row) {
-      var label = row.invoiceNumber !== "-" ? row.invoiceNumber : (row.proNumber !== "-" ? row.proNumber : (row.trackingNumber !== "-" ? row.trackingNumber : (row.sourceId || "-")));
+      var label = freightPrimaryReferenceLabel(row);
+      var groupLabel = freightGroupCountLabel(row);
       var rowHref = row.ledgerHref || row.detailHref || "#";
       var rowLabel = "Open freight ledger for " + label;
       var referenceBits = [];
@@ -6900,6 +7138,9 @@
       if (row.trackingNumber && row.trackingNumber !== "-" && row.trackingNumber !== row.proNumber) {
         referenceBits.push("Track " + row.trackingNumber);
       }
+      if (row.controlNumber && row.controlNumber !== "-" && row.controlNumber !== row.invoiceNumber) {
+        referenceBits.push("Control " + row.controlNumber);
+      }
       if (row.reference && row.reference !== "-") {
         referenceBits.push("Ref " + row.reference);
       }
@@ -6910,7 +7151,7 @@
         (includeBranch
           ? ('<td><span class="qfu-phase0-region-branch-tag">' + escapeHtml(row.branchCode || "-") + '</span>' + (showRegion && row.regionName ? '<div class="qfu-phase0-admin-subtext">' + escapeHtml(row.regionName) + '</div>' : '') + '</td>')
           : '') +
-        '<td class="qfu-phase0-freight-review__reference"><strong>' + escapeHtml(label) + '</strong>' + (referenceBits.length ? '<div class="qfu-phase0-admin-subtext">' + escapeHtml(referenceBits.slice(0, 2).join(" | ")) + '</div>' : '') + '</td>' +
+        '<td class="qfu-phase0-freight-review__reference"><strong>' + escapeHtml(label) + (groupLabel ? '<span class="qfu-phase0-home-feed__badge">' + escapeHtml(groupLabel) + '</span>' : '') + '</strong>' + (referenceBits.length ? '<div class="qfu-phase0-admin-subtext">' + escapeHtml(referenceBits.slice(0, 2).join(" | ")) + '</div>' : '') + '</td>' +
         '<td class="qfu-phase0-freight-review__carrier"><strong>' + escapeHtml(row.carrier || "-") + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(routeBits.length ? routeBits.slice(0, 2).join(" | ") : "-") + '</div></td>' +
         '<td class="qfu-phase0-freight-review__status"><span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(freightStatusTone(row.statusKey)) + '">' + escapeHtml(row.status || "Unreviewed") + '</span><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.owner || "Unowned") + '</div></td>' +
         '<td class="qfu-phase0-freight-review__activity">' + escapeHtml(row.lastActivityOn || row.lastSeenOn || "Not touched") + '</td>' +
@@ -6973,16 +7214,17 @@
       String(freight.actionableCount || rows.length || 0) + " unresolved",
       renderBranchWatchlistRows(rows, function (row) {
         var href = row.ledgerHref || detailHref(branch, "freight-worklist");
-        var label = row.invoiceNumber || row.proNumber || row.trackingNumber || row.sourceId || "-";
+        var label = freightPrimaryReferenceLabel(row);
+        var groupLabel = freightGroupCountLabel(row);
         var routeBits = [row.carrier, row.service, row.direction].filter(function (value) {
           return !!(value && value !== "-");
         });
         var ownerBits = [];
-        ownerBits.push(row.ownerName || "Unowned");
+        ownerBits.push(row.owner || row.ownerName || "Unowned");
         if (routeBits.length) {
           ownerBits.push(routeBits.join(" / "));
         }
-        return '<a class="qfu-phase0-branch-watchlist-row is-freight" href="' + escapeHtml(href) + '"><div class="qfu-phase0-branch-watchlist-row__copy"><strong>' + escapeHtml(label) + '</strong><p>' + escapeHtml(ownerBits.join(" | ")) + '</p></div><div class="qfu-phase0-branch-watchlist-row__metric">' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</div></a>';
+        return '<a class="qfu-phase0-branch-watchlist-row is-freight" href="' + escapeHtml(href) + '"><div class="qfu-phase0-branch-watchlist-row__copy"><strong>' + escapeHtml(label) + (groupLabel ? '<span class="qfu-phase0-home-feed__badge">' + escapeHtml(groupLabel) + '</span>' : '') + '</strong><p>' + escapeHtml(ownerBits.join(" | ")) + '</p></div><div class="qfu-phase0-branch-watchlist-row__metric">' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</div></a>';
       }, "No Freight Bills Requiring Review", "The branch has no unresolved freight bills waiting for review."),
       '<div class="qfu-phase0-branch-watchlist-section__foot">' + escapeHtml(formatCurrency(freight.totalAmountValue || 0)) + ' unresolved | <a href="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">Freight Ledger</a></div>'
     );
@@ -7885,7 +8127,8 @@
           document: row.document,
           customer: row.customer,
           cssr: row.cssr,
-          marginPct: row.marginPct
+          marginPct: row.marginPct,
+          href: detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" })
         });
       });
     });
@@ -8531,6 +8774,20 @@
 
 .qfu-phase0-home-feed__main strong a:hover {
   text-decoration: underline;
+}
+
+.qfu-phase0-home-feed__badge {
+  background: rgba(15, 118, 110, 0.1);
+  border-radius: 999px;
+  color: #0f766e;
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-left: 0.38rem;
+  padding: 0.22rem 0.42rem;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .qfu-phase0-home-feed__meta {
@@ -9401,7 +9658,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-analytics-command-kpi em,.qfu-phase0-analytics-command-kpi small{color:#5f6270;font-size:0.76rem;font-style:normal;line-height:1.34;}' +
       '.qfu-phase0-analytics-command-kpi.is-warning{background:#fff7ed;border-color:rgba(180,83,9,0.24);}.qfu-phase0-analytics-command-kpi.is-bad{background:#fff1f2;border-color:rgba(185,28,28,0.24);}.qfu-phase0-analytics-command-kpi.is-good{background:#effbf8;border-color:rgba(0,111,103,0.22);}' +
       '.qfu-phase0-analytics-command-grid{align-items:start;display:grid;gap:0.86rem;grid-template-columns:minmax(330px,0.82fr) minmax(0,1.18fr);}' +
-      '.qfu-phase0-analytics-priority-stack,.qfu-phase0-analytics-performance,.qfu-phase0-analytics-action-card,.qfu-phase0-analytics-source-panel{background:#ffffff;border:1px solid rgba(116,118,134,0.16);border-radius:8px;box-shadow:0 8px 24px rgba(25,28,30,0.05);display:grid;gap:0.72rem;padding:0.86rem;}' +
+      '.qfu-phase0-analytics-priority-stack,.qfu-phase0-analytics-performance,.qfu-phase0-analytics-drillthrough,.qfu-phase0-analytics-action-card,.qfu-phase0-analytics-source-panel{background:#ffffff;border:1px solid rgba(116,118,134,0.16);border-radius:8px;box-shadow:0 8px 24px rgba(25,28,30,0.05);display:grid;gap:0.72rem;padding:0.86rem;}' +
       '.qfu-phase0-analytics-section-header,.qfu-phase0-analytics-action-card header{align-items:flex-start;display:flex;gap:0.7rem;justify-content:space-between;}' +
       '.qfu-phase0-analytics-section-header>div,.qfu-phase0-analytics-action-card header>div{display:grid;gap:0.14rem;}.qfu-phase0-analytics-section-header h2,.qfu-phase0-analytics-action-card header h2{font-size:1.04rem;}.qfu-phase0-analytics-section-header small,.qfu-phase0-analytics-action-card header small{color:#5f6270;font-size:0.76rem;line-height:1.3;text-align:right;}' +
       '.qfu-phase0-analytics-priority-stack__list{display:grid;gap:0.54rem;}' +
@@ -9890,6 +10147,19 @@ a.qfu-phase0-ready-preview-row--ledger {
       renderAnalyticsBacklogPressureCard(payload, readyToShip) +
       renderAnalyticsExceptionMixCard(workspace, payload, freightRecovery) +
       '</div></section>';
+  }
+
+  function renderAnalyticsExceptionDrillthrough(exceptionFilter, windowFilter, workspace) {
+    var safeWorkspace = workspace || {};
+    if (exceptionFilter === "margin") {
+      var marginModule = safeWorkspace.marginModule || {};
+      var rows = marginModule.rows || [];
+      var countGrid = (marginModule.counts || []).length ? renderReviewCountGrid(marginModule.counts) : "";
+      var periodLabel = marginModule.periodLabel || (windowFilter === "month" ? "Current month" : "Current branch slice");
+      var snapshotLabel = marginModule.snapshotLabel || "Awaiting snapshot";
+      return '<section class="qfu-phase0-analytics-drillthrough qfu-phase0-analytics-drillthrough--margin"><header class="qfu-phase0-analytics-section-header"><div><span>Drill-through</span><h2>Abnormal Margin Exceptions</h2></div><small>' + escapeHtml(String(rows.length)) + ' rows</small></header><p class="qfu-phase0-panel__copy">Full branch margin review list from SA1300 for the selected analytics route.</p>' + countGrid + renderMarginExceptionTable(rows) + '<div class="qfu-phase0-summary-foot">' + escapeHtml(periodLabel + " | " + snapshotLabel) + '</div></section>';
+    }
+    return "";
   }
 
   function renderAnalyticsActionTables(branch, quoteFocus, payload, readyToShip, workspace) {
@@ -11361,6 +11631,10 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-freight-workbench__statusline{display:grid;gap:0.18rem;}' +
       '.qfu-phase0-freight-status-message{color:#4d616b;font-size:0.76rem;font-weight:700;line-height:1.35;}' +
       '.qfu-phase0-freight-dirty{color:#9f2020;font-size:0.74rem;font-weight:800;line-height:1.3;}' +
+      '.qfu-phase0-freight-group-detail{background:rgba(239,246,250,0.72);border-radius:14px;display:grid;gap:0.38rem;margin-bottom:0.65rem;padding:0.58rem;}' +
+      '.qfu-phase0-freight-group-detail__row{background:#fff;border-radius:10px;display:grid;gap:0.12rem;padding:0.44rem 0.52rem;}' +
+      '.qfu-phase0-freight-group-detail__row strong{color:#17313a;font-size:0.78rem;line-height:1.25;}' +
+      '.qfu-phase0-freight-group-detail__row span{color:#5c7080;font-size:0.72rem;line-height:1.35;overflow-wrap:anywhere;}' +
       '.qfu-phase0-freight-detail__stage .qfu-phase0-ledger-drawer{border-radius:22px;box-shadow:0 18px 38px rgba(15,23,42,0.06);overflow:hidden;}' +
       '@media (max-width:1320px){.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__filters{grid-template-columns:repeat(4,minmax(0,1fr));}}' +
       '@media (max-width:920px){.qfu-phase0-freight-ledger-band__header,.qfu-phase0-freight-toolbar__hero,.qfu-phase0-freight-ledger__footer{align-items:flex-start;flex-direction:column;}.qfu-phase0-freight-toolbar__actions,.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__chips,.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__buttons{justify-items:stretch;justify-content:flex-start;}.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__filters{grid-template-columns:repeat(3,minmax(0,1fr));}.qfu-phase0-summary-table--freight thead th:nth-child(4),.qfu-phase0-summary-table--freight tbody td:nth-child(4),.qfu-phase0-summary-table--freight thead th:nth-child(6),.qfu-phase0-summary-table--freight tbody td:nth-child(6){display:none;}}' +
@@ -11456,6 +11730,10 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins thead th{background:linear-gradient(180deg,rgba(13,148,136,0.08) 0%,rgba(180,83,9,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#5f7481;font-size:0.71rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody tr:nth-child(odd){background:rgba(249,251,252,0.88);}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody tr:hover{background:rgba(241,246,248,0.95);}' +
+      '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody tr.is-link{cursor:pointer;}' +
+      '.qfu-phase0-region-shell .qfu-phase0-region-exception__cell-link{color:inherit;display:block;text-decoration:none;}' +
+      '.qfu-phase0-region-shell .qfu-phase0-region-exception__cell-link:focus-visible{border-radius:10px;box-shadow:inset 0 0 0 2px rgba(13,148,136,0.28);outline:none;}' +
+      '.qfu-phase0-region-shell .qfu-phase0-region-exception__row.is-link:hover .qfu-phase0-region-exception__document strong,.qfu-phase0-region-shell .qfu-phase0-region-exception__row.is-link:hover .qfu-phase0-region-exception__customer strong{color:#0f766e;text-decoration:underline;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody td{padding-bottom:0.95rem;padding-top:0.95rem;vertical-align:top;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--freight-review thead th{background:linear-gradient(180deg,rgba(13,148,136,0.08) 0%,rgba(37,99,235,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#5f7481;font-size:0.71rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--freight-review tbody tr:nth-child(odd){background:rgba(249,251,252,0.88);}' +
@@ -11489,13 +11767,14 @@ a.qfu-phase0-ready-preview-row--ledger {
     var windowFilter = String(filters && filters.window || "").trim();
     var branchFilter = "qfu_branchslug eq " + odataString(branch.slug);
     var quoteLinePath = "/_api/qfu_quotelines?$select=qfu_quotelineid,qfu_quotenumber,qfu_amount,qfu_dollarconnected,qfu_gppercent,qfu_cssrname,qfu_tsr,qfu_tsrname,qfu_soldtopartyname,qfu_rejectionreason,qfu_materialgroup,qfu_sourceworksheet,qfu_sourcedate,qfu_lastimportdate,createdon&$top=2500";
-    var backorderPath = "/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_totalvalue,qfu_quantity,qfu_material,qfu_description,qfu_ontimedate,qfu_daysoverdue,qfu_qtynotondel,qfu_qtyondelnotpgid,qfu_cssrname,qfu_shipconddesc,qfu_lineitemcreatedon,qfu_delblockdesc,qfu_billblockdesc,qfu_reasonforrejection,qfu_sourceline,qfu_active,qfu_inactiveon,qfu_lastseenon,createdon,modifiedon&$top=2500";
+    var backorderPath = "/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_totalvalue,qfu_quantity,qfu_material,qfu_description,qfu_ontimedate,qfu_daysoverdue,qfu_qtynotondel,qfu_qtyondelnotpgid,qfu_cssrname,qfu_accountmanagername,qfu_shipconddesc,qfu_lineitemcreatedon,qfu_delblockdesc,qfu_billblockdesc,qfu_reasonforrejection,qfu_sourceline,qfu_active,qfu_inactiveon,qfu_lastseenon,createdon,modifiedon&$top=2500";
     var opsDailyRecords = buildAnalyticsOpsDailyRecordsFromBudget(workspace);
+    var runtimeBackorders = Array.isArray(workspace.analyticsBackorderRecords) ? workspace.analyticsBackorderRecords : null;
     var fetched = await Promise.all([
       safeGetAll(withFilter(quoteLinePath, branchFilter)),
-      safeGetAll(withFilter(backorderPath, branchFilter))
+      runtimeBackorders ? Promise.resolve(runtimeBackorders) : safeGetAll(withFilter(backorderPath, branchFilter))
     ]);
-    var analyticsBackorders = dedupeOperationalRows(fetched[1] || [], {
+    var analyticsBackorders = runtimeBackorders ? runtimeBackorders.slice() : dedupeOperationalRows(fetched[1] || [], {
       datasetName: "qfu_backorders",
       idField: "qfu_backorderid",
       identityFields: ["qfu_branchcode", "qfu_salesdocnumber", "qfu_sourceline"],
@@ -11550,6 +11829,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       payload.marginStatus,
       payload.lateStatus
     ].filter(Boolean);
+    var exceptionDrillthrough = renderAnalyticsExceptionDrillthrough(exceptionFilter, windowFilter, workspace);
     var trustNoteItems = [
       ["Monthly Close", "GL060 cards, finance bridge, and freight recovery stay closed-month only."],
       ["Daily Operations", "SA1300, SP830, and ZBO remain separate from GL060 close numbers."],
@@ -11569,6 +11849,8 @@ a.qfu-phase0-ready-preview-row--ledger {
       renderAnalyticsPriorityStack(branch, attentionItems) +
       renderAnalyticsPerformanceDeck(workspace, payload, quoteFocus, readyToShip, freightRecovery, financeSnapshot) +
       '</section>' +
+      renderFinancePanel(workspace) +
+      exceptionDrillthrough +
       renderAnalyticsActionTables(branch, quoteFocus, payload, readyToShip, workspace) +
       renderAnalyticsSourceContractPanel(sourceStatuses) +
       renderAnalyticsTrustNotesPanel(trustNoteItems, "Every KPI on this page is source-backed: GL060 stays closed-month, SA1300/SP830/ZBO stay current operational signals, delivery loads qfu_deliverynotpgi explicitly, and freight worklist freshness is separate from freight recovery.") +
@@ -11914,7 +12196,8 @@ a.qfu-phase0-ready-preview-row--ledger {
   function renderFreightWorklistDetail(branch) {
     var workspace = branch.workspace || {};
     var freight = workspace.freight || {};
-    if (!portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]"))) {
+    var hasFreightRuntimeData = !!((workspace.freightRows || []).length || (workspace.freightImportRows || []).length || (workspace.freightFeedRows || []).length);
+    if (!portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]")) && !hasFreightRuntimeData) {
       return renderLockedDetail(branch, "freight-worklist", "Freight ledger access requires an authenticated portal user because the freight ledger allows direct row ownership, notes, status updates, and archive actions.");
     }
     if (!freight.isConfigured) {
@@ -11930,6 +12213,7 @@ a.qfu-phase0-ready-preview-row--ledger {
     var latestImportStatus = latestImportRow ? freightStatusLabel(latestImportRow.qfu_status) : "Awaiting";
     var latestImportMomentValue = freight.latestImportMoment;
     var totalFilteredAmount = filteredRows.reduce(function (total, row) { return total + row.totalAmountNumber; }, 0);
+    var filteredSourceRowCount = freightGroupedRowCount(filteredRows);
     var latestImportSummary = latestImportMomentValue ? (latestImportStatus + " | " + formatDateTime(latestImportMomentValue)) : "Awaiting first freight import";
     var health = freightQueueHealthState(freight, latestImportRow);
     var headerChips = [];
@@ -11955,7 +12239,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       diagnosticsMarkup += '<div class="qfu-phase0-runtime-diagnostics is-warning"><div class="qfu-phase0-runtime-diagnostics__header"><strong>Latest freight batch needs review</strong></div><ul class="qfu-phase0-runtime-diagnostics__list"><li><span class="qfu-phase0-inline-badge is-warning">' + escapeHtml(String(latestImportRow.qfu_status || "queued")) + '</span><span>' + escapeHtml((latestImportRow.qfu_notes || "The most recent freight batch did not complete cleanly.") + " | " + latestImportSummary) + '</span></li></ul></div>';
     }
 
-    var footerMarkup = '<div class="qfu-phase0-freight-ledger__footer"><div class="qfu-phase0-freight-ledger__footer-copy">Latest import: ' + escapeHtml(latestImportSummary) + ' | Non-archived freight bills stay in the ledger by default. Closed / No Action rows stay hidden by default and auto-archive after ' + FREIGHT_ARCHIVE_AFTER_DAYS + ' idle days.</div>' +
+    var footerMarkup = '<div class="qfu-phase0-freight-ledger__footer"><div class="qfu-phase0-freight-ledger__footer-copy">' + escapeHtml(String(filteredRows.length) + " ledger entries" + (filteredSourceRowCount > filteredRows.length ? (" from " + String(filteredSourceRowCount) + " source rows") : "") + " | Latest import: " + latestImportSummary + " | Non-archived freight ledger entries stay visible by default. Closed / No Action rows stay hidden by default and auto-archive after " + FREIGHT_ARCHIVE_AFTER_DAYS + " idle days.") + '</div>' +
       (filteredRows.length ? renderPagination(detailHrefWithParams(branch, "freight-worklist", activeParams), pageInfo.page, pageInfo.totalPages) : "") +
       '</div>';
     var importsDrawer = (workspace.freightImportRows || []).length
@@ -11965,7 +12249,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       diagnosticsMarkup +
       renderFreightHero(branch, freight, latestImportRow, latestImportSummary, filteredRows, totalFilteredAmount) +
       renderFreightToolbar(branch, filters, filteredRows, allRows) +
-      renderFreightTable(pageInfo.items, branch, filteredRows.length ? "No Matching Freight Bills" : "No Freight Bills Yet", filteredRows.length ? "No freight bills match the active filters." : "The freight mailbox and parser are wired, but no freight bills have been imported for this branch yet.", filters.item) +
+      renderFreightTable(pageInfo.items, branch, filteredRows.length ? "No Matching Freight Ledger Entries" : "No Freight Ledger Entries Yet", filteredRows.length ? "No freight ledger entries match the active filters." : "The freight mailbox and parser are wired, but no freight ledger entries have been imported for this branch yet.", filters.item) +
       footerMarkup +
       importsDrawer +
       '</div></section>';
@@ -11975,7 +12259,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       '<section class="qfu-phase0-branch-stage qfu-phase0-freight-detail__stage">' +
       flashMarkup() +
       renderFreightWorkbenchInlineStyles() +
-      renderBranchViewHeader(branch, "Freight Ledger", "Branch-scoped freight bill ledger for investigation, notes, status, and archive review.", headerChips) +
+      renderBranchViewHeader(branch, "Freight Ledger", "Branch-scoped shipment-level freight ledger for investigation, notes, status, and archive review.", headerChips) +
       detailBody +
       "</section></section></div>";
   }

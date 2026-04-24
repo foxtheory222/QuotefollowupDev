@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_sourcesystem" localizedName="QFU Source System" description="QFU Source System" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU Source System" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU Source System" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="SP830CA" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="ZBO" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Freight" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Pickup" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010004" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Manual" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010005" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Other" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>

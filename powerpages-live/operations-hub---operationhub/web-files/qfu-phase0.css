@@ -7482,7 +7482,37 @@ main,
   gap: 0.4rem;
 }
 
-.qfu-phase0-freight-workbench .qfu-phase0-inline-button {
+.qfu-phase0-freight-group-detail {
+  background: rgba(239, 246, 250, 0.72);
+  border-radius: 14px;
+  display: grid;
+  gap: 0.38rem;
+  margin-bottom: 0.65rem;
+  padding: 0.58rem;
+}
+
+.qfu-phase0-freight-group-detail__row {
+  background: #fff;
+  border-radius: 10px;
+  display: grid;
+  gap: 0.12rem;
+  padding: 0.44rem 0.52rem;
+}
+
+.qfu-phase0-freight-group-detail__row strong {
+  color: #17313a;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.qfu-phase0-freight-group-detail__row span {
+  color: #5c7080;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.qfu-phase0-freight-workbench .qfu-phase0-inline-button:not(.qfu-phase0-freight-action) {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(0, 109, 119, 0.12);
 }
@@ -7981,6 +8011,20 @@ main,
 
 .qfu-phase0-branch-home-board .qfu-phase0-summary-table--freight-review .qfu-phase0-admin-subtext {
   font-size: 0.7rem;
+}
+
+.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row {
+  cursor: pointer;
+  outline: none;
+}
+
+.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row:hover td,
+.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row:focus-visible td {
+  background: rgba(239, 246, 250, 0.94);
+}
+
+.qfu-phase0-summary-table--freight-review .qfu-phase0-freight-review__row:focus-visible td {
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.22);
 }
 
 .qfu-phase0-ready-preview-panel--dense .qfu-phase0-ready-preview-notes {
@@ -9034,6 +9078,20 @@ main,
 .qfu-phase0-branch-home-board--desktop-redesign .qfu-phase0-home-feed__main strong a {
   font-size: 0.84rem;
   line-height: 1.16;
+}
+
+.qfu-phase0-home-feed__badge {
+  background: rgba(15, 118, 110, 0.1);
+  border-radius: 999px;
+  color: #0f766e;
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-left: 0.38rem;
+  padding: 0.22rem 0.42rem;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .qfu-phase0-branch-home-board--desktop-redesign .qfu-phase0-home-feed__meta {

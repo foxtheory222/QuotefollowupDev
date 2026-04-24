@@ -1,0 +1,1005 @@
+﻿{
+    "solution":  "qfu_revenuefollowupworkbench",
+    "generatedAtUtc":  "2026-04-24T21:05:25.5560283Z",
+    "choices":  [
+                    {
+                        "name":  "qfu_role",
+                        "status":  "exists",
+                        "values":  [
+                                       "TSR",
+                                       "CSSR",
+                                       "Manager",
+                                       "GM",
+                                       "Admin"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_worktype",
+                        "status":  "exists",
+                        "values":  [
+                                       "Quote",
+                                       "Backorder",
+                                       "Freight",
+                                       "Pickup",
+                                       "General"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_sourcesystem",
+                        "status":  "exists",
+                        "values":  [
+                                       "SP830CA",
+                                       "ZBO",
+                                       "Freight",
+                                       "Pickup",
+                                       "Manual",
+                                       "Other"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_aliastype",
+                        "status":  "exists",
+                        "values":  [
+                                       "AM Number",
+                                       "AM Name",
+                                       "CSSR Number",
+                                       "CSSR Name",
+                                       "Created By",
+                                       "Email",
+                                       "Other"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_rolehint",
+                        "status":  "exists",
+                        "values":  [
+                                       "TSR",
+                                       "CSSR",
+                                       "Manager",
+                                       "GM",
+                                       "Admin",
+                                       "Unknown"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_thresholdoperator",
+                        "status":  "exists",
+                        "values":  [
+                                       "GreaterThan",
+                                       "GreaterThanOrEqual"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_workitemgenerationmode",
+                        "status":  "exists",
+                        "values":  [
+                                       "HighValueOnly",
+                                       "AllQuotes",
+                                       "ReportingOnly"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_firstfollowupbasis",
+                        "status":  "exists",
+                        "values":  [
+                                       "ImportDate",
+                                       "QuoteDate",
+                                       "SourceDueDate",
+                                       "Manual",
+                                       "Disabled"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_alertmode",
+                        "status":  "exists",
+                        "values":  [
+                                       "Disabled",
+                                       "NewHighValue",
+                                       "DueToday",
+                                       "Overdue",
+                                       "EscalatedOrRoadblock",
+                                       "DailyDigestOnly"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_cssralertmode",
+                        "status":  "exists",
+                        "values":  [
+                                       "VisibilityOnly",
+                                       "DailyDigestOnly",
+                                       "TargetedAlerts",
+                                       "CCOnly",
+                                       "Disabled"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_workitemstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Open",
+                                       "Due Today",
+                                       "Overdue",
+                                       "Waiting on Customer",
+                                       "Waiting on Vendor",
+                                       "Roadblock",
+                                       "Escalated",
+                                       "Completed",
+                                       "Closed Won",
+                                       "Closed Lost",
+                                       "Cancelled"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_priority",
+                        "status":  "exists",
+                        "values":  [
+                                       "Low",
+                                       "Normal",
+                                       "High",
+                                       "Critical"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_escalationlevel",
+                        "status":  "exists",
+                        "values":  [
+                                       "None",
+                                       "Manager",
+                                       "GM",
+                                       "Admin"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_assignmentstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Assigned",
+                                       "Partially Assigned",
+                                       "Needs TSR Assignment",
+                                       "Needs CSSR Assignment",
+                                       "Unmapped",
+                                       "Error"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_actiontype",
+                        "status":  "exists",
+                        "values":  [
+                                       "Call",
+                                       "Email",
+                                       "Customer Advised",
+                                       "Vendor Contacted",
+                                       "Due Date Updated",
+                                       "Follow-Up Scheduled",
+                                       "Roadblock",
+                                       "Escalated",
+                                       "Won",
+                                       "Lost",
+                                       "Cancelled",
+                                       "Note",
+                                       "Assignment/Reassignment",
+                                       "Sticky Note Updated"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_alerttype",
+                        "status":  "exists",
+                        "values":  [
+                                       "New Assignment",
+                                       "Due Today",
+                                       "Overdue",
+                                       "Escalation",
+                                       "Daily Digest",
+                                       "Assignment Exception",
+                                       "Flow Failure"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_alertstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Pending",
+                                       "Sent",
+                                       "Failed",
+                                       "Suppressed",
+                                       "Skipped"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_exceptiontype",
+                        "status":  "exists",
+                        "values":  [
+                                       "Missing TSR Alias",
+                                       "Missing CSSR Alias",
+                                       "Blank Alias",
+                                       "Zero Alias",
+                                       "Ambiguous Alias",
+                                       "Missing Branch",
+                                       "Missing Policy",
+                                       "Other"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_exceptionstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Open",
+                                       "In Review",
+                                       "Resolved",
+                                       "Ignored"
+                                   ]
+                    }
+                ],
+    "tables":  [
+                   {
+                       "name":  "qfu_staff",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_staffalias",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_branchmembership",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_policy",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_workitem",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_workitemaction",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_alertlog",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_assignmentexception",
+                       "status":  "exists"
+                   }
+               ],
+    "columns":  [
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_primaryemail",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_staffnumber",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_entraobjectid",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_active",
+                        "type":  "boolean",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_sourcesystem",
+                        "type":  "picklist:qfu_sourcesystem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_aliastype",
+                        "type":  "picklist:qfu_aliastype",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_rawalias",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_normalizedalias",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_rolehint",
+                        "type":  "picklist:qfu_rolehint",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_scopekey",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_active",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_verifiedon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_role",
+                        "type":  "picklist:qfu_role",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_active",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_startdate",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_enddate",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_isprimary",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_scopekey",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_worktype",
+                        "type":  "picklist:qfu_worktype",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_highvaluethreshold",
+                        "type":  "decimal",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_thresholdoperator",
+                        "type":  "picklist:qfu_thresholdoperator",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_workitemgenerationmode",
+                        "type":  "picklist:qfu_workitemgenerationmode",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_requiredattempts",
+                        "type":  "integer",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_firstfollowupbasis",
+                        "type":  "picklist:qfu_firstfollowupbasis",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_firstfollowupbusinessdays",
+                        "type":  "integer",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_primaryownerstrategy",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_supportownerstrategy",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_gmccmode",
+                        "type":  "picklist:qfu_alertmode",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_managerccmode",
+                        "type":  "picklist:qfu_alertmode",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_cssralertmode",
+                        "type":  "picklist:qfu_cssralertmode",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_escalateafterbusinessdays",
+                        "type":  "integer",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_digestenabled",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_targetedalertenabled",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_active",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_worktype",
+                        "type":  "picklist:qfu_worktype",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcesystem",
+                        "type":  "picklist:qfu_sourcesystem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_customername",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcedocumentnumber",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourceexternalkey",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_totalvalue",
+                        "type":  "decimal",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_requiredattempts",
+                        "type":  "integer",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_completedattempts",
+                        "type":  "integer",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_status",
+                        "type":  "picklist:qfu_workitemstatus",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_priority",
+                        "type":  "picklist:qfu_priority",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_nextfollowupon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_lastfollowedupon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_lastactionon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_overduesince",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_stickynote",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_stickynoteupdatedon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_escalationlevel",
+                        "type":  "picklist:qfu_escalationlevel",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_assignmentstatus",
+                        "type":  "picklist:qfu_assignmentstatus",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_actiontype",
+                        "type":  "picklist:qfu_actiontype",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_countsasattempt",
+                        "type":  "boolean",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_actionon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_attemptnumber",
+                        "type":  "integer",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_outcome",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_nextfollowupon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_alerttype",
+                        "type":  "picklist:qfu_alerttype",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_recipientemail",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_ccemails",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_dedupekey",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_status",
+                        "type":  "picklist:qfu_alertstatus",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_senton",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_failuremessage",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_flowrunid",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_exceptiontype",
+                        "type":  "picklist:qfu_exceptiontype",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourcesystem",
+                        "type":  "picklist:qfu_sourcesystem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourcefield",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_rawvalue",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_normalizedvalue",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_displayname",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourcedocumentnumber",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourceexternalkey",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_exceptionkey",
+                        "type":  "string",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_status",
+                        "type":  "picklist:qfu_exceptionstatus",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_resolvedon",
+                        "type":  "datetime",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "created"
+                    }
+                ],
+    "lookups":  [
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_systemuser",
+                        "referenced":  "systemuser",
+                        "relationship":  "qfu_systemuser_qfu_staff",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_defaultbranch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_staff_defaultbranch",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_staffalias",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_staff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_staffalias",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_staffalias",
+                        "column":  "qfu_verifiedby",
+                        "referenced":  "systemuser",
+                        "relationship":  "qfu_systemuser_qfu_staffalias_verifiedby",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_branchmembership",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_staff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_branchmembership",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_policy",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcequote",
+                        "referenced":  "qfu_quote",
+                        "relationship":  "qfu_quote_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcequoteline",
+                        "referenced":  "qfu_quoteline",
+                        "relationship":  "qfu_quoteline_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcebackorder",
+                        "referenced":  "qfu_backorder",
+                        "relationship":  "qfu_backorder_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcefreightworkitem",
+                        "referenced":  "qfu_freightworkitem",
+                        "relationship":  "qfu_freightworkitem_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_sourcedeliverynotpgi",
+                        "referenced":  "qfu_deliverynotpgi",
+                        "relationship":  "qfu_deliverynotpgi_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_primaryownerstaff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_workitem_primaryowner",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_supportownerstaff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_workitem_supportowner",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_tsrstaff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_workitem_tsr",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_cssrstaff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_workitem_cssr",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_stickynoteupdatedby",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_workitem_stickynoteupdatedby",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitem",
+                        "column":  "qfu_policy",
+                        "referenced":  "qfu_policy",
+                        "relationship":  "qfu_policy_qfu_workitem",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_workitem",
+                        "referenced":  "qfu_workitem",
+                        "relationship":  "qfu_workitem_qfu_workitemaction",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_actionby",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_workitemaction_actionby",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_workitem",
+                        "referenced":  "qfu_workitem",
+                        "relationship":  "qfu_workitem_qfu_alertlog",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_recipientstaff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_alertlog_recipient",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_relatedalert",
+                        "referenced":  "qfu_alertlog",
+                        "relationship":  "qfu_alertlog_qfu_workitemaction_relatedalert",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_assignmentexception",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourcequote",
+                        "referenced":  "qfu_quote",
+                        "relationship":  "qfu_quote_qfu_assignmentexception",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourcequoteline",
+                        "referenced":  "qfu_quoteline",
+                        "relationship":  "qfu_quoteline_qfu_assignmentexception",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_sourcebackorder",
+                        "referenced":  "qfu_backorder",
+                        "relationship":  "qfu_backorder_qfu_assignmentexception",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_workitem",
+                        "referenced":  "qfu_workitem",
+                        "relationship":  "qfu_workitem_qfu_assignmentexception",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_resolvedstaff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_assignmentexception_resolvedstaff",
+                        "status":  "created"
+                    },
+                    {
+                        "table":  "qfu_assignmentexception",
+                        "column":  "qfu_resolvedby",
+                        "referenced":  "systemuser",
+                        "relationship":  "qfu_systemuser_qfu_assignmentexception_resolvedby",
+                        "status":  "created"
+                    }
+                ],
+    "warnings":  [
+
+                 ],
+    "errors":  [
+
+               ]
+}

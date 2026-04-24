@@ -27,6 +27,8 @@ ATTACHMENTS_ROOT = resolve_existing_attachments_root(
     REPO_ROOT.parent / "output" / "freight-samples" / "attachments",
 )
 FREIGHT_GENERATOR = REPO_ROOT / "scripts" / "create-southern-alberta-freight-flow-solution.ps1"
+FREIGHT_QUEUE_PROCESSOR = REPO_ROOT / "scripts" / "process-freight-inbox-queue.ps1"
+FREIGHT_INVOICE_SURVIVOR_RESTORE = REPO_ROOT / "scripts" / "repair-live-freight-invoice-survivors.ps1"
 
 
 class FakeDataverseClient:
@@ -42,8 +44,10 @@ class FakeDataverseClient:
         return filter_expr.split(prefix, 1)[1].rsplit("'", 1)[0].replace("''", "'")
 
     def list_records(self, entity_set, *, select=None, filter_expr=None, top=None, orderby=None):
-        source_id = self._extract_source_id(filter_expr)
-        return list(self.existing_by_source_id.get(source_id, []))
+        if "qfu_sourceid eq '" in filter_expr:
+            source_id = self._extract_source_id(filter_expr)
+            return list(self.existing_by_source_id.get(source_id, []))
+        raise AssertionError(f"Unexpected filter expression: {filter_expr}")
 
     def create_record(self, entity_set, fields):
         self.created.append((entity_set, dict(fields)))
@@ -129,6 +133,54 @@ class FreightHostedParserContractTests(unittest.TestCase):
         self.assertEqual(updated_fields["qfu_owneridentifier"], "owner-123")
         self.assertEqual(updated_fields["qfu_comment"], "Keep this note")
 
+    def test_hosted_parser_keeps_same_invoice_different_tracking_rows_separate(self):
+        payload = self._payload_for(
+            Path("4171") / "Purolator Invoices Report [F07] by control# [APICAPIC5141] 8738328.xls",
+            "4171",
+            "4171-calgary",
+            "FREIGHT_PUROLATOR_F07",
+        )
+        parsed = process_parse_request(payload)
+        source_id = parsed["records"][0]["qfu_sourceid"]
+        client = FakeDataverseClient(
+            existing_by_source_id={
+                source_id: [
+                    {
+                        "qfu_freightworkitemid": "00000000-0000-0000-0000-000000000456",
+                        "qfu_sourceid": source_id,
+                        "qfu_status": "Investigating",
+                        "qfu_ownername": "Existing Owner",
+                        "qfu_owneridentifier": "owner-456",
+                        "qfu_claimedon": "2026-04-20T10:00:00Z",
+                        "qfu_comment": "Preserve live work note",
+                        "qfu_commentupdatedon": "2026-04-20T10:05:00Z",
+                        "qfu_commentupdatedbyname": "Dispatcher",
+                        "qfu_lastactivityon": "2026-04-20T10:05:00Z",
+                        "qfu_isarchived": False,
+                        "qfu_archivedon": None,
+                        "modifiedon": "2026-04-20T10:06:00Z",
+                    }
+                ]
+            }
+        )
+
+        status_code, body = handle_hosted_parser_request(payload, client=client)
+
+        self.assertEqual(status_code, 200)
+        self.assertEqual(body["normalized_records"], 49)
+        self.assertEqual(body["inserted"], 48)
+        self.assertEqual(body["updated"], 1)
+        self.assertEqual(len(client.created), 48)
+        self.assertEqual(len(client.updated), 1)
+        self.assertEqual(len({fields["qfu_sourceid"] for _, fields in client.created}), 48)
+        self.assertTrue(all(fields["qfu_invoicenumber"] == "550256777" for _, fields in client.created))
+        self.assertFalse(any("|invoice|" in fields["qfu_sourceid"] for _, fields in client.created))
+        updated_fields = client.updated[0][2]
+        self.assertEqual(updated_fields["qfu_sourceid"], source_id)
+        self.assertEqual(updated_fields["qfu_status"], "Investigating")
+        self.assertEqual(updated_fields["qfu_ownername"], "Existing Owner")
+        self.assertEqual(updated_fields["qfu_comment"], "Preserve live work note")
+
     def test_hosted_parser_rejects_missing_document_payload(self):
         status_code, body = handle_hosted_parser_request({"document": {}})
 
@@ -148,6 +200,19 @@ class FreightHostedParserContractTests(unittest.TestCase):
         self.assertIn("Update_Raw_Document_Error", script)
         self.assertIn("Update_Ingestion_Batch_Error", script)
         self.assertIn("Hosted freight parser call is pending.", script)
+
+    def test_local_queue_processor_does_not_fallback_to_invoice_identity(self):
+        script = FREIGHT_QUEUE_PROCESSOR.read_text(encoding="utf-8")
+        self.assertIn('Get-CrmRecords -conn $Connection -EntityLogicalName "qfu_freightworkitem" -FilterAttribute "qfu_sourceid"', script)
+        self.assertNotIn("qfu_invoicenumber", script.split("function Get-ExistingFreightWorkItemRows", 1)[1].split("function Upsert-FreightWorkItems", 1)[0])
+
+    def test_invoice_survivor_restore_only_repairs_nonredwood_invoice_survivors(self):
+        script = FREIGHT_INVOICE_SURVIVOR_RESTORE.read_text(encoding="utf-8")
+        self.assertIn('$sourceFamily -eq "FREIGHT_REDWOOD"', script)
+        self.assertIn('$sourceId -notmatch "\\|invoice\\|"', script)
+        self.assertIn('$sourceId -match "\\|invoice\\|"', script)
+        self.assertIn("Merge-PreservedWorkState", script)
+        self.assertIn("No matching parsed shipment-level records found", script)
 
 
 if __name__ == "__main__":

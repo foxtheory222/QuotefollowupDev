@@ -72,10 +72,37 @@ class FreightParserTests(unittest.TestCase):
             "4172",
             "4172-lethbridge",
         )
+        self.assertEqual(payload["input_row_count"], 27)
         self.assertEqual(payload["normalized_record_count"], 27)
+        self.assertEqual(payload["collapsed_group_rows"], 0)
         first = payload["records"][0]
+        self.assertEqual(
+            first["qfu_sourceid"],
+            "4172|freight-purolator-f07|8892943|550256778|335808498505|002-376038|purolator-express-pack",
+        )
+        self.assertEqual(first["qfu_invoicenumber"], "550256778")
         self.assertTrue(first["qfu_totalamount"] > 0)
         self.assertTrue(first["qfu_chargebreakdowntext"])
+
+    def test_purolator_repeated_invoice_rows_stay_at_tracking_grain(self):
+        payload = self.parse_sample(
+            Path("4171") / "Purolator Invoices Report [F07] by control# [APICAPIC5141] 8738328.xls",
+            "FREIGHT_PUROLATOR_F07",
+            "4171",
+            "4171-calgary",
+        )
+        self.assertEqual(payload["input_row_count"], 49)
+        self.assertEqual(payload["normalized_record_count"], 49)
+        self.assertEqual(payload["collapsed_group_rows"], 0)
+        first = payload["records"][0]
+        self.assertEqual(
+            first["qfu_sourceid"],
+            "4171|freight-purolator-f07|8738328|550256777|czn000033797|1000192266-1417156676|purolator-express",
+        )
+        self.assertEqual(first["qfu_invoicenumber"], "550256777")
+        self.assertAlmostEqual(sum(record["qfu_totalamount"] for record in payload["records"]), 3924.74, places=2)
+        self.assertEqual(len({record["qfu_sourceid"] for record in payload["records"]}), 49)
+        self.assertFalse(any("|invoice|" in record["qfu_sourceid"] for record in payload["records"]))
 
     def test_ups_duplicate_tracking_rows_collapse_to_one_record(self):
         payload = self.parse_sample(
@@ -88,6 +115,10 @@ class FreightParserTests(unittest.TestCase):
         self.assertEqual(payload["normalized_record_count"], 1)
         self.assertEqual(payload["collapsed_group_rows"], 1)
         first = payload["records"][0]
+        self.assertEqual(
+            first["qfu_sourceid"],
+            "4172|freight-ups-f06|871382|871382146|1z871382dk07914163|rga-2026-1383-lamb-weston|wws",
+        )
         self.assertAlmostEqual(first["qfu_totalamount"], 339.72, places=2)
 
     def test_empty_redwood_file_is_supported(self):

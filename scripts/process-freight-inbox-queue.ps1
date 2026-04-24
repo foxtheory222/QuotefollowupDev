@@ -321,6 +321,33 @@ function Convert-FreightRecordToFields {
   return $fields
 }
 
+function Get-ExistingFreightWorkItemRows {
+  param(
+    [Microsoft.Xrm.Tooling.Connector.CrmServiceClient]$Connection,
+    [object]$Record
+  )
+
+  $existingFields = @(
+    "qfu_freightworkitemid",
+    "qfu_sourceid",
+    "qfu_status",
+    "qfu_ownername",
+    "qfu_owneridentifier",
+    "qfu_claimedon",
+    "qfu_comment",
+    "qfu_commentupdatedon",
+    "qfu_commentupdatedbyname",
+    "qfu_lastactivityon",
+    "qfu_isarchived",
+    "qfu_archivedon",
+    "modifiedon"
+  )
+
+  $sourceId = [string]$Record.qfu_sourceid
+  $sourceRows = @((Get-CrmRecords -conn $Connection -EntityLogicalName "qfu_freightworkitem" -FilterAttribute "qfu_sourceid" -FilterOperator eq -FilterValue $sourceId -Fields $existingFields -TopCount 5).CrmRecords)
+  return @($sourceRows)
+}
+
 function Upsert-FreightWorkItems {
   param(
     [Microsoft.Xrm.Tooling.Connector.CrmServiceClient]$Connection,
@@ -333,24 +360,10 @@ function Upsert-FreightWorkItems {
   $observedOn = [datetime]::UtcNow
 
   foreach ($record in @($Records)) {
-    $existingRows = @((Get-CrmRecords -conn $Connection -EntityLogicalName "qfu_freightworkitem" -FilterAttribute "qfu_sourceid" -FilterOperator eq -FilterValue $record.qfu_sourceid -Fields @(
-          "qfu_freightworkitemid",
-          "qfu_sourceid",
-          "qfu_status",
-          "qfu_ownername",
-          "qfu_owneridentifier",
-          "qfu_claimedon",
-          "qfu_comment",
-          "qfu_commentupdatedon",
-          "qfu_commentupdatedbyname",
-          "qfu_lastactivityon",
-          "qfu_isarchived",
-          "qfu_archivedon",
-          "modifiedon"
-        ) -TopCount 5).CrmRecords)
+    $existingRows = @(Get-ExistingFreightWorkItemRows -Connection $Connection -Record $record)
     $existing = $existingRows | Sort-Object modifiedon -Descending | Select-Object -First 1
     if ($existingRows.Count -gt 1) {
-      $warnings.Add("Duplicate freight rows already existed for source id $($record.qfu_sourceid); updated latest row only.") | Out-Null
+      $warnings.Add("Duplicate freight rows already existed for freight identity $($record.qfu_sourceid); updated latest row only.") | Out-Null
     }
 
     $fields = Convert-FreightRecordToFields -Record $record

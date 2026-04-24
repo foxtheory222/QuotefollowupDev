@@ -21,6 +21,7 @@
   var CSSR_LEADERBOARD_AGE_OUTLIER_DAYS = 3650;
   var GETALL_MAX_PAGES = 50;
   var CONFIG_CACHE_TTL_MS = 5 * 60 * 1000;
+  var INGESTION_CACHE_TTL_MS = 60 * 1000;
   var QUOTES_FETCH_TOP = 5000;
   var BACKORDERS_FETCH_TOP = 5000;
   var BUDGETS_FETCH_TOP = 500;
@@ -32,11 +33,61 @@
   var FREIGHT_STALE_HOURS = 192;
   var FREIGHT_HIGH_VALUE_THRESHOLD = 250;
   var FREIGHT_ARCHIVE_AFTER_DAYS = 60;
-  var RUNTIME_CACHE_VERSION = "20260420c";
+  var RUNTIME_CACHE_VERSION = "20260424-freight-row-grain";
   var FLASH_MESSAGE = null;
   var RUNTIME_PROMISE = null;
   var RUNTIME_STATE = null;
   var OBSERVERS = new WeakMap();
+  var DELIVERY_NOT_PGI_DETAIL_FIELDS = [
+    "qfu_deliverynotpgiid", "qfu_sourceid", "qfu_deliverynumber", "qfu_deliveryline",
+    "qfu_ontimedate", "qfu_dayslate", "qfu_shiptocustomername", "qfu_soldtocustomername",
+    "qfu_material", "qfu_description", "qfu_qtyondelnotpgid", "qfu_unshippednetvalue",
+    "qfu_cssrname", "qfu_comment", "qfu_commentupdatedon", "qfu_commentupdatedbyname",
+    "qfu_snapshotcapturedon", "qfu_active", "qfu_inactiveon", "qfu_branchcode",
+    "qfu_branchslug", "qfu_regionslug", "qfu_sourcefamily", "qfu_sourcefile",
+    "qfu_importbatchid", "createdon", "modifiedon"
+  ].join(",");
+  var DELIVERY_NOT_PGI_SUMMARY_FIELDS = [
+    "qfu_deliverynotpgiid", "qfu_sourceid", "qfu_deliverynumber", "qfu_deliveryline",
+    "qfu_ontimedate", "qfu_dayslate", "qfu_shiptocustomername", "qfu_qtyondelnotpgid",
+    "qfu_unshippednetvalue", "qfu_cssrname", "qfu_comment", "qfu_commentupdatedon",
+    "qfu_commentupdatedbyname", "qfu_snapshotcapturedon", "qfu_active", "qfu_inactiveon",
+    "qfu_branchcode", "qfu_branchslug", "qfu_regionslug", "qfu_sourcefamily",
+    "qfu_sourcefile", "qfu_importbatchid", "createdon", "modifiedon"
+  ].join(",");
+  var DELIVERY_NOT_PGI_ANALYTICS_FIELDS = [
+    "qfu_deliverynotpgiid", "qfu_sourceid", "qfu_deliverynumber", "qfu_deliveryline",
+    "qfu_ontimedate", "qfu_dayslate", "qfu_shiptocustomername", "qfu_soldtocustomername",
+    "qfu_qtyondelnotpgid", "qfu_unshippednetvalue", "qfu_cssrname", "qfu_snapshotcapturedon",
+    "qfu_active", "qfu_inactiveon", "qfu_branchcode", "qfu_branchslug", "qfu_regionslug",
+    "qfu_sourcefamily", "qfu_sourcefile", "qfu_importbatchid", "createdon", "modifiedon"
+  ].join(",");
+  var FREIGHT_DETAIL_FIELDS = [
+    "qfu_freightworkitemid", "qfu_name", "qfu_sourceid", "qfu_branchcode",
+    "qfu_branchslug", "qfu_regionslug", "qfu_sourcefamily", "qfu_sourcefilename",
+    "qfu_sourcecarrier", "qfu_importbatchid", "qfu_trackingnumber", "qfu_pronumber",
+    "qfu_invoicenumber", "qfu_controlnumber", "qfu_reference", "qfu_shipdate",
+    "qfu_invoicedate", "qfu_closedate", "qfu_billtype", "qfu_service", "qfu_servicecode",
+    "qfu_sender", "qfu_destination", "qfu_zone", "qfu_actualweight", "qfu_billedweight",
+    "qfu_quantity", "qfu_totalamount", "qfu_freightamount", "qfu_fuelamount",
+    "qfu_taxamount", "qfu_gstamount", "qfu_hstamount", "qfu_qstamount",
+    "qfu_accessorialamount", "qfu_accessorialpresent", "qfu_unrealizedsavings",
+    "qfu_chargebreakdowntext", "qfu_direction", "qfu_status", "qfu_priorityband",
+    "qfu_ownername", "qfu_owneridentifier", "qfu_claimedon", "qfu_comment",
+    "qfu_commentupdatedon", "qfu_commentupdatedbyname", "qfu_lastactivityon",
+    "qfu_isarchived", "qfu_archivedon", "qfu_lastseenon", "createdon", "modifiedon"
+  ].join(",");
+  var FREIGHT_SUMMARY_FIELDS = [
+    "qfu_freightworkitemid", "qfu_name", "qfu_sourceid", "qfu_branchcode",
+    "qfu_branchslug", "qfu_regionslug", "qfu_sourcefamily", "qfu_sourcefilename",
+    "qfu_sourcecarrier", "qfu_importbatchid", "qfu_trackingnumber", "qfu_pronumber",
+    "qfu_invoicenumber", "qfu_controlnumber", "qfu_reference", "qfu_shipdate", "qfu_invoicedate",
+    "qfu_closedate", "qfu_billtype", "qfu_service", "qfu_sender", "qfu_destination",
+    "qfu_totalamount", "qfu_direction", "qfu_status", "qfu_priorityband",
+    "qfu_ownername", "qfu_owneridentifier", "qfu_claimedon", "qfu_commentupdatedon",
+    "qfu_lastactivityon", "qfu_isarchived", "qfu_archivedon", "qfu_lastseenon",
+    "createdon", "modifiedon"
+  ].join(",");
 
   var REGION_ROUTE_MAP = {
     "southern-alberta": "/southern-alberta",
@@ -1665,11 +1716,14 @@
   }
 
   function deliveryNotPgiOrderOldestSort(left, right) {
-    if (right.daysOnListNumber !== left.daysOnListNumber) {
-      return right.daysOnListNumber - left.daysOnListNumber;
+    if (right.daysLateNumber !== left.daysLateNumber) {
+      return right.daysLateNumber - left.daysLateNumber;
     }
-    if (left.createdOnValue !== right.createdOnValue) {
-      return left.createdOnValue - right.createdOnValue;
+    if (!!left.onTimeDateValue !== !!right.onTimeDateValue) {
+      return left.onTimeDateValue ? -1 : 1;
+    }
+    if (left.onTimeDateValue !== right.onTimeDateValue) {
+      return left.onTimeDateValue - right.onTimeDateValue;
     }
     if (right.totalValueNumber !== left.totalValueNumber) {
       return right.totalValueNumber - left.totalValueNumber;
@@ -1997,6 +2051,7 @@
     var tracking = String(record && record.qfu_trackingnumber || "").trim();
     var proNumber = String(record && record.qfu_pronumber || "").trim();
     var invoiceNumber = String(record && record.qfu_invoicenumber || "").trim();
+    var controlNumber = String(record && record.qfu_controlnumber || "").trim();
     var reference = String(record && record.qfu_reference || "").trim();
     var ownerName = String(record && record.qfu_ownername || "").trim();
     var comment = String(record && record.qfu_comment || "");
@@ -2040,6 +2095,7 @@
       trackingNumber: tracking || "-",
       proNumber: proNumber || "-",
       invoiceNumber: invoiceNumber || "-",
+      controlNumber: controlNumber || "-",
       reference: reference || "-",
       sender: sender,
       destination: destination,
@@ -2079,6 +2135,7 @@
       priorityKey: normalizeConfigKey(priorityBand),
       highValue: highValue,
       record: record,
+      ledgerHref: branch ? detailHref(branch, "freight-worklist") : "",
       detailHref: branch ? detailHrefWithParams(branch, "freight-worklist", { item: String(record && record.qfu_sourceid || "").trim() }) : "",
       searchText: [
         carrier,
@@ -2088,6 +2145,7 @@
         tracking,
         proNumber,
         invoiceNumber,
+        controlNumber,
         reference,
         sender,
         destination,
@@ -2283,6 +2341,177 @@
       rows: dedupedRows,
       duplicates: duplicates
     };
+  }
+
+  function freightVisibleIdentityValue(value) {
+    var text = String(value == null ? "" : value).trim();
+    return text && text !== "-" ? text : "";
+  }
+
+  function freightPrimaryReferenceLabel(row) {
+    if (!row) {
+      return "-";
+    }
+    return freightVisibleIdentityValue(row.trackingNumber)
+      || freightVisibleIdentityValue(row.proNumber)
+      || freightVisibleIdentityValue(row.reference)
+      || freightVisibleIdentityValue(row.controlNumber)
+      || freightVisibleIdentityValue(row.invoiceNumber)
+      || freightVisibleIdentityValue(row.sourceId)
+      || "-";
+  }
+
+  function freightPrimaryGroupingReference(row) {
+    if (!row) {
+      return "";
+    }
+    var references = [
+      ["tracking", row.trackingNumber],
+      ["pro", row.proNumber],
+      ["reference", row.reference],
+      ["control", row.controlNumber],
+      ["invoice", row.invoiceNumber]
+    ];
+    for (var index = 0; index < references.length; index += 1) {
+      var part = references[index];
+      var value = freightVisibleIdentityValue(part[1]);
+      if (value) {
+        return part[0] + ":" + value;
+      }
+    }
+    return "";
+  }
+
+  function freightRowBranchKey(row, branch) {
+    var record = row && row.record || {};
+    return freightVisibleIdentityValue(branch && (branch.slug || branch.code))
+      || freightVisibleIdentityValue(row && row.branchCode)
+      || freightVisibleIdentityValue(record.qfu_branchslug)
+      || freightVisibleIdentityValue(record.qfu_branchcode)
+      || "";
+  }
+
+  function freightRowGroupKey(row, branch) {
+    if (!row) {
+      return "freight-empty";
+    }
+    var primaryReference = freightPrimaryGroupingReference(row);
+    if (!primaryReference) {
+      return normalizeConfigKey("source|" + (row.sourceId || row.id || freightPrimaryReferenceLabel(row)));
+    }
+    return normalizeConfigKey([
+      "branch:" + freightRowBranchKey(row, branch),
+      "carrier:" + (row.carrierKey || row.carrier || ""),
+      primaryReference
+    ].join("|"));
+  }
+
+  function uniqueFreightGroupValues(rows, selector) {
+    var seen = {};
+    var values = [];
+    (rows || []).forEach(function (row) {
+      var rawValue = typeof selector === "function" ? selector(row) : row && row[selector];
+      var nextValues = Array.isArray(rawValue) ? rawValue : [rawValue];
+      nextValues.forEach(function (value) {
+        var text = String(value == null ? "" : value).trim();
+        if (!text) {
+          return;
+        }
+        var key = normalizeConfigKey(text);
+        if (seen[key]) {
+          return;
+        }
+        seen[key] = true;
+        values.push(text);
+      });
+    });
+    return values;
+  }
+
+  function freightGroupedRowCount(rows) {
+    return (rows || []).reduce(function (total, row) {
+      return total + Math.max(1, parseInteger(row && row.groupCount, 1));
+    }, 0);
+  }
+
+  function freightGroupCountLabel(row) {
+    var count = parseInteger(row && row.groupCount, 1);
+    return count > 1 ? (String(count) + " rows grouped") : "";
+  }
+
+  function freightLatestGroupedValue(rows, valueField) {
+    return (rows || []).reduce(function (latest, row) {
+      return Math.max(latest, toNumber(row && row[valueField]));
+    }, 0);
+  }
+
+  function summarizeFreightRowGroup(rows, groupKey, branch) {
+    var groupRows = (rows || []).slice().sort(freightSort);
+    var winner = groupRows[0];
+    var statusRow = groupRows.filter(function (row) { return !row.archived; })[0] || winner;
+    var statuses = uniqueFreightGroupValues(groupRows, function (row) { return row.status; });
+    var owners = uniqueFreightGroupValues(groupRows, function (row) { return row.ownerName || "Unowned"; });
+    var ownerNames = uniqueFreightGroupValues(groupRows, function (row) { return row.ownerName; });
+    var groupRecordIds = uniqueFreightGroupValues(groupRows, function (row) { return row.id; });
+    var groupSourceIds = uniqueFreightGroupValues(groupRows, function (row) { return row.sourceId; });
+    var hasUnownedMember = owners.indexOf("Unowned") >= 0;
+    var allArchived = groupRows.every(function (row) { return row.archived; });
+    var anyActionable = groupRows.some(function (row) { return row.actionable; });
+    var lastActivityOnValue = freightLatestGroupedValue(groupRows, "lastActivityOnValue");
+    var lastSeenOnValue = freightLatestGroupedValue(groupRows, "lastSeenOnValue");
+    var commentUpdatedOnValue = freightLatestGroupedValue(groupRows, "commentUpdatedOnValue");
+    var claimedOnValue = freightLatestGroupedValue(groupRows, "claimedOnValue");
+    var display = Object.assign({}, winner, {
+      id: groupRecordIds[0] || winner.id,
+      freightGroupKey: groupKey,
+      groupCount: groupRows.length,
+      groupedRows: groupRows,
+      groupRecordIds: groupRecordIds,
+      groupSourceIds: groupSourceIds,
+      status: statusRow.status,
+      statusKey: statusRow.statusKey,
+      statusFilterValues: statuses,
+      statusSummary: statuses.join(" + "),
+      owner: owners.length === 1 ? owners[0] : "Mixed owners",
+      ownerName: owners.length === 1 && ownerNames.length === 1 ? ownerNames[0] : "",
+      ownerInitials: owners.length === 1 ? winner.ownerInitials : "MX",
+      ownerFilterValues: owners,
+      ownerSummary: owners.join(" + "),
+      hasUnownedMember: hasUnownedMember,
+      archived: allArchived,
+      actionable: !allArchived && anyActionable,
+      highValue: groupRows.some(function (row) { return row.highValue; }),
+      lastActivityOnValue: lastActivityOnValue,
+      lastActivityOn: lastActivityOnValue ? formatDateTime(new Date(lastActivityOnValue)) : "Not touched",
+      lastSeenOnValue: lastSeenOnValue,
+      lastSeenOn: lastSeenOnValue ? formatDateTime(new Date(lastSeenOnValue)) : "Not imported yet",
+      commentUpdatedOnValue: commentUpdatedOnValue,
+      commentUpdatedOn: commentUpdatedOnValue ? formatDateTime(new Date(commentUpdatedOnValue)) : "No comment yet",
+      claimedOnValue: claimedOnValue,
+      claimedOn: claimedOnValue ? formatDateTime(new Date(claimedOnValue)) : "Unclaimed",
+      searchText: uniqueFreightGroupValues(groupRows, function (row) {
+        return [row.searchText, row.sourceId, row.id].join(" ");
+      }).join(" ").toLowerCase(),
+      detailHref: branch ? detailHrefWithParams(branch, "freight-worklist", { item: groupKey }) : winner.detailHref,
+      ledgerHref: branch ? detailHrefWithParams(branch, "freight-worklist", { item: groupKey }) : winner.ledgerHref
+    });
+    return display;
+  }
+
+  function groupFreightWorkItemRows(rows, branch) {
+    var grouped = {};
+    var groupOrder = [];
+    (rows || []).forEach(function (row) {
+      var key = freightRowGroupKey(row, branch);
+      if (!grouped[key]) {
+        grouped[key] = [];
+        groupOrder.push(key);
+      }
+      grouped[key].push(row);
+    });
+    return groupOrder.map(function (key) {
+      return summarizeFreightRowGroup(grouped[key], key, branch);
+    }).sort(freightSort);
   }
 
   function formatPlainNumber(value) {
@@ -3083,17 +3312,13 @@
     var clauses = [];
     var params = new URLSearchParams(window.location.search);
     var search = String(params.get("search") || "").trim();
-    var item = String(params.get("item") || "").trim();
     if (baseFilter) {
       clauses.push("(" + baseFilter + ")");
     }
     if (!(context && context.pageType === "detail" && context.viewKey === "freight-worklist")) {
       return clauses.join(" and ");
     }
-    if (item) {
-      clauses.push("(qfu_sourceid eq " + odataString(item) + ")");
-      return clauses.join(" and ");
-    }
+    // Grouped item links use synthetic keys, so fetch the branch scope and filter after grouping.
     if (search.length >= 3) {
       var searchValue = odataString(search);
       clauses.push("(" + [
@@ -3563,6 +3788,7 @@
       quoteArchiveRows: quoteArchiveRows,
       overdueQuoteRows: overdueQuoteRows,
       overdueBackorderRows: overdueBackorderRows,
+      analyticsBackorderRecords: backorders,
       unfollowedQuoteRows: unfollowedQuoteRows,
       unfollowedQuoteFootnote: unfollowedSelection.note,
       cssrLeaderboardRows: cssrLeaderboardRows,
@@ -4063,7 +4289,6 @@
     var context = runtimeContext();
     var isDetailPage = context.pageType === "detail";
     var detailViewKey = isDetailPage ? normalizeDetailViewKey(context.viewKey || "follow-up-queue") : "";
-    var authenticatedUser = portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]"));
     var routeRegionSlug = inferredRegionSlug(context);
     var needsOpsData = context.pageType === "ops";
     var needsRegionConfig = context.pageType === "hub" || context.pageType === "region" || needsOpsData;
@@ -4074,8 +4299,8 @@
     var needsFinanceVariances = context.pageType === "branch" || needsOpsData || (isDetailPage && detailViewKey === "analytics");
     var needsFinanceData = !isDetailPage || detailViewKey === "analytics";
     var needsDeliveryNotPgi = context.pageType === "branch" || needsOpsData || (isDetailPage && (detailViewKey === "ready-to-ship-not-pgid" || detailViewKey === "analytics"));
-    var needsFreightData = authenticatedUser && (context.pageType === "region" || context.pageType === "branch" || needsOpsData || (isDetailPage && detailViewKey === "freight-worklist"));
-    var needsSourceFeeds = needsOpsData || (authenticatedUser && (context.pageType === "branch" || (isDetailPage && detailViewKey === "freight-worklist")));
+    var needsFreightData = context.pageType === "region" || context.pageType === "branch" || needsOpsData || (isDetailPage && (detailViewKey === "freight-worklist" || detailViewKey === "analytics"));
+    var needsSourceFeeds = needsOpsData || context.pageType === "branch" || (isDetailPage && detailViewKey === "freight-worklist");
     var needsQuoteLineFallback = context.pageType === "region" || context.pageType === "branch" || (isDetailPage && detailViewKey === "quotes");
     var runtimeDiagnostics = createRuntimeDiagnostics();
     var scopedFilter = context.branchSlug
@@ -4094,6 +4319,15 @@
     var branchConfigCacheKey = context.branchSlug ? ("qfu-config-v2-branch:" + context.branchSlug) : "";
     var regionConfigCacheKey = routeRegionSlug ? ("qfu-config-v2-region:" + routeRegionSlug) : "";
     var sourceFeedCacheKey = context.branchSlug ? ("qfu-config-v2-sourcefeeds:" + context.branchSlug) : "";
+    var ingestionCacheKey = "qfu-freshness-v2:" + (context.branchSlug || context.regionSlug || routeRegionSlug || "all");
+    var deliveryNotPgiFields = (isDetailPage && detailViewKey === "ready-to-ship-not-pgid") || needsOpsData
+      ? DELIVERY_NOT_PGI_DETAIL_FIELDS
+      : (isDetailPage && detailViewKey === "analytics"
+        ? DELIVERY_NOT_PGI_ANALYTICS_FIELDS
+        : DELIVERY_NOT_PGI_SUMMARY_FIELDS);
+    var freightFields = (isDetailPage && detailViewKey === "freight-worklist") || needsOpsData
+      ? FREIGHT_DETAIL_FIELDS
+      : FREIGHT_SUMMARY_FIELDS;
 
     var RUNTIME_CACHE_KEY = "qfu-runtime-" + RUNTIME_CACHE_VERSION + ":" + (context.pageType || "") + ":" + (context.branchSlug || "") + ":" + (context.regionSlug || "") + ":" + (context.viewKey || "");
     var RUNTIME_CACHE_TTL_MS = 60 * 1000;
@@ -4114,7 +4348,7 @@
     var runtimeResultsPromise = cachedRuntimeResults ? Promise.resolve(cachedRuntimeResults) : Promise.all([
       needsQuoteData ? safeGetAll(withFilter("/_api/qfu_quotes?$select=qfu_quoteid,qfu_sourceid,qfu_quotenumber,qfu_customername,qfu_amount,qfu_assignedto,qfu_tsr,qfu_cssrname,qfu_nextfollowup,qfu_overduesince,qfu_lasttouchedon,qfu_priorityscore,qfu_status,qfu_sourcedate,qfu_sourceupdatedon,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,createdon,modifiedon&$top=" + QUOTES_FETCH_TOP, scopedFilter), "qfu_quotes", runtimeDiagnostics, { top: QUOTES_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsQuoteLineFallback ? safeGetAll(withFilter("/_api/qfu_quotelines?$select=qfu_quotelineid,qfu_quotenumber,qfu_amount,qfu_status,qfu_cssrname,qfu_tsr,qfu_tsrname,qfu_soldtopartyname,qfu_sourcedate,qfu_lastimportdate,qfu_branchcode,qfu_branchslug,qfu_regionslug,createdon,modifiedon&$top=2500", scopedFilter), "qfu_quotelines", runtimeDiagnostics, { top: 2500, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
-      needsBackorderData ? safeGetAll(withFilter("/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_qtyondelnotpgid,qfu_qtynotondel,qfu_reasonforrejection,qfu_sourceline,qfu_lineitemcreatedon,createdon,modifiedon&$top=" + BACKORDERS_FETCH_TOP, scopedFilter), "qfu_backorders", runtimeDiagnostics, { top: BACKORDERS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
+      needsBackorderData ? safeGetAll(withFilter("/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,qfu_accountmanagername,qfu_shipconddesc,qfu_delblockdesc,qfu_billblockdesc,qfu_importbatchid,qfu_active,qfu_inactiveon,qfu_lastseenon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_qtyondelnotpgid,qfu_qtynotondel,qfu_reasonforrejection,qfu_sourceline,qfu_lineitemcreatedon,createdon,modifiedon&$top=" + BACKORDERS_FETCH_TOP, scopedFilter), "qfu_backorders", runtimeDiagnostics, { top: BACKORDERS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsBudgetData ? safeGetAll(withFilter("/_api/qfu_budgets?$select=qfu_budgetid,qfu_budgetname,qfu_actualsales,qfu_budgetgoal,qfu_lastupdated,qfu_cadsales,qfu_usdsales,qfu_month,qfu_monthname,qfu_year,qfu_fiscalyear,qfu_isactive,qfu_sourcefamily,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_opsdailycadjson,qfu_opsdailyusdjson,createdon&$top=" + BUDGETS_FETCH_TOP, scopedFilter), "qfu_budgets", runtimeDiagnostics, { top: BUDGETS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsBudgetData ? safeGetAll(withFilter("/_api/qfu_budgetarchives?$select=qfu_budgetarchiveid,qfu_name,qfu_sourceid,qfu_budgetgoal,qfu_actualsales,qfu_month,qfu_monthname,qfu_year,qfu_fiscalyear,qfu_lastupdated,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon,modifiedon&$top=" + BUDGET_ARCHIVES_FETCH_TOP, scopedFilter), "qfu_budgetarchives", runtimeDiagnostics, { top: BUDGET_ARCHIVES_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
       needsBranchSummaries ? safeGetAll(withFilter("/_api/qfu_branchdailysummaries?$select=qfu_branchdailysummaryid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_summarydate,qfu_openquotes,qfu_overduequotes,qfu_duetoday,qfu_unscheduledold,qfu_openquotevalue,qfu_quoteslast30days,qfu_quoteswon30days,qfu_quoteslost30days,qfu_quotesopen30days,qfu_avgquotevalue30days,qfu_backordercount,qfu_overduebackordercount,qfu_currentmonthforecastvalue,qfu_currentmonthlatevalue,qfu_allbackordersvalue,qfu_overduebackordersvalue,qfu_budgetactual,qfu_budgettarget,qfu_budgetpace,qfu_cadsales,qfu_usdsales,qfu_lastcalculatedon,createdon&$top=" + BRANCH_SUMMARY_FETCH_TOP, scopedFilter), "qfu_branchdailysummaries", runtimeDiagnostics, { top: BRANCH_SUMMARY_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
@@ -4125,15 +4359,15 @@
       safeGetAllCached(withFilter("/_api/qfu_branchs?$select=qfu_branchid,qfu_branchcode,qfu_branchname,qfu_branchslug,qfu_regionslug,qfu_regionname,qfu_mailboxaddress,qfu_sortorder,qfu_branchstate,qfu_stalethresholdhours,qfu_budgetpacewarningpct,qfu_overduequotewarningcount,qfu_overduebackorderwarningcount,qfu_managernote,createdon,modifiedon&$top=50", branchConfigFilter), "qfu_branchs", runtimeDiagnostics, { top: 50, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug, cacheKey: branchConfigCacheKey, cacheTtlMs: CONFIG_CACHE_TTL_MS }),
       needsRegionConfig ? safeGetAllCached(withFilter("/_api/qfu_regions?$select=qfu_regionid,qfu_regionslug,qfu_regionname,qfu_status,qfu_sortorder,qfu_stalethresholdhours,qfu_budgetpacewarningpct,qfu_overduequotewarningcount,qfu_overduebackorderwarningcount,qfu_managernote,createdon,modifiedon&$top=25", regionConfigFilter), "qfu_regions", runtimeDiagnostics, { top: 25, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug, cacheKey: regionConfigCacheKey, cacheTtlMs: CONFIG_CACHE_TTL_MS }) : Promise.resolve([]),
       needsSourceFeeds ? safeGetAllCached(withFilter("/_api/qfu_sourcefeeds?$select=qfu_sourcefeedid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_mailboxaddress,qfu_filenamepattern,qfu_subjectfilter,qfu_folderid,qfu_enabled,createdon,modifiedon&$top=100", branchConfigFilter), "qfu_sourcefeeds", runtimeDiagnostics, { top: 100, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug, cacheKey: sourceFeedCacheKey, cacheTtlMs: CONFIG_CACHE_TTL_MS, allowEmptyCache: true }) : Promise.resolve([]),
-      safeGetAll(withFilter("/_api/qfu_ingestionbatchs?$select=qfu_ingestionbatchid,qfu_name,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_status,qfu_startedon,qfu_completedon,qfu_insertedcount,qfu_updatedcount,qfu_notes,qfu_triggerflow,createdon,modifiedon&$top=" + INGESTION_FETCH_TOP, scopedFilter), "qfu_ingestionbatchs", runtimeDiagnostics, { top: INGESTION_FETCH_TOP, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }),
-      needsDeliveryNotPgi ? safeGetAll(withFilter("/_api/qfu_deliverynotpgis?$select=qfu_deliverynotpgiid,qfu_sourceid,qfu_deliverynumber,qfu_deliveryline,qfu_ontimedate,qfu_dayslate,qfu_shiptocustomername,qfu_soldtocustomername,qfu_material,qfu_description,qfu_qtyondelnotpgid,qfu_unshippednetvalue,qfu_cssrname,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_snapshotcapturedon,qfu_active,qfu_inactiveon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefile,qfu_importbatchid,createdon,modifiedon&$top=" + DELIVERY_FETCH_TOP, scopedFilter), "qfu_deliverynotpgis", runtimeDiagnostics, { top: DELIVERY_FETCH_TOP, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
-      needsFreightData ? safeGetAll(withFilter("/_api/qfu_freightworkitems?$select=qfu_freightworkitemid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_sourcecarrier,qfu_importbatchid,qfu_trackingnumber,qfu_pronumber,qfu_invoicenumber,qfu_controlnumber,qfu_reference,qfu_shipdate,qfu_invoicedate,qfu_closedate,qfu_billtype,qfu_service,qfu_servicecode,qfu_sender,qfu_destination,qfu_zone,qfu_actualweight,qfu_billedweight,qfu_quantity,qfu_totalamount,qfu_freightamount,qfu_fuelamount,qfu_taxamount,qfu_gstamount,qfu_hstamount,qfu_qstamount,qfu_accessorialamount,qfu_accessorialpresent,qfu_unrealizedsavings,qfu_chargebreakdowntext,qfu_direction,qfu_status,qfu_priorityband,qfu_ownername,qfu_owneridentifier,qfu_claimedon,qfu_comment,qfu_commentupdatedon,qfu_commentupdatedbyname,qfu_lastactivityon,qfu_isarchived,qfu_archivedon,qfu_lastseenon,createdon,modifiedon&$top=" + FREIGHT_FETCH_TOP, freightServerFilter(scopedFilter, context)), "qfu_freightworkitems", runtimeDiagnostics, { top: FREIGHT_FETCH_TOP, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([])
+      safeGetAllCached(withFilter("/_api/qfu_ingestionbatchs?$select=qfu_ingestionbatchid,qfu_name,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,qfu_sourcefilename,qfu_status,qfu_startedon,qfu_completedon,qfu_insertedcount,qfu_updatedcount,qfu_notes,qfu_triggerflow,createdon,modifiedon&$top=" + INGESTION_FETCH_TOP, scopedFilter), "qfu_ingestionbatchs", runtimeDiagnostics, { top: INGESTION_FETCH_TOP, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug, cacheKey: ingestionCacheKey, cacheTtlMs: INGESTION_CACHE_TTL_MS, allowEmptyCache: true }),
+      needsDeliveryNotPgi ? safeGetAll(withFilter("/_api/qfu_deliverynotpgis?$select=" + deliveryNotPgiFields + "&$top=" + DELIVERY_FETCH_TOP, scopedFilter), "qfu_deliverynotpgis", runtimeDiagnostics, { top: DELIVERY_FETCH_TOP, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([]),
+      needsFreightData ? safeGetAll(withFilter("/_api/qfu_freightworkitems?$select=" + freightFields + "&$top=" + FREIGHT_FETCH_TOP, freightServerFilter(scopedFilter, context)), "qfu_freightworkitems", runtimeDiagnostics, { top: FREIGHT_FETCH_TOP, critical: false, branchSlug: context.branchSlug, regionSlug: context.regionSlug }) : Promise.resolve([])
     ]).then(function (results) {
       try {
         if (typeof sessionStorage !== "undefined") {
           sessionStorage.setItem(RUNTIME_CACHE_KEY, JSON.stringify({ ts: Date.now(), results: results }));
         }
-      } catch (cacheWriteErr) { /* quota or serialization issue ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ignore */ }
+      } catch (cacheWriteErr) { /* ignore cache quota or serialization failures */ }
       return results;
     });
 
@@ -4457,9 +4691,10 @@
               oldestRows: displayOrderRows.slice().sort(deliveryNotPgiOrderOldestSort).slice(0, 5)
             };
           })();
-          branch.workspace.freightRows = branchFreightRows.rows.map(function (record) {
+          branch.workspace.freightSourceRows = branchFreightRows.rows.map(function (record) {
             return buildFreightWorkItemRow(record, branch);
           }).sort(freightSort);
+          branch.workspace.freightRows = branch.workspace.freightSourceRows.slice().sort(freightSort);
           branch.workspace.freightFeedRows = sourceFeeds.filter(function (record) {
             return record.qfu_branchslug === branch.slug && String(record.qfu_sourcefamily || "").trim().toUpperCase().indexOf("FREIGHT_") === 0;
           });
@@ -4502,8 +4737,10 @@
               reviewCount: unresolvedRows.length,
               ledgerCount: ledgerRows.length,
               archivedCount: archivedRows.length,
+              sourceRowCount: branch.workspace.freightSourceRows.length,
+              groupedDuplicateCount: Math.max(0, branch.workspace.freightSourceRows.length - rows.length),
               highValueCount: highValueRows.length,
-              unownedCount: unresolvedRows.filter(function (row) { return !row.ownerName; }).length,
+              unownedCount: unresolvedRows.filter(function (row) { return !row.ownerName || row.hasUnownedMember; }).length,
               totalAmountValue: unresolvedRows.reduce(function (total, row) { return total + row.totalAmountNumber; }, 0),
               openRows: unresolvedRows,
               ledgerRows: ledgerRows,
@@ -5076,7 +5313,9 @@
     }
 
     return '<div class="qfu-phase0-home-feed qfu-phase0-home-feed--quotes">' + rows.map(function (row) {
-      return '<article class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--quote"><div class="qfu-phase0-home-feed__main"><strong>Quote ' + escapeHtml(row.quote) + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.customer) + '</div><div class="qfu-phase0-home-feed__submeta">CSSR ' + escapeHtml(row.cssr) + ' | TSR ' + escapeHtml(row.tsr) + ' | Created ' + escapeHtml(row.createdOn || "-") + ' | Next ' + escapeHtml(row.nextFollowup || "-") + ' | Last ' + escapeHtml(row.lastTouched || "-") + '</div></div><div class="qfu-phase0-home-feed__metric is-alert"><span>Overdue</span><strong>' + escapeHtml(row.daysOverdue || "0d") + '</strong></div><div class="qfu-phase0-home-feed__metric is-money"><span>Value</span><strong>' + escapeHtml(row.value) + '</strong></div><div class="qfu-phase0-home-feed__actions"><a class="qfu-phase0-table-action is-primary" href="' + escapeHtml(row.openHref) + '">Open</a><a class="qfu-phase0-table-action is-secondary" href="' + escapeHtml(row.queueHref) + '">Queue</a></div></article>';
+      var href = row.openHref || row.queueHref || "#";
+      var label = row.quote ? ("Open quote " + row.quote) : "Open quote detail";
+      return '<a class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--quote" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(label) + '"><div class="qfu-phase0-home-feed__main"><strong>Quote ' + escapeHtml(row.quote) + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.customer) + '</div><div class="qfu-phase0-home-feed__submeta">CSSR ' + escapeHtml(row.cssr) + ' | TSR ' + escapeHtml(row.tsr) + ' | Created ' + escapeHtml(row.createdOn || "-") + ' | Next ' + escapeHtml(row.nextFollowup || "-") + ' | Last ' + escapeHtml(row.lastTouched || "-") + '</div></div><div class="qfu-phase0-home-feed__metric is-alert"><span>Overdue</span><strong>' + escapeHtml(row.daysOverdue || "0d") + '</strong></div><div class="qfu-phase0-home-feed__metric is-money"><span>Value</span><strong>' + escapeHtml(row.value) + '</strong></div></a>';
     }).join("") + '</div>';
   }
 
@@ -5091,13 +5330,15 @@
     }).join("") + '</div>';
   }
 
-  function renderHomeMarginPreviewList(rows) {
+  function renderHomeMarginPreviewList(rows, detailHref) {
     if (!rows.length) {
       return '<div class="qfu-phase0-empty-state"><strong>No Live Data Yet</strong><p class="qfu-phase0-empty-copy">No abnormal margin exception rows are available for this branch.</p></div>';
     }
 
     return '<div class="qfu-phase0-home-feed qfu-phase0-home-feed--margins">' + rows.map(function (row) {
-      return '<article class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--margin"><div class="qfu-phase0-home-feed__main"><strong>' + renderMarginBadge(row.reviewType, row.tone) + ' ' + escapeHtml(row.document) + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.customer) + '</div><div class="qfu-phase0-home-feed__submeta">' + escapeHtml(row.billingDate + ' | CSSR ' + row.cssr) + '</div></div><div class="qfu-phase0-home-feed__metric is-alert"><span>Margin</span><strong>' + escapeHtml(row.marginPct) + '</strong></div></article>';
+      var href = detailHref || "#";
+      var label = row.document && row.document !== "-" ? ("Open abnormal margin review for billing document " + row.document) : "Open abnormal margin review";
+      return '<a class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--margin" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(label) + '"><div class="qfu-phase0-home-feed__main"><strong>' + renderMarginBadge(row.reviewType, row.tone) + ' ' + escapeHtml(row.document) + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.customer) + '</div><div class="qfu-phase0-home-feed__submeta">' + escapeHtml(row.billingDate + ' | CSSR ' + row.cssr) + '</div></div><div class="qfu-phase0-home-feed__metric is-alert"><span>Margin</span><strong>' + escapeHtml(row.marginPct) + '</strong></div></a>';
     }).join("") + '</div>';
   }
 
@@ -5107,12 +5348,14 @@
     }
 
     return '<div class="qfu-phase0-home-feed qfu-phase0-home-feed--freight">' + rows.map(function (row) {
-      var href = row.detailHref || detailFallbackHref || "#";
-      var label = row.invoiceNumber !== "-" ? row.invoiceNumber : (row.proNumber !== "-" ? row.proNumber : (row.trackingNumber !== "-" ? row.trackingNumber : (row.sourceId || "-")));
+      var href = detailFallbackHref || row.ledgerHref || row.detailHref || "#";
+      var label = freightPrimaryReferenceLabel(row);
+      var groupLabel = freightGroupCountLabel(row);
+      var rowLabel = "Open freight ledger for " + label;
       var routeBits = [row.carrier, row.service, row.direction].filter(function (value) {
         return !!(value && value !== "-");
       });
-      return '<article class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--freight"><div class="qfu-phase0-home-feed__main"><strong><a href="' + escapeHtml(href) + '">' + escapeHtml(label) + '</a></strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.owner || "Unowned") + ' | ' + escapeHtml(row.status || "Unreviewed") + '</div><div class="qfu-phase0-home-feed__submeta">' + escapeHtml((routeBits.length ? routeBits.join(" | ") : "-") + ' | Last ' + (row.lastActivityOn || row.lastSeenOn || "Not touched")) + '</div></div><div class="qfu-phase0-home-feed__metric is-money"><span>Total</span><strong>' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</strong></div></article>';
+      return '<a class="qfu-phase0-home-feed__row qfu-phase0-home-feed__row--freight" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(rowLabel) + '"><div class="qfu-phase0-home-feed__main"><strong>' + escapeHtml(label) + (groupLabel ? '<span class="qfu-phase0-home-feed__badge">' + escapeHtml(groupLabel) + '</span>' : '') + '</strong><div class="qfu-phase0-home-feed__meta">' + escapeHtml(row.owner || "Unowned") + ' | ' + escapeHtml(row.statusSummary || row.status || "Unreviewed") + '</div><div class="qfu-phase0-home-feed__submeta">' + escapeHtml((routeBits.length ? routeBits.join(" | ") : "-") + ' | Last ' + (row.lastActivityOn || row.lastSeenOn || "Not touched")) + '</div></div><div class="qfu-phase0-home-feed__metric is-money"><span>Total</span><strong>' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</strong></div></a>';
     }).join("") + '</div>';
   }
 
@@ -5368,9 +5611,29 @@
       '.qfu-phase0-delivery-detail__stage .qfu-phase0-admin-input{background:#ffffff;border:0;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(15,23,42,0.08);min-height:39px;padding:0.48rem 0.68rem;}' +
       '.qfu-phase0-summary-table-shell--delivery-board{background:linear-gradient(180deg,rgba(240,244,246,0.98) 0%,rgba(236,240,242,0.98) 100%);border-radius:22px;box-shadow:inset 0 0 0 1px rgba(15,23,42,0.05);overflow:hidden;padding:0.48rem;}' +
       '.qfu-phase0-summary-table-shell--delivery-board .qfu-phase0-table-wrap{background:#ffffff;border-radius:18px;overflow:auto;}' +
-      '.qfu-phase0-summary-table--delivery-board{font-size:0.75rem;line-height:1.38;min-width:0;table-layout:fixed;width:100%;}' +
-      '.qfu-phase0-summary-table--delivery-board thead th{background:linear-gradient(180deg,rgba(13,148,136,0.07) 0%,rgba(100,116,139,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#607582;font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;}' +
-      '.qfu-phase0-summary-table--delivery-board tbody td{padding-bottom:0.82rem;padding-top:0.82rem;vertical-align:top;}' +
+      '.qfu-phase0-summary-table-shell--delivery-board .qfu-phase0-table-wrap{scrollbar-color:rgba(96,117,130,0.4) transparent;scrollbar-width:thin;}' +
+      '.qfu-phase0-summary-table--delivery-board{font-size:0.75rem;line-height:1.38;table-layout:fixed;}' +
+      '.qfu-phase0-summary-table--delivery-orders{min-width:1450px;width:1450px;}' +
+      '.qfu-phase0-summary-table--delivery-lines{min-width:1570px;width:1570px;}' +
+      '.qfu-phase0-summary-table--delivery-board thead th{background:linear-gradient(180deg,rgba(13,148,136,0.07) 0%,rgba(100,116,139,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#607582;font-size:0.64rem;font-weight:800;letter-spacing:0.035em;line-height:1.16;padding:0.7rem 0.55rem;text-transform:uppercase;white-space:normal;}' +
+      '.qfu-phase0-summary-table--delivery-board tbody td{overflow-wrap:anywhere;padding:0.82rem 0.55rem;vertical-align:top;word-break:normal;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__date{width:96px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__days{width:74px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__delivery{width:116px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__line{width:62px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__customer{width:174px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__material{width:106px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__description{width:180px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__qty{width:112px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__value{width:132px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__cssr{width:136px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__days-on-list{width:88px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__comment{width:232px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__updated{width:122px;}' +
+      '.qfu-phase0-summary-table--delivery-board th.qfu-phase0-delivery-board__action{width:100px;}' +
+      '.qfu-phase0-summary-table--delivery-lines th.qfu-phase0-delivery-board__comment{width:190px;}' +
+      '.qfu-phase0-delivery-board__qty,.qfu-phase0-delivery-board__value,.qfu-phase0-delivery-board__days,.qfu-phase0-delivery-board__line,.qfu-phase0-delivery-board__updated,.qfu-phase0-summary-table--delivery-board .qfu-phase0-table__numeric{white-space:nowrap;}' +
+      '.qfu-phase0-delivery-board__description{color:#30424d;line-height:1.34;}' +
       '.qfu-phase0-summary-table--delivery-board tbody tr:nth-child(odd){background:rgba(248,250,251,0.84);}' +
       '.qfu-phase0-summary-table--delivery-board tbody tr:hover{background:rgba(237,243,246,0.95);}' +
       '.qfu-phase0-summary-table--delivery-board tbody tr.is-critical{background:rgba(255,241,236,0.9);}' +
@@ -5407,7 +5670,7 @@
       return '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(emptyTitle) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy) + "</p></div>";
     }
 
-    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Lines</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Order Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th><th>Action</th></tr></thead><tbody>' + rows.map(function (row) {
+    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board qfu-phase0-summary-table--delivery-orders"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Lines</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Order Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th><th class="qfu-phase0-delivery-board__action">Action</th></tr></thead><tbody>' + rows.map(function (row) {
       var params = activeDeliveryNotPgiFilterParams(filters);
       params.order = row.deliveryNumber;
       var viewLinesHref = detailHrefWithParams(branch, "ready-to-ship-not-pgid", params);
@@ -5422,7 +5685,7 @@
       return '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(emptyTitle) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy) + "</p></div>";
     }
 
-    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Line</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__material">Material</th><th class="qfu-phase0-delivery-board__description">Description</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Current Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th></tr></thead><tbody>' + rows.map(function (row) {
+    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--delivery-board"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--delivery-board qfu-phase0-summary-table--delivery-lines"><thead><tr><th class="qfu-phase0-delivery-board__date">On-Time Date</th><th class="qfu-phase0-delivery-board__days">Days Late</th><th class="qfu-phase0-delivery-board__delivery">Order Number</th><th class="qfu-phase0-delivery-board__line">Line</th><th class="qfu-phase0-delivery-board__customer">Customer</th><th class="qfu-phase0-delivery-board__material">Material</th><th class="qfu-phase0-delivery-board__description">Description</th><th class="qfu-phase0-delivery-board__qty">Qty on Del Not PGI\'d</th><th class="qfu-phase0-delivery-board__value">Unshipped Net Value</th><th class="qfu-phase0-delivery-board__cssr">CSSR</th><th class="qfu-phase0-delivery-board__days-on-list">Days on List</th><th class="qfu-phase0-delivery-board__comment">Current Comment</th><th class="qfu-phase0-delivery-board__updated">Last Updated</th></tr></thead><tbody>' + rows.map(function (row) {
       var rowTone = deliveryLateTone(row.daysLateNumber);
       return '<tr class="is-' + escapeHtml(rowTone) + '"><td><div class="qfu-phase0-delivery-board__date-stack"><strong>' + escapeHtml(row.onTimeDate) + '</strong><div class="qfu-phase0-admin-subtext">due date</div></div></td><td>' + renderDeliveryAgeChip(row.daysLate + 'd', rowTone) + '</td><td class="qfu-phase0-delivery-board__order"><strong>' + escapeHtml(row.deliveryNumber) + '</strong></td><td><strong>' + escapeHtml(row.line) + '</strong></td><td class="qfu-phase0-delivery-board__customer"><strong>' + escapeHtml(row.customer) + '</strong></td><td class="qfu-phase0-delivery-board__material"><strong>' + escapeHtml(row.material) + '</strong></td><td class="qfu-phase0-delivery-board__description">' + escapeHtml(row.description) + '</td><td>' + escapeHtml(formatPlainNumber(row.qtyOnDeliveryNotPgidNumber)) + '</td><td class="qfu-phase0-table__numeric"><strong>' + escapeHtml(row.unshippedValue) + '</strong></td><td class="qfu-phase0-delivery-board__cssr"><strong>' + escapeHtml(row.cssr) + '</strong></td><td>' + renderDeliveryAgeChip(row.daysOnList + 'd', row.daysOnListNumber >= 8 ? 'warning' : 'steady') + '</td><td>' + escapeHtml(row.comment || "No comment yet") + '</td><td class="qfu-phase0-delivery-board__updated"><strong>' + escapeHtml(row.commentUpdatedOn) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.commentUpdatedByName) + '</div></td></tr>';
     }).join("") + "</tbody></table></div></div>";
@@ -5731,21 +5994,23 @@
 
   function uniqueFreightValues(rows, selector) {
     var seen = {};
-    return (rows || []).map(function (row) {
-      return typeof selector === "function" ? selector(row) : row[selector];
-    }).map(function (value) {
-      return String(value || "").trim();
-    }).filter(function (value) {
-      if (!value) {
-        return false;
-      }
-      var key = value.toLowerCase();
-      if (seen[key]) {
-        return false;
-      }
-      seen[key] = true;
-      return true;
-    }).sort(function (left, right) {
+    var values = [];
+    (rows || []).forEach(function (row) {
+      var selected = typeof selector === "function" ? selector(row) : row[selector];
+      (Array.isArray(selected) ? selected : [selected]).forEach(function (value) {
+        var text = String(value || "").trim();
+        if (!text) {
+          return;
+        }
+        var key = text.toLowerCase();
+        if (seen[key]) {
+          return;
+        }
+        seen[key] = true;
+        values.push(text);
+      });
+    });
+    return values.sort(function (left, right) {
       return String(left || "").localeCompare(String(right || ""));
     });
   }
@@ -5764,15 +6029,11 @@
       if (filters.carrier && row.carrier !== filters.carrier) {
         return false;
       }
-      if (filters.status && row.status !== filters.status) {
+      if (filters.status && (row.statusFilterValues || [row.status]).indexOf(filters.status) === -1) {
         return false;
       }
       if (filters.owner) {
-        if (filters.owner === "Unowned") {
-          if (row.ownerName) {
-            return false;
-          }
-        } else if (row.owner !== filters.owner) {
+        if ((row.ownerFilterValues || [row.ownerName ? row.owner : "Unowned"]).indexOf(filters.owner) === -1) {
           return false;
         }
       }
@@ -5806,7 +6067,7 @@
       if (search && row.searchText.indexOf(search) === -1) {
         return false;
       }
-      if (filters.item && row.sourceId !== filters.item) {
+      if (filters.item && row.sourceId !== filters.item && row.freightGroupKey !== filters.item && (row.groupSourceIds || []).indexOf(filters.item) === -1) {
         return false;
       }
       return true;
@@ -5828,7 +6089,10 @@
       { label: "Tracking", value: function (row) { return row.trackingNumber; } },
       { label: "PRO", value: function (row) { return row.proNumber; } },
       { label: "Invoice", value: function (row) { return row.invoiceNumber; } },
+      { label: "Control", value: function (row) { return row.controlNumber; } },
       { label: "Reference", value: function (row) { return row.reference; } },
+      { label: "Source Row Count", value: function (row) { return String(Math.max(1, parseInteger(row.groupCount, 1))); } },
+      { label: "Source IDs", value: function (row) { return (row.groupSourceIds || [row.sourceId]).join(" | "); } },
       { label: "Sender", value: function (row) { return row.sender; } },
       { label: "Destination", value: function (row) { return row.destination; } },
       { label: "Service", value: function (row) { return row.service; } },
@@ -5895,19 +6159,20 @@
 
   function renderFreightHero(branch, freight, latestImportRow, latestImportSummary, filteredRows, totalFilteredAmount) {
     var reviewRows = filteredRows.filter(function (row) { return row.actionable && !row.archived; });
-    var unownedRows = filteredRows.filter(function (row) { return !row.ownerName && !row.archived; });
+    var unownedRows = filteredRows.filter(function (row) { return (!row.ownerName || row.hasUnownedMember) && !row.archived; });
     var highValueRows = filteredRows.filter(function (row) { return row.highValue && !row.archived; });
+    var ledgerSourceRows = freightGroupedRowCount(filteredRows);
     var health = freightQueueHealthState(freight, latestImportRow);
     var metrics = [
       {
         label: "Value",
         value: formatCompactCurrency(totalFilteredAmount),
-        note: String(filteredRows.length) + " bills"
+        note: String(filteredRows.length) + " ledger entries" + (ledgerSourceRows > filteredRows.length ? (" / " + String(ledgerSourceRows) + " source rows") : "")
       },
       {
         label: "Needs Review",
         value: String(reviewRows.length),
-        note: "unresolved"
+        note: "unresolved entries"
       },
       {
         label: "Unowned",
@@ -5944,8 +6209,8 @@
 
   function renderFreightToolbar(branch, filters, filteredRows, allRows) {
     var carrierOptions = uniqueFreightValues(allRows, function (row) { return row.carrier; });
-    var statusOptions = uniqueFreightValues(allRows, function (row) { return row.status; });
-    var ownerOptions = uniqueFreightValues(allRows, function (row) { return row.ownerName || "Unowned"; });
+    var statusOptions = uniqueFreightValues(allRows, function (row) { return row.statusFilterValues || row.status; });
+    var ownerOptions = uniqueFreightValues(allRows, function (row) { return row.ownerFilterValues || (row.ownerName || "Unowned"); });
     var billTypeOptions = uniqueFreightValues(allRows, function (row) { return row.billType; });
     var serviceOptions = uniqueFreightValues(allRows, function (row) { return row.service; });
     var directionOptions = uniqueFreightValues(allRows, function (row) { return row.direction; });
@@ -5968,7 +6233,7 @@
     if (filters.search) { chips.push(buildFilterChip("Search", filters.search)); }
     return '<form class="qfu-phase0-delivery-toolbar qfu-phase0-freight-toolbar" method="get" action="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">' +
       '<input type="hidden" name="view" value="freight-worklist" />' +
-      '<div class="qfu-phase0-freight-toolbar__hero"><div class="qfu-phase0-freight-toolbar__copy"><span class="qfu-phase0-panel__eyebrow">Ledger filters</span><strong>Filter the ledger</strong><p>Carrier, owner, status, amount, date range, and text search keep the freight bill investigation tight.</p></div><div class="qfu-phase0-freight-toolbar__actions"><div class="qfu-phase0-delivery-toolbar__chips">' + chips.join("") + (!hasExtraFilters ? '<span class="qfu-phase0-admin-subtext">Default sort is highest value first. Switch to newest or oldest using invoice date, ship date, or last activity.</span>' : '') + '</div><div class="qfu-phase0-delivery-toolbar__buttons"><button class="qfu-phase0-action" type="submit">Apply</button><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">Clear</a><button class="qfu-phase0-secondary-action" type="button" data-qfu-copy-freight-list="1">Copy List</button><button class="qfu-phase0-secondary-action" type="button" data-qfu-export-freight-csv="1">Export CSV</button></div></div></div>' +
+      '<div class="qfu-phase0-freight-toolbar__hero"><div class="qfu-phase0-freight-toolbar__copy"><span class="qfu-phase0-panel__eyebrow">Ledger filters</span><strong>Filter the ledger</strong><p>Carrier, owner, status, amount, date range, and text search keep the shipment-level freight investigation tight.</p></div><div class="qfu-phase0-freight-toolbar__actions"><div class="qfu-phase0-delivery-toolbar__chips">' + chips.join("") + (!hasExtraFilters ? '<span class="qfu-phase0-admin-subtext">Default sort is highest value first. Switch to newest or oldest using invoice date, ship date, or last activity.</span>' : '') + '</div><div class="qfu-phase0-delivery-toolbar__buttons"><button class="qfu-phase0-action" type="submit">Apply</button><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">Clear</a><button class="qfu-phase0-secondary-action" type="button" data-qfu-copy-freight-list="1">Copy List</button><button class="qfu-phase0-secondary-action" type="button" data-qfu-export-freight-csv="1">Export CSV</button></div></div></div>' +
       '<div class="qfu-phase0-delivery-toolbar__filters">' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Sort</span><select class="qfu-phase0-admin-input" name="sort">' + renderFreightSortOptions(filters.sort) + '</select></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Date Field</span><select class="qfu-phase0-admin-input" name="dateField">' + renderFreightDateFieldOptions(filters.dateField) + '</select></label>' +
@@ -5982,10 +6247,10 @@
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Max $</span><input class="qfu-phase0-admin-input" name="maxAmount" value="' + escapeHtml(filters.maxAmount || "") + '" inputmode="decimal" /></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Date From</span><input class="qfu-phase0-admin-input" type="date" name="dateFrom" value="' + escapeHtml(filters.dateFrom || "") + '" /></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field"><span>Date To</span><input class="qfu-phase0-admin-input" type="date" name="dateTo" value="' + escapeHtml(filters.dateTo || "") + '" /></label>' +
-      '<label class="qfu-phase0-delivery-toolbar__field qfu-phase0-delivery-toolbar__field--wide"><span>Search</span><input class="qfu-phase0-admin-input" name="search" value="' + escapeHtml(filters.search || "") + '" placeholder="Tracking, PRO, invoice, reference, sender, destination" /></label>' +
+      '<label class="qfu-phase0-delivery-toolbar__field qfu-phase0-delivery-toolbar__field--wide"><span>Search</span><input class="qfu-phase0-admin-input" name="search" value="' + escapeHtml(filters.search || "") + '" placeholder="Tracking, PRO, invoice, control, reference, sender, destination" /></label>' +
       '<label class="qfu-phase0-delivery-toolbar__field qfu-phase0-freight-toolbar__toggle"><span>Archived</span><label class="qfu-phase0-admin-checkbox"><input type="checkbox" name="archived" value="1"' + checkedAttr(filters.includeArchived) + ' /><span>Include archived</span></label></label>' +
       '</div>' +
-      '<div class="qfu-phase0-summary-foot qfu-phase0-freight-toolbar__foot">' + escapeHtml(String(filteredRows.length) + " matching bills | Sort " + sortLabel + " | Date field " + dateFieldLabel + " | High value threshold $" + FREIGHT_HIGH_VALUE_THRESHOLD.toFixed(0) + " | Closed / No Action rows auto-archive after " + FREIGHT_ARCHIVE_AFTER_DAYS + " idle days") + '</div>' +
+      '<div class="qfu-phase0-summary-foot qfu-phase0-freight-toolbar__foot">' + escapeHtml(String(filteredRows.length) + " matching ledger entries" + (freightGroupedRowCount(filteredRows) > filteredRows.length ? (" from " + String(freightGroupedRowCount(filteredRows)) + " source rows") : "") + " | Sort " + sortLabel + " | Date field " + dateFieldLabel + " | High value threshold $" + FREIGHT_HIGH_VALUE_THRESHOLD.toFixed(0) + " | Closed / No Action rows auto-archive after " + FREIGHT_ARCHIVE_AFTER_DAYS + " idle days") + '</div>' +
       '</form>';
   }
 
@@ -5994,11 +6259,26 @@
       return '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(emptyTitle) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy) + '</p></div>';
     }
 
-    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--freight"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--freight"><thead><tr><th>Status / Owner</th><th>Carrier / Route</th><th>Tracking / Invoice</th><th>Shipment Dates</th><th>Total / Charges</th><th>Activity</th><th>Workbench</th></tr></thead><tbody>' + rows.map(function (row) {
-      var highlighted = highlightedSourceId && row.sourceId === highlightedSourceId;
+    return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--freight"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--freight"><thead><tr><th>Status / Owner</th><th>Carrier / Route</th><th>Shipment IDs</th><th>Shipment Dates</th><th>Total / Charges</th><th>Activity</th><th>Workbench</th></tr></thead><tbody>' + rows.map(function (row) {
+      var highlighted = highlightedSourceId && (row.sourceId === highlightedSourceId || row.freightGroupKey === highlightedSourceId || (row.groupSourceIds || []).indexOf(highlightedSourceId) >= 0);
+      var groupCountLabel = freightGroupCountLabel(row);
+      var actionRecordIds = ((row.groupRecordIds && row.groupRecordIds.length) ? row.groupRecordIds : [row.id]).join(",");
+      var primaryReference = freightPrimaryReferenceLabel(row);
+      var ownerSubtext = row.groupCount > 1 ? (row.ownerSummary || "Multiple source rows") : (row.ownerName ? ('Claimed ' + row.claimedOn) : 'Unowned');
+      var groupDetailsMarkup = row.groupCount > 1
+        ? '<div class="qfu-phase0-freight-group-detail">' + (row.groupedRows || []).map(function (item, index) {
+          return '<div class="qfu-phase0-freight-group-detail__row"><strong>' + escapeHtml(String(index + 1) + ". " + freightPrimaryReferenceLabel(item)) + '</strong><span>' + escapeHtml((item.owner || "Unowned") + " | " + (item.status || "Unreviewed") + " | Source Id: " + (item.sourceId || "-")) + '</span></div>';
+        }).join("") + '</div>'
+        : "";
+      var workbenchStatusText = row.groupCount > 1
+        ? (groupCountLabel + "; updates apply to every source row in this entry")
+        : (row.archived ? ('Archived ' + row.archivedOn) : 'Visible in active ledger');
       var badges = [
         '<span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(freightStatusTone(row.statusKey)) + '">' + escapeHtml(row.status) + '</span>'
       ];
+      if (groupCountLabel) {
+        badges.push('<span class="qfu-phase0-pill qfu-phase0-pill--info">' + escapeHtml(groupCountLabel) + '</span>');
+      }
       if (row.highValue) {
         badges.push('<span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(freightPriorityTone(row.priorityKey)) + '">High Value</span>');
       }
@@ -6012,7 +6292,7 @@
       if (row.highValue && !row.archived) {
         rowClasses.push("is-high-value");
       }
-      if (!row.ownerName && !row.archived) {
+      if ((!row.ownerName || row.hasUnownedMember) && !row.archived) {
         rowClasses.push("is-unowned");
       }
       if (row.archived) {
@@ -6021,7 +6301,7 @@
       if (row.actionable) {
         rowClasses.push("is-actionable");
       }
-      return '<tr data-qfu-freight-row="' + escapeHtml(row.id) + '"' + (rowClasses.length ? ' class="' + escapeHtml(rowClasses.join(" ")) + '"' : "") + '><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--status"><div class="qfu-phase0-summary-pills">' + badges.join("") + '</div><div class="qfu-phase0-freight-owner"><span class="qfu-phase0-freight-owner__avatar">' + escapeHtml(row.ownerInitials) + '</span><div><strong>' + escapeHtml(row.owner) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.ownerName ? ('Claimed ' + row.claimedOn) : 'Unowned') + '</div></div></div><div class="qfu-phase0-admin-subtext">Priority ' + escapeHtml(row.priorityBand) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--route"><strong>' + escapeHtml(row.carrier) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.direction + ' | ' + row.billType + ' | Zone ' + row.zone) + '</div><div class="qfu-phase0-freight-route"><span>' + escapeHtml(row.sender) + '</span><span class="qfu-phase0-freight-route__arrow">to</span><span>' + escapeHtml(row.destination) + '</span></div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--ids"><strong>' + escapeHtml(row.trackingNumber) + '</strong><div class="qfu-phase0-admin-subtext">PRO ' + escapeHtml(row.proNumber) + '</div><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceNumber) + '</div><div class="qfu-phase0-admin-subtext">Ref ' + escapeHtml(row.reference) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--dates"><strong>Ship ' + escapeHtml(row.shipDate) + '</strong><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceDate) + ' | Close ' + escapeHtml(row.closeDate) + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.service + (row.serviceCode && row.serviceCode !== "-" ? ' (' + row.serviceCode + ')' : '')) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--money"><strong class="qfu-phase0-freight-cell__amount">' + escapeHtml(row.totalAmount) + '</strong><div class="qfu-phase0-admin-subtext">Freight ' + escapeHtml(row.freightAmount) + ' | Accessorials ' + escapeHtml(row.accessorialAmount) + '</div><div class="qfu-phase0-admin-subtext">Savings ' + escapeHtml(row.unrealizedSavings) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--activity"><strong>' + escapeHtml(row.lastActivityOn) + '</strong><div class="qfu-phase0-admin-subtext">Last seen ' + escapeHtml(row.lastSeenOn) + '</div><div class="qfu-phase0-admin-subtext">Comment ' + escapeHtml(row.commentUpdatedOn) + ' by ' + escapeHtml(row.commentUpdatedByName) + '</div></div></td><td><div class="qfu-phase0-freight-workbench"><label class="qfu-phase0-delivery-toolbar__field"><span>Status</span><select class="qfu-phase0-admin-input" data-qfu-freight-status-select data-original-value="' + escapeHtml(row.status) + '">' + renderFreightStatusOptions(row.status) + '</select></label><label class="qfu-phase0-delivery-toolbar__field"><span>Note</span><textarea class="qfu-phase0-admin-input qfu-phase0-admin-input--memo" rows="2" data-qfu-freight-comment data-original-value="' + escapeHtml(row.comment || "") + '">' + escapeHtml(row.comment || "") + '</textarea></label><div class="qfu-phase0-freight-workbench__actions"><button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary" type="button" data-qfu-save-freight="' + escapeHtml(row.id) + '" disabled>Save</button>' + (row.ownerName ? '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--secondary" type="button" data-qfu-release-freight="' + escapeHtml(row.id) + '">Release</button>' : '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary-soft" type="button" data-qfu-take-freight="' + escapeHtml(row.id) + '">Claim</button>') + '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--ghost" type="button" data-qfu-toggle-freight-archive="' + escapeHtml(row.id) + '" data-qfu-archive-state="' + escapeHtml(row.archived ? "1" : "0") + '">' + escapeHtml(row.archived ? "Unarchive" : "Archive") + '</button></div><div class="qfu-phase0-freight-workbench__statusline"><span class="qfu-phase0-freight-status-message" data-qfu-freight-status-message>' + escapeHtml(row.archived ? ('Archived ' + row.archivedOn) : 'Visible in active ledger') + '</span><span class="qfu-phase0-freight-dirty" data-qfu-freight-dirty hidden>Unsaved changes</span></div><details class="qfu-phase0-ledger-drawer"><summary class="qfu-phase0-ledger-drawer__summary"><strong>Row details</strong><span class="qfu-phase0-ledger-drawer__hint">source / debug</span></summary><div class="qfu-phase0-ledger-drawer__body"><div class="qfu-phase0-admin-subtext">Source Id: ' + escapeHtml(row.sourceId) + '</div><div class="qfu-phase0-admin-subtext">Branch import batch: ' + escapeHtml(row.record.qfu_importbatchid || "None") + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.chargebreakdowntext || "No charge breakdown text") + '</div><div class="qfu-phase0-actions"><a class="qfu-phase0-secondary-action" href="' + escapeHtml(row.detailHref || detailHref(branch, "freight-worklist")) + '">Link to This Row</a></div></div></details></div></td></tr>';
+      return '<tr data-qfu-freight-row="' + escapeHtml(actionRecordIds) + '"' + (rowClasses.length ? ' class="' + escapeHtml(rowClasses.join(" ")) + '"' : "") + '><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--status"><div class="qfu-phase0-summary-pills">' + badges.join("") + '</div><div class="qfu-phase0-freight-owner"><span class="qfu-phase0-freight-owner__avatar">' + escapeHtml(row.ownerInitials) + '</span><div><strong>' + escapeHtml(row.owner) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(ownerSubtext) + '</div></div></div><div class="qfu-phase0-admin-subtext">Priority ' + escapeHtml(row.priorityBand) + (row.statusSummary && row.statusSummary !== row.status ? (' | Statuses ' + escapeHtml(row.statusSummary)) : '') + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--route"><strong>' + escapeHtml(row.carrier) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.direction + ' | ' + row.billType + ' | Zone ' + row.zone) + '</div><div class="qfu-phase0-freight-route"><span>' + escapeHtml(row.sender) + '</span><span class="qfu-phase0-freight-route__arrow">to</span><span>' + escapeHtml(row.destination) + '</span></div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--ids"><strong>' + escapeHtml(primaryReference) + '</strong><div class="qfu-phase0-admin-subtext">Track ' + escapeHtml(row.trackingNumber) + ' | PRO ' + escapeHtml(row.proNumber) + '</div><div class="qfu-phase0-admin-subtext">Ref ' + escapeHtml(row.reference) + '</div><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceNumber) + ' | Control ' + escapeHtml(row.controlNumber) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--dates"><strong>Ship ' + escapeHtml(row.shipDate) + '</strong><div class="qfu-phase0-admin-subtext">Invoice ' + escapeHtml(row.invoiceDate) + ' | Close ' + escapeHtml(row.closeDate) + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.service + (row.serviceCode && row.serviceCode !== "-" ? ' (' + row.serviceCode + ')' : '')) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--money"><strong class="qfu-phase0-freight-cell__amount">' + escapeHtml(row.totalAmount) + '</strong><div class="qfu-phase0-admin-subtext">Freight ' + escapeHtml(row.freightAmount) + ' | Accessorials ' + escapeHtml(row.accessorialAmount) + '</div><div class="qfu-phase0-admin-subtext">Savings ' + escapeHtml(row.unrealizedSavings) + '</div></div></td><td><div class="qfu-phase0-freight-cell qfu-phase0-freight-cell--activity"><strong>' + escapeHtml(row.lastActivityOn) + '</strong><div class="qfu-phase0-admin-subtext">Last seen ' + escapeHtml(row.lastSeenOn) + '</div><div class="qfu-phase0-admin-subtext">Comment ' + escapeHtml(row.commentUpdatedOn) + ' by ' + escapeHtml(row.commentUpdatedByName) + '</div></div></td><td><div class="qfu-phase0-freight-workbench"><label class="qfu-phase0-delivery-toolbar__field"><span>Status</span><select class="qfu-phase0-admin-input" data-qfu-freight-status-select data-original-value="' + escapeHtml(row.status) + '">' + renderFreightStatusOptions(row.status) + '</select></label><label class="qfu-phase0-delivery-toolbar__field"><span>Note</span><textarea class="qfu-phase0-admin-input qfu-phase0-admin-input--memo" rows="2" data-qfu-freight-comment data-original-value="' + escapeHtml(row.comment || "") + '">' + escapeHtml(row.comment || "") + '</textarea></label><div class="qfu-phase0-freight-workbench__actions"><button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary" type="button" data-qfu-save-freight="' + escapeHtml(actionRecordIds) + '" disabled>Save</button>' + (row.ownerName ? '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--secondary" type="button" data-qfu-release-freight="' + escapeHtml(actionRecordIds) + '">Release</button>' : '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--primary-soft" type="button" data-qfu-take-freight="' + escapeHtml(actionRecordIds) + '">Claim</button>') + '<button class="qfu-phase0-inline-button qfu-phase0-freight-action qfu-phase0-freight-action--ghost" type="button" data-qfu-toggle-freight-archive="' + escapeHtml(actionRecordIds) + '" data-qfu-archive-state="' + escapeHtml(row.archived ? "1" : "0") + '">' + escapeHtml(row.archived ? "Unarchive" : "Archive") + '</button></div><div class="qfu-phase0-freight-workbench__statusline"><span class="qfu-phase0-freight-status-message" data-qfu-freight-status-message>' + escapeHtml(workbenchStatusText) + '</span><span class="qfu-phase0-freight-dirty" data-qfu-freight-dirty hidden>Unsaved changes</span></div><details class="qfu-phase0-ledger-drawer"><summary class="qfu-phase0-ledger-drawer__summary"><strong>Row details</strong><span class="qfu-phase0-ledger-drawer__hint">' + escapeHtml(row.groupCount > 1 ? "entry sources" : "source / debug") + '</span></summary><div class="qfu-phase0-ledger-drawer__body">' + groupDetailsMarkup + '<div class="qfu-phase0-admin-subtext">Source Id: ' + escapeHtml(row.sourceId) + '</div><div class="qfu-phase0-admin-subtext">Branch import batch: ' + escapeHtml(row.record.qfu_importbatchid || "None") + '</div><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.chargebreakdowntext || "No charge breakdown text") + '</div><div class="qfu-phase0-actions"><a class="qfu-phase0-secondary-action" href="' + escapeHtml(row.detailHref || detailHref(branch, "freight-worklist")) + '">Link to This Entry</a></div></div></details></div></td></tr>';
     }).join("") + '</tbody></table></div></div>';
   }
 
@@ -6049,13 +6329,35 @@
     }
   }
 
+  function freightActionRecordIds(value) {
+    var seen = {};
+    return String(value || "").split(",").map(function (part) {
+      return part.trim();
+    }).filter(function (part) {
+      if (!part || seen[part]) {
+        return false;
+      }
+      seen[part] = true;
+      return true;
+    });
+  }
+
+  async function patchFreightActionRecords(recordIds, payload) {
+    var ids = freightActionRecordIds(recordIds);
+    var index;
+    for (index = 0; index < ids.length; index += 1) {
+      await patchRecord("qfu_freightworkitems", ids[index], payload);
+    }
+    return ids.length;
+  }
+
   async function saveFreightRow(root, button) {
     var row = button.closest("[data-qfu-freight-row]");
     var recordId = button.getAttribute("data-qfu-save-freight");
     var note = row ? row.querySelector("[data-qfu-freight-comment]") : null;
     var statusSelect = row ? row.querySelector("[data-qfu-freight-status-select]") : null;
     var status = row ? row.querySelector("[data-qfu-freight-status-message]") : null;
-    if (!row || !recordId || !note || !statusSelect) {
+    if (!row || !recordId || !freightActionRecordIds(recordId).length || !note || !statusSelect) {
       return;
     }
 
@@ -6069,52 +6371,52 @@
     if (status) {
       status.textContent = "Saving...";
     }
-    await patchRecord("qfu_freightworkitems", recordId, payload);
-    await rerenderAfterSave(root, "success", "Freight row updated.");
+    var updatedCount = await patchFreightActionRecords(recordId, payload);
+    await rerenderAfterSave(root, "success", updatedCount > 1 ? "Freight group updated." : "Freight row updated.");
   }
 
   async function takeFreightOwnership(root, button) {
     var recordId = button.getAttribute("data-qfu-take-freight");
-    if (!recordId) {
+    if (!freightActionRecordIds(recordId).length) {
       return;
     }
     var now = new Date().toISOString();
     var userName = currentPortalUserName(root);
-    await patchRecord("qfu_freightworkitems", recordId, {
+    var updatedCount = await patchFreightActionRecords(recordId, {
       qfu_ownername: userName,
       qfu_owneridentifier: userName,
       qfu_claimedon: now,
       qfu_lastactivityon: now
     });
-    await rerenderAfterSave(root, "success", "Freight row claimed.");
+    await rerenderAfterSave(root, "success", updatedCount > 1 ? "Freight group claimed." : "Freight row claimed.");
   }
 
   async function releaseFreightOwnership(root, button) {
     var recordId = button.getAttribute("data-qfu-release-freight");
-    if (!recordId) {
+    if (!freightActionRecordIds(recordId).length) {
       return;
     }
-    await patchRecord("qfu_freightworkitems", recordId, {
+    var updatedCount = await patchFreightActionRecords(recordId, {
       qfu_ownername: "",
       qfu_owneridentifier: "",
       qfu_claimedon: null,
       qfu_lastactivityon: new Date().toISOString()
     });
-    await rerenderAfterSave(root, "success", "Freight ownership released.");
+    await rerenderAfterSave(root, "success", updatedCount > 1 ? "Freight group ownership released." : "Freight ownership released.");
   }
 
   async function toggleFreightArchive(root, button) {
     var recordId = button.getAttribute("data-qfu-toggle-freight-archive");
     var archiveState = button.getAttribute("data-qfu-archive-state") === "1";
-    if (!recordId) {
+    if (!freightActionRecordIds(recordId).length) {
       return;
     }
-    await patchRecord("qfu_freightworkitems", recordId, {
+    var updatedCount = await patchFreightActionRecords(recordId, {
       qfu_isarchived: !archiveState,
       qfu_archivedon: archiveState ? null : new Date().toISOString(),
       qfu_lastactivityon: new Date().toISOString()
     });
-    await rerenderAfterSave(root, "success", archiveState ? "Freight row restored to the active queue." : "Freight row archived.");
+    await rerenderAfterSave(root, "success", archiveState ? (updatedCount > 1 ? "Freight group restored to the active queue." : "Freight row restored to the active queue.") : (updatedCount > 1 ? "Freight group archived." : "Freight row archived."));
   }
 
   function bindFreightWorklistActions(root, branch) {
@@ -6368,12 +6670,16 @@
       return '<div class="qfu-phase0-empty-state"><strong>No Live Data Yet</strong><p class="qfu-phase0-empty-copy">No low or negative margin rows are available for the live Southern Alberta branches.</p></div>';
     }
     return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--regional-exceptions"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--regional-margins"><thead><tr><th>Branch</th><th>Type</th><th>Billing Date</th><th>Billing Doc</th><th>Customer</th><th>CSSR</th><th class="qfu-phase0-table__numeric">Margin Sold At</th></tr></thead><tbody>' + rows.map(function (row) {
-      return '<tr><td class="qfu-phase0-region-exception__branch"><span class="qfu-phase0-region-branch-tag">' + escapeHtml(row.branchCode) + '</span></td><td class="qfu-phase0-region-exception__type">' + renderMarginBadge(row.reviewType, row.tone) + '</td><td class="qfu-phase0-region-exception__billing-date">' + escapeHtml(row.billingDate || "-") + '</td><td class="qfu-phase0-region-exception__document"><strong>' + escapeHtml(row.document) + '</strong></td><td class="qfu-phase0-region-exception__customer"><strong>' + escapeHtml(row.customer) + '</strong></td><td class="qfu-phase0-region-exception__cssr">' + escapeHtml(row.cssr) + '</td><td class="qfu-phase0-table__numeric qfu-phase0-region-exception__margin">' + escapeHtml(row.marginPct) + '</td></tr>';
+      var href = row.href || "";
+      var linkLabel = "Open branch " + (row.branchCode || "") + " analytics margin exceptions";
+      var linkStart = href ? '<a class="qfu-phase0-region-exception__cell-link" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(linkLabel) + '">' : "";
+      var linkEnd = href ? "</a>" : "";
+      return '<tr class="qfu-phase0-region-exception__row' + (href ? ' is-link' : '') + '"' + (href ? ' data-qfu-dashboard-href="' + escapeHtml(href) + '"' : '') + '><td class="qfu-phase0-region-exception__branch">' + linkStart + '<span class="qfu-phase0-region-branch-tag">' + escapeHtml(row.branchCode) + '</span>' + linkEnd + '</td><td class="qfu-phase0-region-exception__type">' + linkStart + renderMarginBadge(row.reviewType, row.tone) + linkEnd + '</td><td class="qfu-phase0-region-exception__billing-date">' + linkStart + escapeHtml(row.billingDate || "-") + linkEnd + '</td><td class="qfu-phase0-region-exception__document">' + linkStart + '<strong>' + escapeHtml(row.document) + '</strong>' + linkEnd + '</td><td class="qfu-phase0-region-exception__customer">' + linkStart + '<strong>' + escapeHtml(row.customer) + '</strong>' + linkEnd + '</td><td class="qfu-phase0-region-exception__cssr">' + linkStart + escapeHtml(row.cssr) + linkEnd + '</td><td class="qfu-phase0-table__numeric qfu-phase0-region-exception__margin">' + linkStart + escapeHtml(row.marginPct) + linkEnd + '</td></tr>';
     }).join("") + "</tbody></table></div>";
   }
 
   function renderRegionExceptionsWorkbench(rows) {
-    return '<section class="qfu-phase0-region-support-panel qfu-phase0-region-support-panel--exceptions"><div class="qfu-phase0-region-support-panel__header"><div class="qfu-phase0-region-support-panel__copy"><div class="qfu-phase0-region-support-panel__eyebrow">Low + negative margin only</div><h2 class="qfu-phase0-region-support-panel__title">Regional exceptions</h2><p class="qfu-phase0-region-support-panel__note">Exception rows stay presented as an operational reading table instead of a generic grid, so branch, customer, owner, and margin tone are easier to scan at a glance.</p></div><div class="qfu-phase0-region-support-panel__meta"><span>' + escapeHtml(String(rows.length)) + ' rows</span><span>Live Southern Alberta slice</span></div></div>' + renderRegionMarginExceptionTable(rows) + '<div class="qfu-phase0-summary-foot">Top ' + escapeHtml(String(Math.min(rows.length, 8))) + ' current low and negative margin rows across 4171, 4172, and 4173.</div></section>';
+    return '<section class="qfu-phase0-region-support-panel qfu-phase0-region-support-panel--exceptions"><div class="qfu-phase0-region-support-panel__header"><div class="qfu-phase0-region-support-panel__copy"><div class="qfu-phase0-region-support-panel__eyebrow">Low + negative margin only</div><h2 class="qfu-phase0-region-support-panel__title">Regional exceptions</h2><p class="qfu-phase0-region-support-panel__note">Exception rows stay presented as an operational reading table instead of a generic grid, so branch, customer, owner, and margin tone are easier to scan at a glance.</p></div><div class="qfu-phase0-region-support-panel__meta"><span>' + escapeHtml(String(rows.length)) + ' rows</span><span>Live Southern Alberta slice</span></div></div>' + renderRegionMarginExceptionTable(rows) + '<div class="qfu-phase0-summary-foot">Top ' + escapeHtml(String(Math.min(rows.length, 8))) + ' current low and negative margin rows across 4171, 4172, and 4173. Click any exception row to open that branch analytics page filtered to abnormal margins.</div></section>';
   }
 
   function renderRegionalCssrWorkbench(rows) {
@@ -6797,6 +7103,7 @@
           branchCode: branch.code || "-",
           branchName: branch.name || "Branch",
           regionName: branch.regionName || "",
+          ledgerHref: row.ledgerHref || detailHref(branch, "freight-worklist"),
           detailHref: row.detailHref || detailHref(branch, "freight-worklist")
         }));
       });
@@ -6817,7 +7124,10 @@
     return '<div class="qfu-phase0-summary-table-shell qfu-phase0-summary-table-shell--freight-review"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--freight-review"><thead><tr>' +
       (includeBranch ? '<th>Branch</th>' : '') +
       '<th>Invoice / PRO</th><th>Carrier / Route</th><th>Status / Owner</th><th>Last Activity</th><th class="qfu-phase0-table__numeric">Total</th></tr></thead><tbody>' + rows.map(function (row) {
-      var label = row.invoiceNumber !== "-" ? row.invoiceNumber : (row.proNumber !== "-" ? row.proNumber : (row.trackingNumber !== "-" ? row.trackingNumber : (row.sourceId || "-")));
+      var label = freightPrimaryReferenceLabel(row);
+      var groupLabel = freightGroupCountLabel(row);
+      var rowHref = row.ledgerHref || row.detailHref || "#";
+      var rowLabel = "Open freight ledger for " + label;
       var referenceBits = [];
       if (row.invoiceNumber && row.invoiceNumber !== "-") {
         referenceBits.push("Invoice " + row.invoiceNumber);
@@ -6828,17 +7138,20 @@
       if (row.trackingNumber && row.trackingNumber !== "-" && row.trackingNumber !== row.proNumber) {
         referenceBits.push("Track " + row.trackingNumber);
       }
+      if (row.controlNumber && row.controlNumber !== "-" && row.controlNumber !== row.invoiceNumber) {
+        referenceBits.push("Control " + row.controlNumber);
+      }
       if (row.reference && row.reference !== "-") {
         referenceBits.push("Ref " + row.reference);
       }
       var routeBits = [row.direction, row.billType, row.service].filter(function (value) {
         return !!(value && value !== "-");
       });
-      return '<tr>' +
+      return '<tr class="qfu-phase0-freight-review__row" data-qfu-dashboard-href="' + escapeHtml(rowHref) + '" tabindex="0" role="link" aria-label="' + escapeHtml(rowLabel) + '">' +
         (includeBranch
           ? ('<td><span class="qfu-phase0-region-branch-tag">' + escapeHtml(row.branchCode || "-") + '</span>' + (showRegion && row.regionName ? '<div class="qfu-phase0-admin-subtext">' + escapeHtml(row.regionName) + '</div>' : '') + '</td>')
           : '') +
-        '<td class="qfu-phase0-freight-review__reference"><strong><a href="' + escapeHtml(row.detailHref || "#") + '">' + escapeHtml(label) + '</a></strong>' + (referenceBits.length ? '<div class="qfu-phase0-admin-subtext">' + escapeHtml(referenceBits.slice(0, 2).join(" | ")) + '</div>' : '') + '</td>' +
+        '<td class="qfu-phase0-freight-review__reference"><strong>' + escapeHtml(label) + (groupLabel ? '<span class="qfu-phase0-home-feed__badge">' + escapeHtml(groupLabel) + '</span>' : '') + '</strong>' + (referenceBits.length ? '<div class="qfu-phase0-admin-subtext">' + escapeHtml(referenceBits.slice(0, 2).join(" | ")) + '</div>' : '') + '</td>' +
         '<td class="qfu-phase0-freight-review__carrier"><strong>' + escapeHtml(row.carrier || "-") + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(routeBits.length ? routeBits.slice(0, 2).join(" | ") : "-") + '</div></td>' +
         '<td class="qfu-phase0-freight-review__status"><span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(freightStatusTone(row.statusKey)) + '">' + escapeHtml(row.status || "Unreviewed") + '</span><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.owner || "Unowned") + '</div></td>' +
         '<td class="qfu-phase0-freight-review__activity">' + escapeHtml(row.lastActivityOn || row.lastSeenOn || "Not touched") + '</td>' +
@@ -6900,17 +7213,18 @@
       "Freight Review",
       String(freight.actionableCount || rows.length || 0) + " unresolved",
       renderBranchWatchlistRows(rows, function (row) {
-        var href = row.detailHref || detailHref(branch, "freight-worklist");
-        var label = row.invoiceNumber || row.proNumber || row.trackingNumber || row.sourceId || "-";
+        var href = row.ledgerHref || detailHref(branch, "freight-worklist");
+        var label = freightPrimaryReferenceLabel(row);
+        var groupLabel = freightGroupCountLabel(row);
         var routeBits = [row.carrier, row.service, row.direction].filter(function (value) {
           return !!(value && value !== "-");
         });
         var ownerBits = [];
-        ownerBits.push(row.ownerName || "Unowned");
+        ownerBits.push(row.owner || row.ownerName || "Unowned");
         if (routeBits.length) {
           ownerBits.push(routeBits.join(" / "));
         }
-        return '<a class="qfu-phase0-branch-watchlist-row is-freight" href="' + escapeHtml(href) + '"><div class="qfu-phase0-branch-watchlist-row__copy"><strong>' + escapeHtml(label) + '</strong><p>' + escapeHtml(ownerBits.join(" | ")) + '</p></div><div class="qfu-phase0-branch-watchlist-row__metric">' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</div></a>';
+        return '<a class="qfu-phase0-branch-watchlist-row is-freight" href="' + escapeHtml(href) + '"><div class="qfu-phase0-branch-watchlist-row__copy"><strong>' + escapeHtml(label) + (groupLabel ? '<span class="qfu-phase0-home-feed__badge">' + escapeHtml(groupLabel) + '</span>' : '') + '</strong><p>' + escapeHtml(ownerBits.join(" | ")) + '</p></div><div class="qfu-phase0-branch-watchlist-row__metric">' + escapeHtml(row.totalAmount || formatCurrency(row.totalAmountNumber || 0)) + '</div></a>';
       }, "No Freight Bills Requiring Review", "The branch has no unresolved freight bills waiting for review."),
       '<div class="qfu-phase0-branch-watchlist-section__foot">' + escapeHtml(formatCurrency(freight.totalAmountValue || 0)) + ' unresolved | <a href="' + escapeHtml(detailHref(branch, "freight-worklist")) + '">Freight Ledger</a></div>'
     );
@@ -6942,7 +7256,8 @@
   function renderMarginSidebarPanel(branch, workspace) {
     var marginModule = workspace && workspace.marginModule || {};
     var rows = (marginModule.rows || []).slice(0, 4);
-    return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-home-margin-sidebar"><div class="qfu-phase0-branch-panel__compact-header"><div><h2 class="qfu-phase0-panel__title">Abnormal Margins</h2><div class="qfu-phase0-admin-subtext">Current-month margin exceptions stay visible here without taking a full-width lane.</div></div><div class="qfu-phase0-branch-panel__compact-meta">' + escapeHtml(String(marginModule.countValue || 0)) + ' rows</div></div>' + renderReviewCountGrid(marginModule.counts || []) + renderHomeMarginPreviewList(rows) + '<div class="qfu-phase0-summary-foot">' + escapeHtml(marginModule.snapshotLabel || "Awaiting snapshot") + ' | <a href="' + escapeHtml(detailHref(branch, "analytics")) + '">Analytics</a></div></section>';
+    var marginDetailHref = detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" });
+    return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-home-margin-sidebar"><div class="qfu-phase0-branch-panel__compact-header"><div><h2 class="qfu-phase0-panel__title">Abnormal Margins</h2><div class="qfu-phase0-admin-subtext">Current-month margin exceptions stay visible here without taking a full-width lane.</div></div><div class="qfu-phase0-branch-panel__compact-meta">' + escapeHtml(String(marginModule.countValue || 0)) + ' rows</div></div>' + renderReviewCountGrid(marginModule.counts || []) + renderHomeMarginPreviewList(rows, marginDetailHref) + '<div class="qfu-phase0-summary-foot">' + escapeHtml(marginModule.snapshotLabel || "Awaiting snapshot") + ' | <a href="' + escapeHtml(marginDetailHref) + '">Analytics</a></div></section>';
   }
 
   function renderCssrSidebarPanel(branch, workspace) {
@@ -7030,7 +7345,8 @@
 
   function renderDashboardMarginPanel(branch, workspace) {
     var pageInfo = paginateWithSize(workspace.marginModule.rows || [], dashboardPageValue("marginPage"), DASHBOARD_PAGE_SIZE);
-    return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-branch-panel--exceptions qfu-phase0-exception-panel qfu-phase0-exception-panel--priority"><div class="qfu-phase0-panel__header"><div><div class="qfu-phase0-panel__eyebrow">Current Month</div><h2 class="qfu-phase0-panel__title">Abnormal Margins</h2><p class="qfu-phase0-panel__copy">Rows stay open for the current billing month and reset automatically on the first day of the next month.</p></div><div class="qfu-phase0-region-budget-panel__chips"><span class="qfu-phase0-admin-chip">' + escapeHtml(workspace.marginModule.snapshotLabel) + '</span><span class="qfu-phase0-admin-chip">' + escapeHtml(String(workspace.marginModule.countValue)) + ' rows</span></div></div>' + renderReviewCountGrid(workspace.marginModule.counts) + renderHomeMarginPreviewList(pageInfo.items) + '<div class="qfu-phase0-summary-foot">' + escapeHtml(rowRangeText(pageInfo, workspace.marginModule.rows.length) + ' | ' + workspace.marginModule.periodLabel + ' by billing date') + ' | Full list: <a href="' + escapeHtml(detailHref(branch, "analytics")) + '">Analytics</a> | 10 per page</div>' + renderDashboardPagination("marginPage", pageInfo.page, pageInfo.totalPages) + '</section>';
+    var marginDetailHref = detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" });
+    return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-branch-panel--exceptions qfu-phase0-exception-panel qfu-phase0-exception-panel--priority"><div class="qfu-phase0-panel__header"><div><div class="qfu-phase0-panel__eyebrow">Current Month</div><h2 class="qfu-phase0-panel__title">Abnormal Margins</h2><p class="qfu-phase0-panel__copy">Rows stay open for the current billing month and reset automatically on the first day of the next month.</p></div><div class="qfu-phase0-region-budget-panel__chips"><span class="qfu-phase0-admin-chip">' + escapeHtml(workspace.marginModule.snapshotLabel) + '</span><span class="qfu-phase0-admin-chip">' + escapeHtml(String(workspace.marginModule.countValue)) + ' rows</span></div></div>' + renderReviewCountGrid(workspace.marginModule.counts) + renderHomeMarginPreviewList(pageInfo.items, marginDetailHref) + '<div class="qfu-phase0-summary-foot">' + escapeHtml(rowRangeText(pageInfo, workspace.marginModule.rows.length) + ' | ' + workspace.marginModule.periodLabel + ' by billing date') + ' | Full list: <a href="' + escapeHtml(marginDetailHref) + '">Analytics</a> | 10 per page</div>' + renderDashboardPagination("marginPage", pageInfo.page, pageInfo.totalPages) + '</section>';
   }
 
   function renderDashboardBackorderPanel(branch, workspace) {
@@ -7134,7 +7450,7 @@
     var activeRows = (readyToShip.topRows || []).slice(0, 5);
     var oldestRows = (readyToShip.oldestRows || []).slice(0, 5);
     var title = "Ready to Ship, Not PGI'd";
-    var eyebrow = "Top 5 by value + Top 5 oldest";
+    var eyebrow = "Top 5 by value + Top 5 longest aging";
     var staleWarning = workspace.deliveryNotPgiIsStale && readyToShip.staleLabel
       ? '<div class="qfu-phase0-home-inline-alert is-warning"><span class="qfu-phase0-inline-badge is-warning">stale</span><span>' + escapeHtml(readyToShip.staleLabel) + '</span></div>'
       : "";
@@ -7145,7 +7461,7 @@
       }
       return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-ready-preview-panel qfu-phase0-ready-preview-panel--fallback"><div class="qfu-phase0-panel__header"><div><div class="qfu-phase0-panel__eyebrow">Dispatch snapshot pending</div><h2 class="qfu-phase0-panel__title">' + escapeHtml(title) + '</h2><p class="qfu-phase0-panel__copy">Showing the top 5 highest overdue backorder lines here until the first ready-to-ship dispatch snapshot lands, so this support band stays useful instead of empty.</p></div><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "ready-to-ship-not-pgid")) + '">Open Detail</a></div>' + staleWarning + renderBackorderTable(fallbackRows) + '<div class="qfu-phase0-summary-foot">Temporary fallback: Top 5 highest overdue backorder lines by value | Full backorder list: <a href="' + escapeHtml(detailHref(branch, "overdue-backorders")) + '">Overdue Backorder Lines</a></div></section>';
     }
-    return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-ready-preview-panel qfu-phase0-ready-preview-panel--dense"><div class="qfu-phase0-panel__header"><div><div class="qfu-phase0-panel__eyebrow">' + escapeHtml(eyebrow) + '</div><h2 class="qfu-phase0-panel__title">' + escapeHtml(title) + '</h2><p class="qfu-phase0-panel__copy">Two views: highest unshipped dollars and longest time on the dispatch list.</p></div><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "ready-to-ship-not-pgid")) + '">Open Detail</a></div>' + staleWarning + '<div class="qfu-phase0-ready-preview-compact-layout">' + renderReadyToShipCompactTable(activeRows, { title: "Top 5 highest value", metaLabel: "Largest unshipped dollars first", metricLabel: "Unshipped Value", metricAccessor: function (row) { return row.unshippedValue || "-"; }, metricClass: "is-value", viewKey: "value" }, branch) + renderReadyToShipCompactTable(oldestRows, { title: "Top 5 oldest on list", metaLabel: "Longest days on dispatch list", metricLabel: "Days on List", metricAccessor: function (row) { return row.daysOnList ? (row.daysOnList + "d") : "-"; }, metricClass: "is-days", secondaryMetricLabel: "Unshipped Value", secondaryMetricAccessor: function (row) { return row.unshippedValue || "-"; }, secondaryMetricClass: "is-value is-secondary", viewKey: "oldest" }, branch) + '</div><div class="qfu-phase0-summary-foot">Top 5 by value + Top 5 oldest ready-to-ship orders | Full list: <a href="' + escapeHtml(detailHref(branch, "ready-to-ship-not-pgid")) + '">Ready to Ship, Not PGI\'d</a></div></section>';
+    return '<section class="qfu-phase0-panel qfu-phase0-branch-panel qfu-phase0-ready-preview-panel qfu-phase0-ready-preview-panel--dense"><div class="qfu-phase0-panel__header"><div><div class="qfu-phase0-panel__eyebrow">' + escapeHtml(eyebrow) + '</div><h2 class="qfu-phase0-panel__title">' + escapeHtml(title) + '</h2><p class="qfu-phase0-panel__copy">Two views: highest unshipped dollars and the longest aging orders from the on-time date.</p></div><a class="qfu-phase0-secondary-action" href="' + escapeHtml(detailHref(branch, "ready-to-ship-not-pgid")) + '">Open Detail</a></div>' + staleWarning + '<div class="qfu-phase0-ready-preview-compact-layout">' + renderReadyToShipCompactTable(activeRows, { title: "Top 5 highest value", metaLabel: "Largest unshipped dollars first", metricLabel: "Unshipped Value", metricAccessor: function (row) { return row.unshippedValue || "-"; }, metricClass: "is-value", viewKey: "value" }, branch) + renderReadyToShipCompactTable(oldestRows, { title: "Top 5 longest aging", metaLabel: "Ranked by overdue aging from on-time date", metricLabel: "Days Past Due", metricAccessor: function (row) { return row.onTimeDateValue ? (row.daysLate + "d") : "-"; }, metricClass: "is-days", secondaryMetricLabel: "Unshipped Value", secondaryMetricAccessor: function (row) { return row.unshippedValue || "-"; }, secondaryMetricClass: "is-value is-secondary", viewKey: "oldest" }, branch) + '</div><div class="qfu-phase0-summary-foot">Top 5 by value + Top 5 longest aging ready-to-ship orders | Full list: <a href="' + escapeHtml(detailHref(branch, "ready-to-ship-not-pgid")) + '">Ready to Ship, Not PGI\'d</a></div></section>';
   }
 
   function renderLeaderboardPanel(workspace, detailUrl) {
@@ -7811,7 +8127,8 @@
           document: row.document,
           customer: row.customer,
           cssr: row.cssr,
-          marginPct: row.marginPct
+          marginPct: row.marginPct,
+          href: detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" })
         });
       });
     });
@@ -8403,6 +8720,23 @@
   grid-template-columns: minmax(0, 1fr) auto auto auto;
   padding: 0.52rem 0.62rem;
   text-decoration: none;
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+.qfu-phase0-home-feed__row--quote {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.qfu-phase0-home-feed__row--quote:hover,
+.qfu-phase0-home-feed__row--quote:focus-visible,
+.qfu-phase0-home-feed__row--margin:hover,
+.qfu-phase0-home-feed__row--margin:focus-visible,
+.qfu-phase0-home-feed__row--freight:hover,
+.qfu-phase0-home-feed__row--freight:focus-visible {
+  border-color: rgba(15, 118, 110, 0.26);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .qfu-phase0-home-feed__row--backorder {
@@ -8440,6 +8774,20 @@
 
 .qfu-phase0-home-feed__main strong a:hover {
   text-decoration: underline;
+}
+
+.qfu-phase0-home-feed__badge {
+  background: rgba(15, 118, 110, 0.1);
+  border-radius: 999px;
+  color: #0f766e;
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-left: 0.38rem;
+  padding: 0.22rem 0.42rem;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .qfu-phase0-home-feed__meta {
@@ -9020,6 +9368,27 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-analytics-source-chip.is-live{background:linear-gradient(180deg,#ffffff 0%,#edf8f1 100%);border-color:rgba(29,107,67,0.22);}' +
       '.qfu-phase0-analytics-source-chip.is-stale{background:linear-gradient(180deg,#ffffff 0%,#fff6ea 100%);border-color:rgba(138,90,0,0.28);}' +
       '.qfu-phase0-analytics-source-chip.is-awaiting{background:linear-gradient(180deg,#ffffff 0%,#f3f6f8 100%);border-color:rgba(68,88,106,0.2);}' +
+      '.qfu-phase0-analytics-attention{background:linear-gradient(135deg,#ffffff 0%,#f7fafc 100%);border:1px solid rgba(15,23,42,0.08);border-radius:30px;box-shadow:0 24px 54px rgba(15,23,42,0.08);display:grid;gap:1rem;overflow:hidden;padding:1.08rem 1.12rem;position:relative;}' +
+      '.qfu-phase0-analytics-attention::before{background:linear-gradient(90deg,#b45309 0%,#0d9488 52%,#2563eb 100%);content:"";height:4px;inset:0 0 auto 0;position:absolute;}' +
+      '.qfu-phase0-analytics-attention__header{align-items:flex-start;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;}' +
+      '.qfu-phase0-analytics-attention__copy{display:grid;gap:0.3rem;max-width:76ch;}' +
+      '.qfu-phase0-analytics-attention__eyebrow{color:#0d6b73;font-size:0.76rem;font-weight:800;letter-spacing:0.11em;text-transform:uppercase;}' +
+      '.qfu-phase0-analytics-attention__title{color:#17212b;font-family:Georgia,"Times New Roman",serif;font-size:1.42rem;font-weight:700;letter-spacing:-0.04em;line-height:1.04;margin:0;}' +
+      '.qfu-phase0-analytics-attention__note{color:#607482;font-size:0.86rem;line-height:1.5;margin:0;}' +
+      '.qfu-phase0-analytics-attention__count{align-items:center;background:rgba(247,251,252,0.94);border:1px solid rgba(15,23,42,0.08);border-radius:999px;color:#536672;display:inline-flex;font-size:0.76rem;font-weight:800;line-height:1.2;padding:0.45rem 0.74rem;text-transform:uppercase;}' +
+      '.qfu-phase0-analytics-attention__grid{display:grid;gap:0.82rem;grid-template-columns:repeat(4,minmax(0,1fr));}' +
+      '.qfu-phase0-analytics-attention-card{background:rgba(255,255,255,0.96);border:1px solid rgba(15,23,42,0.08);border-radius:22px;display:grid;gap:0.68rem;min-height:230px;padding:0.9rem;position:relative;}' +
+      '.qfu-phase0-analytics-attention-card::before{background:#0d9488;border-radius:999px;content:"";height:8px;inset:0.9rem 0.9rem auto auto;position:absolute;width:8px;}' +
+      '.qfu-phase0-analytics-attention-card.is-warning::before{background:#b45309;}' +
+      '.qfu-phase0-analytics-attention-card.is-bad::before{background:#b91c1c;}' +
+      '.qfu-phase0-analytics-attention-card.is-info::before{background:#2563eb;}' +
+      '.qfu-phase0-analytics-attention-card__rank{align-items:center;background:#17212b;border-radius:999px;color:#ffffff;display:inline-flex;font-size:0.74rem;font-weight:800;height:1.65rem;justify-content:center;width:1.65rem;}' +
+      '.qfu-phase0-analytics-attention-card__label{color:#607482;font-size:0.74rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;}' +
+      '.qfu-phase0-analytics-attention-card__title{color:#17212b;font-family:"Segoe UI Semibold","Helvetica Neue",sans-serif;font-size:1rem;line-height:1.16;margin:0;}' +
+      '.qfu-phase0-analytics-attention-card__why{color:#475569;font-size:0.84rem;line-height:1.45;margin:0;}' +
+      '.qfu-phase0-analytics-attention-card__evidence{background:rgba(15,23,42,0.045);border-radius:16px;color:#536672;font-size:0.78rem;font-weight:650;line-height:1.45;margin:0;padding:0.58rem 0.64rem;}' +
+      '.qfu-phase0-analytics-attention-card__action{align-self:end;display:flex;}' +
+      '.qfu-phase0-analytics-attention-card__action .qfu-phase0-secondary-action{width:100%;justify-content:center;}' +
       '.qfu-phase0-analytics-spotlight{display:grid;gap:0.9rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}' +
       '.qfu-phase0-analytics-signal-band-grid{display:grid;gap:1rem;grid-template-columns:repeat(2,minmax(0,1fr));}' +
       '.qfu-phase0-analytics-signal-band{background:linear-gradient(180deg,#ffffff 0%,#f7fafc 100%);border-radius:30px;box-shadow:0 22px 48px rgba(15,23,42,0.08);display:grid;gap:1rem;overflow:hidden;padding:1.05rem 1.1rem 1.12rem;position:relative;}' +
@@ -9234,8 +9603,80 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-analytics-drawer-stack{display:grid;gap:0.9rem;}' +
       '.qfu-phase0-ledger-drawer--analytics-late{border-radius:28px;box-shadow:0 18px 38px rgba(15,23,42,0.07);overflow:hidden;}' +
       '.qfu-phase0-ledger-drawer__body--analytics-late{display:grid;gap:1rem;}' +
-      '@media (max-width:1240px){.qfu-phase0-analytics-card-grid,.qfu-phase0-analytics-card-grid.qfu-phase0-analytics-card-grid--four,.qfu-phase0-analytics-revenue__spotlight,.qfu-phase0-analytics-focus-grid,.qfu-phase0-analytics-signal-band-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.qfu-phase0-analytics-composition__summary,.qfu-phase0-analytics-trust-grid{grid-template-columns:1fr 1fr;}.qfu-phase0-analytics-focus__hero,.qfu-phase0-analytics-revenue__hero-grid{grid-template-columns:1fr;}.qfu-phase0-analytics-revenue__watch{position:static;}}' +
-      '@media (max-width:980px){.qfu-phase0-analytics-freshness{justify-content:flex-start;}.qfu-phase0-analytics-card-grid,.qfu-phase0-grid--cards-2.qfu-phase0-analytics-grid,.qfu-phase0-analytics-trend__grid,.qfu-phase0-grid--cards-1.qfu-phase0-analytics-grid,.qfu-phase0-analytics-revenue__spotlight,.qfu-phase0-analytics-focus-grid,.qfu-phase0-analytics-focus__metrics,.qfu-phase0-analytics-signal-band-grid{grid-template-columns:1fr;}.qfu-phase0-analytics-bar-row,.qfu-phase0-analytics-variance__row,.qfu-phase0-analytics-composition__row{grid-template-columns:1fr;}.qfu-phase0-analytics-bar-row__value{justify-self:flex-start;}.qfu-phase0-analytics-composition__value{justify-items:start;text-align:left;}.qfu-phase0-analytics-composition__summary,.qfu-phase0-analytics-trust-grid{grid-template-columns:1fr;}}' +
+      '/* Stitch analytics visual refresh: Steel Grid Systems, generated 2026-04-23. */' +
+      '.qfu-phase0-analytics-stage{background:#f7f9fb;gap:0.9rem;padding:0.15rem;}' +
+      '.qfu-phase0-analytics-stage::before,.qfu-phase0-analytics-revenue::after{display:none;}' +
+      '.qfu-phase0-analytics-stage,.qfu-phase0-analytics-stage *{font-family:"Segoe UI","Public Sans","Helvetica Neue",Arial,sans-serif;}' +
+      '.qfu-phase0-analytics-stage h1,.qfu-phase0-analytics-stage h2,.qfu-phase0-analytics-stage h3,.qfu-phase0-analytics-stage h4,.qfu-phase0-analytics-stage strong,.qfu-phase0-analytics-stage [class*="__title"],.qfu-phase0-analytics-stage [class*="__value"],.qfu-phase0-analytics-stage [class*="__headline"]{letter-spacing:0!important;}' +
+      '.qfu-phase0-analytics-stage .qfu-phase0-panel,.qfu-phase0-analytics-attention,.qfu-phase0-analytics-revenue,.qfu-phase0-analytics-signal-band,.qfu-phase0-analytics-focus,.qfu-phase0-ledger-drawer--analytics-late{background:#ffffff;border:1px solid rgba(116,118,134,0.16);border-radius:8px;box-shadow:0 8px 24px rgba(25,28,30,0.06);}' +
+      '.qfu-phase0-analytics-stage .qfu-phase0-panel::before,.qfu-phase0-analytics-attention::before,.qfu-phase0-analytics-revenue::before,.qfu-phase0-analytics-signal-band::before,.qfu-phase0-analytics-focus::before{height:3px;}' +
+      '.qfu-phase0-analytics-stage .qfu-phase0-panel__title,.qfu-phase0-analytics-attention__title,.qfu-phase0-analytics-signal-band__copy h3,.qfu-phase0-analytics-revenue__copy h3,.qfu-phase0-analytics-revenue__watch-header h4,.qfu-phase0-analytics-focus__title,.qfu-phase0-analytics-composition__header h3,.qfu-phase0-analytics-variance__header strong{color:#191c1e;font-family:"Segoe UI Semibold","Public Sans","Helvetica Neue",Arial,sans-serif;font-weight:700;line-height:1.15;}' +
+      '.qfu-phase0-analytics-stage .qfu-phase0-panel__copy,.qfu-phase0-analytics-attention__note,.qfu-phase0-analytics-signal-band__copy p,.qfu-phase0-analytics-revenue__copy p,.qfu-phase0-analytics-revenue__watch-header p,.qfu-phase0-analytics-focus__note,.qfu-phase0-analytics-composition__header p{color:#434655;font-size:0.86rem;line-height:1.5;}' +
+      '.qfu-phase0-analytics-stage .qfu-phase0-panel__eyebrow,.qfu-phase0-analytics-attention__eyebrow,.qfu-phase0-analytics-focus__eyebrow{color:#006f67;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;}' +
+      '.qfu-phase0-analytics-freshness{gap:0.55rem;margin-top:0;}' +
+      '.qfu-phase0-analytics-source-chip{background:#ffffff;border:1px solid rgba(196,197,215,0.45);border-radius:8px;box-shadow:none;min-width:198px;padding:0.58rem 0.72rem;}' +
+      '.qfu-phase0-analytics-source-chip.is-live{background:#effbf8;border-color:rgba(0,111,103,0.24);}' +
+      '.qfu-phase0-analytics-source-chip.is-stale{background:#fff7ed;border-color:rgba(180,83,9,0.3);}' +
+      '.qfu-phase0-analytics-source-chip.is-awaiting{background:#f2f4f6;border-color:rgba(116,118,134,0.2);}' +
+      '.qfu-phase0-analytics-attention{background:#f2f4f6;gap:0.82rem;padding:0.9rem;}' +
+      '.qfu-phase0-analytics-attention__header{background:#ffffff;border-radius:8px;box-shadow:0 6px 18px rgba(25,28,30,0.05);padding:0.82rem 0.9rem;}' +
+      '.qfu-phase0-analytics-attention__count{background:#e6e8ea;border:0;border-radius:6px;color:#434655;font-size:0.72rem;letter-spacing:0.05em;padding:0.4rem 0.58rem;}' +
+      '.qfu-phase0-analytics-attention__grid{gap:0.72rem;}' +
+      '.qfu-phase0-analytics-attention-card{background:#ffffff;border:1px solid rgba(196,197,215,0.42);border-radius:8px;box-shadow:none;gap:0.55rem;grid-template-rows:auto auto auto 1fr auto;min-height:214px;padding:0.86rem 0.88rem 0.88rem 1rem;}' +
+      '.qfu-phase0-analytics-attention-card::before{border-radius:8px 0 0 8px;height:auto;inset:0 auto 0 0;width:4px;}' +
+      '.qfu-phase0-analytics-attention-card__rank{background:#0f172a;border-radius:6px;font-size:0.72rem;height:1.6rem;width:1.6rem;}' +
+      '.qfu-phase0-analytics-attention-card__label{color:#434655;font-size:0.7rem;letter-spacing:0.05em;}' +
+      '.qfu-phase0-analytics-attention-card__title{font-size:0.98rem;line-height:1.2;}' +
+      '.qfu-phase0-analytics-attention-card__why{color:#434655;font-size:0.82rem;line-height:1.42;}' +
+      '.qfu-phase0-analytics-attention-card__evidence,.qfu-phase0-analytics-revenue__watch-item small,.qfu-phase0-analytics-revenue__summary-card small,.qfu-phase0-analytics-focus__metric small,.qfu-phase0-analytics-spotlight-card__subdetail{background:#f2f4f6;border-radius:6px;color:#434655;}' +
+      '.qfu-phase0-analytics-attention-card__action .qfu-phase0-secondary-action{background:#ffffff;border:1px solid rgba(29,78,216,0.24);border-radius:8px;box-shadow:none;color:#0037b0;min-height:2.1rem;}' +
+      '.qfu-phase0-analytics-card,.qfu-phase0-analytics-spotlight-card,.qfu-phase0-analytics-trend__summary-card,.qfu-phase0-analytics-trend__panel,.qfu-phase0-analytics-splitbar,.qfu-phase0-analytics-revenue__summary-card,.qfu-phase0-analytics-revenue__chart-shell,.qfu-phase0-analytics-revenue__watch,.qfu-phase0-analytics-revenue__watch-item,.qfu-phase0-analytics-composition,.qfu-phase0-analytics-composition__summary article,.qfu-phase0-analytics-composition__row,.qfu-phase0-analytics-trust-note,.qfu-phase0-analytics-focus__metric,.qfu-phase0-analytics-variance__row{border-radius:8px;box-shadow:none;}' +
+      '.qfu-phase0-analytics-revenue{background:#ffffff;padding:1rem;}' +
+      '.qfu-phase0-analytics-revenue__headline,.qfu-phase0-analytics-focus__headline{border-radius:8px;box-shadow:0 10px 28px rgba(15,23,42,0.12);}' +
+      '.qfu-phase0-analytics-revenue__summary-card,.qfu-phase0-analytics-revenue__watch-item{border:1px solid rgba(196,197,215,0.38);}' +
+      '.qfu-phase0-analytics-revenue__watch{background:#f2f4f6;border-color:rgba(116,118,134,0.14);position:sticky;top:0.75rem;}' +
+      '.qfu-phase0-analytics-spotlight-card__value{font-size:2.15rem;line-height:1;}' +
+      '.qfu-phase0-analytics-revenue__summary-card strong,.qfu-phase0-analytics-revenue__watch-item strong,.qfu-phase0-analytics-focus__headline strong,.qfu-phase0-analytics-focus__metric strong{font-family:"Segoe UI Semibold","Public Sans","Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;}' +
+      '.qfu-phase0-analytics-stage [class*="__value"],.qfu-phase0-analytics-stage [class*="__metric"],.qfu-phase0-analytics-stage [class*="__summary-card"] strong,.qfu-phase0-analytics-stage [class*="__watch-item"] strong{font-variant-numeric:tabular-nums;}' +
+      '.qfu-phase0-summary-table--analytics-revenue thead th,.qfu-phase0-summary-table--analytics-finance thead th{background:#f2f4f6;color:#434655;letter-spacing:0.05em;}' +
+      '.qfu-phase0-summary-table--analytics-revenue tbody tr:nth-child(odd),.qfu-phase0-summary-table--analytics-finance tbody tr:nth-child(odd){background:#f7f9fb;}' +
+      '.qfu-phase0-summary-table--analytics-revenue tbody tr:hover,.qfu-phase0-summary-table--analytics-finance tbody tr:hover{background:#e6e8ea;}' +
+      '/* Compact Stitch analytics decision layout, generated from Stitch screen 7ae92e4d12a24559ab82d8da866d27cd. */' +
+      '.qfu-phase0-analytics-command{background:#ffffff;border:1px solid rgba(116,118,134,0.18);border-left:5px solid #006f67;border-radius:8px;box-shadow:0 8px 24px rgba(25,28,30,0.06);display:grid;gap:0.86rem;grid-template-columns:minmax(0,1.26fr) minmax(380px,0.94fr);padding:0.95rem;}' +
+      '.qfu-phase0-analytics-command.is-warning{border-left-color:#b45309;}.qfu-phase0-analytics-command.is-bad{border-left-color:#b91c1c;}.qfu-phase0-analytics-command.is-good{border-left-color:#15803d;}' +
+      '.qfu-phase0-analytics-command__primary{align-content:start;display:grid;gap:0.5rem;}' +
+      '.qfu-phase0-analytics-command__eyebrow,.qfu-phase0-analytics-section-header span,.qfu-phase0-analytics-action-card header span{color:#006f67;font-size:0.72rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;}' +
+      '.qfu-phase0-analytics-command__rank{background:#f2f4f6;border:1px solid rgba(116,118,134,0.18);border-radius:6px;color:#434655;display:inline-flex;font-size:0.72rem;font-weight:800;line-height:1.2;padding:0.36rem 0.54rem;width:max-content;}' +
+      '.qfu-phase0-analytics-command__primary h2,.qfu-phase0-analytics-section-header h2,.qfu-phase0-analytics-action-card header h2,.qfu-phase0-analytics-mini-card header h3{color:#191c1e;font-family:"Segoe UI Semibold","Public Sans","Helvetica Neue",Arial,sans-serif;font-weight:700;letter-spacing:0;line-height:1.16;margin:0;}' +
+      '.qfu-phase0-analytics-command__primary h2{font-size:1.36rem;}.qfu-phase0-analytics-command__primary p{color:#434655;font-size:0.9rem;line-height:1.48;margin:0;max-width:78ch;}' +
+      '.qfu-phase0-analytics-command__evidence{background:#f2f4f6;border:1px solid rgba(196,197,215,0.38);border-radius:8px;color:#434655;font-size:0.82rem;font-weight:650;line-height:1.45;padding:0.58rem 0.68rem;}' +
+      '.qfu-phase0-analytics-command__primary .qfu-phase0-action{justify-self:start;margin-top:0.12rem;}' +
+      '.qfu-phase0-analytics-command__kpis{display:grid;gap:0.58rem;grid-template-columns:repeat(2,minmax(0,1fr));}' +
+      '.qfu-phase0-analytics-command-kpi{background:#f7f9fb;border:1px solid rgba(196,197,215,0.42);border-radius:8px;display:grid;gap:0.18rem;min-width:0;padding:0.68rem 0.72rem;}' +
+      '.qfu-phase0-analytics-command-kpi span,.qfu-phase0-analytics-mini-metric span{color:#434655;font-size:0.68rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;}' +
+      '.qfu-phase0-analytics-command-kpi strong{color:#191c1e;font-family:"Segoe UI Semibold","Public Sans","Helvetica Neue",Arial,sans-serif;font-size:1.18rem;font-variant-numeric:tabular-nums;line-height:1.1;}' +
+      '.qfu-phase0-analytics-command-kpi em,.qfu-phase0-analytics-command-kpi small{color:#5f6270;font-size:0.76rem;font-style:normal;line-height:1.34;}' +
+      '.qfu-phase0-analytics-command-kpi.is-warning{background:#fff7ed;border-color:rgba(180,83,9,0.24);}.qfu-phase0-analytics-command-kpi.is-bad{background:#fff1f2;border-color:rgba(185,28,28,0.24);}.qfu-phase0-analytics-command-kpi.is-good{background:#effbf8;border-color:rgba(0,111,103,0.22);}' +
+      '.qfu-phase0-analytics-command-grid{align-items:start;display:grid;gap:0.86rem;grid-template-columns:minmax(330px,0.82fr) minmax(0,1.18fr);}' +
+      '.qfu-phase0-analytics-priority-stack,.qfu-phase0-analytics-performance,.qfu-phase0-analytics-drillthrough,.qfu-phase0-analytics-action-card,.qfu-phase0-analytics-source-panel{background:#ffffff;border:1px solid rgba(116,118,134,0.16);border-radius:8px;box-shadow:0 8px 24px rgba(25,28,30,0.05);display:grid;gap:0.72rem;padding:0.86rem;}' +
+      '.qfu-phase0-analytics-section-header,.qfu-phase0-analytics-action-card header{align-items:flex-start;display:flex;gap:0.7rem;justify-content:space-between;}' +
+      '.qfu-phase0-analytics-section-header>div,.qfu-phase0-analytics-action-card header>div{display:grid;gap:0.14rem;}.qfu-phase0-analytics-section-header h2,.qfu-phase0-analytics-action-card header h2{font-size:1.04rem;}.qfu-phase0-analytics-section-header small,.qfu-phase0-analytics-action-card header small{color:#5f6270;font-size:0.76rem;line-height:1.3;text-align:right;}' +
+      '.qfu-phase0-analytics-priority-stack__list{display:grid;gap:0.54rem;}' +
+      '.qfu-phase0-analytics-priority-row{align-items:center;background:#f7f9fb;border:1px solid rgba(196,197,215,0.42);border-radius:8px;color:#191c1e;display:grid;gap:0.58rem;grid-template-columns:auto minmax(0,1fr) auto;padding:0.66rem;text-decoration:none;}' +
+      '.qfu-phase0-analytics-priority-row:hover{background:#eef4f6;text-decoration:none;}.qfu-phase0-analytics-priority-row__rank{align-items:center;background:#0f172a;border-radius:6px;color:#ffffff;display:inline-flex;font-size:0.72rem;font-weight:800;height:1.6rem;justify-content:center;width:1.6rem;}.qfu-phase0-analytics-priority-row.is-warning .qfu-phase0-analytics-priority-row__rank{background:#b45309;}.qfu-phase0-analytics-priority-row.is-bad .qfu-phase0-analytics-priority-row__rank{background:#b91c1c;}.qfu-phase0-analytics-priority-row.is-good .qfu-phase0-analytics-priority-row__rank{background:#15803d;}' +
+      '.qfu-phase0-analytics-priority-row__copy{display:grid;gap:0.14rem;min-width:0;}.qfu-phase0-analytics-priority-row__copy strong{font-size:0.78rem;letter-spacing:0;text-transform:none;}.qfu-phase0-analytics-priority-row__copy em{color:#191c1e;font-size:0.88rem;font-style:normal;line-height:1.25;}.qfu-phase0-analytics-priority-row__copy small{color:#5f6270;font-size:0.74rem;line-height:1.35;}.qfu-phase0-analytics-priority-row__action{color:#0037b0;font-size:0.74rem;font-weight:800;white-space:nowrap;}' +
+      '.qfu-phase0-analytics-performance__grid,.qfu-phase0-analytics-action-tables{display:grid;gap:0.86rem;grid-template-columns:repeat(2,minmax(0,1fr));}' +
+      '.qfu-phase0-analytics-mini-card{background:#ffffff;border:1px solid rgba(196,197,215,0.38);border-radius:8px;display:grid;gap:0.72rem;min-width:0;padding:0.78rem;}' +
+      '.qfu-phase0-analytics-mini-card header{display:grid;gap:0.16rem;}.qfu-phase0-analytics-mini-card header span{color:#006f67;font-size:0.7rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;}.qfu-phase0-analytics-mini-card header h3{font-size:0.98rem;}.qfu-phase0-analytics-mini-card header small,.qfu-phase0-analytics-mini-card footer{color:#5f6270;font-size:0.75rem;line-height:1.35;}' +
+      '.qfu-phase0-analytics-mini-card.is-warning{border-color:rgba(180,83,9,0.25);}.qfu-phase0-analytics-mini-card.is-bad{border-color:rgba(185,28,28,0.24);}.qfu-phase0-analytics-mini-card.is-good{border-color:rgba(0,111,103,0.22);}' +
+      '.qfu-phase0-analytics-mini-metrics{display:grid;gap:0.54rem;grid-template-columns:repeat(2,minmax(0,1fr));}.qfu-phase0-analytics-mini-metric{background:#f7f9fb;border:1px solid rgba(196,197,215,0.38);border-radius:8px;display:grid;gap:0.14rem;padding:0.54rem 0.6rem;}.qfu-phase0-analytics-mini-metric strong{font-size:0.98rem;font-variant-numeric:tabular-nums;}.qfu-phase0-analytics-mini-metric em{color:#5f6270;font-size:0.73rem;font-style:normal;line-height:1.3;}' +
+      '.qfu-phase0-analytics-meter{display:grid;gap:0.52rem;}.qfu-phase0-analytics-meter>div:not(.qfu-phase0-analytics-meter__track){display:flex;justify-content:space-between;gap:0.7rem;}.qfu-phase0-analytics-meter span{color:#5f6270;font-size:0.7rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;}.qfu-phase0-analytics-meter strong{font-size:1rem;font-variant-numeric:tabular-nums;}.qfu-phase0-analytics-meter__track{background:#e6e8ea;border-radius:999px;height:14px;overflow:hidden;}.qfu-phase0-analytics-meter__track span{background:linear-gradient(90deg,#006f67,#2d9567);display:block;height:100%;}.qfu-phase0-analytics-meter em{color:#434655;font-size:0.78rem;font-style:normal;}' +
+      '.qfu-phase0-analytics-splitbar--compact{background:#f7f9fb;border-radius:8px;margin:0;padding:0.68rem;}' +
+      '.qfu-phase0-analytics-mini-bars{display:grid;gap:0.48rem;}.qfu-phase0-analytics-mini-bar{align-items:center;display:grid;gap:0.54rem;grid-template-columns:minmax(0,1.15fr) minmax(110px,0.8fr) auto;}.qfu-phase0-analytics-mini-bar__label{display:grid;gap:0.08rem;min-width:0;}.qfu-phase0-analytics-mini-bar__label strong{font-size:0.82rem;line-height:1.2;}.qfu-phase0-analytics-mini-bar__label span{color:#5f6270;font-size:0.72rem;line-height:1.24;}.qfu-phase0-analytics-mini-bar__track{background:#e6e8ea;border-radius:999px;height:9px;overflow:hidden;}.qfu-phase0-analytics-mini-bar__track span{background:linear-gradient(90deg,#006f67,#4d9f89);display:block;height:100%;}.qfu-phase0-analytics-mini-bar.is-warning .qfu-phase0-analytics-mini-bar__track span,.qfu-phase0-analytics-mini-bar.is-is-warning .qfu-phase0-analytics-mini-bar__track span{background:linear-gradient(90deg,#b45309,#f59e0b);}.qfu-phase0-analytics-mini-bar.is-bad .qfu-phase0-analytics-mini-bar__track span,.qfu-phase0-analytics-mini-bar.is-is-bad .qfu-phase0-analytics-mini-bar__track span{background:linear-gradient(90deg,#b91c1c,#ef4444);}.qfu-phase0-analytics-mini-bar__value{font-size:0.78rem;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}' +
+      '.qfu-phase0-analytics-action-tables{align-items:start;}.qfu-phase0-analytics-action-card header{padding-bottom:0.18rem;}.qfu-phase0-summary-table--analytics-actions{font-size:0.77rem;}.qfu-phase0-summary-table--analytics-actions thead th{background:#f2f4f6;color:#434655;letter-spacing:0.05em;}.qfu-phase0-summary-table--analytics-actions tbody tr:nth-child(odd){background:#f7f9fb;}.qfu-phase0-summary-table--analytics-actions tbody tr:hover{background:#e6e8ea;}' +
+      '.qfu-phase0-analytics-source-panel .qfu-phase0-analytics-freshness{justify-content:flex-start;}.qfu-phase0-analytics-source-panel .qfu-phase0-analytics-source-chip{min-width:184px;}' +
+      '@media (max-width:1240px){.qfu-phase0-analytics-card-grid,.qfu-phase0-analytics-card-grid.qfu-phase0-analytics-card-grid--four,.qfu-phase0-analytics-revenue__spotlight,.qfu-phase0-analytics-focus-grid,.qfu-phase0-analytics-signal-band-grid,.qfu-phase0-analytics-attention__grid,.qfu-phase0-analytics-command__kpis,.qfu-phase0-analytics-performance__grid,.qfu-phase0-analytics-action-tables{grid-template-columns:repeat(2,minmax(0,1fr));}.qfu-phase0-analytics-command,.qfu-phase0-analytics-command-grid{grid-template-columns:1fr;}.qfu-phase0-analytics-composition__summary,.qfu-phase0-analytics-trust-grid{grid-template-columns:1fr 1fr;}.qfu-phase0-analytics-focus__hero,.qfu-phase0-analytics-revenue__hero-grid{grid-template-columns:1fr;}.qfu-phase0-analytics-revenue__watch{position:static;}}' +
+      '@media (max-width:980px){.qfu-phase0-analytics-freshness{justify-content:flex-start;}.qfu-phase0-analytics-card-grid,.qfu-phase0-grid--cards-2.qfu-phase0-analytics-grid,.qfu-phase0-analytics-trend__grid,.qfu-phase0-grid--cards-1.qfu-phase0-analytics-grid,.qfu-phase0-analytics-revenue__spotlight,.qfu-phase0-analytics-focus-grid,.qfu-phase0-analytics-focus__metrics,.qfu-phase0-analytics-signal-band-grid,.qfu-phase0-analytics-attention__grid,.qfu-phase0-analytics-command,.qfu-phase0-analytics-command__kpis,.qfu-phase0-analytics-command-grid,.qfu-phase0-analytics-performance__grid,.qfu-phase0-analytics-action-tables,.qfu-phase0-analytics-mini-metrics{grid-template-columns:1fr;}.qfu-phase0-analytics-bar-row,.qfu-phase0-analytics-variance__row,.qfu-phase0-analytics-composition__row,.qfu-phase0-analytics-mini-bar{grid-template-columns:1fr;}.qfu-phase0-analytics-bar-row__value,.qfu-phase0-analytics-mini-bar__value{justify-self:flex-start;}.qfu-phase0-analytics-composition__value{justify-items:start;text-align:left;}.qfu-phase0-analytics-composition__summary,.qfu-phase0-analytics-trust-grid{grid-template-columns:1fr;}}' +
       '</style>';
   }
 
@@ -9301,6 +9742,464 @@ a.qfu-phase0-ready-preview-row--ledger {
       var width = maxValue > 0 ? percentWidth((toNumber(row.value) / maxValue) * 100) : "0%";
       return '<article class="qfu-phase0-analytics-bar-row"><div class="qfu-phase0-analytics-bar-row__copy"><strong>' + escapeHtml(row.label) + '</strong><span>' + escapeHtml(row.detail || "") + '</span></div><div class="qfu-phase0-analytics-bar-row__track"><span style="width:' + escapeHtml(width) + ';"></span></div><div class="qfu-phase0-analytics-bar-row__value">' + escapeHtml(formatter(toNumber(row.value))) + '</div></article>';
     }).join("") + '</div>';
+  }
+
+  function analyticsSourceNeedsAttention(status) {
+    return !!(status && (status.state === "stale" || status.state === "awaiting"));
+  }
+
+  function analyticsEvidence(parts) {
+    return (parts || []).filter(function (part) {
+      return String(part || "").trim() !== "";
+    }).join(" | ");
+  }
+
+  function buildAnalyticsAttentionFocus(branch, payload, revenueMotion, readyToShip, freightRecovery, financeSnapshot, latestOpsTrend, workspace) {
+    var items = [];
+    var quoteSummary = payload && payload.monthlyQuoteSummary && payload.monthlyQuoteSummary.lineRowCount
+      ? payload.monthlyQuoteSummary
+      : (payload && payload.dailyQuoteSummary || {});
+    var ordersSummary = payload && payload.ordersSummary || {};
+    var opsSummary = payload && payload.opsSummary || {};
+    var marginSummary = payload && payload.marginSummary || {};
+    var lateSummary = payload && payload.lateSummary || {};
+    var statuses = [
+      payload && payload.financeStatus,
+      payload && payload.opsStatus,
+      payload && payload.quotesStatus,
+      payload && payload.ordersStatus,
+      payload && payload.deliveryStatus,
+      payload && payload.freightQueueStatus,
+      payload && payload.freightStatus,
+      payload && payload.marginStatus,
+      payload && payload.lateStatus
+    ].filter(Boolean);
+    var freshnessGaps = statuses.filter(analyticsSourceNeedsAttention);
+    if (freshnessGaps.length) {
+      items.push({
+        score: 112,
+        label: "Data freshness",
+        title: "Repair stale feeds before trusting the branch read",
+        why: "A stale or missing source can make the branch look better or worse than the live operation.",
+        evidence: freshnessGaps.map(function (status) { return status.shortLabel + " " + status.state; }).join(" | "),
+        tone: "warning",
+        href: detailHref(branch, "analytics"),
+        action: "Review Sources"
+      });
+    }
+
+    if (financeSnapshot) {
+      var salesActual = toNumber(financeSnapshot.qfu_currentmonthsalesactual);
+      var salesPlan = toNumber(financeSnapshot.qfu_currentmonthsalesplan);
+      var salesGap = salesActual - salesPlan;
+      if (salesPlan > 0 && salesGap < 0) {
+        var salesGapRatio = Math.abs(salesGap) / salesPlan;
+        items.push({
+          score: 100 + Math.min(10, salesGapRatio * 40),
+          label: "Quote follow-up",
+          title: "Sales are below plan - work the live quote book first",
+          why: "Closed-month sales are short of plan, so the closest controllable lever is open quote conversion and owner follow-up.",
+          evidence: analyticsEvidence([
+            "Sales gap " + signedValueLabel(salesGap, formatCompactCurrency),
+            "Open quotes " + formatCompactCurrency(quoteSummary.openQuoteValue || 0),
+            revenueMotion && revenueMotion.trendSync ? ("Trend " + revenueMotion.trendSync.label) : ""
+          ]),
+          tone: "bad",
+          href: detailHref(branch, "follow-up-queue"),
+          action: "Open Follow-Up"
+        });
+      }
+
+      var gpActual = toNumber(financeSnapshot.qfu_currentmonthgrossprofitpctactual);
+      var gpPlan = toNumber(financeSnapshot.qfu_currentmonthgrossprofitpctplan);
+      if (gpPlan > 0 && gpActual < gpPlan) {
+        items.push({
+          score: 86 + Math.min(10, Math.abs(gpActual - gpPlan) * 80),
+          label: "Margin quality",
+          title: "GP percent is below plan - review pricing and abnormal margins",
+          why: "Sales activity is not enough if mix, discounting, or exception rows are pulling gross profit below plan.",
+          evidence: analyticsEvidence([
+            "GP " + formatPercent(gpActual) + " vs plan " + formatPercent(gpPlan),
+            String(marginSummary.totalRows || 0) + " margin rows"
+          ]),
+          tone: "warning",
+          href: detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" }),
+          action: "Review Margins"
+        });
+      }
+    }
+
+    if (revenueMotion && revenueMotion.trendSync && (revenueMotion.trendSync.tone === "warning" || (revenueMotion.pipelineCoverDays != null && toNumber(revenueMotion.pipelineCoverDays) < 7))) {
+      items.push({
+        score: 88,
+        label: "Demand conversion",
+        title: "Quote demand and billed sales are not moving cleanly together",
+        why: "A weak sync means quote activity may not be converting into billed revenue quickly enough.",
+        evidence: analyticsEvidence([
+          revenueMotion.trendSync.detail,
+          revenueMotion.pipelineCoverDays == null ? "" : ("Cover " + ((Math.round(revenueMotion.pipelineCoverDays * 10) / 10).toFixed(1)) + " days")
+        ]),
+        tone: "warning",
+        href: detailHref(branch, "quotes"),
+        action: "Open Quotes"
+      });
+    }
+
+    if (toNumber(ordersSummary.overdueBacklogValue) > 0 || toNumber(ordersSummary.blockedOrderCount) > 0) {
+      items.push({
+        score: 84 + Math.min(12, toNumber(ordersSummary.blockedOrderCount || 0)),
+        label: "Backlog escalation",
+        title: "Overdue and blocked backorders need branch follow-through",
+        why: "This is the operational pressure most likely to turn into customer impact and internal rework.",
+        evidence: analyticsEvidence([
+          formatCompactCurrency(ordersSummary.overdueBacklogValue || 0) + " overdue",
+          String(ordersSummary.blockedOrderCount || 0) + " blocked orders"
+        ]),
+        tone: "warning",
+        href: detailHref(branch, "overdue-backorders"),
+        action: "Open Backorders"
+      });
+    }
+
+    if (readyToShip && (toNumber(readyToShip.count) > 0 || toNumber(readyToShip.totalValue) > 0)) {
+      items.push({
+        score: readyToShip.isStale ? 89 : 82,
+        label: "Ready to ship",
+        title: "Shipment-ready work should not sit on the board",
+        why: "These rows are close to revenue recognition and should be cleared before they age into a service issue.",
+        evidence: analyticsEvidence([
+          String(readyToShip.count || 0) + " orders",
+          readyToShip.totalLabel || formatCurrency(readyToShip.totalValue || 0),
+          readyToShip.isStale ? "Snapshot stale" : ""
+        ]),
+        tone: readyToShip.isStale ? "warning" : "info",
+        href: detailHref(branch, "ready-to-ship-not-pgid"),
+        action: "Open Dispatch"
+      });
+    }
+
+    if (opsSummary && opsSummary.totalRow && toNumber(opsSummary.totalRow.onTimeDelivery) < 0.9) {
+      items.push({
+        score: 80 + Math.min(10, (0.9 - toNumber(opsSummary.totalRow.onTimeDelivery)) * 100),
+        label: "Delivery reliability",
+        title: "On-time delivery is below the operating target",
+        why: "Service drift usually shows up here before it spreads into backlog and customer follow-up.",
+        evidence: analyticsEvidence([
+          "OTD " + formatRatioPercent(opsSummary.totalRow.onTimeDelivery, 1),
+          latestOpsTrend ? ("Latest billed day " + latestOpsTrend.billingDayLabel) : ""
+        ]),
+        tone: "warning",
+        href: detailHref(branch, "ready-to-ship-not-pgid"),
+        action: "Open Delivery"
+      });
+    }
+
+    if (marginSummary && toNumber(marginSummary.totalRows) > 0) {
+      items.push({
+        score: 78 + Math.min(9, toNumber(marginSummary.totalRows)),
+        label: "Sales quality",
+        title: "Abnormal margin rows are open for review",
+        why: "These rows already have sales activity attached, so cleanup protects margin quality without waiting for more volume.",
+        evidence: analyticsEvidence([
+          String(marginSummary.totalRows || 0) + " rows",
+          formatCompactCurrency(marginSummary.totalGp || 0) + " GP in review"
+        ]),
+        tone: "warning",
+        href: detailHrefWithParams(branch, "analytics", { exception: "margin", window: "month" }),
+        action: "Open Margins"
+      });
+    }
+
+    if (lateSummary && toNumber(lateSummary.totalRows) > 0) {
+      items.push({
+        score: 74 + Math.min(8, toNumber(lateSummary.totalRows)),
+        label: "Late orders",
+        title: "Late-order exposure needs owner review",
+        why: "These rows show billed order pressure that should be matched back to customer and branch ownership.",
+        evidence: analyticsEvidence([
+          String(lateSummary.totalRows || 0) + " rows",
+          formatCompactCurrency(lateSummary.totalSales || 0) + " sales exposure"
+        ]),
+        tone: "warning",
+        href: detailHrefWithParams(branch, "analytics", { exception: "late-orders", window: "7d" }),
+        action: "Open Late Orders"
+      });
+    }
+
+    if (freightRecovery && freightRecovery.isLive && parseCurrencyLabelNumber(freightRecovery.valueLabel) < 0) {
+      items.push({
+        score: 72,
+        label: "Freight recovery",
+        title: "Freight recovery is negative for the closed month",
+        why: "Freight leakage can erase profit even when sales and GP dollars look acceptable.",
+        evidence: analyticsEvidence([
+          freightRecovery.valueLabel,
+          freightRecovery.monthLabel || "",
+          workspace && workspace.freight && workspace.freight.actionableCount ? (String(workspace.freight.actionableCount) + " freight work items") : ""
+        ]),
+        tone: "warning",
+        href: detailHref(branch, "freight-worklist"),
+        action: "Open Freight"
+      });
+    }
+
+    var freightQueue = workspace && workspace.freight || {};
+    var freightImportFailed = failedImportStatus(freightQueue.latestImportStatus);
+    if (freightQueue.isConfigured && (toNumber(freightQueue.actionableCount) > 0 || freightQueue.isStale || freightImportFailed)) {
+      items.push({
+        score: freightImportFailed ? 98 : (freightQueue.isStale ? 90 : 76 + Math.min(8, toNumber(freightQueue.actionableCount || 0))),
+        label: "Freight worklist",
+        title: freightImportFailed ? "Freight import needs attention" : (freightQueue.isStale ? "Freight queue may be stale" : "Open freight items need review"),
+        why: "Freight work items can leak recovery dollars or leave carrier exceptions unresolved.",
+        evidence: analyticsEvidence([
+          String(freightQueue.actionableCount || 0) + " actionable",
+          formatCompactCurrency(freightQueue.totalAmountValue || 0) + " open",
+          freightQueue.isStale ? "Queue stale" : "",
+          freightImportFailed ? ("Latest status " + freightQueue.latestImportStatus) : ""
+        ]),
+        tone: (freightImportFailed || freightQueue.isStale) ? "warning" : "info",
+        href: detailHref(branch, "freight-worklist"),
+        action: "Open Freight"
+      });
+    }
+
+    if (!items.length) {
+      items.push({
+        score: 1,
+        label: "Monitor",
+        title: "No urgent branch focus is standing out",
+        why: "The live signals do not currently show a sales, backlog, delivery, margin, or freshness problem above the normal review threshold.",
+        evidence: "Keep watching quote conversion, daily sales, and backlog aging.",
+        tone: "good",
+        href: detailHref(branch, "analytics"),
+        action: "Stay Here"
+      });
+    }
+
+    return items.sort(function (left, right) {
+      return right.score - left.score || String(left.label || "").localeCompare(String(right.label || ""));
+    }).slice(0, 4);
+  }
+
+  function renderAnalyticsAttentionPlan(branch, items) {
+    var focusItems = (items || []).slice(0, 4);
+    return '<section class="qfu-phase0-analytics-attention"><header class="qfu-phase0-analytics-attention__header"><div class="qfu-phase0-analytics-attention__copy"><div class="qfu-phase0-analytics-attention__eyebrow">Focus First</div><h2 class="qfu-phase0-analytics-attention__title">Where the branch should spend attention now</h2><p class="qfu-phase0-analytics-attention__note">Current pressure from sales, quote demand, backlog, delivery, margin, freight, and source freshness.</p></div><span class="qfu-phase0-analytics-attention__count">' + escapeHtml(String(focusItems.length)) + ' active focus</span></header><div class="qfu-phase0-analytics-attention__grid">' + focusItems.map(function (item, index) {
+      return '<article class="qfu-phase0-analytics-attention-card is-' + escapeHtml(item.tone || "info") + '"><span class="qfu-phase0-analytics-attention-card__rank">' + escapeHtml(String(index + 1)) + '</span><span class="qfu-phase0-analytics-attention-card__label">' + escapeHtml(item.label || "Focus") + '</span><h3 class="qfu-phase0-analytics-attention-card__title">' + escapeHtml(item.title || "Review branch signal") + '</h3><p class="qfu-phase0-analytics-attention-card__why">' + escapeHtml(item.why || "") + '</p><p class="qfu-phase0-analytics-attention-card__evidence">' + escapeHtml(item.evidence || "No supporting detail available.") + '</p><div class="qfu-phase0-analytics-attention-card__action"><a class="qfu-phase0-secondary-action" href="' + escapeHtml(item.href || detailHref(branch, "analytics")) + '">' + escapeHtml(item.action || "Open Detail") + '</a></div></article>';
+    }).join("") + '</div></section>';
+  }
+
+  function renderAnalyticsMiniMetric(label, value, detail, tone) {
+    return '<article class="qfu-phase0-analytics-mini-metric is-' + escapeHtml(tone || "neutral") + '"><span>' + escapeHtml(label || "") + '</span><strong>' + escapeHtml(value || "Not Live") + '</strong><em>' + escapeHtml(detail || "") + '</em></article>';
+  }
+
+  function renderAnalyticsMiniBarRows(rows, formatter, emptyCopy) {
+    var visibleRows = (rows || []).filter(function (row) {
+      return !!(row && toNumber(row.value) > 0);
+    }).slice(0, 5);
+    if (!visibleRows.length) {
+      return '<div class="qfu-phase0-empty-state qfu-phase0-empty-state--compact"><strong>No Live Rows</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyCopy || "This graph is waiting on live source rows.") + '</p></div>';
+    }
+    var maxValue = Math.max.apply(null, visibleRows.map(function (row) { return toNumber(row.value); }).concat([1]));
+    return '<div class="qfu-phase0-analytics-mini-bars">' + visibleRows.map(function (row) {
+      var width = maxValue > 0 ? percentWidth((toNumber(row.value) / maxValue) * 100) : "0%";
+      var valueLabel = typeof formatter === "function" ? formatter(toNumber(row.value)) : formatCompactCurrency(row.value);
+      return '<article class="qfu-phase0-analytics-mini-bar is-' + escapeHtml(row.tone || row.toneClass || "neutral") + '"><div class="qfu-phase0-analytics-mini-bar__label"><strong>' + escapeHtml(row.label || "Signal") + '</strong><span>' + escapeHtml(row.detail || row.secondary || "") + '</span></div><div class="qfu-phase0-analytics-mini-bar__track"><span style="width:' + escapeHtml(width) + ';"></span></div><div class="qfu-phase0-analytics-mini-bar__value">' + escapeHtml(valueLabel) + '</div></article>';
+    }).join("") + '</div>';
+  }
+
+  function buildAnalyticsFocusKpis(workspace, payload, quoteFocus, revenueMotion, readyToShip, financeSnapshot) {
+    var safeWorkspace = workspace || {};
+    var budget = safeWorkspace.budgetBlock || {};
+    var ordersSummary = payload && payload.ordersSummary || {};
+    var freightQueue = safeWorkspace.freight || {};
+    var salesKpi = {
+      label: "Sales vs Plan",
+      value: "Not Live",
+      detail: "Waiting on current-month SA1300 or closed-month GL060.",
+      source: payload && payload.opsStatus ? payload.opsStatus.chipText : "SA1300 / GL060",
+      tone: "neutral"
+    };
+    if (budget.hasDisplayActual && toNumber(budget.targetValue) > 0) {
+      salesKpi = {
+        label: "Sales vs Plan",
+        value: budget.pace || formatRatioPercent(toNumber(budget.actualValue) / Math.max(1, toNumber(budget.targetValue)), 1),
+        detail: (budget.actual || formatCurrency(budget.actualValue)) + " vs " + (budget.target || formatCurrency(budget.targetValue)),
+        source: (budget.actualSourceLabel || "SA1300") + " | Updated " + (budget.updated || "No timestamp"),
+        tone: metricToneHigherIsBetter(budget.actualValue, budget.targetValue)
+      };
+    } else if (financeSnapshot) {
+      var salesActual = toNumber(financeSnapshot.qfu_currentmonthsalesactual);
+      var salesPlan = toNumber(financeSnapshot.qfu_currentmonthsalesplan);
+      salesKpi = {
+        label: "Sales vs Plan",
+        value: signedValueLabel(salesActual - salesPlan, formatCompactCurrency),
+        detail: "Closed month " + formatCurrency(salesActual) + " vs plan " + formatCurrency(salesPlan),
+        source: payload && payload.financeStatus ? payload.financeStatus.chipText : "GL060 closed month",
+        tone: metricToneHigherIsBetter(salesActual, salesPlan)
+      };
+    }
+    var quoteTotalValue = toNumber(quoteFocus && quoteFocus.openQuoteValue) + toNumber(quoteFocus && quoteFocus.convertedQuoteValue);
+    var quoteKpi = {
+      label: "Quote Pipeline",
+      value: quoteTotalValue > 0 ? formatCompactCurrency(quoteFocus.openQuoteValue || 0) : "Not Live",
+      detail: String(quoteFocus && quoteFocus.distinctQuoteCount || 0) + " distinct quotes | " + formatRatioPercent(quoteFocus && quoteFocus.conversionByValue || 0, 1) + " connected by value",
+      source: payload && payload.quotesStatus ? payload.quotesStatus.chipText : "SP830 quote lines",
+      tone: quoteTotalValue > 0 && toNumber(quoteFocus && quoteFocus.conversionByValue) < 0.35 ? "warning" : (quoteTotalValue > 0 ? "info" : "neutral")
+    };
+    var backlogKpi = {
+      label: "Backlog Risk",
+      value: ordersSummary.openRows && ordersSummary.openRows.length ? formatCompactCurrency(ordersSummary.overdueBacklogValue || 0) : "Not Live",
+      detail: String(ordersSummary.blockedOrderCount || 0) + " blocked | " + String(ordersSummary.openOrderCount || 0) + " open orders",
+      source: payload && payload.ordersStatus ? payload.ordersStatus.chipText : "ZBO backlog",
+      tone: toNumber(ordersSummary.overdueBacklogValue) > 0 || toNumber(ordersSummary.blockedOrderCount) > 0 ? "warning" : (ordersSummary.openRows && ordersSummary.openRows.length ? "good" : "neutral")
+    };
+    var shipFreightKpi = {
+      label: "Ship / Freight",
+      value: (readyToShip && readyToShip.countLabel ? readyToShip.countLabel : "0") + " RTS",
+      detail: (readyToShip && readyToShip.totalLabel ? readyToShip.totalLabel : formatCurrency(0)) + " ready | " + String(freightQueue.actionableCount || 0) + " freight items",
+      source: [
+        payload && payload.deliveryStatus ? payload.deliveryStatus.shortLabel + " " + payload.deliveryStatus.state : "",
+        payload && payload.freightQueueStatus ? payload.freightQueueStatus.shortLabel + " " + payload.freightQueueStatus.state : ""
+      ].filter(Boolean).join(" | "),
+      tone: (readyToShip && readyToShip.isStale) || freightQueue.isStale || toNumber(freightQueue.actionableCount) > 0 ? "warning" : ((readyToShip && readyToShip.hasData) || freightQueue.isConfigured ? "info" : "neutral")
+    };
+    return [salesKpi, quoteKpi, backlogKpi, shipFreightKpi];
+  }
+
+  function renderAnalyticsFocusPlanBar(branch, items, kpis) {
+    var focusItems = (items || []).slice(0, 4);
+    var primary = focusItems[0] || {
+      label: "Monitor",
+      title: "No urgent branch focus is standing out",
+      why: "Keep watching quote conversion, backlog, dispatch, freight, and source freshness.",
+      evidence: "No high-priority signal crossed the review threshold.",
+      tone: "good",
+      href: detailHref(branch, "analytics"),
+      action: "Stay Here"
+    };
+    return '<section class="qfu-phase0-analytics-command is-' + escapeHtml(primary.tone || "info") + '">' +
+      '<article class="qfu-phase0-analytics-command__primary"><div class="qfu-phase0-analytics-command__eyebrow">Focus Plan</div><div class="qfu-phase0-analytics-command__rank">Top Ranked Action</div><h2>' + escapeHtml(primary.title || "Review branch signal") + '</h2><p>' + escapeHtml(primary.why || "") + '</p><div class="qfu-phase0-analytics-command__evidence">' + escapeHtml(primary.evidence || "No supporting detail available.") + '</div><a class="qfu-phase0-action" href="' + escapeHtml(primary.href || detailHref(branch, "analytics")) + '">' + escapeHtml(primary.action || "Open Detail") + '</a></article>' +
+      '<div class="qfu-phase0-analytics-command__kpis">' + (kpis || []).map(function (kpi) {
+        return '<article class="qfu-phase0-analytics-command-kpi is-' + escapeHtml(kpi.tone || "neutral") + '"><span>' + escapeHtml(kpi.label || "KPI") + '</span><strong>' + escapeHtml(kpi.value || "Not Live") + '</strong><em>' + escapeHtml(kpi.detail || "") + '</em><small>' + escapeHtml(kpi.source || "") + '</small></article>';
+      }).join("") + '</div></section>';
+  }
+
+  function renderAnalyticsPriorityStack(branch, items) {
+    var focusItems = (items || []).slice(0, 4);
+    return '<section class="qfu-phase0-analytics-priority-stack"><header class="qfu-phase0-analytics-section-header"><div><span>Priority Stack</span><h2>What to work first</h2></div><small>' + escapeHtml(String(focusItems.length)) + ' active focus areas</small></header><div class="qfu-phase0-analytics-priority-stack__list">' + focusItems.map(function (item, index) {
+      return '<a class="qfu-phase0-analytics-priority-row is-' + escapeHtml(item.tone || "info") + '" href="' + escapeHtml(item.href || detailHref(branch, "analytics")) + '"><span class="qfu-phase0-analytics-priority-row__rank">' + escapeHtml(String(index + 1)) + '</span><div class="qfu-phase0-analytics-priority-row__copy"><strong>' + escapeHtml(item.label || "Focus") + '</strong><em>' + escapeHtml(item.title || "Review branch signal") + '</em><small>' + escapeHtml(item.evidence || "") + '</small></div><span class="qfu-phase0-analytics-priority-row__action">' + escapeHtml(item.action || "Open") + '</span></a>';
+    }).join("") + '</div></section>';
+  }
+
+  function renderAnalyticsSalesPacingCard(workspace, financeSnapshot) {
+    var safeWorkspace = workspace || {};
+    var budget = safeWorkspace.budgetBlock || {};
+    if (budget.hasDisplayActual && toNumber(budget.targetValue) > 0) {
+      var actual = toNumber(budget.actualValue);
+      var target = toNumber(budget.targetValue);
+      var width = percentWidth((actual / Math.max(1, target)) * 100);
+      return '<article class="qfu-phase0-analytics-mini-card is-' + escapeHtml(metricToneHigherIsBetter(actual, target)) + '"><header><span>Sales Pacing</span><h3>Current month progress</h3><small>SA1300 actuals against target</small></header><div class="qfu-phase0-analytics-meter"><div><span>Actual</span><strong>' + escapeHtml(budget.actual || formatCurrency(actual)) + '</strong></div><div><span>Target</span><strong>' + escapeHtml(budget.target || formatCurrency(target)) + '</strong></div><div class="qfu-phase0-analytics-meter__track"><span style="width:' + escapeHtml(width) + ';"></span></div><em>' + escapeHtml((budget.variance ? ("Variance " + budget.variance) : "") + (budget.projected ? (" | Projected " + budget.projected) : "")) + '</em></div><footer>' + escapeHtml("Updated " + (budget.updated || "No timestamp") + " | Actual " + (budget.actualSourceLabel || "SA1300") + " | Target " + (budget.targetSource || "qfu_budgetarchive")) + '</footer></article>';
+    }
+    if (financeSnapshot) {
+      var salesActual = toNumber(financeSnapshot.qfu_currentmonthsalesactual);
+      var salesPlan = toNumber(financeSnapshot.qfu_currentmonthsalesplan);
+      var financeWidth = percentWidth((salesActual / Math.max(1, salesPlan)) * 100);
+      return '<article class="qfu-phase0-analytics-mini-card is-' + escapeHtml(metricToneHigherIsBetter(salesActual, salesPlan)) + '"><header><span>Sales Pacing</span><h3>Last closed month</h3><small>GL060 actuals against plan</small></header><div class="qfu-phase0-analytics-meter"><div><span>Actual</span><strong>' + escapeHtml(formatCurrency(salesActual)) + '</strong></div><div><span>Plan</span><strong>' + escapeHtml(formatCurrency(salesPlan)) + '</strong></div><div class="qfu-phase0-analytics-meter__track"><span style="width:' + escapeHtml(financeWidth) + ';"></span></div><em>' + escapeHtml("Variance " + signedValueLabel(salesActual - salesPlan, formatCurrency)) + '</em></div><footer>Source: GL060 closed-month finance.</footer></article>';
+    }
+    return '<article class="qfu-phase0-analytics-mini-card is-neutral"><header><span>Sales Pacing</span><h3>Waiting on source</h3><small>SA1300 or GL060 required</small></header><div class="qfu-phase0-empty-state qfu-phase0-empty-state--compact"><strong>Not Live</strong><p class="qfu-phase0-empty-copy">No current-month budget pace or closed-month finance row is available for this branch yet.</p></div></article>';
+  }
+
+  function renderAnalyticsQuoteFunnelCard(quoteFocus) {
+    var focus = quoteFocus || {};
+    var totalValue = toNumber(focus.openQuoteValue) + toNumber(focus.convertedQuoteValue);
+    var openWidth = percentWidth((toNumber(focus.openQuoteValue) / Math.max(1, totalValue)) * 100);
+    var connectedWidth = percentWidth((toNumber(focus.convertedQuoteValue) / Math.max(1, totalValue)) * 100);
+    return '<article class="qfu-phase0-analytics-mini-card is-info"><header><span>Quote Funnel</span><h3>Open vs connected value</h3><small>SP830 grouped by quote number</small></header><div class="qfu-phase0-analytics-splitbar qfu-phase0-analytics-splitbar--compact"><div class="qfu-phase0-analytics-splitbar__labels"><span>Open Quote $</span><strong>' + escapeHtml(formatCompactCurrency(focus.openQuoteValue || 0)) + '</strong><span>Connected Quote $</span><strong>' + escapeHtml(formatCompactCurrency(focus.convertedQuoteValue || 0)) + '</strong></div><div class="qfu-phase0-analytics-splitbar__track"><span class="is-open" style="width:' + escapeHtml(openWidth) + ';"></span><span class="is-converted" style="width:' + escapeHtml(connectedWidth) + ';"></span></div></div><div class="qfu-phase0-analytics-mini-metrics">' + renderAnalyticsMiniMetric("Distinct Quotes", String(focus.distinctQuoteCount || 0), formatRatioPercent(focus.conversionByCount || 0, 1) + " converted by count", "info") + renderAnalyticsMiniMetric("Weighted GP%", formatRatioPercent(focus.weightedGpRatio || 0, 1), "SP830 line-weighted GP", "neutral") + '</div>' + renderAnalyticsMiniBarRows(focus.agingRows || [], formatCompactCurrency, "Quote age buckets require quote Created On dates.") + '</article>';
+  }
+
+  function renderAnalyticsBacklogPressureCard(payload, readyToShip) {
+    var ordersSummary = payload && payload.ordersSummary || {};
+    var rows = [
+      { label: "Overdue backlog", value: toNumber(ordersSummary.overdueBacklogValue), detail: "Rows with overdue days", tone: "bad" },
+      { label: "Pending approval", value: toNumber(ordersSummary.pendingApprovalValue), detail: "Delivery block pending approval", tone: "warning" },
+      { label: "Must add freight", value: toNumber(ordersSummary.mustAddFreightValue), detail: "Freight-related backlog hold", tone: "warning" },
+      { label: "Ready to ship", value: toNumber(readyToShip && readyToShip.totalValue), detail: String(readyToShip && readyToShip.count || 0) + " order(s)", tone: readyToShip && readyToShip.isStale ? "warning" : "info" }
+    ];
+    return '<article class="qfu-phase0-analytics-mini-card is-warning"><header><span>Backlog Pressure</span><h3>Where orders are stuck</h3><small>ZBO plus ready-to-ship dispatch</small></header><div class="qfu-phase0-analytics-mini-metrics">' + renderAnalyticsMiniMetric("Open Orders", String(ordersSummary.openOrderCount || 0), formatCompactCurrency(ordersSummary.openBacklogValue || 0) + " open", "neutral") + renderAnalyticsMiniMetric("Blocked", String(ordersSummary.blockedOrderCount || 0), "distinct blocked orders", toNumber(ordersSummary.blockedOrderCount) > 0 ? "warning" : "good") + '</div>' + renderAnalyticsMiniBarRows(rows, formatCompactCurrency, "Backlog pressure will appear when ZBO or dispatch rows are live.") + '</article>';
+  }
+
+  function renderAnalyticsExceptionMixCard(workspace, payload, freightRecovery) {
+    var safeWorkspace = workspace || {};
+    var freightQueue = safeWorkspace.freight || {};
+    var rows = [
+      { label: "Abnormal margin", value: payload && payload.marginSummary ? toNumber(payload.marginSummary.totalRows) : 0, detail: formatCompactCurrency(payload && payload.marginSummary ? payload.marginSummary.totalSales : 0) + " sales in review", tone: "warning" },
+      { label: "Late orders", value: payload && payload.lateSummary ? toNumber(payload.lateSummary.totalRows) : 0, detail: formatCompactCurrency(payload && payload.lateSummary ? payload.lateSummary.totalSales : 0) + " sales exposure", tone: "warning" },
+      { label: "Freight items", value: toNumber(freightQueue.actionableCount), detail: formatCompactCurrency(freightQueue.totalAmountValue || 0) + " open freight", tone: freightQueue.isStale ? "warning" : "info" },
+      { label: "Unowned freight", value: toNumber(freightQueue.unownedCount), detail: "needs an owner", tone: toNumber(freightQueue.unownedCount) > 0 ? "warning" : "good" }
+    ];
+    return '<article class="qfu-phase0-analytics-mini-card is-neutral"><header><span>Exception Mix</span><h3>Sales quality and freight cleanup</h3><small>SA1300 reviews plus freight worklist</small></header><div class="qfu-phase0-analytics-mini-metrics">' + renderAnalyticsMiniMetric("Freight Recovery", freightRecovery && freightRecovery.valueLabel ? freightRecovery.valueLabel : "Not Live", freightRecovery && freightRecovery.monthLabel ? freightRecovery.monthLabel : "GL060 monthly line", freightRecovery && freightRecovery.isLive ? "info" : "neutral") + renderAnalyticsMiniMetric("Freight Queue", String(freightQueue.actionableCount || 0), freightQueue.isStale ? "Queue stale" : "actionable items", freightQueue.isStale || toNumber(freightQueue.actionableCount) > 0 ? "warning" : "good") + '</div>' + renderAnalyticsMiniBarRows(rows, function (value) { return String(parseInteger(value, 0)); }, "No active margin, late-order, or freight exceptions are present.") + '</article>';
+  }
+
+  function renderAnalyticsPerformanceDeck(workspace, payload, quoteFocus, readyToShip, freightRecovery, financeSnapshot) {
+    return '<section class="qfu-phase0-analytics-performance"><header class="qfu-phase0-analytics-section-header"><div><span>Performance Visualizations</span><h2>KPI graphs that explain the focus plan</h2></div><small>Source-backed</small></header><div class="qfu-phase0-analytics-performance__grid">' +
+      renderAnalyticsSalesPacingCard(workspace, financeSnapshot) +
+      renderAnalyticsQuoteFunnelCard(quoteFocus) +
+      renderAnalyticsBacklogPressureCard(payload, readyToShip) +
+      renderAnalyticsExceptionMixCard(workspace, payload, freightRecovery) +
+      '</div></section>';
+  }
+
+  function renderAnalyticsExceptionDrillthrough(exceptionFilter, windowFilter, workspace) {
+    var safeWorkspace = workspace || {};
+    if (exceptionFilter === "margin") {
+      var marginModule = safeWorkspace.marginModule || {};
+      var rows = marginModule.rows || [];
+      var countGrid = (marginModule.counts || []).length ? renderReviewCountGrid(marginModule.counts) : "";
+      var periodLabel = marginModule.periodLabel || (windowFilter === "month" ? "Current month" : "Current branch slice");
+      var snapshotLabel = marginModule.snapshotLabel || "Awaiting snapshot";
+      return '<section class="qfu-phase0-analytics-drillthrough qfu-phase0-analytics-drillthrough--margin"><header class="qfu-phase0-analytics-section-header"><div><span>Drill-through</span><h2>Abnormal Margin Exceptions</h2></div><small>' + escapeHtml(String(rows.length)) + ' rows</small></header><p class="qfu-phase0-panel__copy">Full branch margin review list from SA1300 for the selected analytics route.</p>' + countGrid + renderMarginExceptionTable(rows) + '<div class="qfu-phase0-summary-foot">' + escapeHtml(periodLabel + " | " + snapshotLabel) + '</div></section>';
+    }
+    return "";
+  }
+
+  function renderAnalyticsActionTables(branch, quoteFocus, payload, readyToShip, workspace) {
+    var quoteRows = ((quoteFocus && quoteFocus.quoteRows) || []).filter(function (row) {
+      return toNumber(row.openValue) > 0;
+    }).slice().sort(function (left, right) {
+      var valueDelta = toNumber(right.openValue) - toNumber(left.openValue);
+      if (Math.abs(valueDelta) > 0.009) {
+        return valueDelta;
+      }
+      return toNumber(right.ageDays) - toNumber(left.ageDays);
+    }).slice(0, 6);
+    var quoteTable = quoteRows.length
+      ? '<div class="qfu-phase0-summary-table-shell"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--analytics-actions"><thead><tr><th>Quote / Customer</th><th>Owner</th><th class="qfu-phase0-table__numeric">Open $</th><th>Age</th><th>Action</th></tr></thead><tbody>' + quoteRows.map(function (row) {
+        return '<tr><td><strong>' + escapeHtml(row.quoteNumber || "-") + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.customer || "-") + '</div></td><td><strong>' + escapeHtml(row.cssr || "Unassigned") + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.am || "Unassigned") + '</div></td><td class="qfu-phase0-table__numeric">' + escapeHtml(formatCurrency(row.openValue || 0)) + '</td><td>' + escapeHtml(String(parseInteger(row.ageDays, 0)) + "d") + '</td><td><a class="qfu-phase0-table-action is-secondary" href="' + escapeHtml(detailHrefWithParams(branch, "quote-detail", { quote: row.quoteNumber || "" })) + '">Open Quote</a></td></tr>';
+      }).join("") + '</tbody></table></div>'
+      : '<div class="qfu-phase0-empty-state"><strong>No Open Quote Worklist</strong><p class="qfu-phase0-empty-copy">No open SP830 quote value is present in the analytics slice.</p></div>';
+    var safeWorkspace = workspace || {};
+    var freightRows = topFreightReviewRows(safeWorkspace.freight && (safeWorkspace.freight.openRows || safeWorkspace.freight.rows) || [], 3);
+    var opsRows = [];
+    ((payload && payload.ordersSummary && payload.ordersSummary.blockedRows) || []).slice(0, 4).forEach(function (row) {
+      opsRows.push({ kind: "Backorder", title: row.order || "-", detail: row.customer || "-", owner: row.cssr || row.accountManager || "Unassigned", impact: row.valueLabel || formatCurrency(row.value || 0), href: detailHrefWithParams(branch, "overdue-backorders", { order: row.order || "" }) });
+    });
+    ((readyToShip && readyToShip.topRows) || []).slice(0, 3).forEach(function (row) {
+      opsRows.push({ kind: "Ready To Ship", title: row.deliveryNumber || row.order || "-", detail: row.customer || "-", owner: row.cssr || "Unassigned", impact: row.totalValue || row.unshippedValue || formatCurrency(row.totalValueNumber || row.unshippedValueNumber || 0), href: row.lineHref || detailHrefWithParams(branch, "ready-to-ship-not-pgid", { order: row.deliveryNumber || row.order || "" }) });
+    });
+    freightRows.forEach(function (row) {
+      opsRows.push({ kind: "Freight", title: row.invoiceNumber !== "-" ? row.invoiceNumber : (row.proNumber !== "-" ? row.proNumber : row.trackingNumber), detail: row.carrier || "-", owner: row.owner || "Unowned", impact: row.totalAmount || formatCurrency(row.totalAmountNumber || 0), href: row.detailHref || row.ledgerHref || detailHref(branch, "freight-worklist") });
+    });
+    opsRows = opsRows.slice(0, 8);
+    var opsTable = opsRows.length
+      ? '<div class="qfu-phase0-summary-table-shell"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--analytics-actions"><thead><tr><th>Type / Item</th><th>Customer / Carrier</th><th>Owner</th><th class="qfu-phase0-table__numeric">Impact</th><th>Action</th></tr></thead><tbody>' + opsRows.map(function (row) {
+        return '<tr><td><strong>' + escapeHtml(row.kind) + '</strong><div class="qfu-phase0-admin-subtext">' + escapeHtml(row.title || "-") + '</div></td><td>' + escapeHtml(row.detail || "-") + '</td><td>' + escapeHtml(row.owner || "Unassigned") + '</td><td class="qfu-phase0-table__numeric">' + escapeHtml(row.impact || "-") + '</td><td><a class="qfu-phase0-table-action is-secondary" href="' + escapeHtml(row.href || detailHref(branch, "analytics")) + '">Open</a></td></tr>';
+      }).join("") + '</tbody></table></div>'
+      : '<div class="qfu-phase0-empty-state"><strong>No Operational Blockers</strong><p class="qfu-phase0-empty-copy">No blocked backorders, ready-to-ship rows, or unresolved freight items are present in the current branch slice.</p></div>';
+    return '<section class="qfu-phase0-analytics-action-tables"><article class="qfu-phase0-analytics-action-card"><header><span>Action Table</span><h2>Highest impact quote follow-ups</h2><small>Ranked by open quote dollars, then age</small></header>' + quoteTable + '</article><article class="qfu-phase0-analytics-action-card"><header><span>Action Table</span><h2>Operational blockers</h2><small>Backorders, dispatch, and freight in one queue</small></header>' + opsTable + '</article></section>';
+  }
+
+  function renderAnalyticsSourceContractPanel(statuses) {
+    return '<section class="qfu-phase0-analytics-source-panel"><header class="qfu-phase0-analytics-section-header"><div><span>Source Contract</span><h2>Freshness and KPI source rules</h2></div><small>Live Dataverse reads</small></header>' + renderAnalyticsFreshnessStrip(statuses || []) + '</section>';
   }
 
   function buildAnalyticsRevenueWatchItems(summary, payload, readyToShip, freightRecovery, latestOpsTrend) {
@@ -10263,6 +11162,8 @@ a.qfu-phase0-ready-preview-row--ledger {
     var opsStatus = analyticsSourceStatus("Sales / OTD (SA1300)", "SA1300", "Daily", analyticsFreshness.opsUpdatedValue || opsSummary.asOf, 2, "Freshness uses the latest successful SA1300 import; the trend table still charts billing days from the workbook.");
     var quotesStatus = analyticsSourceStatus("Quotes (SP830)", "SP830", "Daily", analyticsFreshness.quotesUpdatedValue || quoteLines.reduce(function (latest, row) { return latestDate(latest, row.createdOn); }, null), 2, "Freshness uses the latest successful SP830 import; pipeline analysis still uses quote-line Created On dates.");
     var ordersStatus = analyticsSourceStatus("Orders (ZBO)", "ZBO", "Daily", analyticsFreshness.ordersUpdatedValue || ordersSummary.asOf, 2, "Freshness uses the newer of the latest successful ZBO import and the latest live backlog/dispatch snapshot; backlog aging inside the page still uses Line Item Created On instead of promised on-time date.");
+    var deliveryStatus = analyticsSourceStatus("Ready To Ship (Delivery)", "Delivery", "Daily", workspace.deliveryNotPgiLatestFreshnessOn, Math.ceil(DELIVERY_NOT_PGI_STALE_HOURS / 24), "Ready-to-ship metrics come directly from qfu_deliverynotpgi rows and use the dispatch snapshot timestamp before falling back to row creation time.");
+    var freightQueueStatus = analyticsSourceStatus("Freight Worklist", "Freight", "Weekly", workspace.freight && (workspace.freight.latestSuccessfulImportMoment || workspace.freight.latestImportMoment) || workspace.freightLatestSeen, Math.ceil(FREIGHT_STALE_HOURS / 24), "Freight worklist freshness comes from freight ingestion batches and live qfu_freightworkitem rows, not the closed-month GL060 recovery line.");
     var freightStatus = analyticsSourceStatus("Freight Recovery (GL060)", "GL060", "Monthly", workspace.freightRecovery && workspace.freightRecovery.updatedValue, 45, "Closed-month freight recovery comes from qfu_financevariance and stays aligned to the latest GL060 close.");
     var marginStatus = analyticsSourceStatus("Abnormal Margin Review", "SA1300", "Daily", workspace.marginModule && workspace.marginModule.snapshotDate, 2, "Margin exceptions come from the SA1300 abnormal margin review snapshot.");
     var lateStatus = analyticsSourceStatus("Late Orders", "SA1300", "Daily", workspace.lateModule && workspace.lateModule.snapshotDate, 2, "Late orders come from the latest SA1300 late order review snapshot.");
@@ -10271,6 +11172,8 @@ a.qfu-phase0-ready-preview-row--ledger {
       opsStatus: opsStatus,
       quotesStatus: quotesStatus,
       ordersStatus: ordersStatus,
+      deliveryStatus: deliveryStatus,
+      freightQueueStatus: freightQueueStatus,
       freightStatus: freightStatus,
       marginStatus: marginStatus,
       lateStatus: lateStatus,
@@ -10718,8 +11621,9 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-freight-workbench__actions{display:flex;flex-wrap:wrap;gap:0.38rem;}' +
       '.qfu-phase0-freight-action{align-items:center;appearance:none;-webkit-appearance:none;border:0;border-radius:9px;display:inline-flex;font-size:0.71rem;font-weight:800;justify-content:center;letter-spacing:0.02em;line-height:1;padding:0.5rem 0.74rem;text-decoration:none;transition:filter .16s ease,background-color .16s ease,box-shadow .16s ease,color .16s ease;white-space:nowrap;}' +
       '.qfu-phase0-freight-action:hover{filter:brightness(1.02);}' +
-      '.qfu-phase0-freight-action[disabled]{cursor:not-allowed;filter:none;opacity:0.45;}' +
+      '.qfu-phase0-freight-action[disabled]{cursor:not-allowed;filter:none;opacity:1;}' +
       '.qfu-phase0-freight-action--primary{background:#00535b;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.02);color:#ffffff !important;}' +
+      '.qfu-phase0-freight-action--primary[disabled]{background:#5f7a7e;box-shadow:inset 0 0 0 1px rgba(15,23,42,0.06);color:#ffffff !important;}' +
       '.qfu-phase0-freight-action--primary-soft{background:rgba(0,109,119,0.12);box-shadow:inset 0 0 0 1px rgba(0,83,91,0.08);color:#00535b !important;}' +
       '.qfu-phase0-freight-action--secondary{background:rgba(100,116,139,0.12);box-shadow:inset 0 0 0 1px rgba(71,85,105,0.08);color:#334155 !important;}' +
       '.qfu-phase0-freight-action--ghost{background:#edf2f4;box-shadow:inset 0 0 0 1px rgba(71,85,105,0.08);color:#33464d !important;}' +
@@ -10727,6 +11631,10 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-freight-workbench__statusline{display:grid;gap:0.18rem;}' +
       '.qfu-phase0-freight-status-message{color:#4d616b;font-size:0.76rem;font-weight:700;line-height:1.35;}' +
       '.qfu-phase0-freight-dirty{color:#9f2020;font-size:0.74rem;font-weight:800;line-height:1.3;}' +
+      '.qfu-phase0-freight-group-detail{background:rgba(239,246,250,0.72);border-radius:14px;display:grid;gap:0.38rem;margin-bottom:0.65rem;padding:0.58rem;}' +
+      '.qfu-phase0-freight-group-detail__row{background:#fff;border-radius:10px;display:grid;gap:0.12rem;padding:0.44rem 0.52rem;}' +
+      '.qfu-phase0-freight-group-detail__row strong{color:#17313a;font-size:0.78rem;line-height:1.25;}' +
+      '.qfu-phase0-freight-group-detail__row span{color:#5c7080;font-size:0.72rem;line-height:1.35;overflow-wrap:anywhere;}' +
       '.qfu-phase0-freight-detail__stage .qfu-phase0-ledger-drawer{border-radius:22px;box-shadow:0 18px 38px rgba(15,23,42,0.06);overflow:hidden;}' +
       '@media (max-width:1320px){.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__filters{grid-template-columns:repeat(4,minmax(0,1fr));}}' +
       '@media (max-width:920px){.qfu-phase0-freight-ledger-band__header,.qfu-phase0-freight-toolbar__hero,.qfu-phase0-freight-ledger__footer{align-items:flex-start;flex-direction:column;}.qfu-phase0-freight-toolbar__actions,.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__chips,.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__buttons{justify-items:stretch;justify-content:flex-start;}.qfu-phase0-freight-detail__stage .qfu-phase0-delivery-toolbar__filters{grid-template-columns:repeat(3,minmax(0,1fr));}.qfu-phase0-summary-table--freight thead th:nth-child(4),.qfu-phase0-summary-table--freight tbody td:nth-child(4),.qfu-phase0-summary-table--freight thead th:nth-child(6),.qfu-phase0-summary-table--freight tbody td:nth-child(6){display:none;}}' +
@@ -10822,6 +11730,10 @@ a.qfu-phase0-ready-preview-row--ledger {
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins thead th{background:linear-gradient(180deg,rgba(13,148,136,0.08) 0%,rgba(180,83,9,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#5f7481;font-size:0.71rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody tr:nth-child(odd){background:rgba(249,251,252,0.88);}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody tr:hover{background:rgba(241,246,248,0.95);}' +
+      '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody tr.is-link{cursor:pointer;}' +
+      '.qfu-phase0-region-shell .qfu-phase0-region-exception__cell-link{color:inherit;display:block;text-decoration:none;}' +
+      '.qfu-phase0-region-shell .qfu-phase0-region-exception__cell-link:focus-visible{border-radius:10px;box-shadow:inset 0 0 0 2px rgba(13,148,136,0.28);outline:none;}' +
+      '.qfu-phase0-region-shell .qfu-phase0-region-exception__row.is-link:hover .qfu-phase0-region-exception__document strong,.qfu-phase0-region-shell .qfu-phase0-region-exception__row.is-link:hover .qfu-phase0-region-exception__customer strong{color:#0f766e;text-decoration:underline;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--regional-margins tbody td{padding-bottom:0.95rem;padding-top:0.95rem;vertical-align:top;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--freight-review thead th{background:linear-gradient(180deg,rgba(13,148,136,0.08) 0%,rgba(37,99,235,0.04) 100%);border-bottom:1px solid rgba(15,23,42,0.06);color:#5f7481;font-size:0.71rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}' +
       '.qfu-phase0-region-shell .qfu-phase0-summary-table--freight-review tbody tr:nth-child(odd){background:rgba(249,251,252,0.88);}' +
@@ -10855,13 +11767,14 @@ a.qfu-phase0-ready-preview-row--ledger {
     var windowFilter = String(filters && filters.window || "").trim();
     var branchFilter = "qfu_branchslug eq " + odataString(branch.slug);
     var quoteLinePath = "/_api/qfu_quotelines?$select=qfu_quotelineid,qfu_quotenumber,qfu_amount,qfu_dollarconnected,qfu_gppercent,qfu_cssrname,qfu_tsr,qfu_tsrname,qfu_soldtopartyname,qfu_rejectionreason,qfu_materialgroup,qfu_sourceworksheet,qfu_sourcedate,qfu_lastimportdate,createdon&$top=2500";
-    var backorderPath = "/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_totalvalue,qfu_quantity,qfu_material,qfu_description,qfu_ontimedate,qfu_daysoverdue,qfu_qtynotondel,qfu_qtyondelnotpgid,qfu_cssrname,qfu_shipconddesc,qfu_lineitemcreatedon,qfu_delblockdesc,qfu_billblockdesc,qfu_reasonforrejection,qfu_sourceline,qfu_active,qfu_inactiveon,qfu_lastseenon,createdon,modifiedon&$top=2500";
+    var backorderPath = "/_api/qfu_backorders?$select=qfu_backorderid,qfu_sourceid,qfu_customername,qfu_salesdocnumber,qfu_totalvalue,qfu_quantity,qfu_material,qfu_description,qfu_ontimedate,qfu_daysoverdue,qfu_qtynotondel,qfu_qtyondelnotpgid,qfu_cssrname,qfu_accountmanagername,qfu_shipconddesc,qfu_lineitemcreatedon,qfu_delblockdesc,qfu_billblockdesc,qfu_reasonforrejection,qfu_sourceline,qfu_active,qfu_inactiveon,qfu_lastseenon,createdon,modifiedon&$top=2500";
     var opsDailyRecords = buildAnalyticsOpsDailyRecordsFromBudget(workspace);
+    var runtimeBackorders = Array.isArray(workspace.analyticsBackorderRecords) ? workspace.analyticsBackorderRecords : null;
     var fetched = await Promise.all([
       safeGetAll(withFilter(quoteLinePath, branchFilter)),
-      safeGetAll(withFilter(backorderPath, branchFilter))
+      runtimeBackorders ? Promise.resolve(runtimeBackorders) : safeGetAll(withFilter(backorderPath, branchFilter))
     ]);
-    var analyticsBackorders = dedupeOperationalRows(fetched[1] || [], {
+    var analyticsBackorders = runtimeBackorders ? runtimeBackorders.slice() : dedupeOperationalRows(fetched[1] || [], {
       datasetName: "qfu_backorders",
       idField: "qfu_backorderid",
       identityFields: ["qfu_branchcode", "qfu_salesdocnumber", "qfu_sourceline"],
@@ -10903,155 +11816,44 @@ a.qfu-phase0-ready-preview-row--ledger {
     }
 
     var financeSnapshot = workspace.financeSnapshot || null;
-    var opexRow = workspace.financeRows && financeVarianceBySlug(workspace.financeRows, "operating-expenses");
-    var marginRows = workspace.marginModule && workspace.marginModule.rows || [];
-    var lateRows = workspace.lateModule && workspace.lateModule.rows || [];
-    var financeSignalCards = financeSnapshot ? [
-      {
-        eyebrow: "Closed-month finance",
-        title: "Sales Variance",
-        value: signedValueLabel(toNumber(financeSnapshot.qfu_currentmonthsalesactual) - toNumber(financeSnapshot.qfu_currentmonthsalesplan), formatCompactCurrency),
-        detail: "Actual " + formatCurrency(financeSnapshot.qfu_currentmonthsalesactual) + " vs plan " + formatCurrency(financeSnapshot.qfu_currentmonthsalesplan),
-        subdetail: "Why it matters: if sales land below plan, every profit line under it has less room to recover.",
-        tone: metricToneHigherIsBetter(financeSnapshot.qfu_currentmonthsalesactual, financeSnapshot.qfu_currentmonthsalesplan)
-      },
-      {
-        eyebrow: "Closed-month finance",
-        title: "GP %",
-        value: formatPercent(financeSnapshot.qfu_currentmonthgrossprofitpctactual),
-        detail: "Plan " + formatPercent(financeSnapshot.qfu_currentmonthgrossprofitpctplan) + " | Variance " + formatPoints(toNumber(financeSnapshot.qfu_currentmonthgrossprofitpctactual) - toNumber(financeSnapshot.qfu_currentmonthgrossprofitpctplan)),
-        subdetail: "Why it matters: GP% shows whether pricing, mix, and discounting are holding margin quality.",
-        tone: metricToneHigherIsBetter(financeSnapshot.qfu_currentmonthgrossprofitpctactual, financeSnapshot.qfu_currentmonthgrossprofitpctplan)
-      },
-      {
-        eyebrow: "Closed-month finance",
-        title: "GAP %",
-        value: formatPercent(financeSnapshot.qfu_currentmonthgapactual),
-        detail: "Plan " + formatPercent(financeSnapshot.qfu_currentmonthgapplan) + " | Variance " + formatPoints(toNumber(financeSnapshot.qfu_currentmonthgapactual) - toNumber(financeSnapshot.qfu_currentmonthgapplan)),
-        subdetail: "Why it matters: GAP% is the cleanest quick read on profit quality after operating expense.",
-        tone: metricToneHigherIsBetter(financeSnapshot.qfu_currentmonthgapactual, financeSnapshot.qfu_currentmonthgapplan)
-      },
-      {
-        eyebrow: "Closed-month finance",
-        title: "Operating Profit",
-        value: formatCompactCurrency(financeSnapshot.qfu_currentmonthoperatingprofitactual),
-        detail: "Plan " + formatCurrency(financeSnapshot.qfu_currentmonthoperatingprofitplan) + " | Expenses " + formatCurrency(opexRow ? opexRow.qfu_currentmonthactual : 0),
-        subdetail: "Why it matters: this is what the branch actually contributes after expense.",
-        tone: metricToneHigherIsBetter(financeSnapshot.qfu_currentmonthoperatingprofitactual, financeSnapshot.qfu_currentmonthoperatingprofitplan)
-      }
-    ] : [];
-
-    var executionSignalCards = [
-      {
-        eyebrow: "Current execution",
-        title: "Overdue Backlog",
-        value: payload.ordersSummary.openRows.length ? formatCompactCurrency(payload.ordersSummary.overdueBacklogValue) : "Not Live",
-        detail: payload.ordersSummary.openRows.length ? (String(payload.ordersSummary.blockedOrderCount || 0) + " blocked | " + String(payload.ordersSummary.openOrderCount || 0) + " open orders") : "Awaiting ZBO",
-        subdetail: "Why it matters: late backlog is the fastest signal that customers and internal teams are feeling pain.",
-        tone: payload.ordersSummary.overdueBacklogValue > 0 ? "warning" : (payload.ordersSummary.openRows.length ? "good" : "neutral")
-      },
-      {
-        eyebrow: "Current execution",
-        title: "Ready to Ship",
-        value: readyToShip.countLabel || "0",
-        detail: readyToShip.totalLabel ? (readyToShip.totalLabel + " on dispatch board") : "Dispatch snapshot pending",
-        subdetail: "Why it matters: this is revenue that is already close to shipment and should not be sitting idle.",
-        tone: readyToShip.isStale ? "warning" : (readyToShip.hasData ? "good" : "neutral")
-      },
-      {
-        eyebrow: "Current execution",
-        title: "Abnormal Margins",
-        value: workspace.marginModule && workspace.marginModule.hasSnapshot ? String(payload.marginSummary.totalRows || 0) : "Not Live",
-        detail: workspace.marginModule && workspace.marginModule.snapshotLabel ? ("Snapshot " + workspace.marginModule.snapshotLabel + " | GP " + formatCompactCurrency(payload.marginSummary.totalGp || 0)) : "Awaiting SA1300 review",
-        subdetail: "Why it matters: negative and low-margin rows are where sales quality is already damaging profit.",
-        tone: !workspace.marginModule || !workspace.marginModule.hasSnapshot ? "neutral" : ((payload.marginSummary.totalRows || 0) > 0 ? "warning" : "good")
-      },
-      {
-        eyebrow: "Current execution",
-        title: "On-Time Delivery",
-        value: payload.opsSummary.totalRow ? formatRatioPercent(payload.opsSummary.totalRow.onTimeDelivery, 1) : "Not Live",
-        detail: latestOpsTrend ? ("Latest billed day " + latestOpsTrend.billingDayLabel) : "Awaiting SA1300 daily trend rows",
-        subdetail: "Why it matters: service reliability usually weakens here before it shows up in broader branch results.",
-        tone: payload.opsSummary.totalRow && payload.opsSummary.totalRow.onTimeDelivery >= 0.9 ? "good" : (payload.opsSummary.totalRow ? "warning" : "neutral")
-      }
-    ];
+    var attentionItems = buildAnalyticsAttentionFocus(branch, payload, revenueMotion, readyToShip, freightRecovery, financeSnapshot, latestOpsTrend, workspace);
+    var focusKpis = buildAnalyticsFocusKpis(workspace, payload, quoteFocus, revenueMotion, readyToShip, financeSnapshot);
+    var sourceStatuses = [
+      payload.financeStatus,
+      payload.opsStatus,
+      payload.quotesStatus,
+      payload.ordersStatus,
+      payload.deliveryStatus,
+      payload.freightQueueStatus,
+      payload.freightStatus,
+      payload.marginStatus,
+      payload.lateStatus
+    ].filter(Boolean);
+    var exceptionDrillthrough = renderAnalyticsExceptionDrillthrough(exceptionFilter, windowFilter, workspace);
     var trustNoteItems = [
       ["Monthly Close", "GL060 cards, finance bridge, and freight recovery stay closed-month only."],
       ["Daily Operations", "SA1300, SP830, and ZBO remain separate from GL060 close numbers."],
       ["Quote Count", "Distinct quote number comes from qfu_quoteline."],
       ["Order Count", "Distinct sales doc number comes from qfu_backorder."],
       ["Backlog Aging", "Source freshness comes from the latest successful ZBO import; backlog aging inside the page still uses line item created on, not on-time date."],
-      ["Freight Recovery", "Closed-month qfu_financevariance / GL060 line, not a daily logistics feed."]
+      ["Delivery / Freight", "Ready-to-ship loads qfu_deliverynotpgi and freight worklist loads qfu_freightworkitem; closed-month freight recovery remains a separate GL060 variance."]
     ];
-    var financeRows = (workspace.financeRows || []).slice(0, 10);
-    var quotePipelineBody = '<section class="qfu-phase0-analytics-splitbar"><div class="qfu-phase0-analytics-splitbar__labels"><span>Open Quote $</span><strong>' + escapeHtml(formatCurrency(quoteFocus.openQuoteValue)) + '</strong><span>Connected Quote $</span><strong>' + escapeHtml(formatCurrency(quoteFocus.convertedQuoteValue)) + '</strong></div><div class="qfu-phase0-analytics-splitbar__track"><span class="is-open" style="width:' + escapeHtml(percentWidth((quoteFocus.openQuoteValue / Math.max(1, quoteFocus.openQuoteValue + quoteFocus.convertedQuoteValue)) * 100)) + ';"></span><span class="is-converted" style="width:' + escapeHtml(percentWidth((quoteFocus.convertedQuoteValue / Math.max(1, quoteFocus.openQuoteValue + quoteFocus.convertedQuoteValue)) * 100)) + ';"></span></div></section>' +
-      renderMetricGrid([
-        { label: "Distinct Quotes", value: String(quoteFocus.distinctQuoteCount || 0) },
-        { label: "Connected Quotes", value: String(quoteFocus.convertedQuoteCount || 0) },
-        { label: "Conversion % by Count", value: formatRatioPercent(quoteFocus.conversionByCount || 0, 1) },
-        { label: "Weighted GP%", value: formatRatioPercent(quoteFocus.weightedGpRatio || 0, 1) }
-      ]) +
-      renderAnalyticsBarList((quoteFocus.agingRows || []).filter(function (row) { return row.value > 0; }), formatCurrency, "Age buckets are waiting on quote Created On dates.") +
-      renderLedgerDrawer("Quote ownership and worklist", "SP830 ownership", renderAnalyticsBarList((quoteFocus.cssrRows || []).slice(0, 6), formatCurrency, "No CSSR ranking available.") + renderAnalyticsBarList((quoteFocus.amRows || []).slice(0, 6), formatCurrency, "No AM ranking available.") + ((quoteFocus.rejectionRows || []).length ? renderAnalyticsBarList(quoteFocus.rejectionRows, function (value) { return String(parseInteger(value, 0)); }, "No rejection reasons populated.") : '<div class="qfu-phase0-empty-state"><strong>No Rejection Reasons</strong><p class="qfu-phase0-empty-copy">The current quote slice does not include populated rejection reasons.</p></div>') + renderAnalyticsQuoteWorklist(quoteFocus.quoteRows || [])) +
-      '<div class="qfu-phase0-summary-foot">' + escapeHtml(payload.quotesStatus.chipText) + ' | Quote build is grouped by quote Created On date.</div>';
-    var ordersPanelBody = renderMetricGrid([
-        { label: "Open Orders", value: String(payload.ordersSummary.openOrderCount || 0) },
-        { label: "Blocked Orders", value: String(payload.ordersSummary.blockedOrderCount || 0) },
-        { label: "Pending Approval $", value: formatCompactCurrency(payload.ordersSummary.pendingApprovalValue || 0) },
-        { label: "Must Add Freight $", value: formatCompactCurrency(payload.ordersSummary.mustAddFreightValue || 0) }
-      ]) +
-      renderAnalyticsBacklogComposition(payload.ordersSummary) +
-      renderAnalyticsBarList((payload.ordersSummary.shipConditionRows || []).slice(0, 6), formatCurrency, "Ship condition mix will appear when open backlog rows are live.") +
-      renderLedgerDrawer("Blocked orders review", "ZBO backlog", renderAnalyticsBlockedOrders(payload.ordersSummary.blockedRows || [])) +
-      '<div class="qfu-phase0-summary-foot">' + escapeHtml(payload.ordersStatus.chipText) + ' | Overdue backlog ' + escapeHtml(formatCurrency(payload.ordersSummary.overdueBacklogValue || 0)) + '.</div>';
-    var marginPanelBody = renderMetricGrid([
-        { label: "Rows", value: String(payload.marginSummary.totalRows || 0) },
-        { label: "Sales In Review", value: formatCompactCurrency(payload.marginSummary.totalSales || 0) },
-        { label: "GP In Review", value: formatCompactCurrency(payload.marginSummary.totalGp || 0) },
-        { label: "Snapshot", value: workspace.marginModule && workspace.marginModule.snapshotLabel ? workspace.marginModule.snapshotLabel : "Not Live" }
-      ]) +
-      renderAnalyticsBarList(payload.marginSummary.countRows || [], function (value) { return String(parseInteger(value, 0)); }, "No abnormal margin rows are available.") +
-      renderLedgerDrawer("Full abnormal margin review", "Current billing month", renderReviewCountGrid(workspace.marginModule && workspace.marginModule.counts || []) + renderMarginPreviewTable(marginRows.slice(0, 6)) + renderMarginExceptionTable(marginRows)) +
-      '<div class="qfu-phase0-summary-foot">' + escapeHtml(payload.marginStatus.chipText) + ' | Current month membership is driven by qfu_billingdate.</div>';
-    var watchItems = buildAnalyticsRevenueWatchItems(revenueMotion, payload, readyToShip, freightRecovery, latestOpsTrend);
-    var financeFocus = renderAnalyticsFinanceFocus(financeSnapshot, financeRows, payload, workspace, freightRecovery, opexRow);
-    var executionFocus = renderAnalyticsExecutionFocus(payload, readyToShip, latestOpsTrend, workspace);
-    var financeSignalBand = renderAnalyticsSignalBand({
-      variant: "finance",
-      eyebrow: "Why finance matters",
-      title: "Closed-Month Profit Signals",
-      note: "These are the closed-month numbers that explain whether the branch sold enough, sold profitably enough, and kept enough contribution after expense.",
-      meta: workspace.financeMonthLabel || "Closed Month",
-      cards: financeSignalCards
-    });
-    var executionSignalBand = renderAnalyticsSignalBand({
-      variant: "execution",
-      eyebrow: "Why execution matters",
-      title: "Current Action Signals",
-      note: "These are the operating reads that usually justify a call, escalation, or same-day follow-up before the rest of the page gets opened.",
-      meta: payload.ordersStatus.badgeText || "Live Ops",
-      cards: executionSignalCards
-    });
 
     return '<div class="qfu-phase0-shell qfu-phase0-shell--tool"><section class="qfu-phase0-branch-shell">' +
       renderBranchRail(branch, "analytics") +
       '<section class="qfu-phase0-branch-stage qfu-phase0-analytics-stage">' +
       renderAnalyticsInlineStyles() +
-      renderBranchViewHeader(branch, "Branch Analytics", "This page now leads with one question first: is quote demand building in the same direction as billed sales. Closed-month finance, execution pressure, and exception review stay underneath that trend board.", chips) +
-      renderAnalyticsFreshnessStrip([payload.financeStatus, payload.opsStatus, payload.quotesStatus, payload.ordersStatus, payload.freightStatus]) +
-      renderAnalyticsRevenueMotion(revenueMotion, watchItems) +
-      '<section class="qfu-phase0-analytics-signal-band-grid">' + financeSignalBand + executionSignalBand + '</section>' +
-      '<section class="qfu-phase0-analytics-focus-grid">' + financeFocus + executionFocus + '</section>' +
-      '<section class="qfu-phase0-analytics-drawer-stack">' +
-      renderLedgerDrawer("Quote Pipeline", payload.monthlyQuoteSummary.lineRowCount ? "SP830 monthly quote build" : "SP830 daily quote build", quotePipelineBody) +
+      renderBranchViewHeader(branch, "Branch Analytics", "A focused operations workbench: one ranked action plan, KPI graphs that explain it, and the exact quote, backlog, dispatch, and freight rows to open first.", chips) +
+      renderAnalyticsFocusPlanBar(branch, attentionItems, focusKpis) +
+      '<section class="qfu-phase0-analytics-command-grid">' +
+      renderAnalyticsPriorityStack(branch, attentionItems) +
+      renderAnalyticsPerformanceDeck(workspace, payload, quoteFocus, readyToShip, freightRecovery, financeSnapshot) +
       '</section>' +
-      '<section class="qfu-phase0-analytics-review-deck"><header class="qfu-phase0-analytics-review-deck__header"><div class="qfu-phase0-analytics-focus__eyebrow">Operational review deck</div><h2 class="qfu-phase0-analytics-focus__title">Freight, backlog, sales quality, and late-order review</h2><p class="qfu-phase0-analytics-focus__note">The lower half now stays in the same two-column rhythm as the top analytics board so the branch review reads like one deliberate control surface.</p></header><div class="qfu-phase0-analytics-focus-grid qfu-phase0-analytics-focus-grid--workbench">' +
-      renderFreightRecoveryHistoryPanel(workspace, payload) +
-      renderAnalyticsBacklogWorkbenchCard(payload, readyToShip) +
-      renderAnalyticsMarginWorkbenchCard(workspace, payload, marginRows) +
-      renderAnalyticsLateOrderDrawer(workspace, payload, lateRows, exceptionFilter === "late-orders") +
-      '</div></section>' +
-      renderAnalyticsTrustNotesPanel(trustNoteItems, "This page only renders metrics that can be proven from the live Dataverse rows already populated by the current ingestion flows.") +
+      renderFinancePanel(workspace) +
+      exceptionDrillthrough +
+      renderAnalyticsActionTables(branch, quoteFocus, payload, readyToShip, workspace) +
+      renderAnalyticsSourceContractPanel(sourceStatuses) +
+      renderAnalyticsTrustNotesPanel(trustNoteItems, "Every KPI on this page is source-backed: GL060 stays closed-month, SA1300/SP830/ZBO stay current operational signals, delivery loads qfu_deliverynotpgi explicitly, and freight worklist freshness is separate from freight recovery.") +
       '</section></section></div>';
   }
 
@@ -11394,7 +12196,8 @@ a.qfu-phase0-ready-preview-row--ledger {
   function renderFreightWorklistDetail(branch) {
     var workspace = branch.workspace || {};
     var freight = workspace.freight || {};
-    if (!portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]"))) {
+    var hasFreightRuntimeData = !!((workspace.freightRows || []).length || (workspace.freightImportRows || []).length || (workspace.freightFeedRows || []).length);
+    if (!portalUserIsAuthenticated(document.querySelector("[data-qfu-phase0]")) && !hasFreightRuntimeData) {
       return renderLockedDetail(branch, "freight-worklist", "Freight ledger access requires an authenticated portal user because the freight ledger allows direct row ownership, notes, status updates, and archive actions.");
     }
     if (!freight.isConfigured) {
@@ -11410,6 +12213,7 @@ a.qfu-phase0-ready-preview-row--ledger {
     var latestImportStatus = latestImportRow ? freightStatusLabel(latestImportRow.qfu_status) : "Awaiting";
     var latestImportMomentValue = freight.latestImportMoment;
     var totalFilteredAmount = filteredRows.reduce(function (total, row) { return total + row.totalAmountNumber; }, 0);
+    var filteredSourceRowCount = freightGroupedRowCount(filteredRows);
     var latestImportSummary = latestImportMomentValue ? (latestImportStatus + " | " + formatDateTime(latestImportMomentValue)) : "Awaiting first freight import";
     var health = freightQueueHealthState(freight, latestImportRow);
     var headerChips = [];
@@ -11435,7 +12239,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       diagnosticsMarkup += '<div class="qfu-phase0-runtime-diagnostics is-warning"><div class="qfu-phase0-runtime-diagnostics__header"><strong>Latest freight batch needs review</strong></div><ul class="qfu-phase0-runtime-diagnostics__list"><li><span class="qfu-phase0-inline-badge is-warning">' + escapeHtml(String(latestImportRow.qfu_status || "queued")) + '</span><span>' + escapeHtml((latestImportRow.qfu_notes || "The most recent freight batch did not complete cleanly.") + " | " + latestImportSummary) + '</span></li></ul></div>';
     }
 
-    var footerMarkup = '<div class="qfu-phase0-freight-ledger__footer"><div class="qfu-phase0-freight-ledger__footer-copy">Latest import: ' + escapeHtml(latestImportSummary) + ' | Non-archived freight bills stay in the ledger by default. Closed / No Action rows stay hidden by default and auto-archive after ' + FREIGHT_ARCHIVE_AFTER_DAYS + ' idle days.</div>' +
+    var footerMarkup = '<div class="qfu-phase0-freight-ledger__footer"><div class="qfu-phase0-freight-ledger__footer-copy">' + escapeHtml(String(filteredRows.length) + " ledger entries" + (filteredSourceRowCount > filteredRows.length ? (" from " + String(filteredSourceRowCount) + " source rows") : "") + " | Latest import: " + latestImportSummary + " | Non-archived freight ledger entries stay visible by default. Closed / No Action rows stay hidden by default and auto-archive after " + FREIGHT_ARCHIVE_AFTER_DAYS + " idle days.") + '</div>' +
       (filteredRows.length ? renderPagination(detailHrefWithParams(branch, "freight-worklist", activeParams), pageInfo.page, pageInfo.totalPages) : "") +
       '</div>';
     var importsDrawer = (workspace.freightImportRows || []).length
@@ -11445,7 +12249,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       diagnosticsMarkup +
       renderFreightHero(branch, freight, latestImportRow, latestImportSummary, filteredRows, totalFilteredAmount) +
       renderFreightToolbar(branch, filters, filteredRows, allRows) +
-      renderFreightTable(pageInfo.items, branch, filteredRows.length ? "No Matching Freight Bills" : "No Freight Bills Yet", filteredRows.length ? "No freight bills match the active filters." : "The freight mailbox and parser are wired, but no freight bills have been imported for this branch yet.", filters.item) +
+      renderFreightTable(pageInfo.items, branch, filteredRows.length ? "No Matching Freight Ledger Entries" : "No Freight Ledger Entries Yet", filteredRows.length ? "No freight ledger entries match the active filters." : "The freight mailbox and parser are wired, but no freight ledger entries have been imported for this branch yet.", filters.item) +
       footerMarkup +
       importsDrawer +
       '</div></section>';
@@ -11455,7 +12259,7 @@ a.qfu-phase0-ready-preview-row--ledger {
       '<section class="qfu-phase0-branch-stage qfu-phase0-freight-detail__stage">' +
       flashMarkup() +
       renderFreightWorkbenchInlineStyles() +
-      renderBranchViewHeader(branch, "Freight Ledger", "Branch-scoped freight bill ledger for investigation, notes, status, and archive review.", headerChips) +
+      renderBranchViewHeader(branch, "Freight Ledger", "Branch-scoped shipment-level freight ledger for investigation, notes, status, and archive review.", headerChips) +
       detailBody +
       "</section></section></div>";
   }
@@ -12281,6 +13085,19 @@ a.qfu-phase0-ready-preview-row--ledger {
 
     root.addEventListener("click", function (event) {
       var target = event.target;
+      var rowLink = target && target.closest ? target.closest("[data-qfu-dashboard-href]") : null;
+      if (rowLink && root.contains(rowLink)) {
+        if (target && target.closest && target.closest("a,button,input,select,textarea,summary,details,[data-qfu-dashboard-page]")) {
+          return;
+        }
+        var href = rowLink.getAttribute("data-qfu-dashboard-href") || "";
+        if (!href || href === "#") {
+          return;
+        }
+        event.preventDefault();
+        window.location.assign(href);
+        return;
+      }
       var button = target && target.closest ? target.closest("[data-qfu-dashboard-page]") : null;
       if (!button || !root.contains(button)) {
         return;
@@ -12297,6 +13114,23 @@ a.qfu-phase0-ready-preview-row--ledger {
       renderRoot(root).catch(function (error) {
         renderRuntimeFailure(root, error);
       });
+    });
+
+    root.addEventListener("keydown", function (event) {
+      var target = event.target;
+      var rowLink = target && target.closest ? target.closest("[data-qfu-dashboard-href]") : null;
+      if (!rowLink || !root.contains(rowLink)) {
+        return;
+      }
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      var href = rowLink.getAttribute("data-qfu-dashboard-href") || "";
+      if (!href || href === "#") {
+        return;
+      }
+      event.preventDefault();
+      window.location.assign(href);
     });
 
     root.dataset.qfuDashboardPagingBound = "1";

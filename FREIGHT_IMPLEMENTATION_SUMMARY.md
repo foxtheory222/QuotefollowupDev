@@ -95,7 +95,7 @@ Processing model:
 
 - mailbox/flow stage logs raw attachment + ingestion batch
 - hosted parser is the durable unattended parser/upsert target
-- deterministic `qfu_sourceid` drives upsert/idempotency
+- deterministic `qfu_sourceid` drives upsert/idempotency; as of the April 24, 2026 freight-ledger correction, legacy carrier `.xls` rows are keyed at shipment/charge-entry grain. Tracking-bearing rows use branch + carrier family + control + invoice + tracking + reference + service, so repeated imports update the same shipment entry while different tracking rows on the same invoice remain separate ledger entries.
 - history is preserved; rows are not snapshot-deleted just because a later weekly file omits them
 - archive flow moves only `Closed` / `No Action` rows with 60 idle days into archived state
 

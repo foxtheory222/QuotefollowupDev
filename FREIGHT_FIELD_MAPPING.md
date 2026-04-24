@@ -3,7 +3,7 @@
 ## Normalization Rules Shared Across Families
 
 - `qfu_sourceid`
-  Deterministic composite key built from branch + family + carrier + invoice + tracking/PRO/reference + service discriminator where needed.
+  Deterministic current-state key. For legacy carrier `.xls` files, invoice is not the operational row grain. Rows with a tracking number use branch + source family + control + invoice + tracking + reference + service so distinct tracking rows under one invoice remain separate ledger entries. Re-seen rows with the same tracking identity update in place. Rows without tracking fall back to invoice/reference/shipper/service, and the Redwood invoice workbook remains invoice-row grain because the reviewed samples expose one operational row per invoice.
 - `qfu_totalamount`
   Best operational review amount for the row. Prefer explicit total; otherwise sum parsed component charges.
 - `qfu_direction`
@@ -145,6 +145,7 @@ Transform notes:
 - Purolator rows often need text parsing because component amounts are embedded in extended charge descriptions
 - GST/HST/QST are normalized separately when explicitly present
 - if only parsed components exist, `qfu_totalamount` is derived from the usable component sum instead of leaving a false zero
+- rows sharing the same invoice stay separate when the tracking number is different; invoice number is display/search metadata, not the ledger entry grain
 
 ## FREIGHT_UPS_F06
 
@@ -189,7 +190,7 @@ Normalized mapping:
 
 Transform notes:
 
-- UPS sample groups can collapse multiple raw rows into one operational row when they belong to the same logical invoice/tracking group
+- UPS sample groups can collapse multiple raw rows into one operational row when they belong to the same logical tracking entry
 - the parser reports collapsed row counts so aggregation is visible in test output
 
 ## Source Coverage Proven In This Pass

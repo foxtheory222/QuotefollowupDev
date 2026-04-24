@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_alertstatus" localizedName="QFU Alert Status" description="QFU Alert Status" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU Alert Status" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU Alert Status" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Pending" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Sent" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Failed" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Suppressed" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010004" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Skipped" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>
