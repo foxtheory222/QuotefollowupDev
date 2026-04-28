@@ -1,0 +1,12 @@
+adx_enablerating: false
+adx_enabletracking: false
+adx_excludefromsearch: true
+adx_hiddenfromsitemap: true
+adx_isroot: true
+adx_name: Access Denied
+adx_pagetemplateid: <GUID>
+adx_parentpageid: <GUID>
+adx_partialurl: access-denied
+adx_publishingstateid: <GUID>
+adx_sharedpageconfiguration: false
+adx_webpageid: <GUID>

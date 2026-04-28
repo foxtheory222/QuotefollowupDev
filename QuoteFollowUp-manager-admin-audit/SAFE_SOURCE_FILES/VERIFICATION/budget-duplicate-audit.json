@@ -1,0 +1,408 @@
+{
+    "generatedOn":  "2026-04-09T11:42:47",
+    "probePath":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\results\\portal-runtime-data-probe-20260409.json",
+    "asOfDate":  "2026-04-09",
+    "currentFiscalYear":  "FY26",
+    "currentMonth":  4,
+    "notes":  [
+                  "Raw qfu_isactive = false is treated as active.",
+                  "Current portal probe evidence also shows formatted Yes on rows where raw qfu_isactive = false."
+              ],
+    "budgetGroups":  [
+                         {
+                             "branchCode":  "4171",
+                             "fiscalYear":  "FY26",
+                             "monthNumber":  3,
+                             "yearNumber":  2026,
+                             "isCurrentMonth":  false,
+                             "candidateCount":  2,
+                             "activeCandidateCount":  1,
+                             "winner":  {
+                                            "budgetId":  "<GUID>",
+                                            "sourceId":  "",
+                                            "active":  true,
+                                            "formattedLabel":  "Yes",
+                                            "reason":  "active, latest=2026-03-30T18:00:00"
+                                        },
+                             "candidates":  [
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  true,
+                                                    "formattedLabel":  "Yes",
+                                                    "lastUpdated":  "2026-03-30T18:00:00",
+                                                    "actualSales":  563797.99,
+                                                    "budgetGoal":  901760,
+                                                    "reason":  "active, latest=2026-03-30T18:00:00"
+                                                },
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  false,
+                                                    "formattedLabel":  "No",
+                                                    "lastUpdated":  "2026-03-30T18:00:00",
+                                                    "actualSales":  563797.99,
+                                                    "budgetGoal":  901760,
+                                                    "reason":  "latest=2026-03-30T18:00:00"
+                                                }
+                                            ]
+                         },
+                         {
+                             "branchCode":  "4172",
+                             "fiscalYear":  "FY26",
+                             "monthNumber":  3,
+                             "yearNumber":  2026,
+                             "isCurrentMonth":  false,
+                             "candidateCount":  2,
+                             "activeCandidateCount":  1,
+                             "winner":  {
+                                            "budgetId":  "<GUID>",
+                                            "sourceId":  "",
+                                            "active":  true,
+                                            "formattedLabel":  "Yes",
+                                            "reason":  "active, latest=2026-03-30T18:00:00"
+                                        },
+                             "candidates":  [
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  true,
+                                                    "formattedLabel":  "Yes",
+                                                    "lastUpdated":  "2026-03-30T18:00:00",
+                                                    "actualSales":  299348.09,
+                                                    "budgetGoal":  552410,
+                                                    "reason":  "active, latest=2026-03-30T18:00:00"
+                                                },
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  false,
+                                                    "formattedLabel":  "No",
+                                                    "lastUpdated":  "2026-03-30T18:00:00",
+                                                    "actualSales":  299348.09,
+                                                    "budgetGoal":  552410,
+                                                    "reason":  "latest=2026-03-30T18:00:00"
+                                                }
+                                            ]
+                         },
+                         {
+                             "branchCode":  "4173",
+                             "fiscalYear":  "FY26",
+                             "monthNumber":  3,
+                             "yearNumber":  2026,
+                             "isCurrentMonth":  false,
+                             "candidateCount":  2,
+                             "activeCandidateCount":  1,
+                             "winner":  {
+                                            "budgetId":  "<GUID>",
+                                            "sourceId":  "",
+                                            "active":  true,
+                                            "formattedLabel":  "Yes",
+                                            "reason":  "active, latest=2026-03-30T18:00:00"
+                                        },
+                             "candidates":  [
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  true,
+                                                    "formattedLabel":  "Yes",
+                                                    "lastUpdated":  "2026-03-30T18:00:00",
+                                                    "actualSales":  152727.5,
+                                                    "budgetGoal":  445070,
+                                                    "reason":  "active, latest=2026-03-30T18:00:00"
+                                                },
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  false,
+                                                    "formattedLabel":  "No",
+                                                    "lastUpdated":  "2026-03-30T18:00:00",
+                                                    "actualSales":  152727.5,
+                                                    "budgetGoal":  445070,
+                                                    "reason":  "latest=2026-03-30T18:00:00"
+                                                }
+                                            ]
+                         },
+                         {
+                             "branchCode":  "4171",
+                             "fiscalYear":  "FY26",
+                             "monthNumber":  4,
+                             "yearNumber":  2026,
+                             "isCurrentMonth":  true,
+                             "candidateCount":  1,
+                             "activeCandidateCount":  1,
+                             "winner":  {
+                                            "budgetId":  "<GUID>",
+                                            "sourceId":  "",
+                                            "active":  true,
+                                            "formattedLabel":  "Yes",
+                                            "reason":  "active, latest=2026-04-08T20:14:34"
+                                        },
+                             "candidates":  [
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  true,
+                                                    "formattedLabel":  "Yes",
+                                                    "lastUpdated":  "2026-04-08T20:14:34",
+                                                    "actualSales":  108916.03,
+                                                    "budgetGoal":  945500,
+                                                    "reason":  "active, latest=2026-04-08T20:14:34"
+                                                }
+                                            ]
+                         },
+                         {
+                             "branchCode":  "4172",
+                             "fiscalYear":  "FY26",
+                             "monthNumber":  4,
+                             "yearNumber":  2026,
+                             "isCurrentMonth":  true,
+                             "candidateCount":  1,
+                             "activeCandidateCount":  1,
+                             "winner":  {
+                                            "budgetId":  "<GUID>",
+                                            "sourceId":  "",
+                                            "active":  true,
+                                            "formattedLabel":  "Yes",
+                                            "reason":  "active, latest=2026-04-08T20:14:34"
+                                        },
+                             "candidates":  [
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  true,
+                                                    "formattedLabel":  "Yes",
+                                                    "lastUpdated":  "2026-04-08T20:14:34",
+                                                    "actualSales":  118936.62,
+                                                    "budgetGoal":  388540,
+                                                    "reason":  "active, latest=2026-04-08T20:14:34"
+                                                }
+                                            ]
+                         },
+                         {
+                             "branchCode":  "4173",
+                             "fiscalYear":  "FY26",
+                             "monthNumber":  4,
+                             "yearNumber":  2026,
+                             "isCurrentMonth":  true,
+                             "candidateCount":  1,
+                             "activeCandidateCount":  1,
+                             "winner":  {
+                                            "budgetId":  "<GUID>",
+                                            "sourceId":  "",
+                                            "active":  true,
+                                            "formattedLabel":  "Yes",
+                                            "reason":  "active, latest=2026-04-08T20:14:34"
+                                        },
+                             "candidates":  [
+                                                {
+                                                    "budgetId":  "<GUID>",
+                                                    "sourceId":  "",
+                                                    "sourceFamily":  "",
+                                                    "active":  true,
+                                                    "formattedLabel":  "Yes",
+                                                    "lastUpdated":  "2026-04-08T20:14:34",
+                                                    "actualSales":  28732,
+                                                    "budgetGoal":  411990,
+                                                    "reason":  "active, latest=2026-04-08T20:14:34"
+                                                }
+                                            ]
+                         }
+                     ],
+    "archiveGroups":  [
+                          {
+                              "branchCode":  "4171",
+                              "fiscalYear":  "FY26",
+                              "monthNumber":  3,
+                              "yearNumber":  2026,
+                              "isCurrentMonth":  false,
+                              "candidateCount":  3,
+                              "winner":  {
+                                             "budgetArchiveId":  "<GUID>",
+                                             "sourceId":  "4171|budgettarget|2026-03",
+                                             "reason":  "has-goal, latest=2026-04-08T18:10:41"
+                                         },
+                              "candidates":  [
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4171|budgettarget|2026-03",
+                                                     "budgetGoal":  901760,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T18:10:41",
+                                                     "reason":  "has-goal, latest=2026-04-08T18:10:41"
+                                                 },
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4171|budgettarget|2026-03",
+                                                     "budgetGoal":  901760,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T17:51:07",
+                                                     "reason":  "has-goal, latest=2026-04-08T17:51:07"
+                                                 },
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4171|budgettarget|2026-03",
+                                                     "budgetGoal":  901760,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T17:51:05",
+                                                     "reason":  "has-goal, latest=2026-04-08T17:51:05"
+                                                 }
+                                             ]
+                          },
+                          {
+                              "branchCode":  "4172",
+                              "fiscalYear":  "FY26",
+                              "monthNumber":  3,
+                              "yearNumber":  2026,
+                              "isCurrentMonth":  false,
+                              "candidateCount":  3,
+                              "winner":  {
+                                             "budgetArchiveId":  "<GUID>",
+                                             "sourceId":  "4172|budgettarget|2026-03",
+                                             "reason":  "has-goal, latest=2026-04-08T18:11:07"
+                                         },
+                              "candidates":  [
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4172|budgettarget|2026-03",
+                                                     "budgetGoal":  552410,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T18:11:07",
+                                                     "reason":  "has-goal, latest=2026-04-08T18:11:07"
+                                                 },
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4172|budgettarget|2026-03",
+                                                     "budgetGoal":  552410,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T17:51:07",
+                                                     "reason":  "has-goal, latest=2026-04-08T17:51:07"
+                                                 },
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4172|budgettarget|2026-03",
+                                                     "budgetGoal":  552410,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T17:51:05",
+                                                     "reason":  "has-goal, latest=2026-04-08T17:51:05"
+                                                 }
+                                             ]
+                          },
+                          {
+                              "branchCode":  "4173",
+                              "fiscalYear":  "FY26",
+                              "monthNumber":  3,
+                              "yearNumber":  2026,
+                              "isCurrentMonth":  false,
+                              "candidateCount":  3,
+                              "winner":  {
+                                             "budgetArchiveId":  "<GUID>",
+                                             "sourceId":  "4173|budgettarget|2026-03",
+                                             "reason":  "has-goal, latest=2026-04-08T18:11:28"
+                                         },
+                              "candidates":  [
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4173|budgettarget|2026-03",
+                                                     "budgetGoal":  445070,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T18:11:28",
+                                                     "reason":  "has-goal, latest=2026-04-08T18:11:28"
+                                                 },
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4173|budgettarget|2026-03",
+                                                     "budgetGoal":  445070,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T17:51:07",
+                                                     "reason":  "has-goal, latest=2026-04-08T17:51:07"
+                                                 },
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4173|budgettarget|2026-03",
+                                                     "budgetGoal":  445070,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T17:51:06",
+                                                     "reason":  "has-goal, latest=2026-04-08T17:51:06"
+                                                 }
+                                             ]
+                          },
+                          {
+                              "branchCode":  "4171",
+                              "fiscalYear":  "FY26",
+                              "monthNumber":  4,
+                              "yearNumber":  2026,
+                              "isCurrentMonth":  true,
+                              "candidateCount":  1,
+                              "winner":  {
+                                             "budgetArchiveId":  "<GUID>",
+                                             "sourceId":  "4171|budgetarchive|FY26|04",
+                                             "reason":  "canonical-sourceid, has-goal, latest=2026-04-08T20:14:35"
+                                         },
+                              "candidates":  [
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4171|budgetarchive|FY26|04",
+                                                     "budgetGoal":  945500,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T20:14:35",
+                                                     "reason":  "canonical-sourceid, has-goal, latest=2026-04-08T20:14:35"
+                                                 }
+                                             ]
+                          },
+                          {
+                              "branchCode":  "4172",
+                              "fiscalYear":  "FY26",
+                              "monthNumber":  4,
+                              "yearNumber":  2026,
+                              "isCurrentMonth":  true,
+                              "candidateCount":  1,
+                              "winner":  {
+                                             "budgetArchiveId":  "<GUID>",
+                                             "sourceId":  "4172|budgetarchive|FY26|04",
+                                             "reason":  "canonical-sourceid, has-goal, latest=2026-04-08T20:14:35"
+                                         },
+                              "candidates":  [
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4172|budgetarchive|FY26|04",
+                                                     "budgetGoal":  388540,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T20:14:35",
+                                                     "reason":  "canonical-sourceid, has-goal, latest=2026-04-08T20:14:35"
+                                                 }
+                                             ]
+                          },
+                          {
+                              "branchCode":  "4173",
+                              "fiscalYear":  "FY26",
+                              "monthNumber":  4,
+                              "yearNumber":  2026,
+                              "isCurrentMonth":  true,
+                              "candidateCount":  1,
+                              "winner":  {
+                                             "budgetArchiveId":  "<GUID>",
+                                             "sourceId":  "4173|budgetarchive|FY26|04",
+                                             "reason":  "canonical-sourceid, has-goal, latest=2026-04-08T20:14:36"
+                                         },
+                              "candidates":  [
+                                                 {
+                                                     "budgetArchiveId":  "<GUID>",
+                                                     "sourceId":  "4173|budgetarchive|FY26|04",
+                                                     "budgetGoal":  411990,
+                                                     "actualSales":  null,
+                                                     "lastUpdated":  "2026-04-08T20:14:36",
+                                                     "reason":  "canonical-sourceid, has-goal, latest=2026-04-08T20:14:36"
+                                                 }
+                                             ]
+                          }
+                      ]
+}

@@ -1,0 +1,24 @@
+{
+    "generated_on":  "2026-04-09T21:49:26.1512610Z",
+    "target_environment_url":  "<URL>
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "overdue_line_count":  222,
+                         "overdue_order_count":  91,
+                         "cssr_count":  9
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "overdue_line_count":  400,
+                         "overdue_order_count":  193,
+                         "cssr_count":  11
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "overdue_line_count":  159,
+                         "overdue_order_count":  89,
+                         "cssr_count":  11
+                     }
+                 ]
+}

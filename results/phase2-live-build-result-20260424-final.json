@@ -1,0 +1,375 @@
+﻿{
+    "solution":  "qfu_revenuefollowupworkbench",
+    "generatedAtUtc":  "2026-04-24T21:04:55.0459664Z",
+    "choices":  [
+                    {
+                        "name":  "qfu_role",
+                        "status":  "exists",
+                        "values":  [
+                                       "TSR",
+                                       "CSSR",
+                                       "Manager",
+                                       "GM",
+                                       "Admin"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_worktype",
+                        "status":  "exists",
+                        "values":  [
+                                       "Quote",
+                                       "Backorder",
+                                       "Freight",
+                                       "Pickup",
+                                       "General"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_sourcesystem",
+                        "status":  "exists",
+                        "values":  [
+                                       "SP830CA",
+                                       "ZBO",
+                                       "Freight",
+                                       "Pickup",
+                                       "Manual",
+                                       "Other"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_aliastype",
+                        "status":  "exists",
+                        "values":  [
+                                       "AM Number",
+                                       "AM Name",
+                                       "CSSR Number",
+                                       "CSSR Name",
+                                       "Created By",
+                                       "Email",
+                                       "Other"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_rolehint",
+                        "status":  "exists",
+                        "values":  [
+                                       "TSR",
+                                       "CSSR",
+                                       "Manager",
+                                       "GM",
+                                       "Admin",
+                                       "Unknown"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_thresholdoperator",
+                        "status":  "exists",
+                        "values":  [
+                                       "GreaterThan",
+                                       "GreaterThanOrEqual"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_workitemgenerationmode",
+                        "status":  "exists",
+                        "values":  [
+                                       "HighValueOnly",
+                                       "AllQuotes",
+                                       "ReportingOnly"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_firstfollowupbasis",
+                        "status":  "exists",
+                        "values":  [
+                                       "ImportDate",
+                                       "QuoteDate",
+                                       "SourceDueDate",
+                                       "Manual",
+                                       "Disabled"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_alertmode",
+                        "status":  "exists",
+                        "values":  [
+                                       "Disabled",
+                                       "NewHighValue",
+                                       "DueToday",
+                                       "Overdue",
+                                       "EscalatedOrRoadblock",
+                                       "DailyDigestOnly"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_cssralertmode",
+                        "status":  "exists",
+                        "values":  [
+                                       "VisibilityOnly",
+                                       "DailyDigestOnly",
+                                       "TargetedAlerts",
+                                       "CCOnly",
+                                       "Disabled"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_workitemstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Open",
+                                       "Due Today",
+                                       "Overdue",
+                                       "Waiting on Customer",
+                                       "Waiting on Vendor",
+                                       "Roadblock",
+                                       "Escalated",
+                                       "Completed",
+                                       "Closed Won",
+                                       "Closed Lost",
+                                       "Cancelled"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_priority",
+                        "status":  "exists",
+                        "values":  [
+                                       "Low",
+                                       "Normal",
+                                       "High",
+                                       "Critical"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_escalationlevel",
+                        "status":  "exists",
+                        "values":  [
+                                       "None",
+                                       "Manager",
+                                       "GM",
+                                       "Admin"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_assignmentstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Assigned",
+                                       "Partially Assigned",
+                                       "Needs TSR Assignment",
+                                       "Needs CSSR Assignment",
+                                       "Unmapped",
+                                       "Error"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_actiontype",
+                        "status":  "exists",
+                        "values":  [
+                                       "Call",
+                                       "Email",
+                                       "Customer Advised",
+                                       "Vendor Contacted",
+                                       "Due Date Updated",
+                                       "Follow-Up Scheduled",
+                                       "Roadblock",
+                                       "Escalated",
+                                       "Won",
+                                       "Lost",
+                                       "Cancelled",
+                                       "Note",
+                                       "Assignment/Reassignment",
+                                       "Sticky Note Updated"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_alerttype",
+                        "status":  "exists",
+                        "values":  [
+                                       "New Assignment",
+                                       "Due Today",
+                                       "Overdue",
+                                       "Escalation",
+                                       "Daily Digest",
+                                       "Assignment Exception",
+                                       "Flow Failure"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_alertstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Pending",
+                                       "Sent",
+                                       "Failed",
+                                       "Suppressed",
+                                       "Skipped"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_exceptiontype",
+                        "status":  "exists",
+                        "values":  [
+                                       "Missing TSR Alias",
+                                       "Missing CSSR Alias",
+                                       "Blank Alias",
+                                       "Zero Alias",
+                                       "Ambiguous Alias",
+                                       "Missing Branch",
+                                       "Missing Policy",
+                                       "Other"
+                                   ]
+                    },
+                    {
+                        "name":  "qfu_exceptionstatus",
+                        "status":  "exists",
+                        "values":  [
+                                       "Open",
+                                       "In Review",
+                                       "Resolved",
+                                       "Ignored"
+                                   ]
+                    }
+                ],
+    "tables":  [
+                   {
+                       "name":  "qfu_staff",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_staffalias",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_branchmembership",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_policy",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_workitem",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_workitemaction",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_alertlog",
+                       "status":  "exists"
+                   },
+                   {
+                       "name":  "qfu_assignmentexception",
+                       "status":  "exists"
+                   }
+               ],
+    "columns":  [
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_primaryemail",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_staffnumber",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_entraobjectid",
+                        "type":  "string",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_active",
+                        "type":  "boolean",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_notes",
+                        "type":  "memo",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_scopekey",
+                        "type":  "string",
+                        "status":  "exists"
+                    }
+                ],
+    "lookups":  [
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_systemuser",
+                        "referenced":  "systemuser",
+                        "relationship":  "qfu_systemuser_qfu_staff",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_staff",
+                        "column":  "qfu_defaultbranch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_staff_defaultbranch",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_branchmembership",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_branchmembership",
+                        "column":  "qfu_staff",
+                        "referenced":  "qfu_staff",
+                        "relationship":  "qfu_staff_qfu_branchmembership",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_policy",
+                        "column":  "qfu_branch",
+                        "referenced":  "qfu_branch",
+                        "relationship":  "qfu_branch_qfu_policy",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_workitem",
+                        "referenced":  "qfu_workitem",
+                        "relationship":  "qfu_workitem_qfu_workitemaction",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_alertlog",
+                        "column":  "qfu_workitem",
+                        "referenced":  "qfu_workitem",
+                        "relationship":  "qfu_workitem_qfu_alertlog",
+                        "status":  "exists"
+                    },
+                    {
+                        "table":  "qfu_workitemaction",
+                        "column":  "qfu_relatedalert",
+                        "referenced":  "qfu_alertlog",
+                        "relationship":  "qfu_alertlog_qfu_workitemaction_relatedalert",
+                        "status":  "exists"
+                    }
+                ],
+    "warnings":  [
+
+                 ],
+    "errors":  [
+                   "qfu_staffalias columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}",
+                   "qfu_branchmembership columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}",
+                   "qfu_policy columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}",
+                   "qfu_workitem columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}",
+                   "qfu_workitemaction columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}",
+                   "qfu_alertlog columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}",
+                   "qfu_assignmentexception columns failed: The remote server returned an error: (500) Internal Server Error. {\"error\":{\"code\":\"0x0\",\"message\":\"Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).\"}}"
+               ]
+}

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{e82dc719-8eb8-4ccf-a95d-d174850b7eb1}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{bc79e5b4-c8cd-4925-b5e6-75792898cbc3}" IsUserDefined="1">
+          <labels>
+            <label description="Staff Alias Mapping Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{759a5340-a1f4-4c97-8132-82c0f6858fae}">
+                  <labels>
+                    <label description="Alias" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{92e5ca74-1d23-42e3-abfb-278e32a20a02}">
+                        <labels>
+                          <label description="Source System" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcesystem" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcesystem" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{067f96c2-708c-4c05-9f8d-8b76c6acbd75}">
+                        <labels>
+                          <label description="Alias Type" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_aliastype" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_aliastype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{03c2c1ad-dadc-4452-8c80-6174f3ee157e}">
+                        <labels>
+                          <label description="Raw Alias" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_rawalias" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_rawalias" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{32c2db04-73e1-40ea-8a63-6be549b15118}">
+                        <labels>
+                          <label description="Normalized Alias" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_normalizedalias" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_normalizedalias" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b8096685-681b-42fe-be7f-03871f02f71d}">
+                        <labels>
+                          <label description="Role Hint" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_rolehint" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_rolehint" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7fecd2ad-e0c5-4325-adc6-c256ddcf1714}">
+                        <labels>
+                          <label description="Branch" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_branch" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_branch" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{191a598e-a9bd-4a7d-a48c-5dacf1655e5d}">
+                        <labels>
+                          <label description="Scope Key" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_scopekey" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_scopekey" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{8dc1f69b-2da8-4073-96b0-656c16e70817}">
+                        <labels>
+                          <label description="Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_staff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_staff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{c4fda35c-9049-402c-ac0f-b3511d42a2b7}">
+                        <labels>
+                          <label description="Active" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_active" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_active" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ed9e75e7-eb79-4dfb-b48e-e88ac2939db3}">
+                        <labels>
+                          <label description="Verified By" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_verifiedby" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_verifiedby" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{992514b6-a1cf-4056-912c-837716c5ec1b}">
+                        <labels>
+                          <label description="Verified On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_verifiedon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_verifiedon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{bcc31461-3c0b-45a7-a341-2553e71b679e}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Staff Alias Mapping Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

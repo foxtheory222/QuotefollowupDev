@@ -1,0 +1,12 @@
+{
+    "captured_at":  "2026-04-24T20:38:33.0408386Z",
+    "environment":  "https://regionaloperationshub.crm.dynamics.com",
+    "webtemplate_id":  "0fd41d74-10be-4fae-acf5-c6817654e6b3",
+    "webtemplate_name":  "QFU Regional Runtime",
+    "modifiedon":  null,
+    "local_hash":  "ee11ce9a21497f178f2dfb92e65aac4595015933582ec2b68056f18aa05857a5",
+    "remote_hash":  "ee11ce9a21497f178f2dfb92e65aac4595015933582ec2b68056f18aa05857a5",
+    "hashes_match":  true,
+    "cache_version_present":  true,
+    "ledger_entries_present":  true
+}

@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_workitemstatus" localizedName="QFU Work Item Status" description="QFU Work Item Status" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU Work Item Status" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU Work Item Status" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Open" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Due Today" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Overdue" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Waiting on Customer" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010004" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Waiting on Vendor" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010005" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Roadblock" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010006" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Escalated" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010007" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Completed" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010008" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Closed Won" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010009" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Closed Lost" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010010" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Cancelled" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>

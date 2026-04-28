@@ -1,0 +1,53 @@
+﻿{
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "timestamp":  "2026-04-28T11:19:32.0237030-06:00",
+    "solutionFound":  true,
+    "appFound":  true,
+    "canvasAppFound":  true,
+    "queueFieldsPresent":  {
+                               "qfu_currentqueueownerstaff":  true,
+                               "qfu_currentqueuerole":  true,
+                               "qfu_queueassignedon":  true,
+                               "qfu_queueassignedby":  true,
+                               "qfu_queuehandoffreason":  true,
+                               "qfu_queuehandoffcount":  true
+                           },
+    "counts":  {
+                   "activeWorkItems":  37,
+                   "activeQuoteWorkItems":  32,
+                   "activeBackorderWorkItems":  5,
+                   "activeAssignmentExceptions":  3,
+                   "activeAlertLogs":  0,
+                   "sentAlertLogs":  0,
+                   "workItemActions":  10,
+                   "handoffActions":  2,
+                   "dueToday":  4,
+                   "overdue":  27,
+                   "open":  5,
+                   "roadblocks":  0,
+                   "assignmentIssues":  7,
+                   "currentQueueTsr":  30,
+                   "currentQueueCssr":  1,
+                   "currentQueueUnassigned":  6
+               },
+    "duplicateWorkItemSourceKeys":  0,
+    "duplicateAssignmentExceptionKeys":  0,
+    "controlledHandoff":  {
+                              "run":  false,
+                              "itemSelected":  false,
+                              "sourceExternalKey":  null,
+                              "sourceDocumentNumber":  null,
+                              "beforeOwnerRole":  null,
+                              "afterCssrOwnerMatched":  false,
+                              "afterTsrOwnerMatched":  false,
+                              "actionLogsCreated":  0,
+                              "countsAsAttemptFalse":  false,
+                              "completedAttemptsPreserved":  false,
+                              "alertsSentAfter":  0,
+                              "error":  null
+                          },
+    "serverSideRollup":  {
+                             "implemented":  false,
+                             "validation":  "Blocked/deferred. PAC has no supported cloud-flow create command in this session, and dotnet/plugin build tooling is unavailable. App-side rollup remains active in the custom page."
+                         }
+}

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppModule>
+  <UniqueName>qfu_RevenueFollowUpWorkbench</UniqueName>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <WebResourceId>8c917a64-6742-f111-bec7-7c1e52062b6f</WebResourceId>
+  <OptimizedFor></OptimizedFor>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+  <FormFactor>1</FormFactor>
+  <ClientType>4</ClientType>
+  <NavigationType>0</NavigationType>
+  <AppModuleComponents>
+    <AppModuleComponent type="26" id="{327df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{347df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{367df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{387df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{3b7df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{3d7df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{3f7df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{417df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{437df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{457df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{477df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{497df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{4b7df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{4d7df134-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{e52cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{e72cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{e92cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{eb2cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{ed2cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{ef2cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{f12cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{f32cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{f52cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{f72cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{f92cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{fb2cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{fd2cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{ff2cfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{012dfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{032dfd3a-6742-f111-bec7-7c1e52062b6f}" />
+    <AppModuleComponent type="26" id="{4ea0bcd6-8ef3-4d98-950a-7df8bfb243e2}" />
+    <AppModuleComponent type="26" id="{e58494ad-d793-4e36-ab86-8c0f05379031}" />
+    <AppModuleComponent type="60" id="{466fc469-f253-48e5-a05f-10250f3b0acb}" />
+    <AppModuleComponent type="60" id="{a5d4e00e-ece4-4512-ac6f-19bb8fd5d624}" />
+    <AppModuleComponent type="60" id="{821bb6ad-56d5-4fb2-aa6b-2d1ec6d6fb9a}" />
+    <AppModuleComponent type="60" id="{34438806-f89c-43f9-ac8d-3c28dcf5f87e}" />
+    <AppModuleComponent type="60" id="{f7508fea-65e3-4e71-9139-45fcd890fcb8}" />
+    <AppModuleComponent type="60" id="{89d42082-c1b0-4267-9a31-cb6f95acf088}" />
+    <AppModuleComponent type="60" id="{e82dc719-8eb8-4ccf-a95d-d174850b7eb1}" />
+    <AppModuleComponent type="60" id="{cc0e0b05-6846-458c-8108-d57a9bacf37b}" />
+    <AppModuleComponent type="62" schemaName="qfu_RevenueFollowUpWorkbench" />
+  </AppModuleComponents>
+  <AppModuleRoleMaps>
+    <Role id="{627090ff-40a3-4053-8790-584edc5be201}" />
+    <Role id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
+  </AppModuleRoleMaps>
+  <LocalizedNames>
+    <LocalizedName description="Revenue Follow-Up Workbench" languagecode="1033" />
+  </LocalizedNames>
+  <Descriptions>
+    <Description description="Revenue Follow-Up Workbench Admin Panel MVP." languagecode="1033" />
+  </Descriptions>
+  <appsettings>
+    <appsetting settingdefinitionid.uniquename="AppChannel">
+      <iscustomizable>1</iscustomizable>
+      <value>1</value>
+    </appsetting>
+  </appsettings>
+</AppModule>

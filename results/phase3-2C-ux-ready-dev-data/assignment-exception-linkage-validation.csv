@@ -1,0 +1,4 @@
+"exception_type","source_field","raw_value","normalized_value","source_document_present","source_external_key_present","branch_linked","source_quote_linked","source_line_expected","source_line_linked","work_item_linked","status","duplicate_check","validation_result"
+"Blank Alias","qfu_cssr","BLANK","BLANK","True","True","True","True","True","True","True","Open","pass","pass"
+"Blank Alias","qfu_tsr","BLANK","BLANK","True","True","True","True","True","True","True","Open","pass","pass"
+"Zero Alias","qfu_tsr","0","0","True","True","True","True","True","True","True","Open","pass","pass"

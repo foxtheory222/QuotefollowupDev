@@ -1,0 +1,49 @@
+{
+  "environmentUrl": "https://orga632edd5.crm3.dynamics.com",
+  "timestamp": "2026-04-28T11:01:24.0022980-06:00",
+  "fieldResults": [
+    {
+      "name": "qfu_currentqueueownerstaff",
+      "status": "found"
+    },
+    {
+      "name": "qfu_currentqueuerole",
+      "status": "found"
+    },
+    {
+      "name": "qfu_queueassignedon",
+      "status": "found"
+    },
+    {
+      "name": "qfu_queueassignedby",
+      "status": "found"
+    },
+    {
+      "name": "qfu_queuehandoffreason",
+      "status": "found"
+    },
+    {
+      "name": "qfu_queuehandoffcount",
+      "status": "found"
+    }
+  ],
+  "queueInitialization": {
+    "skipped_existing_owner": 31,
+    "scanned": 32,
+    "updated": 1,
+    "no_staff_available": 1
+  },
+  "backorderWorkItems": {
+    "skipped_no_branch": 0,
+    "created": 5,
+    "source": "qfu_backorder",
+    "updated": 0,
+    "scanned": 5,
+    "owner_assignment": "deferred-no-verified-backorder-staff-number",
+    "branch": "4171"
+  },
+  "serverSideRollup": {
+    "implemented": false,
+    "blocker": "No safe automated Power Automate flow creation path was available through PAC in this session, and dotnet/plugin build tooling is not installed. App-side rollup remains live; server-side flow/plugin is documented as next required reliability work."
+  }
+}

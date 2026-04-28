@@ -1,0 +1,263 @@
+[
+  {
+    "DisplayName": "4171-Mailbox-Diagnostic-Demo",
+    "FlowName": "d8deba61-d529-4ece-a9ef-278c98257bde",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "b8c1b59c-6e53-44f6-97ad-a8c4d1fb4211",
+    "CreatedTime": "2026-04-27T17:12:10Z",
+    "LastModifiedTime": "2026-04-27T17:12:10Z"
+  },
+  {
+    "DisplayName": "4173-Mailbox-Diagnostic-Demo",
+    "FlowName": "019c19a2-79da-480e-9477-d2c867cd18ac",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "20cc8b36-f95c-4a8e-ad91-6787f52f442f",
+    "CreatedTime": "2026-04-27T17:12:10Z",
+    "LastModifiedTime": "2026-04-27T17:12:10Z"
+  },
+  {
+    "DisplayName": "4172-Mailbox-Diagnostic-Demo",
+    "FlowName": "0961ef86-3645-4547-9e26-37a91dec241e",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "cd53ba51-b6fc-4b83-81cb-4517a8497822",
+    "CreatedTime": "2026-04-27T17:12:09Z",
+    "LastModifiedTime": "2026-04-27T17:12:09Z"
+  },
+  {
+    "DisplayName": "4173-BackOrder-Update-ZBO",
+    "FlowName": "c121b64d-4f06-4bf2-80dc-36d02dc77db3",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "3277dd8e-14f6-4e7b-b627-ebc923ba86ef",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:47:24Z"
+  },
+  {
+    "DisplayName": "4172-BackOrder-Update-ZBO",
+    "FlowName": "d252ad51-f7c2-4114-b675-eeeba7e67009",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "a5a911cc-1d2d-4e5a-b0ab-da6f52def8b0",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:47:24Z"
+  },
+  {
+    "DisplayName": "4171-BackOrder-Update-ZBO",
+    "FlowName": "8ae4564b-65e8-48db-94ce-d7e878f0b039",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "94ae1bae-fe22-455e-bf63-24ba92644dc0",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:47:23Z"
+  },
+  {
+    "DisplayName": "4173-BackOrder-Update-ZBO-Live-R2",
+    "FlowName": "a4228f7d-7c65-42dc-ae06-c781cc329bc1",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "4210a722-67bf-c38e-45f4-bf6a27f66eab",
+    "CreatedTime": "2026-04-27T14:46:53Z",
+    "LastModifiedTime": "2026-04-27T14:46:53Z"
+  },
+  {
+    "DisplayName": "4172-BackOrder-Update-ZBO-Live-R2",
+    "FlowName": "835e466c-9bc4-4729-b8ba-51817278ae20",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "0f47dbda-6e71-889f-29ae-8b59c2e85d5f",
+    "CreatedTime": "2026-04-27T14:46:53Z",
+    "LastModifiedTime": "2026-04-27T14:46:53Z"
+  },
+  {
+    "DisplayName": "4171-BackOrder-Update-ZBO-Live-R2",
+    "FlowName": "bd4c7450-2193-4d4e-a6a5-978a91358844",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "08ce9cfa-7511-2b2a-1be5-360ca2f92c4c",
+    "CreatedTime": "2026-04-27T14:46:53Z",
+    "LastModifiedTime": "2026-04-27T14:46:53Z"
+  },
+  {
+    "DisplayName": "4171-Freight-Inbox-Ingress",
+    "FlowName": "0b651d6d-cbbc-4cc3-9e5c-4ab70b70a488",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "cf9dbe3d-e0a8-4257-9b97-e21f34a39119",
+    "CreatedTime": "2026-04-27T14:46:14Z",
+    "LastModifiedTime": "2026-04-27T14:46:14Z"
+  },
+  {
+    "DisplayName": "QFU-Freight-Archive-Workitems",
+    "FlowName": "3d671c63-85cc-43eb-b0bf-7e7d4f88a6d2",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "d0e9e2a5-5155-4d7b-bd8f-c3fd99ff181d",
+    "CreatedTime": "2026-04-27T14:46:14Z",
+    "LastModifiedTime": "2026-04-27T14:46:14Z"
+  },
+  {
+    "DisplayName": "4173-Freight-Inbox-Ingress",
+    "FlowName": "bc7374e3-b4fb-4f96-be49-da8cfaadc72f",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "b6cd0d55-c3d8-4d83-a2e0-53ef2dd19d24",
+    "CreatedTime": "2026-04-27T14:46:14Z",
+    "LastModifiedTime": "2026-04-27T14:46:14Z"
+  },
+  {
+    "DisplayName": "4172-Freight-Inbox-Ingress",
+    "FlowName": "f85c1532-6e60-4c65-9ee7-6944912b4626",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "f1a3e7b2-7a34-4bc7-8cfa-20e4d9350f56",
+    "CreatedTime": "2026-04-27T14:46:14Z",
+    "LastModifiedTime": "2026-04-27T14:46:14Z"
+  },
+  {
+    "DisplayName": "4171-GL060-Inbox-Ingress",
+    "FlowName": "f563cb6f-1a15-41a1-acae-088d923e3745",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "fd1ec8dc-56ca-4af7-ab8d-49465802b52a",
+    "CreatedTime": "2026-04-27T14:45:33Z",
+    "LastModifiedTime": "2026-04-27T14:45:33Z"
+  },
+  {
+    "DisplayName": "4173-GL060-Inbox-Ingress",
+    "FlowName": "484f38e6-594b-4136-8e39-be2ac736aed1",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "cb327979-b304-4b7f-9a42-44c01c959666",
+    "CreatedTime": "2026-04-27T14:45:33Z",
+    "LastModifiedTime": "2026-04-27T14:45:33Z"
+  },
+  {
+    "DisplayName": "4172-GL060-Inbox-Ingress",
+    "FlowName": "a74818bc-ef97-4580-b374-552259558c8b",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "7447f66d-93d0-44dd-9bf4-449e320190e7",
+    "CreatedTime": "2026-04-27T14:45:33Z",
+    "LastModifiedTime": "2026-04-27T14:45:33Z"
+  },
+  {
+    "DisplayName": "4171-Budget-Update-SA1300",
+    "FlowName": "6944140a-a154-440b-b32d-99eb4ec143e8",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "6db19ff3-c313-4db6-9a57-f3335fe55558",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4173-Budget-Update-SA1300",
+    "FlowName": "c9214327-6108-4a3b-b0ac-8c4c3a79cf71",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "3c2ebd80-35d9-4e3c-bdbe-70be98a82ae6",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4173-QuoteFollowUp-Import-Staging",
+    "FlowName": "5ad0064b-9b31-489b-b322-73a66d36b673",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "490e1685-4623-461e-ba1c-6c0907a60e33",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4172-Budget-Update-SA1300",
+    "FlowName": "8b60771f-276a-482c-945e-27a2d7ffa91e",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "078cea4c-84f6-4c4f-b73b-62ad838f7cae",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4173-BackOrder-Update-ZBO-Live",
+    "FlowName": "b420c6bc-2cc1-43be-9b6e-86140cbe6fa6",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "78d68445-b3dc-4eda-a74b-5b14a2fd1812",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4172-QuoteFollowUp-Import-Staging",
+    "FlowName": "a861aaa4-5a18-43c3-8449-ebcabd450485",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "3520a9d9-f40d-430b-aec8-56b9f4c5d96c",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4171-QuoteFollowUp-Import-Staging",
+    "FlowName": "c0c44909-a33e-4c2d-8e0c-83a89795e69e",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "0aff92f1-a8f0-45d7-b05c-3afe5ade9ed1",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4172-BackOrder-Update-ZBO-Live",
+    "FlowName": "d50a84c7-6690-42a0-8991-3ed100f46f73",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "5e11f5d1-dd65-4cbd-bc5d-24998c506cb5",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4171-BackOrder-Update-ZBO-Live",
+    "FlowName": "51d36215-e41b-45b8-90f7-fe84d2fdb774",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "c3af4e9f-235a-4e03-b35a-01f83adefea4",
+    "CreatedTime": "2026-04-27T14:44:24Z",
+    "LastModifiedTime": "2026-04-27T14:44:24Z"
+  },
+  {
+    "DisplayName": "4171-Temp-Mailbox-Capture",
+    "FlowName": "d4ac7124-e7ce-4442-bcff-8c0418b266e7",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "7b4e2b57-a83d-4d1f-b23c-82f6037e7217",
+    "CreatedTime": "2026-04-27T14:31:51Z",
+    "LastModifiedTime": "2026-04-27T14:31:51Z"
+  },
+  {
+    "DisplayName": "Integrated Search API trigger flow",
+    "FlowName": "cb5aa41e-2d8f-415c-8f13-accf5416ae93",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "4ffa33c2-c12e-ed11-9db1-0022482aea7b",
+    "CreatedTime": "2026-03-28T07:27:30Z",
+    "LastModifiedTime": "2026-03-28T07:27:30Z"
+  },
+  {
+    "DisplayName": "Search Dynamics 365 knowledge article flow",
+    "FlowName": "57a4beb4-7767-4bab-ac46-76ef9c5a15d3",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "87023c69-962c-ec11-b6e6-000d3a574957",
+    "CreatedTime": "2026-03-28T07:27:30Z",
+    "LastModifiedTime": "2026-03-28T07:27:30Z"
+  },
+  {
+    "DisplayName": "SLAInstanceMonitoringWarningAndExpiryFlow",
+    "FlowName": "456fd447-d990-4859-b436-804f0569911a",
+    "Enabled": false,
+    "State": null,
+    "WorkflowEntityId": "ee2079d2-a93f-48b5-887a-c54ad830cbe5",
+    "CreatedTime": "2026-03-28T07:15:41Z",
+    "LastModifiedTime": "2026-03-28T07:15:41Z"
+  }
+]

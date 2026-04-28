@@ -24,6 +24,7 @@ Build a scalable internal monitoring platform for quote follow-up, overdue quote
 8. No hard-coded environment URLs, mailbox addresses, GUIDs, or branch IDs in production code.
 9. No UI-only progress. Backend, security, and performance must stay aligned with UI work.
 10. If something is unclear, preserve the existing behavior and document assumptions instead of inventing new business rules.
+11. Keep Power Pages on the Enhanced data model path. Do not switch to non-Enhanced export/edit/upload flows or assume legacy portal patterns are the default.
 
 ## Product vision
 The final product should work like this:
@@ -149,6 +150,13 @@ Target architecture:
 - Keep security in mind at all times.
 - Design for internal use first, polish second.
 - Favor responsive layouts but optimize desktop first if that is the primary usage pattern.
+- This project uses the Power Pages Enhanced data model. Refresh site source with `pac pages download ... -mv Enhanced` and preserve the Enhanced path on export/import work.
+- The real app pattern is custom web templates plus JavaScript runtime, not classic Power Pages metadata-first pages. The core monitoring experience lives in `powerpages-live/operations-hub---operationhub/web-templates/qfu-regional-runtime/QFU-Regional-Runtime.webtemplate.source.html`.
+- Default assumption for Hub / Region / Branch / detail routes: data is loaded through portal `/_api` calls backed by `Webapi/<table>/enabled` and `Webapi/<table>/fields` site settings in `powerpages-live/operations-hub---operationhub/sitesetting.yml`.
+- Before proposing Basic Forms, Entity Lists, old portal forms, or non-Enhanced patterns, inspect the refreshed runtime template and site settings first. Only use those older patterns if the refreshed local source proves the page already depends on them.
+- If a Power Pages change adds a field to any `/_api` read, update the matching `Webapi/<table>/fields` whitelist in `sitesetting.yml` in the same change or the page can fail with `unauthorized` / degraded data.
+- The site is Bootstrap V5-enabled. Preserve the current custom runtime / CSS approach and optimize dense operational views for desktop first instead of forcing generic mobile-first spacing.
+- Authenticated browser proof matters for this portal. Public unauthenticated requests can redirect to Microsoft Entra sign-in, so use authenticated Playwright/browser evidence or backend/runtime proof rather than treating anonymous DOM access as the default verification path.
 - Before changing any Power Pages artifact, run `pac pages download` from the target environment/site and refresh the local site source first.
 - For Power Pages work, the freshly downloaded local files are the source of truth. Do not assume the repo copy is current if it has not just been refreshed from the target environment.
 - If the latest site source has not been downloaded and confirmed, do not edit or upload Power Pages changes.
@@ -265,7 +273,17 @@ When working on this project, produce:
 - The current durable repo copy used for long-lived source preservation is nested under `tmp-github-QuoteFollowUp`.
 - The current synced branch in that durable repo is `codex/home-sync-20260410-live-state`.
 - The older `tmp-github-quotefollowupv2/quoteFollowUpV2` clone is not the current source of truth and its configured remote is no longer usable.
+- Current production site/environment, to be retired later:
+  - Power Pages: `https://operationhub.powerappsportals.com/`
+  - Dataverse: `https://regionaloperationshub.crm.dynamics.com/`
+- Dev / production-candidate site/environment:
+  - Power Pages: `https://operationscenter.powerappsportals.com/`
+  - Dataverse: `https://orga632edd5.crm3.dynamics.com/`
+- Do not assume the active PAC profile points at the intended environment. Verify the target URL before Power Pages, Dataverse, or Power Automate changes.
 - If script fixes are meant to survive beyond the current workspace session, mirror them into the durable repo copy before closing the task.
+- The refreshed live site source is under `powerpages-live/operations-hub---operationhub`. Treat that export as canonical for portal work after each fresh `pac pages download -mv Enhanced`.
+- The monitoring UI is not split across many independent low-code page artifacts. The operational behavior is concentrated in the regional runtime template and its supporting CSS plus Web API site settings.
+- Portal read failures are often whitelist/config defects, not rendering defects. If a page suddenly shows degraded or unauthorized data, inspect the runtime `/_api` fields and the matching `Webapi/.../fields` site setting before redesigning the page.
 - `qfu_ingestionbatch` freshness rows, SA1300 summary rows, and Power Pages analytics must be validated in Dataverse before UI changes are treated as fixed.
 - For branch support issues, prefer narrow repairs that preserve the live path and prove the next unattended run, rather than broad rewrites or manual one-off local jobs.
 - If a repair requires a temporary replay or seed, record the exact row ids, timestamps, and validation artifacts in `results/`.

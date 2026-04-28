@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{821bb6ad-56d5-4fb2-aa6b-2d1ec6d6fb9a}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{ab2ed32d-ed9e-4da6-8c45-f3ae1e3b5ef0}" IsUserDefined="1">
+          <labels>
+            <label description="Branch Policy Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{80f3a288-8c19-4373-b925-715b5e31708b}">
+                  <labels>
+                    <label description="Policy" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{178b9168-a4c8-4a50-ae2d-b5f3fb29189d}">
+                        <labels>
+                          <label description="Policy Name" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_name" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{f4eee908-8e5a-461e-bb71-de88a46d10b9}">
+                        <labels>
+                          <label description="Branch" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_branch" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_branch" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b1b46d53-8ce5-4777-89be-feb6e51f35e6}">
+                        <labels>
+                          <label description="Scope Key" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_scopekey" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_scopekey" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{acbb6c4f-8cfe-497c-b542-46bbbf3d242c}">
+                        <labels>
+                          <label description="Work Type" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_worktype" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_worktype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ce575adb-5e69-482c-a420-c7271fda89e4}">
+                        <labels>
+                          <label description="High-Value Threshold" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_highvaluethreshold" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_highvaluethreshold" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{75755d94-aace-4ad3-ac06-1b83a61bd581}">
+                        <labels>
+                          <label description="Threshold Operator" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_thresholdoperator" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_thresholdoperator" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6939ee50-75b5-4e01-a6a3-3de64c65ddf1}">
+                        <labels>
+                          <label description="Work Item Generation Mode" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_workitemgenerationmode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_workitemgenerationmode" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e1a39879-59f2-4010-ad54-8249b7977dfb}">
+                        <labels>
+                          <label description="Required Attempts" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_requiredattempts" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_requiredattempts" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7ddb6666-4fa0-4e94-9a04-1b84401edbc1}">
+                        <labels>
+                          <label description="First Follow-Up Basis" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_firstfollowupbasis" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_firstfollowupbasis" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{a75ff712-1f69-472a-8b7d-d10a564094d1}">
+                        <labels>
+                          <label description="First Follow-Up Business Days" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_firstfollowupbusinessdays" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_firstfollowupbusinessdays" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{a4682559-c930-42c1-9b2e-d7cf42a20f5a}">
+                        <labels>
+                          <label description="Primary Owner Strategy" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_primaryownerstrategy" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_primaryownerstrategy" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{1aefb0e9-f3da-458b-a807-88d8c0afe623}">
+                        <labels>
+                          <label description="Support Owner Strategy" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_supportownerstrategy" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_supportownerstrategy" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{fa1fee58-b0dc-45c7-a363-56389378c41a}">
+                        <labels>
+                          <label description="GM CC Mode" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_gmccmode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_gmccmode" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4ebd1d42-ac41-4156-b9c0-7ae462c88c98}">
+                        <labels>
+                          <label description="Manager CC Mode" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_managerccmode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_managerccmode" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{0b6d975c-d7b9-4808-9067-a072c2656ba8}">
+                        <labels>
+                          <label description="CSSR Alert Mode" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_cssralertmode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_cssralertmode" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{dbad90ce-cc72-4f33-9040-f4d85d050e41}">
+                        <labels>
+                          <label description="Escalate After Business Days" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_escalateafterbusinessdays" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_escalateafterbusinessdays" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d121a58e-1d24-4df2-a508-333f06ac1d1c}">
+                        <labels>
+                          <label description="Digest Enabled" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_digestenabled" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_digestenabled" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{a21eb428-7572-45de-a2ba-73d2e2bb732b}">
+                        <labels>
+                          <label description="Targeted Alert Enabled" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_targetedalertenabled" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_targetedalertenabled" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{3ef8570e-d0fb-4b26-9040-1c8f92e964bc}">
+                        <labels>
+                          <label description="Active" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_active" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_active" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Branch Policy Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

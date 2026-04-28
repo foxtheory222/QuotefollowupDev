@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-27T16:04:15.7748079-06:00",
+  "note": "Initial first apply attempt was stopped by Dataverse lookup navigation metadata, then a clean-scope empty-exception guard. No broad apply was run. One scoped work item was created before the guard stopped; the corrected first successful apply updated that row and created the remaining four scoped work items.",
+  "scope": "results/phase3-2B-controlled-apply/pre-apply-scope-review.csv",
+  "activeWorkItemsAfterFinalApply": 5,
+  "activeAssignmentExceptionsAfterFinalApply": 0,
+  "activeAlertLogsAfterFinalApply": 0,
+  "alertsSent": 0
+}

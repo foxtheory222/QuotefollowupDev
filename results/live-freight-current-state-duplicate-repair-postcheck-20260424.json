@@ -1,0 +1,18 @@
+{
+    "target_environment":  "https://regionaloperationshub.crm.dynamics.com",
+    "captured_at":  "2026-04-24T17:39:27.1637989Z",
+    "applied":  false,
+    "branch_codes":  [
+                         "4171",
+                         "4172",
+                         "4173"
+                     ],
+    "scanned_rows":  386,
+    "duplicate_groups":  0,
+    "active_rows_before":  0,
+    "survivors_to_update":  0,
+    "duplicate_rows_to_archive":  0,
+    "plans":  [
+
+              ]
+}

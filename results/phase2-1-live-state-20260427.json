@@ -1,0 +1,2020 @@
+{
+    "checkedAtUtc":  "2026-04-27T17:27:50.5849034Z",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionUniqueName":  "qfu_revenuefollowupworkbench",
+    "solution":  {
+                     "@odata.etag":  "W/\"2751496\"",
+                     "solutionid":  "1802b69d-6ea2-433f-8acd-48c86d907cc3",
+                     "uniquename":  "qfu_revenuefollowupworkbench",
+                     "ismanaged":  false,
+                     "version":  "1.0.0.0",
+                     "friendlyname":  "Revenue Follow-Up Workbench"
+                 },
+    "choices":  [
+                    {
+                        "name":  "qfu_role",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "1c2ed76f-830f-401e-b05c-126c37816043",
+                                        "Name":  "qfu_role"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_worktype",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "43d4051c-4324-461d-9ba9-d579732a437f",
+                                        "Name":  "qfu_worktype"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_sourcesystem",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "4ba96021-2c5f-47b7-92a9-9565fa12ad74",
+                                        "Name":  "qfu_sourcesystem"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_aliastype",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "658f1d97-f671-4574-a1ea-5913156ea4cc",
+                                        "Name":  "qfu_aliastype"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_rolehint",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "9fdb99d8-b46d-470a-8740-d3344869515e",
+                                        "Name":  "qfu_rolehint"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_thresholdoperator",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "75d71f8a-8237-4998-98ef-7e730a70bad5",
+                                        "Name":  "qfu_thresholdoperator"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_workitemgenerationmode",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "02453cc3-6950-4f31-96aa-acce2b9a412e",
+                                        "Name":  "qfu_workitemgenerationmode"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_firstfollowupbasis",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "cdc5e730-f858-4939-b948-d131b1ecc562",
+                                        "Name":  "qfu_firstfollowupbasis"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_alertmode",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "78a91d5e-48f0-4a75-8832-a6f3d9dc48a4",
+                                        "Name":  "qfu_alertmode"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_cssralertmode",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "e35a3558-4307-4ca2-8f56-56067e4c5e02",
+                                        "Name":  "qfu_cssralertmode"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_workitemstatus",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "536ebc57-3b85-4cba-aa45-80a51812b276",
+                                        "Name":  "qfu_workitemstatus"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_priority",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "7db30520-dd77-4036-948a-9f60f66a649b",
+                                        "Name":  "qfu_priority"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_escalationlevel",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "a819b235-fb0d-4fba-a88c-7a9858e39f4a",
+                                        "Name":  "qfu_escalationlevel"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_assignmentstatus",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "b09994d9-499e-421e-bb67-7cc7a311f834",
+                                        "Name":  "qfu_assignmentstatus"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_actiontype",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "78a7c45b-9490-4223-a6fe-bc3226a04c61",
+                                        "Name":  "qfu_actiontype"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_alerttype",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "df6263de-2e26-4206-8c60-944599b6d390",
+                                        "Name":  "qfu_alerttype"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_alertstatus",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "aa02694d-b989-4576-9e8e-7552ee567354",
+                                        "Name":  "qfu_alertstatus"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_exceptiontype",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "13748cb7-5c82-44d5-858a-1f4bc41833cc",
+                                        "Name":  "qfu_exceptiontype"
+                                    }
+                    },
+                    {
+                        "name":  "qfu_exceptionstatus",
+                        "found":  true,
+                        "details":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#GlobalOptionSetDefinitions/Microsoft.Dynamics.CRM.OptionSetMetadata(Name,MetadataId)/$entity",
+                                        "@odata.type":  "#Microsoft.Dynamics.CRM.OptionSetMetadata",
+                                        "MetadataId":  "8999270c-a487-4ee2-a08d-ef4415dccc6b",
+                                        "Name":  "qfu_exceptionstatus"
+                                    }
+                    }
+                ],
+    "tables":  [
+                   {
+                       "name":  "qfu_staff",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "41fbae88-d558-48dd-b67e-b55cbf23d691",
+                                        "LogicalName":  "qfu_staff",
+                                        "ObjectTypeCode":  10776,
+                                        "SchemaName":  "qfu_Staff"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_name",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_primaryemail",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_staffnumber",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_systemuser",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_entraobjectid",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_defaultbranch",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_active",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_systemuser",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_defaultbranch",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staff_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staff_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staff_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staff_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_staff",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_staff",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_staff",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_staff",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_branch_qfu_staff_defaultbranch",
+                                                       "ReferencingAttribute":  "qfu_defaultbranch",
+                                                       "ReferencedEntity":  "qfu_branch"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_systemuser_qfu_staff",
+                                                       "ReferencingAttribute":  "qfu_systemuser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_staffalias",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "ef809ccc-7b6a-414f-a925-27c87f21193a",
+                                        "LogicalName":  "qfu_staffalias",
+                                        "ObjectTypeCode":  10777,
+                                        "SchemaName":  "qfu_StaffAlias"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_sourcesystem",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_aliastype",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_rawalias",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_normalizedalias",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_rolehint",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_branch",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_scopekey",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_staff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_active",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_verifiedby",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_verifiedon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_branch",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_staff",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_verifiedby",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staffalias_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staffalias_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staffalias_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_staffalias_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_staffalias",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_staffalias",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_staffalias",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_staffalias",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_branch_qfu_staffalias",
+                                                       "ReferencingAttribute":  "qfu_branch",
+                                                       "ReferencedEntity":  "qfu_branch"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_staffalias",
+                                                       "ReferencingAttribute":  "qfu_staff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_systemuser_qfu_staffalias_verifiedby",
+                                                       "ReferencingAttribute":  "qfu_verifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_branchmembership",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "c6a91fb0-b1fe-45e3-b203-62155f7f91f9",
+                                        "LogicalName":  "qfu_branchmembership",
+                                        "ObjectTypeCode":  10770,
+                                        "SchemaName":  "qfu_BranchMembership"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_branch",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_staff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_role",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_active",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_startdate",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_enddate",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_isprimary",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_branch",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_staff",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_branchmembership_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_branchmembership_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_branchmembership_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_branchmembership_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_branchmembership",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_branchmembership",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_branchmembership",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_branchmembership",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_branch_qfu_branchmembership",
+                                                       "ReferencingAttribute":  "qfu_branch",
+                                                       "ReferencedEntity":  "qfu_branch"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_branchmembership",
+                                                       "ReferencingAttribute":  "qfu_staff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_policy",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "ffedacab-e0c8-46eb-b91b-86fa933e269a",
+                                        "LogicalName":  "qfu_policy",
+                                        "ObjectTypeCode":  10773,
+                                        "SchemaName":  "qfu_Policy"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_name",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_branch",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_scopekey",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_worktype",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_highvaluethreshold",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_thresholdoperator",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_workitemgenerationmode",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_requiredattempts",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_firstfollowupbasis",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_firstfollowupbusinessdays",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_primaryownerstrategy",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_supportownerstrategy",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_gmccmode",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_managerccmode",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_cssralertmode",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_escalateafterbusinessdays",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_digestenabled",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_targetedalertenabled",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_active",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_branch",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_policy_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_policy_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_policy_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_policy_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_policy",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_policy",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_policy",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_policy",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_branch_qfu_policy",
+                                                       "ReferencingAttribute":  "qfu_branch",
+                                                       "ReferencedEntity":  "qfu_branch"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_workitem",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "d0fff70a-e054-4cfc-9f75-fdcfd4c1dd42",
+                                        "LogicalName":  "qfu_workitem",
+                                        "ObjectTypeCode":  10778,
+                                        "SchemaName":  "qfu_WorkItem"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_workitemnumber",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_worktype",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcesystem",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_branch",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcedocumentnumber",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_stickynote",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_stickynoteupdatedon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_stickynoteupdatedby",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_customername",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_totalvalue",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_primaryownerstaff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_supportownerstaff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_tsrstaff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_cssrstaff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_requiredattempts",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_completedattempts",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_status",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_priority",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_nextfollowupon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_lastfollowedupon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_lastactionon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_overduesince",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_escalationlevel",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_policy",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_assignmentstatus",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_branch",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_primaryownerstaff",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_supportownerstaff",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_tsrstaff",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_cssrstaff",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_policy",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitem_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitem_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitem_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitem_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_workitem",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_workitem",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_workitem",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_workitem",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_backorder_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_sourcebackorder",
+                                                       "ReferencedEntity":  "qfu_backorder"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_branch_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_branch",
+                                                       "ReferencedEntity":  "qfu_branch"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_deliverynotpgi_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_sourcedeliverynotpgi",
+                                                       "ReferencedEntity":  "qfu_deliverynotpgi"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_freightworkitem_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_sourcefreightworkitem",
+                                                       "ReferencedEntity":  "qfu_freightworkitem"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_policy_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_policy",
+                                                       "ReferencedEntity":  "qfu_policy"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_quote_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_sourcequote",
+                                                       "ReferencedEntity":  "qfu_quote"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_quoteline_qfu_workitem",
+                                                       "ReferencingAttribute":  "qfu_sourcequoteline",
+                                                       "ReferencedEntity":  "qfu_quoteline"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_workitem_cssr",
+                                                       "ReferencingAttribute":  "qfu_cssrstaff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_workitem_primaryowner",
+                                                       "ReferencingAttribute":  "qfu_primaryownerstaff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_workitem_stickynoteupdatedby",
+                                                       "ReferencingAttribute":  "qfu_stickynoteupdatedby",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_workitem_supportowner",
+                                                       "ReferencingAttribute":  "qfu_supportownerstaff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_workitem_tsr",
+                                                       "ReferencingAttribute":  "qfu_tsrstaff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_workitemaction",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "6d9eb74b-0241-40d4-9974-daf874871321",
+                                        "LogicalName":  "qfu_workitemaction",
+                                        "ObjectTypeCode":  10779,
+                                        "SchemaName":  "qfu_WorkItemAction"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_workitem",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_actiontype",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_countsasattempt",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_actionby",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_actionon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_attemptnumber",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_outcome",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_nextfollowupon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_relatedalert",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_workitem",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_actionby",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_relatedalert",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitemaction_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitemaction_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitemaction_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_workitemaction_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_workitemaction",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_workitemaction",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_workitemaction",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_workitemaction",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_alertlog_qfu_workitemaction_relatedalert",
+                                                       "ReferencingAttribute":  "qfu_relatedalert",
+                                                       "ReferencedEntity":  "qfu_alertlog"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_workitemaction_actionby",
+                                                       "ReferencingAttribute":  "qfu_actionby",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_workitem_qfu_workitemaction",
+                                                       "ReferencingAttribute":  "qfu_workitem",
+                                                       "ReferencedEntity":  "qfu_workitem"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_alertlog",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "dd872c41-53f2-4ec5-b103-05654a8b8283",
+                                        "LogicalName":  "qfu_alertlog",
+                                        "ObjectTypeCode":  10766,
+                                        "SchemaName":  "qfu_AlertLog"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_workitem",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_alerttype",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_recipientstaff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_recipientemail",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_ccemails",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_dedupekey",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_status",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_senton",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_failuremessage",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_flowrunid",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_workitem",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_recipientstaff",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_alertlog_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_alertlog_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_alertlog_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_alertlog_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_alertlog",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_alertlog",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_alertlog",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_alertlog",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_alertlog_recipient",
+                                                       "ReferencingAttribute":  "qfu_recipientstaff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_workitem_qfu_alertlog",
+                                                       "ReferencingAttribute":  "qfu_workitem",
+                                                       "ReferencedEntity":  "qfu_workitem"
+                                                   }
+                                               ]
+                   },
+                   {
+                       "name":  "qfu_assignmentexception",
+                       "found":  true,
+                       "metadata":  {
+                                        "@odata.context":  "https://orga632edd5.crm3.dynamics.com/api/data/v9.2/$metadata#EntityDefinitions(LogicalName,SchemaName,MetadataId,ObjectTypeCode)/$entity",
+                                        "MetadataId":  "276d3351-e8e5-4e3c-ae3b-5b79f4aee93a",
+                                        "LogicalName":  "qfu_assignmentexception",
+                                        "ObjectTypeCode":  10767,
+                                        "SchemaName":  "qfu_AssignmentException"
+                                    },
+                       "expectedFields":  [
+                                              {
+                                                  "name":  "qfu_exceptiontype",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_branch",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcesystem",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcefield",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_rawvalue",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_normalizedvalue",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_displayname",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcedocumentnumber",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourceexternalkey",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcequote",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcequoteline",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_sourcebackorder",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_workitem",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_status",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_resolvedstaff",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_resolvedby",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_resolvedon",
+                                                  "found":  true
+                                              },
+                                              {
+                                                  "name":  "qfu_notes",
+                                                  "found":  true
+                                              }
+                                          ],
+                       "expectedLookups":  [
+                                               {
+                                                   "name":  "qfu_branch",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_sourcequote",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_sourcequoteline",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_sourcebackorder",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_workitem",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_resolvedstaff",
+                                                   "found":  true
+                                               },
+                                               {
+                                                   "name":  "qfu_resolvedby",
+                                                   "found":  true
+                                               }
+                                           ],
+                       "relationshipSummary":  [
+                                                   {
+                                                       "SchemaName":  "lk_qfu_assignmentexception_createdby",
+                                                       "ReferencingAttribute":  "createdby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_assignmentexception_createdonbehalfby",
+                                                       "ReferencingAttribute":  "createdonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_assignmentexception_modifiedby",
+                                                       "ReferencingAttribute":  "modifiedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "lk_qfu_assignmentexception_modifiedonbehalfby",
+                                                       "ReferencingAttribute":  "modifiedonbehalfby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "user_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "owninguser",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "team_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "owningteam",
+                                                       "ReferencedEntity":  "team"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "owner_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "ownerid",
+                                                       "ReferencedEntity":  "owner"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "business_unit_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "owningbusinessunit",
+                                                       "ReferencedEntity":  "businessunit"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_backorder_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "qfu_sourcebackorder",
+                                                       "ReferencedEntity":  "qfu_backorder"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_branch_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "qfu_branch",
+                                                       "ReferencedEntity":  "qfu_branch"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_quote_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "qfu_sourcequote",
+                                                       "ReferencedEntity":  "qfu_quote"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_quoteline_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "qfu_sourcequoteline",
+                                                       "ReferencedEntity":  "qfu_quoteline"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_staff_qfu_assignmentexception_resolvedstaff",
+                                                       "ReferencingAttribute":  "qfu_resolvedstaff",
+                                                       "ReferencedEntity":  "qfu_staff"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_systemuser_qfu_assignmentexception_resolvedby",
+                                                       "ReferencingAttribute":  "qfu_resolvedby",
+                                                       "ReferencedEntity":  "systemuser"
+                                                   },
+                                                   {
+                                                       "SchemaName":  "qfu_workitem_qfu_assignmentexception",
+                                                       "ReferencingAttribute":  "qfu_workitem",
+                                                       "ReferencedEntity":  "qfu_workitem"
+                                                   }
+                                               ]
+                   }
+               ],
+    "modelDrivenApps":  [
+
+                        ],
+    "appFound":  false,
+    "formsByTable":  {
+                         "qfu_staff":  [
+                                           {
+                                               "name":  "Information",
+                                               "type":  2,
+                                               "formid":  "466fc469-f253-48e5-a05f-10250f3b0acb"
+                                           },
+                                           {
+                                               "name":  "Information",
+                                               "type":  11,
+                                               "formid":  "91308211-9e3c-4b6a-b681-a0ec831327a9"
+                                           },
+                                           {
+                                               "name":  "Information",
+                                               "type":  6,
+                                               "formid":  "c30d5ee6-0907-4128-8408-ed52176e5172"
+                                           }
+                                       ],
+                         "qfu_staffalias":  [
+                                                {
+                                                    "name":  "Information",
+                                                    "type":  11,
+                                                    "formid":  "d8585417-6292-4d67-a518-2b078371a2e4"
+                                                },
+                                                {
+                                                    "name":  "Information",
+                                                    "type":  6,
+                                                    "formid":  "2303539d-813c-4460-b6a2-5b57748ab26e"
+                                                },
+                                                {
+                                                    "name":  "Information",
+                                                    "type":  2,
+                                                    "formid":  "e82dc719-8eb8-4ccf-a95d-d174850b7eb1"
+                                                }
+                                            ],
+                         "qfu_branchmembership":  [
+                                                      {
+                                                          "name":  "Information",
+                                                          "type":  2,
+                                                          "formid":  "a5d4e00e-ece4-4512-ac6f-19bb8fd5d624"
+                                                      },
+                                                      {
+                                                          "name":  "Information",
+                                                          "type":  11,
+                                                          "formid":  "4ba1675e-c4cc-462b-b348-41d12ec7524b"
+                                                      },
+                                                      {
+                                                          "name":  "Information",
+                                                          "type":  6,
+                                                          "formid":  "b8a963ad-24c7-4b60-b26d-cbce0dd692d7"
+                                                      }
+                                                  ],
+                         "qfu_policy":  [
+                                            {
+                                                "name":  "Information",
+                                                "type":  2,
+                                                "formid":  "821bb6ad-56d5-4fb2-aa6b-2d1ec6d6fb9a"
+                                            },
+                                            {
+                                                "name":  "Information",
+                                                "type":  11,
+                                                "formid":  "162eea11-3fc8-4372-81ef-6d6d6f939b81"
+                                            },
+                                            {
+                                                "name":  "Information",
+                                                "type":  6,
+                                                "formid":  "34c46adc-8c60-4646-a3e0-f0570a0486ea"
+                                            }
+                                        ],
+                         "qfu_workitem":  [
+                                              {
+                                                  "name":  "Information",
+                                                  "type":  6,
+                                                  "formid":  "4268cc5d-c2fa-4044-aa9e-b5029078cc19"
+                                              },
+                                              {
+                                                  "name":  "Information",
+                                                  "type":  2,
+                                                  "formid":  "89d42082-c1b0-4267-9a31-cb6f95acf088"
+                                              },
+                                              {
+                                                  "name":  "Information",
+                                                  "type":  11,
+                                                  "formid":  "0298b418-2933-4919-a686-d785eb577471"
+                                              }
+                                          ],
+                         "qfu_workitemaction":  [
+                                                    {
+                                                        "name":  "Information",
+                                                        "type":  2,
+                                                        "formid":  "34438806-f89c-43f9-ac8d-3c28dcf5f87e"
+                                                    },
+                                                    {
+                                                        "name":  "Information",
+                                                        "type":  6,
+                                                        "formid":  "59b585b7-0243-4aa3-988e-421991e87b57"
+                                                    },
+                                                    {
+                                                        "name":  "Information",
+                                                        "type":  11,
+                                                        "formid":  "83596df7-66f5-4dd6-943c-471958fec1a3"
+                                                    }
+                                                ],
+                         "qfu_alertlog":  [
+                                              {
+                                                  "name":  "Information",
+                                                  "type":  11,
+                                                  "formid":  "ec1048da-1b56-4f80-9db6-3f9d335af117"
+                                              },
+                                              {
+                                                  "name":  "Information",
+                                                  "type":  2,
+                                                  "formid":  "f7508fea-65e3-4e71-9139-45fcd890fcb8"
+                                              },
+                                              {
+                                                  "name":  "Information",
+                                                  "type":  6,
+                                                  "formid":  "7d033a37-9e25-4862-9413-f0780d2f060a"
+                                              }
+                                          ],
+                         "qfu_assignmentexception":  [
+                                                         {
+                                                             "name":  "Information",
+                                                             "type":  6,
+                                                             "formid":  "0b8d5a70-473f-4e2a-b1fc-1860ae4e5715"
+                                                         },
+                                                         {
+                                                             "name":  "Information",
+                                                             "type":  11,
+                                                             "formid":  "9df97882-a3ee-4531-b65e-88f54ec26d9d"
+                                                         },
+                                                         {
+                                                             "name":  "Information",
+                                                             "type":  2,
+                                                             "formid":  "cc0e0b05-6846-458c-8108-d57a9bacf37b"
+                                                         }
+                                                     ]
+                     },
+    "viewsByTable":  {
+                         "qfu_staff":  [
+                                           {
+                                               "name":  "My Staff",
+                                               "querytype":  8192,
+                                               "isdefault":  true,
+                                               "savedqueryid":  "35e6a3c7-1f40-f111-88b5-000d3a59294a"
+                                           },
+                                           {
+                                               "name":  "Staff Advanced Find View",
+                                               "querytype":  1,
+                                               "isdefault":  true,
+                                               "savedqueryid":  "aa875edf-8103-4712-9b0e-33d1145b65e6"
+                                           },
+                                           {
+                                               "name":  "Quick Find Active Staff",
+                                               "querytype":  4,
+                                               "isdefault":  true,
+                                               "savedqueryid":  "55aa2de7-0c93-4366-aeef-3c0bfb4c5d20"
+                                           },
+                                           {
+                                               "name":  "Staff Lookup View",
+                                               "querytype":  64,
+                                               "isdefault":  true,
+                                               "savedqueryid":  "1173b48a-a28f-4274-ba27-447a126abf6f"
+                                           },
+                                           {
+                                               "name":  "Inactive Staff",
+                                               "querytype":  0,
+                                               "isdefault":  false,
+                                               "savedqueryid":  "b631c630-a4f3-4d87-a022-757941d3ab34"
+                                           },
+                                           {
+                                               "name":  "Active Staff",
+                                               "querytype":  0,
+                                               "isdefault":  true,
+                                               "savedqueryid":  "e58494ad-d793-4e36-ab86-8c0f05379031"
+                                           },
+                                           {
+                                               "name":  "Staff Associated View",
+                                               "querytype":  2,
+                                               "isdefault":  true,
+                                               "savedqueryid":  "4625427f-78b9-4426-b310-d4011117d642"
+                                           }
+                                       ],
+                         "qfu_staffalias":  [
+                                                {
+                                                    "name":  "My Staff Aliases",
+                                                    "querytype":  8192,
+                                                    "isdefault":  true,
+                                                    "savedqueryid":  "f3630da9-2040-f111-88b5-000d3a59294a"
+                                                },
+                                                {
+                                                    "name":  "Staff Alias Lookup View",
+                                                    "querytype":  64,
+                                                    "isdefault":  true,
+                                                    "savedqueryid":  "4eb8f31f-6d9a-442b-8431-3dcd155647d1"
+                                                },
+                                                {
+                                                    "name":  "Quick Find Active Staff Aliases",
+                                                    "querytype":  4,
+                                                    "isdefault":  true,
+                                                    "savedqueryid":  "6f04ae4d-3ddb-41d6-8ba4-4d73e52af0a8"
+                                                },
+                                                {
+                                                    "name":  "Active Staff Aliases",
+                                                    "querytype":  0,
+                                                    "isdefault":  true,
+                                                    "savedqueryid":  "66a994b0-2d36-4e32-a7cf-b1a4f4ca16e5"
+                                                },
+                                                {
+                                                    "name":  "Inactive Staff Aliases",
+                                                    "querytype":  0,
+                                                    "isdefault":  false,
+                                                    "savedqueryid":  "23793f30-ef86-4cd4-84c7-c6b239d7e838"
+                                                },
+                                                {
+                                                    "name":  "Staff Alias Advanced Find View",
+                                                    "querytype":  1,
+                                                    "isdefault":  true,
+                                                    "savedqueryid":  "fb1bb769-468d-42d7-b213-e4e481024f77"
+                                                },
+                                                {
+                                                    "name":  "Staff Alias Associated View",
+                                                    "querytype":  2,
+                                                    "isdefault":  true,
+                                                    "savedqueryid":  "46aa1fad-c364-414f-a25f-eefdef5303c6"
+                                                }
+                                            ],
+                         "qfu_branchmembership":  [
+                                                      {
+                                                          "name":  "My Branch Memberships",
+                                                          "querytype":  8192,
+                                                          "isdefault":  true,
+                                                          "savedqueryid":  "ab9811af-2040-f111-88b5-000d3a59294a"
+                                                      },
+                                                      {
+                                                          "name":  "Quick Find Active Branch Memberships",
+                                                          "querytype":  4,
+                                                          "isdefault":  true,
+                                                          "savedqueryid":  "1408ff61-a35e-4f5c-b0fb-501e4c67318d"
+                                                      },
+                                                      {
+                                                          "name":  "Branch Membership Associated View",
+                                                          "querytype":  2,
+                                                          "isdefault":  true,
+                                                          "savedqueryid":  "6f921da5-4bac-4040-8853-50aa7185b293"
+                                                      },
+                                                      {
+                                                          "name":  "Inactive Branch Memberships",
+                                                          "querytype":  0,
+                                                          "isdefault":  false,
+                                                          "savedqueryid":  "af4d8015-b817-4405-bcc0-5f3cfe1ac08c"
+                                                      },
+                                                      {
+                                                          "name":  "Branch Membership Advanced Find View",
+                                                          "querytype":  1,
+                                                          "isdefault":  true,
+                                                          "savedqueryid":  "9ad3f1ca-6d11-47c9-9a2e-64d38f6c13bb"
+                                                      },
+                                                      {
+                                                          "name":  "Active Branch Memberships",
+                                                          "querytype":  0,
+                                                          "isdefault":  true,
+                                                          "savedqueryid":  "4ea0bcd6-8ef3-4d98-950a-7df8bfb243e2"
+                                                      },
+                                                      {
+                                                          "name":  "Branch Membership Lookup View",
+                                                          "querytype":  64,
+                                                          "isdefault":  true,
+                                                          "savedqueryid":  "e5b0381a-f294-413b-804d-8a7326b4440a"
+                                                      }
+                                                  ],
+                         "qfu_policy":  [
+                                            {
+                                                "name":  "My Branch Policies",
+                                                "querytype":  8192,
+                                                "isdefault":  true,
+                                                "savedqueryid":  "abdad2b7-2040-f111-88b5-000d3a59294a"
+                                            },
+                                            {
+                                                "name":  "Quick Find Active Branch Policies",
+                                                "querytype":  4,
+                                                "isdefault":  true,
+                                                "savedqueryid":  "2a914bf5-a946-4d5b-8b35-12defa4c3c73"
+                                            },
+                                            {
+                                                "name":  "Inactive Branch Policies",
+                                                "querytype":  0,
+                                                "isdefault":  false,
+                                                "savedqueryid":  "332f58c0-5f4c-4d94-8c10-64e1caa21251"
+                                            },
+                                            {
+                                                "name":  "Branch Policy Lookup View",
+                                                "querytype":  64,
+                                                "isdefault":  true,
+                                                "savedqueryid":  "52df3286-e196-482e-a3ff-a4b14e2e971c"
+                                            },
+                                            {
+                                                "name":  "Branch Policy Advanced Find View",
+                                                "querytype":  1,
+                                                "isdefault":  true,
+                                                "savedqueryid":  "e75433f5-e18c-4dcf-b2a7-a8e884767363"
+                                            },
+                                            {
+                                                "name":  "Branch Policy Associated View",
+                                                "querytype":  2,
+                                                "isdefault":  true,
+                                                "savedqueryid":  "c4cc2721-d6b0-455c-87c7-b3c7c2a17c0a"
+                                            },
+                                            {
+                                                "name":  "Active Branch Policies",
+                                                "querytype":  0,
+                                                "isdefault":  true,
+                                                "savedqueryid":  "45f49cf9-77d6-4c32-8df0-fbbdcf5ec9a3"
+                                            }
+                                        ],
+                         "qfu_workitem":  [
+                                              {
+                                                  "name":  "My Work Items",
+                                                  "querytype":  8192,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "0353c6c3-2040-f111-88b5-000d3a59294a"
+                                              },
+                                              {
+                                                  "name":  "Quick Find Active Work Items",
+                                                  "querytype":  4,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "bb444060-d073-4411-bec9-312933f9729a"
+                                              },
+                                              {
+                                                  "name":  "Active Work Items",
+                                                  "querytype":  0,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "d814b993-f037-41f6-ad52-413ff0149b2a"
+                                              },
+                                              {
+                                                  "name":  "Inactive Work Items",
+                                                  "querytype":  0,
+                                                  "isdefault":  false,
+                                                  "savedqueryid":  "96ea556b-3975-46c2-ac01-50bff38bd0f1"
+                                              },
+                                              {
+                                                  "name":  "Work Item Associated View",
+                                                  "querytype":  2,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "bf6b8836-90ee-4919-84c4-59d8056d0ed4"
+                                              },
+                                              {
+                                                  "name":  "Work Item Advanced Find View",
+                                                  "querytype":  1,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "1ab42e55-d270-4842-ae4c-65696bedd5cd"
+                                              },
+                                              {
+                                                  "name":  "Work Item Lookup View",
+                                                  "querytype":  64,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "5e03b31b-d226-4846-ae6d-8d4b0abe1e93"
+                                              }
+                                          ],
+                         "qfu_workitemaction":  [
+                                                    {
+                                                        "name":  "My Work Item Actions",
+                                                        "querytype":  8192,
+                                                        "isdefault":  true,
+                                                        "savedqueryid":  "0879eec9-2040-f111-88b5-000d3a59294a"
+                                                    },
+                                                    {
+                                                        "name":  "Work Item Action Advanced Find View",
+                                                        "querytype":  1,
+                                                        "isdefault":  true,
+                                                        "savedqueryid":  "4675402a-87a7-467c-a96e-0a14cb260b8e"
+                                                    },
+                                                    {
+                                                        "name":  "Active Work Item Actions",
+                                                        "querytype":  0,
+                                                        "isdefault":  true,
+                                                        "savedqueryid":  "7b1c34e2-adcb-401f-9352-32f01b8429d1"
+                                                    },
+                                                    {
+                                                        "name":  "Inactive Work Item Actions",
+                                                        "querytype":  0,
+                                                        "isdefault":  false,
+                                                        "savedqueryid":  "a98081dc-7a02-4c8b-bbd9-3a383d3d96e8"
+                                                    },
+                                                    {
+                                                        "name":  "Work Item Action Associated View",
+                                                        "querytype":  2,
+                                                        "isdefault":  true,
+                                                        "savedqueryid":  "1e4477f1-acaf-48a1-9ebf-4eb7eea3990b"
+                                                    },
+                                                    {
+                                                        "name":  "Quick Find Active Work Item Actions",
+                                                        "querytype":  4,
+                                                        "isdefault":  true,
+                                                        "savedqueryid":  "1234d06c-f06f-42b5-899d-d65651b89a00"
+                                                    },
+                                                    {
+                                                        "name":  "Work Item Action Lookup View",
+                                                        "querytype":  64,
+                                                        "isdefault":  true,
+                                                        "savedqueryid":  "b1e93ef4-45d4-4c8b-8638-e4a09dba8da5"
+                                                    }
+                                                ],
+                         "qfu_alertlog":  [
+                                              {
+                                                  "name":  "My Alert Logs",
+                                                  "querytype":  8192,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "fc4ff6d6-2040-f111-88b5-000d3a59294a"
+                                              },
+                                              {
+                                                  "name":  "Inactive Alert Logs",
+                                                  "querytype":  0,
+                                                  "isdefault":  false,
+                                                  "savedqueryid":  "193929c4-6bfc-4e02-ae50-11c12f801f3d"
+                                              },
+                                              {
+                                                  "name":  "Quick Find Active Alert Logs",
+                                                  "querytype":  4,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "423b08f7-0203-491b-b2e5-230793427399"
+                                              },
+                                              {
+                                                  "name":  "Active Alert Logs",
+                                                  "querytype":  0,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "acbd2654-5223-4ed2-965d-60a84c754179"
+                                              },
+                                              {
+                                                  "name":  "Alert Log Lookup View",
+                                                  "querytype":  64,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "4d81fabe-61aa-497d-a52a-7e8c3f3ca41e"
+                                              },
+                                              {
+                                                  "name":  "Alert Log Advanced Find View",
+                                                  "querytype":  1,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "0ce10515-f05c-44d4-a998-98d04bf802d2"
+                                              },
+                                              {
+                                                  "name":  "Alert Log Associated View",
+                                                  "querytype":  2,
+                                                  "isdefault":  true,
+                                                  "savedqueryid":  "cd008eee-7132-4ea7-93da-a28ed848a38e"
+                                              }
+                                          ],
+                         "qfu_assignmentexception":  [
+                                                         {
+                                                             "name":  "My Assignment Exceptions",
+                                                             "querytype":  8192,
+                                                             "isdefault":  true,
+                                                             "savedqueryid":  "d26593dd-2040-f111-88b5-000d3a59294a"
+                                                         },
+                                                         {
+                                                             "name":  "Assignment Exception Associated View",
+                                                             "querytype":  2,
+                                                             "isdefault":  true,
+                                                             "savedqueryid":  "258e81ef-a4b9-4172-9420-07d440b7d014"
+                                                         },
+                                                         {
+                                                             "name":  "Assignment Exception Lookup View",
+                                                             "querytype":  64,
+                                                             "isdefault":  true,
+                                                             "savedqueryid":  "e6cfd9c6-546c-4f42-a44a-14984a205587"
+                                                         },
+                                                         {
+                                                             "name":  "Active Assignment Exceptions",
+                                                             "querytype":  0,
+                                                             "isdefault":  true,
+                                                             "savedqueryid":  "72cea6d7-8243-45b4-9185-192056f98767"
+                                                         },
+                                                         {
+                                                             "name":  "Assignment Exception Advanced Find View",
+                                                             "querytype":  1,
+                                                             "isdefault":  true,
+                                                             "savedqueryid":  "9d81f84a-1b33-4ff7-9831-7f9b42ad7412"
+                                                         },
+                                                         {
+                                                             "name":  "Inactive Assignment Exceptions",
+                                                             "querytype":  0,
+                                                             "isdefault":  false,
+                                                             "savedqueryid":  "c1862c9c-d9fd-4699-ad0c-cf6cc2337ecc"
+                                                         },
+                                                         {
+                                                             "name":  "Quick Find Active Assignment Exceptions",
+                                                             "querytype":  4,
+                                                             "isdefault":  true,
+                                                             "savedqueryid":  "68a329a8-2127-4005-ae6e-f7f6124f2fec"
+                                                         }
+                                                     ]
+                     },
+    "requiredViewCoverage":  {
+                                 "qfu_staff":  [
+                                                   {
+                                                       "name":  "Active Staff",
+                                                       "found":  true
+                                                   },
+                                                   {
+                                                       "name":  "Staff Missing Email",
+                                                       "found":  false
+                                                   },
+                                                   {
+                                                       "name":  "Staff Missing Dataverse User",
+                                                       "found":  false
+                                                   }
+                                               ],
+                                 "qfu_staffalias":  [
+                                                        {
+                                                            "name":  "Active Aliases",
+                                                            "found":  false
+                                                        },
+                                                        {
+                                                            "name":  "Unverified Aliases",
+                                                            "found":  false
+                                                        },
+                                                        {
+                                                            "name":  "Aliases by Source System",
+                                                            "found":  false
+                                                        },
+                                                        {
+                                                            "name":  "Potential Duplicate Aliases",
+                                                            "found":  false
+                                                        }
+                                                    ],
+                                 "qfu_branchmembership":  [
+                                                              {
+                                                                  "name":  "Active Branch Memberships",
+                                                                  "found":  true
+                                                              },
+                                                              {
+                                                                  "name":  "Memberships by Branch",
+                                                                  "found":  false
+                                                              },
+                                                              {
+                                                                  "name":  "Memberships by Role",
+                                                                  "found":  false
+                                                              }
+                                                          ],
+                                 "qfu_policy":  [
+                                                    {
+                                                        "name":  "Active Policies",
+                                                        "found":  false
+                                                    },
+                                                    {
+                                                        "name":  "Draft/Inactive Policies",
+                                                        "found":  false
+                                                    },
+                                                    {
+                                                        "name":  "Policies by Branch",
+                                                        "found":  false
+                                                    },
+                                                    {
+                                                        "name":  "Quote Policies",
+                                                        "found":  false
+                                                    }
+                                                ],
+                                 "qfu_workitem":  [
+                                                      {
+                                                          "name":  "Open Work Items",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Needs TSR Assignment",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Needs CSSR Assignment",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Quotes \u003e= $3K",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Overdue Work Items",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Work Items with Sticky Notes",
+                                                          "found":  false
+                                                      }
+                                                  ],
+                                 "qfu_workitemaction":  [
+                                                            {
+                                                                "name":  "Recent Actions",
+                                                                "found":  false
+                                                            },
+                                                            {
+                                                                "name":  "Attempt Actions",
+                                                                "found":  false
+                                                            },
+                                                            {
+                                                                "name":  "Non-Attempt Actions",
+                                                                "found":  false
+                                                            }
+                                                        ],
+                                 "qfu_alertlog":  [
+                                                      {
+                                                          "name":  "Pending Alerts",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Failed Alerts",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Sent Alerts",
+                                                          "found":  false
+                                                      },
+                                                      {
+                                                          "name":  "Suppressed/Skipped Alerts",
+                                                          "found":  false
+                                                      }
+                                                  ],
+                                 "qfu_assignmentexception":  [
+                                                                 {
+                                                                     "name":  "Open Assignment Exceptions",
+                                                                     "found":  false
+                                                                 },
+                                                                 {
+                                                                     "name":  "Missing TSR Alias",
+                                                                     "found":  false
+                                                                 },
+                                                                 {
+                                                                     "name":  "Missing CSSR Alias",
+                                                                     "found":  false
+                                                                 },
+                                                                 {
+                                                                     "name":  "Blank/Zero Alias Exceptions",
+                                                                     "found":  false
+                                                                 },
+                                                                 {
+                                                                     "name":  "Resolved Exceptions",
+                                                                     "found":  false
+                                                                 }
+                                                             ]
+                             },
+    "errors":  [
+
+               ]
+}

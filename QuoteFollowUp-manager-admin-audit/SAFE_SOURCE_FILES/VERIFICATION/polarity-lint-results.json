@@ -1,0 +1,195 @@
+{
+    "generatedOn":  "2026-04-09T11:42:47",
+    "authoritativeFiles":  [
+                               "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\web-templates\\qfu-regional-runtime\\QFU-Regional-Runtime.webtemplate.source.html",
+                               "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                               "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                               "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                               "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\standardize-sa1300-budget-flows.py"
+                           ],
+    "suspiciousCount":  0,
+    "matches":  [
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\web-templates\\qfu-regional-runtime\\QFU-Regional-Runtime.webtemplate.source.html",
+                        "line":  7,
+                        "classification":  "manual-review",
+                        "text":  "* - INVERTED ENVIRONMENT: qfu_isactive false = active, true = inactive."
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\web-templates\\qfu-regional-runtime\\QFU-Regional-Runtime.webtemplate.source.html",
+                        "line":  174,
+                        "classification":  "manual-review",
+                        "text":  "// INVERTED ENVIRONMENT: qfu_isactive false = active, true = inactive."
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\web-templates\\qfu-regional-runtime\\QFU-Regional-Runtime.webtemplate.source.html",
+                        "line":  176,
+                        "classification":  "active-aware",
+                        "text":  "return parseBoolean(record \u0026\u0026 record.qfu_isactive) === false;"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\powerpages-live\\operations-hub---operationhub\\web-templates\\qfu-regional-runtime\\QFU-Regional-Runtime.webtemplate.source.html",
+                        "line":  2419,
+                        "classification":  "manual-review",
+                        "text":  "safeGetAll(withFilter(\"/_api/qfu_budgets?$select=qfu_budgetid,qfu_budgetname,qfu_actualsales,qfu_budgetgoal,qfu_lastupdated,qfu_cadsales,qfu_usdsales,qfu_month,qfu_monthname,qfu_year,qfu_fiscalyear,qfu_isactive,qfu_sourcefamily,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_opsdailycadjson,qfu_opsdailyusdjson,createdon\u0026$top=\" + BUDGETS_FETCH_TOP, scopedFilter), \"qfu_budgets\", runtimeDiagnostics, { top: BUDGETS_FETCH_TOP, critical: true, branchSlug: context.branchSlug, regionSlug: context.regionSlug }),"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  1609,
+                        "classification":  "active-aware",
+                        "text":  "Set-FieldValue -Map $getActiveBudgetParameters -Name \u0027$filter\u0027 -Value \"qfu_isactive eq false and qfu_branchcode eq \u0027@{parameters(\u0027qfu_QFU_BranchCode\u0027)}\u0027 and qfu_sourcefamily eq \u0027SA1300\u0027\""
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  1685,
+                        "classification":  "manual-review",
+                        "text":  "Set-FieldValue -Map $itemMap -Name \"qfu_isactive\" -Value $false"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  1706,
+                        "classification":  "manual-review",
+                        "text":  "Set-FieldValue -Map $updateCurrent -Name \"qfu_isactive\" -Value $false"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\create-southern-alberta-pilot-flow-solution.ps1",
+                        "line":  1847,
+                        "classification":  "manual-review",
+                        "text":  "Add-Note -Notes $Notes -Text \"Budget flow now enforces trigger concurrency = 1, treats qfu_isactive false as active, resolves current-month rows by qfu_sourceid plus active fiscal year, falls back from qfu_budgetarchive to the SA1300 Month-End Plan before flagging a missing target, checks branch+month+fiscal year before creating qfu_budgetarchive, replaces the current branch\u0027s same-day qfu_marginexception snapshot directly from the SA1300 abnormal margin sheet, refreshes qfu_branchopsdaily rows from branch-configured SA1300 Daily Sales- Location ranges without overlapping USD/CAD temporary tables, and stores the latest CAD/USD Daily Sales- Location payload on the current qfu_budget row for analytics.\""
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  83,
+                        "classification":  "manual-review",
+                        "text":  "function Test-BudgetRowIsActive {"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  86,
+                        "classification":  "manual-review",
+                        "text":  "$value = if ($Row.PSObject.Properties[\u0027qfu_isactive\u0027]) { $Row.qfu_isactive } else { $null }"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  91,
+                        "classification":  "manual-review",
+                        "text":  "# Current portal/Web API evidence shows formatted \"Yes\" on rows where raw qfu_isactive = false."
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  114,
+                        "classification":  "manual-review",
+                        "text":  "@{ Expression = { if (Test-BudgetRowIsActive -Row $_) { 1 } else { 0 } }; Descending = $true }, `"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  150,
+                        "classification":  "manual-review",
+                        "text":  "\"qfu_isactive\","
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  177,
+                        "classification":  "active-aware",
+                        "text":  "qfu_isactive = $false"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  193,
+                        "classification":  "manual-review",
+                        "text":  "\"qfu_isactive\","
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  199,
+                        "classification":  "manual-review",
+                        "text":  "(Test-BudgetRowIsActive -Row $_) -and"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\normalize-live-sa1300-current-budgets.ps1",
+                        "line":  212,
+                        "classification":  "explicit-inactive-write",
+                        "text":  "qfu_isactive = $true"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  98,
+                        "classification":  "manual-review",
+                        "text":  "function Test-BudgetRowIsActive {"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  101,
+                        "classification":  "manual-review",
+                        "text":  "$value = if ($Row.PSObject.Properties[\u0027qfu_isactive\u0027]) { $Row.qfu_isactive } else { $null }"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  106,
+                        "classification":  "manual-review",
+                        "text":  "# Current portal/Web API evidence shows formatted \"Yes\" on rows where raw qfu_isactive = false."
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  331,
+                        "classification":  "manual-review",
+                        "text":  "\"qfu_isactive\","
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  339,
+                        "classification":  "manual-review",
+                        "text":  "@{ Expression = { if (Test-BudgetRowIsActive -Row $_) { 1 } else { 0 } }; Descending = $true }, `"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  359,
+                        "classification":  "active-aware",
+                        "text":  "qfu_isactive = $false"
+                    },
+                    {
+                        "file":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\scripts\\repair-southern-alberta-live-dashboard-data.ps1",
+                        "line":  367,
+                        "classification":  "explicit-inactive-write",
+                        "text":  "qfu_isactive = $true"
+                    }
+                ],
+    "probeEvidence":  [
+                          {
+                              "branchCode":  "4171",
+                              "budgetId":  "<GUID>",
+                              "rawValue":  false,
+                              "formattedValue":  "Yes"
+                          },
+                          {
+                              "branchCode":  "4172",
+                              "budgetId":  "<GUID>",
+                              "rawValue":  false,
+                              "formattedValue":  "Yes"
+                          },
+                          {
+                              "branchCode":  "4173",
+                              "budgetId":  "<GUID>",
+                              "rawValue":  false,
+                              "formattedValue":  "Yes"
+                          },
+                          {
+                              "branchCode":  "4171",
+                              "budgetId":  "<GUID>",
+                              "rawValue":  true,
+                              "formattedValue":  "No"
+                          },
+                          {
+                              "branchCode":  "4172",
+                              "budgetId":  "<GUID>",
+                              "rawValue":  true,
+                              "formattedValue":  "No"
+                          },
+                          {
+                              "branchCode":  "4173",
+                              "budgetId":  "<GUID>",
+                              "rawValue":  true,
+                              "formattedValue":  "No"
+                          }
+                      ]
+}

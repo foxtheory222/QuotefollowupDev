@@ -1,0 +1,10 @@
+adx_append: false
+adx_appendto: false
+adx_create: false
+adx_delete: false
+adx_entitylogicalname: qfu_branchopsdaily
+adx_entityname: operationhub qfu_branchopsdaily Global Read
+adx_entitypermissionid: 939efbc9-e1d7-4e99-b781-d97031c94a10
+adx_read: true
+adx_scope: 756150000
+adx_write: false

@@ -1,0 +1,233 @@
+﻿{
+    "phase":  "Phase 3",
+    "checkedAtUtc":  "2026-04-27T19:31:48.3363850Z",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionUniqueName":  "qfu_revenuefollowupworkbench",
+    "solution":  {
+                     "@odata.etag":  "W/\"2751496\"",
+                     "solutionid":  "1802b69d-6ea2-433f-8acd-48c86d907cc3",
+                     "uniquename":  "qfu_revenuefollowupworkbench",
+                     "ismanaged":  false,
+                     "version":  "1.0.0.0",
+                     "friendlyname":  "Revenue Follow-Up Workbench"
+                 },
+    "app":  {
+                "@odata.etag":  "W/\"2854313\"",
+                "uniquename":  "qfu_RevenueFollowUpWorkbench",
+                "appmoduleid":  "93917a64-6742-f111-bec7-7c1e52062b6f",
+                "name":  "Revenue Follow-Up Workbench"
+            },
+    "requiredTables":  [
+                           {
+                               "logicalName":  "qfu_staff",
+                               "found":  true,
+                               "entitySetName":  "qfu_staffs",
+                               "primaryIdAttribute":  "qfu_staffid",
+                               "primaryNameAttribute":  "qfu_name"
+                           },
+                           {
+                               "logicalName":  "qfu_staffalias",
+                               "found":  true,
+                               "entitySetName":  "qfu_staffaliases",
+                               "primaryIdAttribute":  "qfu_staffaliasid",
+                               "primaryNameAttribute":  "qfu_name"
+                           },
+                           {
+                               "logicalName":  "qfu_branchmembership",
+                               "found":  true,
+                               "entitySetName":  "qfu_branchmemberships",
+                               "primaryIdAttribute":  "qfu_branchmembershipid",
+                               "primaryNameAttribute":  "qfu_name"
+                           },
+                           {
+                               "logicalName":  "qfu_policy",
+                               "found":  true,
+                               "entitySetName":  "qfu_policies",
+                               "primaryIdAttribute":  "qfu_policyid",
+                               "primaryNameAttribute":  "qfu_name"
+                           },
+                           {
+                               "logicalName":  "qfu_workitem",
+                               "found":  true,
+                               "entitySetName":  "qfu_workitems",
+                               "primaryIdAttribute":  "qfu_workitemid",
+                               "primaryNameAttribute":  "qfu_workitemnumber"
+                           },
+                           {
+                               "logicalName":  "qfu_workitemaction",
+                               "found":  true,
+                               "entitySetName":  "qfu_workitemactions",
+                               "primaryIdAttribute":  "qfu_workitemactionid",
+                               "primaryNameAttribute":  "qfu_name"
+                           },
+                           {
+                               "logicalName":  "qfu_alertlog",
+                               "found":  true,
+                               "entitySetName":  "qfu_alertlogs",
+                               "primaryIdAttribute":  "qfu_alertlogid",
+                               "primaryNameAttribute":  "qfu_name"
+                           },
+                           {
+                               "logicalName":  "qfu_assignmentexception",
+                               "found":  true,
+                               "entitySetName":  "qfu_assignmentexceptions",
+                               "primaryIdAttribute":  "qfu_assignmentexceptionid",
+                               "primaryNameAttribute":  "qfu_name"
+                           }
+                       ],
+    "requiredSourceTables":  [
+                                 {
+                                     "logicalName":  "qfu_quote",
+                                     "found":  true,
+                                     "entitySetName":  "qfu_quotes",
+                                     "primaryIdAttribute":  "qfu_quoteid",
+                                     "primaryNameAttribute":  "qfu_name"
+                                 },
+                                 {
+                                     "logicalName":  "qfu_quoteline",
+                                     "found":  true,
+                                     "entitySetName":  "qfu_quotelines",
+                                     "primaryIdAttribute":  "qfu_quotelineid",
+                                     "primaryNameAttribute":  "qfu_name"
+                                 },
+                                 {
+                                     "logicalName":  "qfu_branch",
+                                     "found":  true,
+                                     "entitySetName":  "qfu_branchs",
+                                     "primaryIdAttribute":  "qfu_branchid",
+                                     "primaryNameAttribute":  "qfu_name"
+                                 }
+                             ],
+    "entitySets":  {
+                       "qfu_staff":  "qfu_staffs",
+                       "qfu_staffalias":  "qfu_staffaliases",
+                       "qfu_branchmembership":  "qfu_branchmemberships",
+                       "qfu_policy":  "qfu_policies",
+                       "qfu_workitem":  "qfu_workitems",
+                       "qfu_workitemaction":  "qfu_workitemactions",
+                       "qfu_alertlog":  "qfu_alertlogs",
+                       "qfu_assignmentexception":  "qfu_assignmentexceptions",
+                       "qfu_quote":  "qfu_quotes",
+                       "qfu_quoteline":  "qfu_quotelines",
+                       "qfu_branch":  "qfu_branchs"
+                   },
+    "optionValues":  {
+                         "qfu_worktype_quote":  985010000,
+                         "qfu_sourcesystem_sp830ca":  985010000,
+                         "qfu_aliastype_amnumber":  985010000,
+                         "qfu_aliastype_cssrnumber":  985010002,
+                         "qfu_thresholdoperator_gte":  985010001,
+                         "qfu_workitemgenerationmode_highvalueonly":  985010000,
+                         "qfu_firstfollowupbasis_importdate":  985010000,
+                         "qfu_alertmode_disabled":  985010000,
+                         "qfu_cssralertmode_disabled":  985010004
+                     },
+    "alternateKeys":  [
+                          {
+                              "table":  "qfu_staffalias",
+                              "keyName":  "qfu_key_staffalias_source_type_alias_scope",
+                              "status":  "found",
+                              "columns":  [
+                                              "qfu_aliastype",
+                                              "qfu_normalizedalias",
+                                              "qfu_scopekey",
+                                              "qfu_sourcesystem"
+                                          ],
+                              "replacementField":  null,
+                              "entityKeyIndexStatus":  "Active",
+                              "safeForIdempotency":  true,
+                              "purpose":  "Prevents duplicate alias mappings.",
+                              "failure":  null
+                          },
+                          {
+                              "table":  "qfu_branchmembership",
+                              "keyName":  "qfu_key_branchmembership_branch_staff_role",
+                              "status":  "found",
+                              "columns":  [
+                                              "qfu_branch",
+                                              "qfu_role",
+                                              "qfu_staff"
+                                          ],
+                              "replacementField":  null,
+                              "entityKeyIndexStatus":  "Active",
+                              "safeForIdempotency":  true,
+                              "purpose":  "Prevents duplicate branch/staff/role mappings where feasible.",
+                              "failure":  null
+                          },
+                          {
+                              "table":  "qfu_policy",
+                              "keyName":  "qfu_key_policy_scope_worktype_activekey",
+                              "status":  "found",
+                              "columns":  [
+                                              "qfu_policykey"
+                                          ],
+                              "replacementField":  null,
+                              "entityKeyIndexStatus":  "Active",
+                              "safeForIdempotency":  true,
+                              "purpose":  "Helps prevent duplicate active policies.",
+                              "failure":  null
+                          },
+                          {
+                              "table":  "qfu_workitem",
+                              "keyName":  "qfu_key_workitem_type_sourcekey",
+                              "status":  "found",
+                              "columns":  [
+                                              "qfu_sourceexternalkey",
+                                              "qfu_worktype"
+                                          ],
+                              "replacementField":  null,
+                              "entityKeyIndexStatus":  "Active",
+                              "safeForIdempotency":  true,
+                              "purpose":  "Ensures resolver reruns update the same work item instead of creating duplicates.",
+                              "failure":  null
+                          },
+                          {
+                              "table":  "qfu_alertlog",
+                              "keyName":  "qfu_key_alertlog_dedupekey",
+                              "status":  "found",
+                              "columns":  [
+                                              "qfu_dedupekey"
+                                          ],
+                              "replacementField":  null,
+                              "entityKeyIndexStatus":  "Active",
+                              "safeForIdempotency":  true,
+                              "purpose":  "Future alert dedupe. No alerts are sent in Phase 3.",
+                              "failure":  null
+                          },
+                          {
+                              "table":  "qfu_assignmentexception",
+                              "keyName":  "qfu_key_assignmentexception_sourcekey_type_field_value",
+                              "status":  "found",
+                              "columns":  [
+                                              "qfu_exceptionkey"
+                                          ],
+                              "replacementField":  null,
+                              "entityKeyIndexStatus":  "Active",
+                              "safeForIdempotency":  true,
+                              "purpose":  "Ensures reruns do not create duplicate exceptions.",
+                              "failure":  null
+                          }
+                      ],
+    "policySeed":  {
+                       "status":  "updated",
+                       "policyId":  "c839a82d-6f42-f111-bec7-7c1e52062b6f",
+                       "scope":  "GLOBAL",
+                       "workType":  "Quote",
+                       "highValueThreshold":  3000,
+                       "thresholdOperator":  "GreaterThanOrEqual",
+                       "workItemGenerationMode":  "HighValueOnly",
+                       "requiredAttempts":  3,
+                       "firstFollowUpBasis":  "ImportDate",
+                       "firstFollowUpBusinessDays":  1,
+                       "active":  true,
+                       "alertModes":  "GM Disabled; Manager Disabled; CSSR Disabled; digest false; targeted false"
+                   },
+    "publish":  {
+                    "command":  "pac solution publish --environment https://orga632edd5.crm3.dynamics.com",
+                    "exitCode":  0,
+                    "output":  "Connected as smcfarlane@applied.com\r\nConnected to... Applied Canada Operations\r\n\r\nPublishing All Customizations...\r\n\r\nPublished All Customizations."
+                },
+    "blockers":  [
+
+                 ]
+}

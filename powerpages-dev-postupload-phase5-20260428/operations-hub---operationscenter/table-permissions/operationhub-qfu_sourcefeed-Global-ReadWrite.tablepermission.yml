@@ -1,0 +1,14 @@
+adx_append: false
+adx_appendto: false
+adx_create: true
+adx_delete: false
+adx_entitylogicalname: qfu_sourcefeed
+adx_entityname: operationhub qfu_sourcefeed Global ReadWrite
+adx_entitypermission_webrole:
+- 07a9ddec-0ba7-4061-b875-34f13a444da0
+- de7fe134-14f7-4a56-9045-ea79973d73d8
+- fc96f42a-637a-43a5-af0b-65a7474bfdb5
+adx_entitypermissionid: fd18d5a3-6915-4581-b963-b6f0909c2b90
+adx_read: true
+adx_scope: 756150000
+adx_write: true

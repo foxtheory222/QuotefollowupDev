@@ -48,6 +48,8 @@ The Admin Panel MVP is a model-driven Power Apps area for configuring the Revenu
 This admin surface should not be built into the old Power Pages ops-admin route.
 It should not be a custom React/web app and should not rely on editing Power Automate flow settings for normal branch/staff configuration.
 
+Phase 3 adds the dry-run resolver and work item generator foundation documented in `docs/revenue-follow-up-phase-3-resolver-workitem-generator.md`. Admins use Assignment Exceptions and Staff Alias Mapping to resolve unmapped AM/CSSR numbers, then rerun the resolver so `qfu_workitem` rows update as the workflow layer over `qfu_quote` and `qfu_quoteline`. No alerts, daily digests, My Work custom page, Manager Panel, GM Review, or security roles are active from Phase 3.
+
 ## App Name
 
 Recommended app name:

@@ -1,0 +1,3242 @@
+<!-- DEPRECATED / DO NOT EDIT / NOT AUTHORITATIVE FOR SOUTHERN ALBERTA LIVE RUNTIME -->
+<script>
+(function () {
+  "use strict";
+
+  var ENVIRONMENT_NAME = "Applied Canada Operations Hub";
+  var INTEGRATION_NOTE = "Calgary Phase 1 data is now synced into regionaloperationshub. 4172 Lethbridge, 4173 Medicine Hat, Northern Alberta, Saskatchewan, Ops/Admin, and advanced Calgary tabs remain intentionally locked.";
+  var PHASE1_CALGARY_SLUG = "4171-calgary";
+  var PHASE1_ACTIVE_DETAIL_VIEWS = {
+    "follow-up-queue": true,
+    quotes: true,
+    "overdue-quotes": true,
+    "overdue-backorders": true
+  };
+  var PHASE1_CALGARY_PROMISE = null;
+  var PORTAL_TOKEN_HEADER = "__RequestVerificationToken";
+  var PHASE1_PORTAL_TOKEN = <REDACTED>
+  var PHASE1_PORTAL_TOKEN_PROMISE = null;
+  var PORTAL_TOKEN_TIMEOUT_MS = 4000;
+  var API_REQUEST_TIMEOUT_MS = 15000;
+  var LIVE_LOAD_INDICATOR_DELAY_MS = 350;
+
+  var REGIONS = [
+    {
+      slug: "southern-alberta",
+      name: "Southern Alberta",
+      status: "awaiting",
+      statusLabel: "Awaiting Integration",
+      summary: "Phase 0 locks the regional layout, branch drill-down, and operational hierarchy in the target environment before any backend expansion.",
+      freshness: "No Live Data Yet",
+      branchCount: "Awaiting Integration",
+      overdueQuotes: "Awaiting Integration",
+      overdueBackorders: "Awaiting Integration",
+      budgetPace: "Awaiting Integration",
+      liveBranches: "No Live Data Yet",
+      staleBranches: "No Live Data Yet",
+      pageUrl: "/southern-alberta",
+      footerNote: "Southern Alberta is the first region shell wired in OperationHub, but every KPI remains blocked until the QFU backend is deployed here.",
+      branches: [
+        {
+          slug: "4171-calgary",
+          code: "4171",
+          name: "Calgary",
+          status: "stale",
+          statusLabel: "Stale Snapshot",
+          overdueQuotes: "6 snapshot",
+          overdueBackorders: "76 snapshot",
+          budgetPace: "86.5% snapshot",
+          freshness: "Archived 4171 snapshot",
+          pageUrl: "/southern-alberta/4171-calgary"
+        },
+        {
+          slug: "4172-lethbridge",
+          code: "4172",
+          name: "Lethbridge",
+          status: "notlive",
+          statusLabel: "Not Live",
+          overdueQuotes: "Not Live",
+          overdueBackorders: "Not Live",
+          budgetPace: "Not Live",
+          freshness: "No Live Data Yet",
+          pageUrl: "/southern-alberta/4172-lethbridge"
+        },
+        {
+          slug: "4173-medicine-hat",
+          code: "4173",
+          name: "Medicine Hat",
+          status: "notlive",
+          statusLabel: "Not Live",
+          overdueQuotes: "Not Live",
+          overdueBackorders: "Not Live",
+          budgetPace: "Not Live",
+          freshness: "No Live Data Yet",
+          pageUrl: "/southern-alberta/4173-medicine-hat"
+        }
+      ]
+    },
+    {
+      slug: "northern-alberta",
+      name: "Northern Alberta",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Regional shell is reserved for rollout validation only. Backend and branch integration have not started in this environment.",
+      freshness: "Awaiting Integration",
+      branchCount: "Awaiting Integration",
+      overdueQuotes: "Locked",
+      overdueBackorders: "Locked",
+      budgetPace: "Locked",
+      liveBranches: "Locked",
+      staleBranches: "Locked",
+      pageUrl: "/northern-alberta",
+      footerNote: "Northern Alberta remains intentionally locked in Phase 0.",
+      branches: []
+    },
+    {
+      slug: "saskatchewan",
+      name: "Saskatchewan",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Route exists for hierarchy validation, but no branch rollout, KPI source, or detail surface is enabled yet.",
+      freshness: "Awaiting Integration",
+      branchCount: "Awaiting Integration",
+      overdueQuotes: "Locked",
+      overdueBackorders: "Locked",
+      budgetPace: "Locked",
+      liveBranches: "Locked",
+      staleBranches: "Locked",
+      pageUrl: "/saskatchewan",
+      footerNote: "Saskatchewan remains intentionally locked in Phase 0.",
+      branches: []
+    }
+  ];
+
+  var BRANCHES = [
+    {
+      slug: "4171-calgary",
+      code: "4171",
+      name: "Calgary",
+      regionSlug: "southern-alberta",
+      regionName: "Southern Alberta",
+      status: "stale",
+      statusLabel: "Stale Snapshot",
+      freshness: "Archived live 4171 snapshot captured March 29, 2026",
+      subtitle: "Phase 0 branch reference build. The layout intentionally mirrors the live 4171 operational tool, while the target environment still shows honest stale or locked states until QFU backend wiring lands in OperationHub.",
+      kpis: [
+        { label: "Quotes in Queue", value: "45" },
+        { label: "Overdue Follow-ups", value: "6" },
+        { label: "All Late Backorders $", value: "$76,392.89" },
+        { label: "Budget Pace %", value: "86.5%" },
+        { label: "March Forecast $", value: "$136,933.18" },
+        { label: "March Late $", value: "$70,449.35" }
+      ],
+      workspace: {
+        note: "OperationHub still has no live QFU tables or summary rollups. This page preserves the live 4171 table-first workflow by using archived live snapshot values and explicit locked messaging where the new environment is not wired yet.",
+        tabs: [
+          { label: "Home", href: "#branch-home", active: true },
+          { label: "Follow-up Queue", href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue", state: "Snapshot" },
+          { label: "Quotes", href: "/southern-alberta/4171-calgary/detail?view=quotes", state: "Snapshot" },
+          { label: "Overdue Quotes", href: "/southern-alberta/4171-calgary/detail?view=overdue-quotes", state: "Snapshot" },
+          { label: "Overdue Backorders", href: "/southern-alberta/4171-calgary/detail?view=overdue-backorders", state: "Snapshot" },
+          { label: "Team Progress", href: "/southern-alberta/4171-calgary/detail?view=team-progress", state: "Snapshot" },
+          { label: "Workload", href: "/southern-alberta/4171-calgary/detail?view=workload", state: "Snapshot" },
+          { label: "Analytics", href: "/southern-alberta/4171-calgary/detail?view=analytics", state: "Snapshot" }
+        ],
+        headerMeta: [
+          { label: "Branch", value: "4171 Calgary reference pattern" },
+          { label: "Snapshot", value: "Live 4171 shell captured March 29, 2026" },
+          { label: "Live wiring", value: "Awaiting Integration in OperationHub" }
+        ],
+        calloutStats: [
+          {
+            label: "Quotes in Queue",
+            value: "45",
+            subvalue: "$1,095,378.62",
+            tone: "success",
+            href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            label: "Overdue Follow-ups",
+            value: "6",
+            subvalue: "Priority follow-up rows",
+            tone: "overdue",
+            href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            label: "Due Today",
+            value: "0",
+            subvalue: "No due-today rows in snapshot",
+            tone: "neutral",
+            href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            label: "Unscheduled (Old)",
+            value: "509",
+            subvalue: "Needs live queue wiring",
+            tone: "attention",
+            href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          }
+        ],
+        queueRows: [
+          {
+            quote: "0515337216",
+            customer: "CELTIC PRIDE MANUFACTURING LTD",
+            value: "$278,876.50",
+            daysOverdue: "32",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "STEPHEN MCFARLANE",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515444148",
+            customer: "CELTIC PRIDE MANUFACTURING LTD",
+            value: "$105,334.00",
+            daysOverdue: "5",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "STEPHEN MCFARLANE",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515360513",
+            customer: "CELTIC PRIDE MANUFACTURING LTD",
+            value: "$55,509.90",
+            daysOverdue: "28",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "STEPHEN MCFARLANE",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515423544",
+            customer: "CELTIC PRIDE MANUFACTURING LTD",
+            value: "$55,509.90",
+            daysOverdue: "11",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "STEPHEN MCFARLANE",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515342420",
+            customer: "AGRIUM CANADA PARTNERSHIP",
+            value: "$47,271.89",
+            daysOverdue: "31",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "YAMA SHAH",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515291532",
+            customer: "AGRIUM CANADA PARTNERSHIP",
+            value: "$40,230.08",
+            daysOverdue: "45",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "YAMA SHAH",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515325810",
+            customer: "OIL LIFT TECHNOLOGY INC",
+            value: "$38,437.76",
+            daysOverdue: "36",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "STEPHEN MCFARLANE",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515324131",
+            customer: "NXL TECHNOLOGIES INC",
+            value: "$35,967.65",
+            daysOverdue: "37",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "JASON MARCHANT",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515404137",
+            customer: "SHORELINE FABRICATION LTD",
+            value: "$35,448.00",
+            daysOverdue: "17",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "COREY CARPENTER",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          },
+          {
+            quote: "0515326486",
+            customer: "WEST COAST REDUCTION LTD",
+            value: "$33,353.40",
+            daysOverdue: "36",
+            nextFollowup: "Unscheduled",
+            lastTouched: "-",
+            owner: "STEPHEN MCFARLANE",
+            openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+            queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+          }
+        ],
+        tableNote: "Quote number, customer, value, days overdue, and owner reflect the archived live 4171 tool. Search, filters, scheduling, and record actions stay locked until the QFU quote tables are deployed in Applied Canada Operations Hub.",
+        budget: {
+          month: "March 2026",
+          pace: "86.5%",
+          progressWidth: "86.5%",
+          actual: "$780,470.98",
+          target: "$901,760.00",
+          remaining: "$121,289.02",
+          neededPerWorkday: "$60,644.51 / day",
+          trending: "$858,518.07 (95.2% of goal)",
+          updated: "March 27, 2026 5:06 AM",
+          cad: "$757,131.47",
+          usd: "$17,037.84",
+          fx: "0.73"
+        },
+        cssrOverdue: {
+          note: "Archived live CSSR overdue counts. Direct CSSR filtering is still locked in OperationHub.",
+          people: [
+            { name: "SARAH SMITH", count: "23" },
+            { name: "STEPHEN MCFARLANE", count: "16" },
+            { name: "COREY CARPENTER", count: "15" },
+            { name: "YAMA SHAH", count: "10" },
+            { name: "ANTHONY TALBOT", count: "4" },
+            { name: "JASON MARCHANT", count: "4" },
+            { name: "MARIA DEL PILAR RAMIREZ", count: "2" },
+            { name: "DAVID EARL MATHESON", count: "1" },
+            { name: "BRONSON LODGE", count: "1" }
+          ]
+        },
+        quotes30Days: {
+          note: "Based on quotes created in the last 30 days in the live 4171 snapshot.",
+          metrics: [
+            { label: "Total Quotes", value: "294" },
+            { label: "Quotes Won", value: "49" },
+            { label: "Quotes Lost", value: "0" },
+            { label: "Open Quotes", value: "245" },
+            { label: "Win Rate", value: "16.7%" },
+            { label: "Avg Quote Value", value: "$2,361.27" }
+          ]
+        },
+        backorderCards: [
+          {
+            title: "March Forecast",
+            value: "$136,933.18",
+            note: "Total value of ALL March backorders",
+            subnote: "Complete forecast for March"
+          },
+          {
+            title: "March Late",
+            value: "$70,449.35",
+            note: "Orders overdue THIS month",
+            subnote: "March on-time dates now past due"
+          },
+          {
+            title: "All Backorders",
+            value: "$717,343.62",
+            note: "Total value of all backorders in the system",
+            subnote: "All months"
+          },
+          {
+            title: "All Late Backorders",
+            value: "$76,392.89",
+            note: "Total value of all late backorders",
+            subnote: "All months"
+          }
+        ],
+        backorders: {
+          rowsLabel: "100 / 100 snapshot rows",
+          filterNote: "Backorder filters, min-value thresholds, and CSSR routing stay locked until the live list is deployed in OperationHub.",
+          rows: [
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100775465",
+              materialDescription: "CONT_4/3VX710",
+              quantity: "4",
+              value: "$714",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100944847",
+              materialDescription: "DODG_4/3V4.12SH",
+              quantity: "4",
+              value: "$264",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100944858",
+              materialDescription: "DODG_4/3V14.0SK",
+              quantity: "4",
+              value: "$1,032",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100945998",
+              materialDescription: "DODG_SH1 3/8",
+              quantity: "4",
+              value: "$103.56",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100946039",
+              materialDescription: "DODG_SK1 15/16",
+              quantity: "4",
+              value: "$184.04",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100789652",
+              materialDescription: "SCL_2SC 1 15/16",
+              quantity: "8",
+              value: "$135.76",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-06",
+              order: "1522861724",
+              customer: "CALHEX INDUSTRIAL LTD",
+              materialNumber: "100733520",
+              materialDescription: "DODG_F4B-SCM-115",
+              quantity: "8",
+              value: "$1,456",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "21 days"
+            },
+            {
+              onTimeDate: "2026-03-07",
+              order: "1522664757",
+              customer: "CANADA BREAD COMPANY LIMITED",
+              materialNumber: "122033119",
+              materialDescription: "CTM_SL-660-100-S-A-30-24V-CON-Z",
+              quantity: "1",
+              value: "$1,500",
+              cssr: "YAMA SHAH",
+              daysOverdue: "20 days"
+            },
+            {
+              onTimeDate: "2026-03-11",
+              order: "1522893752",
+              customer: "ENERSUL LIMITED PARTNERSHIP",
+              materialNumber: "100731467",
+              materialDescription: "SKF_SAFD 517",
+              quantity: "3",
+              value: "$1,941.06",
+              cssr: "YAMA SHAH",
+              daysOverdue: "17 days"
+            },
+            {
+              onTimeDate: "2026-03-12",
+              order: "1521916715",
+              customer: "BIDELL EQUIPMENT LP - OEM",
+              materialNumber: "101956416",
+              materialDescription: "STER_105603100BQF",
+              quantity: "2",
+              value: "$2,711.02",
+              cssr: "STEPHEN MCFARLANE",
+              daysOverdue: "16 days"
+            }
+          ]
+        },
+        summary: {
+          source: "Archived live 4171 reference snapshot",
+          lastCalculated: "March 29, 2026 capture"
+        }
+      }
+    },
+    {
+      slug: "4172-lethbridge",
+      code: "4172",
+      name: "Lethbridge",
+      regionSlug: "southern-alberta",
+      regionName: "Southern Alberta",
+      status: "notlive",
+      statusLabel: "Not Live",
+      freshness: "No Live Data Yet",
+      subtitle: "This branch route is locked to validate hierarchy, card rhythm, and detail entry points before any rollout beyond Calgary is enabled.",
+      kpis: [
+        { label: "Quotes Needing Follow-Up", value: "Not Live" },
+        { label: "Overdue Quotes", value: "Not Live" },
+        { label: "Overdue Backorders", value: "Not Live" },
+        { label: "Budget Pace %", value: "Not Live" },
+        { label: "Forecast This Month $", value: "Not Live" },
+        { label: "Late This Month $", value: "Not Live" }
+      ]
+    },
+    {
+      slug: "4173-medicine-hat",
+      code: "4173",
+      name: "Medicine Hat",
+      regionSlug: "southern-alberta",
+      regionName: "Southern Alberta",
+      status: "notlive",
+      statusLabel: "Not Live",
+      freshness: "No Live Data Yet",
+      subtitle: "This branch route stays visible for structural validation only. Live branch onboarding is explicitly out of scope for Phase 0.",
+      kpis: [
+        { label: "Quotes Needing Follow-Up", value: "Not Live" },
+        { label: "Overdue Quotes", value: "Not Live" },
+        { label: "Overdue Backorders", value: "Not Live" },
+        { label: "Budget Pace %", value: "Not Live" },
+        { label: "Forecast This Month $", value: "Not Live" },
+        { label: "Late This Month $", value: "Not Live" }
+      ]
+    }
+  ];
+
+  var DETAIL_VIEWS = {
+    "follow-up-queue": {
+      title: "Follow-up Queue",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "The route exists to preserve the real branch tool hierarchy. The live follow-up queue list, filters, ownership logic, and quote actions are not deployed in OperationHub yet.",
+      bullets: [
+        ["Primary list", "Quotes currently in queue"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No QFU queue tables in OperationHub"],
+        ["Reason", "Phase 0 stops at branch reference shell validation"]
+      ]
+    },
+    quotes: {
+      title: "Quotes",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Detail route is intentionally present so the drill-through hierarchy is testable. No quote list is rendered in this environment yet.",
+      bullets: [
+        ["Primary list", "Quotes needing follow-up"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No QFU quote table is wired into OperationHub"],
+        ["Reason", "Phase 0 stops at shell validation"]
+      ]
+    },
+    "overdue-quotes": {
+      title: "Overdue Quotes",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Overdue quote detail is held behind a locked shell until the summary and list sources exist in this environment.",
+      bullets: [
+        ["Primary list", "Overdue quote ownership and aging"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No live overdue quote feed in OperationHub"],
+        ["Reason", "Phase 0 stops at shell validation"]
+      ]
+    },
+    "overdue-backorders": {
+      title: "Overdue Backorders",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Backorder drill-through is visible as a route target only. No operational rows are exposed here in Phase 0.",
+      bullets: [
+        ["Primary list", "Overdue backorder rows"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No backorder table or permission model deployed here"],
+        ["Reason", "Phase 0 stops at shell validation"]
+      ]
+    },
+    workload: {
+      title: "Workload",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Workload detail is intentionally blocked until the ownership and staffing layer are installed in this environment.",
+      bullets: [
+        ["Primary list", "Per-user workload summary"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No live workload source in OperationHub"],
+        ["Reason", "Phase 0 stops at shell validation"]
+      ]
+    },
+    "team-progress": {
+      title: "Team Progress",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Team progress detail is intentionally blocked until the team summary model and drill-down logic are installed in this environment.",
+      bullets: [
+        ["Primary list", "Team progress summary"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No live team summary source in OperationHub"],
+        ["Reason", "Phase 0 stops at shell validation"]
+      ]
+    },
+    analytics: {
+      title: "Analytics",
+      status: "locked",
+      statusLabel: "Locked",
+      summary: "Analytics remains a locked shell in Phase 0. The tab exists so the branch tool keeps the same navigation family as the live 4171 site without pretending the charts are wired.",
+      bullets: [
+        ["Primary list", "Branch analytics modules"],
+        ["Status", "Awaiting Integration"],
+        ["Source", "No analytics source or chart wiring in OperationHub"],
+        ["Reason", "Phase 0 preserves shape only"]
+      ]
+    }
+  };
+
+  function bySlug(items, slug) {
+    for (var i = 0; i < items.length; i += 1) {
+      if (items[i].slug === slug) {
+        return items[i];
+      }
+    }
+    return null;
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function badge(status, label) {
+    return '<span class="qfu-phase0-badge qfu-phase0-badge--' + escapeHtml(status) + '">' + escapeHtml(label) + "</span>";
+  }
+
+  function breadcrumbs(items) {
+    return (
+      '<nav class="qfu-phase0-breadcrumbs" aria-label="Breadcrumb">' +
+      items
+        .map(function (item, index) {
+          var link = item.url ? '<a href="' + escapeHtml(item.url) + '">' + escapeHtml(item.label) + "</a>" : "<span>" + escapeHtml(item.label) + "</span>";
+          if (index === items.length - 1) {
+            return link;
+          }
+          return link + '<span class="qfu-phase0-sep">/</span>';
+        })
+        .join("") +
+      "</nav>"
+    );
+  }
+
+  function hero(options) {
+    var metaHtml = options.meta
+      .map(function (item) {
+        return (
+          '<div class="qfu-phase0-meta-card">' +
+          "<span>" + escapeHtml(item.label) + "</span>" +
+          "<strong>" + escapeHtml(item.value) + "</strong>" +
+          "</div>"
+        );
+      })
+      .join("");
+
+    var noteHtml = options.note
+      ? '<div class="qfu-phase0-note"><strong>Environment truth</strong><div>' + escapeHtml(options.note) + "</div></div>"
+      : "";
+
+    return (
+      '<section class="qfu-phase0-hero">' +
+      (options.breadcrumbs || "") +
+      '<div class="qfu-phase0-hero__top">' +
+      '<span class="qfu-phase0-kicker">' + escapeHtml(options.kicker) + "</span>" +
+      '<div class="qfu-phase0-status-row">' + options.badges.join("") + "</div>" +
+      "</div>" +
+      '<div class="qfu-phase0-title-row">' +
+      '<div class="qfu-phase0-title-group">' +
+      '<h1 class="qfu-phase0-title">' + escapeHtml(options.title) + "</h1>" +
+      '<p class="qfu-phase0-subtitle">' + escapeHtml(options.subtitle) + "</p>" +
+      "</div>" +
+      "</div>" +
+      '<div class="qfu-phase0-hero__meta">' + metaHtml + "</div>" +
+      noteHtml +
+      "</section>"
+    );
+  }
+
+  function kpiStrip(items) {
+    return (
+      '<section class="qfu-phase0-kpi-strip">' +
+      items
+        .map(function (item) {
+          return (
+            '<article class="qfu-phase0-kpi">' +
+            "<span>" + escapeHtml(item.label) + "</span>" +
+            "<strong>" + escapeHtml(item.value) + "</strong>" +
+            "</article>"
+          );
+        })
+        .join("") +
+      "</section>"
+    );
+  }
+
+  function hubRegionCard(region) {
+    return (
+      '<article class="qfu-phase0-region-card">' +
+      '<div class="qfu-phase0-region-card__header">' +
+      '<div class="qfu-phase0-status-row">' +
+      '<h2 class="qfu-phase0-region-card__title">' + escapeHtml(region.name) + "</h2>" +
+      badge(region.status, region.statusLabel) +
+      "</div>" +
+      '<p class="qfu-phase0-region-card__copy">' + escapeHtml(region.summary) + "</p>" +
+      "</div>" +
+      '<dl class="qfu-phase0-region-card__stats">' +
+      "<div><dt>Branch Count</dt><dd>" + escapeHtml(region.branchCount) + "</dd></div>" +
+      "<div><dt>Overdue Quotes</dt><dd>" + escapeHtml(region.overdueQuotes) + "</dd></div>" +
+      "<div><dt>Overdue Backorders</dt><dd>" + escapeHtml(region.overdueBackorders) + "</dd></div>" +
+      "<div><dt>Budget Pace %</dt><dd>" + escapeHtml(region.budgetPace) + "</dd></div>" +
+      "</dl>" +
+      '<div class="qfu-phase0-actions">' +
+      '<a class="qfu-phase0-action" href="' + escapeHtml(region.pageUrl) + '">Open Region</a>' +
+      "</div>" +
+      "</article>"
+    );
+  }
+
+  function branchCard(branch) {
+    var copy = branch.status === "live"
+      ? "Calgary is live in Phase 1 inside the frozen branch shell. The remaining approved branches stay locked until later rollout."
+      : "Branch routing is locked now so the page hierarchy and card rhythm can be challenged before backend rollout continues.";
+    return (
+      '<article class="qfu-phase0-region-card">' +
+      '<div class="qfu-phase0-region-card__header">' +
+      '<div class="qfu-phase0-status-row">' +
+      '<h2 class="qfu-phase0-region-card__title">' + escapeHtml(branch.code + " " + branch.name) + "</h2>" +
+      badge(branch.status, branch.statusLabel) +
+      "</div>" +
+      '<p class="qfu-phase0-region-card__copy">' + escapeHtml(copy) + "</p>" +
+      "</div>" +
+      '<dl class="qfu-phase0-region-card__stats">' +
+      "<div><dt>Overdue Quotes</dt><dd>" + escapeHtml(branch.overdueQuotes) + "</dd></div>" +
+      "<div><dt>Overdue Backorders</dt><dd>" + escapeHtml(branch.overdueBackorders) + "</dd></div>" +
+      "<div><dt>Budget Pace</dt><dd>" + escapeHtml(branch.budgetPace) + "</dd></div>" +
+      "<div><dt>Last Refresh</dt><dd>" + escapeHtml(branch.freshness) + "</dd></div>" +
+      "</dl>" +
+      '<div class="qfu-phase0-actions">' +
+      '<a class="qfu-phase0-action" href="' + escapeHtml(branch.pageUrl) + '">Open Dashboard</a>' +
+      "</div>" +
+      "</article>"
+    );
+  }
+
+  function panel(title, eyebrow, bodyHtml, actionHtml) {
+    return (
+      '<section class="qfu-phase0-panel">' +
+      '<div class="qfu-phase0-panel__header">' +
+      '<div>' +
+      '<div class="qfu-phase0-panel__eyebrow">' + escapeHtml(eyebrow) + "</div>" +
+      '<h2 class="qfu-phase0-panel__title">' + escapeHtml(title) + "</h2>" +
+      "</div>" +
+      (actionHtml || "") +
+      "</div>" +
+      bodyHtml +
+      "</section>"
+    );
+  }
+
+  function statusList(items) {
+    return (
+      '<div class="qfu-phase0-status-items">' +
+      items
+        .map(function (item) {
+          return (
+            '<div class="qfu-phase0-status-item">' +
+            '<div><span>' + escapeHtml(item.label) + "</span><strong>" + escapeHtml(item.title) + "</strong></div>" +
+            badge(item.status, item.value) +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>"
+    );
+  }
+
+  function workspaceTabs(items) {
+    return (
+      '<nav class="qfu-phase0-tab-rail" aria-label="Branch workspace">' +
+      items
+        .map(function (item) {
+          var classes = "qfu-phase0-tab";
+          if (item.active) {
+            classes += " is-active";
+          }
+          if (item.locked) {
+            classes += " is-locked";
+          }
+          var state = item.state ? "<small>" + escapeHtml(item.state) + "</small>" : "";
+          if (item.href) {
+            return '<a class="' + classes + '" href="' + escapeHtml(item.href) + '"><span>' + escapeHtml(item.label) + "</span>" + state + "</a>";
+          }
+          return '<span class="' + classes + '"><span>' + escapeHtml(item.label) + "</span>" + state + "</span>";
+        })
+        .join("") +
+      "</nav>"
+    );
+  }
+
+  function workspaceStat(item) {
+    return (
+      '<div class="qfu-phase0-home-meta-card">' +
+      "<span>" + escapeHtml(item.label) + "</span>" +
+      "<strong>" + escapeHtml(item.value) + "</strong>" +
+      "</div>"
+    );
+  }
+
+  function tablePill(tone, label) {
+    return '<span class="qfu-phase0-pill qfu-phase0-pill--' + escapeHtml(tone || "neutral") + '">' + escapeHtml(label) + "</span>";
+  }
+
+  function miniAction(label, href, modifier) {
+    if (!href) {
+      return '<span class="qfu-phase0-mini-action qfu-phase0-mini-action--' + escapeHtml(modifier || "secondary") + '">' + escapeHtml(label) + "</span>";
+    }
+    return '<a class="qfu-phase0-mini-action qfu-phase0-mini-action--' + escapeHtml(modifier || "secondary") + '" href="' + escapeHtml(href) + '">' + escapeHtml(label) + "</a>";
+  }
+
+  function calloutCard(item) {
+    var tag = item.href ? "a" : "div";
+    var href = item.href ? ' href="' + escapeHtml(item.href) + '"' : "";
+    var subvalue = item.subvalue ? '<div class="qfu-phase0-ops-callout__sub">' + escapeHtml(item.subvalue) + "</div>" : "";
+    return (
+      "<" + tag + ' class="qfu-phase0-ops-callout qfu-phase0-ops-callout--' + escapeHtml(item.tone || "neutral") + '"' + href + ">" +
+      '<span class="qfu-phase0-ops-callout__label">' + escapeHtml(item.label) + "</span>" +
+      '<strong class="qfu-phase0-ops-callout__value">' + escapeHtml(item.value) + "</strong>" +
+      subvalue +
+      "</" + tag + ">"
+    );
+  }
+
+  function numericDays(value) {
+    var match = String(value || "").match(/-?\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  }
+
+  function numericCurrency(value) {
+    var cleaned = String(value || "").replace(/[^0-9.-]/g, "");
+    var parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  function shortDate(value) {
+    var raw = String(value || "").trim();
+    var isoMatch = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (isoMatch) {
+      return String(parseInt(isoMatch[2], 10)) + "/" + String(parseInt(isoMatch[3], 10)) + "/" + isoMatch[1];
+    }
+
+    var slashMatch = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (slashMatch) {
+      return String(parseInt(slashMatch[1], 10)) + "/" + String(parseInt(slashMatch[2], 10)) + "/" + slashMatch[3];
+    }
+
+    return raw;
+  }
+
+  function dateTimeLabel(value) {
+    if (!value) {
+      return "Not available";
+    }
+
+    var date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return date.toLocaleString();
+  }
+
+  function formatCurrencyNumber(value) {
+    var number = Number(value || 0);
+    return number.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function formatPercentNumber(value) {
+    var number = Number(value || 0);
+    return number.toFixed(1) + "%";
+  }
+
+  function toNumber(value) {
+    var number = Number(value);
+    return isNaN(number) ? 0 : number;
+  }
+
+  function parseDateValue(value) {
+    if (!value) {
+      return null;
+    }
+
+    var date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  function startOfTodayLocal() {
+    var now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+
+  function startOfMonthLocal(date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+  }
+
+  function startOfNextMonthLocal(date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+  }
+
+  function fetchWithTimeout(path, options, timeoutMs) {
+    if (typeof AbortController !== "function") {
+      return fetch(path, options);
+    }
+
+    var controller = new AbortController();
+    var timer = window.setTimeout(function () {
+      controller.abort();
+    }, timeoutMs);
+    var requestOptions = Object.assign({}, options || {}, { signal: controller.signal });
+
+    return fetch(path, requestOptions).then(function (response) {
+      window.clearTimeout(timer);
+      return response;
+    }).catch(function (error) {
+      window.clearTimeout(timer);
+      throw error;
+    });
+  }
+
+  function fetchPortalTokenFromLayout() {
+    return fetchWithTimeout("/_layout/tokenhtml", { credentials: "same-origin" }, API_REQUEST_TIMEOUT_MS)
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Failed to fetch portal verification token.");
+        }
+        return response.text();
+      })
+      .then(function (html) {
+        var container = document.createElement("div");
+        container.innerHTML = html;
+        var hidden = container.querySelector('input[name="' + PORTAL_TOKEN_HEADER + '"]');
+        if (!hidden || !hidden.value) {
+          throw new Error("Portal verification token was not present in the tokenhtml response.");
+        }
+        return hidden.value;
+      });
+  }
+
+  function getPortalToken() {
+    if (PHASE1_PORTAL_TOKEN) {
+      return Promise.resolve(PHASE1_PORTAL_TOKEN);
+    }
+
+    if (PHASE1_PORTAL_TOKEN_PROMISE) {
+      return PHASE1_PORTAL_TOKEN_PROMISE;
+    }
+
+    PHASE1_PORTAL_TOKEN_PROMISE = new Promise(function (resolve, reject) {
+      var input = document.querySelector('input[name="' + PORTAL_TOKEN_HEADER + '"]');
+      if (input && input.value) {
+        resolve(input.value);
+        return;
+      }
+
+      var meta = document.querySelector('meta[name="' + PORTAL_TOKEN_HEADER + '"]');
+      if (meta && meta.content) {
+        resolve(meta.content);
+        return;
+      }
+
+      if (window.shell && typeof window.shell.getTokenDeferred === "function") {
+        try {
+          var deferred = window.shell.getTokenDeferred();
+          if (deferred && typeof deferred.done === "function" && typeof deferred.fail === "function") {
+            var settled = false;
+            var fallbackTimer = window.setTimeout(function () {
+              if (settled) {
+                return;
+              }
+              fetchPortalTokenFromLayout().then(function (token) {
+                settled = true;
+                resolve(token);
+              }, function (error) {
+                settled = true;
+                reject(error);
+              });
+            }, PORTAL_TOKEN_TIMEOUT_MS);
+            deferred.done(function (token) {
+              if (settled) {
+                return;
+              }
+              settled = true;
+              window.clearTimeout(fallbackTimer);
+              resolve(token);
+            }).fail(function () {
+              if (settled) {
+                return;
+              }
+              settled = true;
+              window.clearTimeout(fallbackTimer);
+              fetchPortalTokenFromLayout().then(resolve, reject);
+            });
+            return;
+          }
+          if (deferred && typeof deferred.then === "function") {
+            Promise.race([
+              deferred,
+              new Promise(function (_, rejectTimeout) {
+                window.setTimeout(function () {
+                  rejectTimeout(new Error("shell token timed out"));
+                }, PORTAL_TOKEN_TIMEOUT_MS);
+              })
+            ]).then(resolve, function () {
+              fetchPortalTokenFromLayout().then(resolve, reject);
+            });
+            return;
+          }
+        } catch (error) {
+          fetchPortalTokenFromLayout().then(resolve, function () {
+            reject(error);
+          });
+          return;
+        }
+      }
+
+      fetchPortalTokenFromLayout().then(resolve).catch(reject);
+    }).then(function (token) {
+      PHASE1_PORTAL_TOKEN = <REDACTED>
+      PHASE1_PORTAL_TOKEN_PROMISE = null;
+      return token;
+    }, function (error) {
+      PHASE1_PORTAL_TOKEN = <REDACTED>
+      PHASE1_PORTAL_TOKEN_PROMISE = null;
+      throw error;
+    });
+
+    return PHASE1_PORTAL_TOKEN_PROMISE;
+  }
+
+  function dayDiff(later, earlier) {
+    if (!later || !earlier) {
+      return 0;
+    }
+    return Math.max(0, Math.floor((later.getTime() - earlier.getTime()) / 86400000));
+  }
+
+  function businessDaysBetweenInclusive(startDate, endDate) {
+    if (!startDate || !endDate || endDate < startDate) {
+      return 0;
+    }
+
+    var count = 0;
+    var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    var finalDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+    while (current <= finalDate) {
+      var day = current.getDay();
+      if (day !== 0 && day !== 6) {
+        count += 1;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+
+    return count;
+  }
+
+  function apiGet(path) {
+    return getPortalToken().then(function (token) {
+      return fetchWithTimeout(path, {
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+          "__RequestVerificationToken": token
+        }
+      }, API_REQUEST_TIMEOUT_MS);
+    }).then(function (response) {
+      if (!response.ok) {
+        var error = new Error("Request failed: " + response.status + " " + path);
+        error.status = response.status;
+        throw error;
+      }
+      return response.json();
+    });
+  }
+
+  function apiGetAll(path) {
+    var rows = [];
+
+    function load(nextPath) {
+      return apiGet(nextPath).then(function (payload) {
+        rows = rows.concat(payload && payload.value ? payload.value : []);
+        if (payload && payload["@odata.nextLink"]) {
+          return load(payload["@odata.nextLink"]);
+        }
+        return rows;
+      });
+    }
+
+    return load(path);
+  }
+
+  function preferredOwner(record) {
+    return record.qfu_assignedto || record.qfu_cssrname || "Unassigned";
+  }
+
+  function isClosedQuote(record) {
+    var status = Number(record.qfu_status || 0);
+    return status === 2 || status === 3 || status === 4;
+  }
+
+  function quoteAgeDays(record, today) {
+    var overdueSince = parseDateValue(record.qfu_overduesince);
+    var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+    var sourceDate = parseDateValue(record.qfu_sourcedate || record.createdon);
+
+    if (overdueSince) {
+      return dayDiff(today, overdueSince);
+    }
+    if (nextFollowup && nextFollowup < today) {
+      return dayDiff(today, nextFollowup);
+    }
+    if (sourceDate) {
+      return dayDiff(today, sourceDate);
+    }
+    return 0;
+  }
+
+  function toQuoteRow(record, today) {
+    var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+    var lastTouched = parseDateValue(record.qfu_lasttouchedon);
+    return {
+      quote: record.qfu_quotenumber || "Unknown",
+      customer: record.qfu_customername || "Unknown customer",
+      value: formatCurrencyNumber(record.qfu_amount),
+      daysOverdue: String(quoteAgeDays(record, today)),
+      nextFollowup: nextFollowup ? shortDate(nextFollowup.toISOString().slice(0, 10)) : "Unscheduled",
+      lastTouched: lastTouched ? shortDate(lastTouched.toISOString().slice(0, 10)) : "-",
+      owner: preferredOwner(record),
+      openHref: "/southern-alberta/4171-calgary/detail?view=quotes",
+      queueHref: "/southern-alberta/4171-calgary/detail?view=follow-up-queue"
+    };
+  }
+
+  function buildBudgetModel(budgets, today) {
+    if (!budgets.length) {
+      return null;
+    }
+
+    var latest = budgets
+      .slice()
+      .sort(function (a, b) {
+        var aKey = (Number(a.qfu_year || 0) * 100) + Number(a.qfu_month || 0);
+        var bKey = (Number(b.qfu_year || 0) * 100) + Number(b.qfu_month || 0);
+        if (aKey !== bKey) {
+          return bKey - aKey;
+        }
+        return (parseDateValue(b.qfu_lastupdated) || 0) - (parseDateValue(a.qfu_lastupdated) || 0);
+      })[0];
+
+    var actual = toNumber(latest.qfu_actualsales);
+    var goal = toNumber(latest.qfu_budgetgoal);
+    var percent = toNumber(latest.qfu_percentachieved);
+    if (!percent && goal > 0) {
+      percent = (actual / goal) * 100;
+    }
+
+    var remaining = Math.max(0, goal - actual);
+    var monthStart = startOfMonthLocal(today);
+    var monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    var businessElapsed = businessDaysBetweenInclusive(monthStart, today);
+    var businessRemaining = businessDaysBetweenInclusive(today, monthEnd);
+    var businessTotal = businessDaysBetweenInclusive(monthStart, monthEnd);
+    var projected = actual;
+
+    if (businessElapsed > 0 && businessTotal > 0) {
+      projected = (actual / businessElapsed) * businessTotal;
+    }
+
+    return {
+      month: (latest.qfu_monthname || "Current Month") + " " + (latest.qfu_year || today.getFullYear()),
+      pace: formatPercentNumber(percent),
+      progressWidth: Math.max(0, Math.min(percent, 100)).toFixed(1) + "%",
+      actual: formatCurrencyNumber(actual),
+      target: formatCurrencyNumber(goal),
+      remaining: formatCurrencyNumber(remaining),
+      neededPerWorkday: businessRemaining > 0 ? formatCurrencyNumber(remaining / businessRemaining) + " / day" : "Month ended",
+      trending: goal > 0 ? formatCurrencyNumber(projected) + " (" + formatPercentNumber((projected / goal) * 100) + " of goal)" : formatCurrencyNumber(projected),
+      updated: dateTimeLabel(latest.qfu_lastupdated),
+      cad: formatCurrencyNumber(latest.qfu_cadsales),
+      usd: formatCurrencyNumber(latest.qfu_usdsales),
+      fx: "Not provided"
+    };
+  }
+
+  function buildCalgaryPhase1Model(quotes, backorders, budgets) {
+    var today = startOfTodayLocal();
+    var graceCutoff = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+    var monthStart = startOfMonthLocal(today);
+    var nextMonthStart = startOfNextMonthLocal(today);
+    var last30Cutoff = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+
+    var allQuotes = quotes.slice();
+    var openQuotes = allQuotes.filter(function (record) {
+      return !isClosedQuote(record);
+    });
+    var liveQueueRows = openQuotes
+      .slice()
+      .sort(function (a, b) {
+        var priorityDiff = toNumber(b.qfu_priorityscore) - toNumber(a.qfu_priorityscore);
+        if (priorityDiff !== 0) {
+          return priorityDiff;
+        }
+        return toNumber(b.qfu_amount) - toNumber(a.qfu_amount);
+      })
+      .map(function (record) {
+        return toQuoteRow(record, today);
+      });
+    var allQuoteRows = allQuotes
+      .slice()
+      .sort(function (a, b) {
+        return toNumber(b.qfu_amount) - toNumber(a.qfu_amount);
+      })
+      .map(function (record) {
+        return toQuoteRow(record, today);
+      });
+    var overdueQuoteRows = openQuotes
+      .filter(function (record) {
+        var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+        return nextFollowup && nextFollowup < today;
+      })
+      .sort(function (a, b) {
+        return quoteAgeDays(b, today) - quoteAgeDays(a, today);
+      })
+      .map(function (record) {
+        return toQuoteRow(record, today);
+      });
+    var dueTodayCount = openQuotes.filter(function (record) {
+      var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+      return nextFollowup && nextFollowup >= today && nextFollowup < new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    }).length;
+    var unscheduledOldCount = openQuotes.filter(function (record) {
+      var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+      var sourceDate = parseDateValue(record.qfu_sourcedate || record.createdon);
+      return !nextFollowup && sourceDate && sourceDate < graceCutoff;
+    }).length;
+    var quotesLast30 = allQuotes.filter(function (record) {
+      var sourceDate = parseDateValue(record.qfu_sourcedate || record.createdon);
+      return sourceDate && sourceDate >= last30Cutoff;
+    });
+    var wonCount = quotesLast30.filter(function (record) { return Number(record.qfu_status || 0) === 2; }).length;
+    var lostCount = quotesLast30.filter(function (record) { return Number(record.qfu_status || 0) === 3 || Number(record.qfu_status || 0) === 4; }).length;
+    var overdueBackorders = backorders
+      .filter(function (record) {
+        var onTime = parseDateValue(record.qfu_ontimedate);
+        return (Number(record.qfu_daysoverdue || 0) > 0) || (onTime && onTime < today);
+      })
+      .sort(function (a, b) {
+        return toNumber(b.qfu_daysoverdue) - toNumber(a.qfu_daysoverdue);
+      });
+    var currentMonthBackorders = backorders.filter(function (record) {
+      var onTime = parseDateValue(record.qfu_ontimedate);
+      return onTime && onTime >= monthStart && onTime < nextMonthStart;
+    });
+    var currentMonthLate = currentMonthBackorders.filter(function (record) {
+      var onTime = parseDateValue(record.qfu_ontimedate);
+      return (Number(record.qfu_daysoverdue || 0) > 0) || (onTime && onTime < today);
+    });
+    var overdueBackorderRows = overdueBackorders.map(function (record) {
+      return {
+        onTimeDate: record.qfu_ontimedate ? shortDate(record.qfu_ontimedate.slice(0, 10)) : "-",
+        order: record.qfu_salesdocnumber || "-",
+        customer: record.qfu_customername || "-",
+        materialNumber: record.qfu_material || "-",
+        materialDescription: record.qfu_description || "-",
+        quantity: String(record.qfu_quantity || ""),
+        value: formatCurrencyNumber(record.qfu_totalvalue),
+        cssr: record.qfu_cssrname || "Unassigned",
+        daysOverdue: String(toNumber(record.qfu_daysoverdue || 0)) + " days"
+      };
+    });
+    var cssrCounts = {};
+    overdueBackorders.forEach(function (record) {
+      var key = record.qfu_cssrname || "Unassigned";
+      cssrCounts[key] = (cssrCounts[key] || 0) + 1;
+    });
+    var cssrPeople = Object.keys(cssrCounts)
+      .sort(function (a, b) { return cssrCounts[b] - cssrCounts[a]; })
+      .map(function (name) {
+        return { name: name, count: String(cssrCounts[name]) };
+      });
+    var budget = buildBudgetModel(budgets, today);
+    var latestBudget = budgets[0] || null;
+    var syncLabel = latestBudget && latestBudget.qfu_lastupdated ? dateTimeLabel(latestBudget.qfu_lastupdated) : dateTimeLabel(new Date().toISOString());
+
+    return {
+      branch: {
+        status: "live",
+        statusLabel: "Live Calgary Data",
+        freshness: "Target sync " + syncLabel,
+        subtitle: "Approved Phase 0 branch shell with Calgary Phase 1 data wired from regionaloperationshub. This is read-only operational data inside the frozen layout.",
+        kpis: [
+          { label: "Quotes in Queue", value: String(openQuotes.length) },
+          { label: "Overdue Follow-ups", value: String(overdueQuoteRows.length) },
+          { label: "All Late Backorders $", value: formatCurrencyNumber(overdueBackorders.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)) },
+          { label: "Budget Pace %", value: budget ? budget.pace : "Not Live" },
+          { label: "March Forecast $", value: formatCurrencyNumber(currentMonthBackorders.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)) },
+          { label: "March Late $", value: formatCurrencyNumber(currentMonthLate.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)) }
+        ],
+        workspace: {
+          note: "Calgary reads real data from qfu_quote, qfu_backorder, and qfu_budget rows synced into Applied Canada Operations Hub. Search, write actions, and advanced tabs remain intentionally locked in this phase.",
+          tabs: [
+            { label: "Home", href: "#branch-home", active: true, state: "Live" },
+            { label: "Follow-up Queue", href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue", state: "Live" },
+            { label: "Quotes", href: "/southern-alberta/4171-calgary/detail?view=quotes", state: "Live" },
+            { label: "Overdue Quotes", href: "/southern-alberta/4171-calgary/detail?view=overdue-quotes", state: "Live" },
+            { label: "Overdue Backorders", href: "/southern-alberta/4171-calgary/detail?view=overdue-backorders", state: "Live" },
+            { label: "Team Progress", href: "/southern-alberta/4171-calgary/detail?view=team-progress", locked: true, state: "Locked" },
+            { label: "Workload", href: "/southern-alberta/4171-calgary/detail?view=workload", locked: true, state: "Locked" },
+            { label: "Analytics", href: "/southern-alberta/4171-calgary/detail?view=analytics", locked: true, state: "Locked" }
+          ],
+          headerMeta: [
+            { label: "Branch", value: "4171 Calgary canonical pattern" },
+            { label: "Data state", value: "Live Calgary sync" },
+            { label: "Last sync", value: syncLabel }
+          ],
+          calloutStats: [
+            { label: "Quotes in Queue", value: String(openQuotes.length), subvalue: formatCurrencyNumber(openQuotes.reduce(function (sum, record) { return sum + toNumber(record.qfu_amount); }, 0)), tone: "success", href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue" },
+            { label: "Overdue Follow-ups", value: String(overdueQuoteRows.length), subvalue: "Live overdue rows", tone: "overdue", href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue" },
+            { label: "Due Today", value: String(dueTodayCount), subvalue: "Live due-today rows", tone: "neutral", href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue" },
+            { label: "Unscheduled (Old)", value: String(unscheduledOldCount), subvalue: "Read-only live queue", tone: "attention", href: "/southern-alberta/4171-calgary/detail?view=follow-up-queue" }
+          ],
+          queueRows: liveQueueRows,
+          quoteRows: allQuoteRows,
+          tableNote: "Rows come from live Calgary qfu_quote data in regionaloperationshub. Search, reassign, snooze, and write actions stay locked in Phase 1.",
+          budget: budget,
+          cssrOverdue: {
+            note: "Grouped from live overdue Calgary backorders in regionaloperationshub.",
+            people: cssrPeople
+          },
+          quotes30Days: {
+            note: "Calculated from qfu_quote source-created dates for the last 30 days in the target environment.",
+            metrics: [
+              { label: "Total Quotes", value: String(quotesLast30.length) },
+              { label: "Quotes Won", value: String(wonCount) },
+              { label: "Quotes Lost", value: String(lostCount) },
+              { label: "Open Quotes", value: String(Math.max(0, quotesLast30.length - wonCount - lostCount)) },
+              { label: "Win Rate", value: formatPercentNumber(quotesLast30.length ? (wonCount / quotesLast30.length) * 100 : 0) },
+              { label: "Avg Quote Value", value: formatCurrencyNumber(quotesLast30.length ? quotesLast30.reduce(function (sum, record) { return sum + toNumber(record.qfu_amount); }, 0) / quotesLast30.length : 0) }
+            ]
+          },
+          backorderCards: [
+            { title: "March Forecast", value: formatCurrencyNumber(currentMonthBackorders.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)), note: "Current-month Calgary backorders", subnote: "Live target data" },
+            { title: "March Late", value: formatCurrencyNumber(currentMonthLate.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)), note: "Current-month overdue backorders", subnote: "Live target data" },
+            { title: "All Backorders", value: formatCurrencyNumber(backorders.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)), note: "All Calgary backorders in target", subnote: "Live target data" },
+            { title: "All Late Backorders", value: formatCurrencyNumber(overdueBackorders.reduce(function (sum, record) { return sum + toNumber(record.qfu_totalvalue); }, 0)), note: "All overdue Calgary backorders", subnote: "Live target data" }
+          ],
+          backorders: {
+            rowsLabel: String(overdueBackorderRows.length) + " live overdue rows",
+            filterNote: "Backorder routing is live and read-only for Calgary. Filter controls and write actions remain intentionally locked in this phase.",
+            rows: overdueBackorderRows
+          },
+          summary: {
+            source: "regionaloperationshub qfu_quote / qfu_backorder / qfu_budget",
+            lastCalculated: syncLabel
+          }
+        }
+      },
+      region: {
+        status: "live",
+        statusLabel: "Calgary Live / Region Partial",
+        summary: "Southern Alberta now exposes Calgary as a live read-only pilot on the approved shell while Lethbridge and Medicine Hat remain locked.",
+        freshness: "Calgary synced " + syncLabel,
+        branchCount: "1 live / 3 visible",
+        quotesNeedingFollowUp: String(openQuotes.length),
+        overdueQuotes: String(overdueQuoteRows.length),
+        overdueBackorders: String(overdueBackorderRows.length),
+        budgetPace: budget ? budget.pace : "Not Live",
+        liveBranches: "4171 Calgary",
+        staleBranches: "4172 / 4173 locked",
+        footerNote: "Calgary is live in Phase 1. Lethbridge and Medicine Hat remain locked until later rollout."
+      }
+    };
+  }
+
+  function applyCalgaryPhase1FailureState() {
+    var calgary = bySlug(BRANCHES, PHASE1_CALGARY_SLUG);
+    var southernAlberta = bySlug(REGIONS, "southern-alberta");
+    if (!calgary || !southernAlberta) {
+      return;
+    }
+
+    calgary.status = "locked";
+    calgary.statusLabel = "Locked";
+    calgary.freshness = "Live Calgary data unavailable";
+    calgary.overdueQuotes = "Locked";
+    calgary.overdueBackorders = "Locked";
+    calgary.budgetPace = "Locked";
+    calgary.kpis = [
+      { label: "Quotes in Queue", value: "Locked" },
+      { label: "Overdue Follow-ups", value: "Locked" },
+      { label: "All Late Backorders $", value: "Locked" },
+      { label: "Budget Pace %", value: "Locked" },
+      { label: "March Forecast $", value: "Locked" },
+      { label: "March Late $", value: "Locked" }
+    ];
+    calgary.workspace = createDefaultBranchWorkspace(calgary);
+    calgary.workspace.note = "Calgary is approved for Phase 1 live wiring, but the site could not read qfu_quote, qfu_backorder, or qfu_budget data from Applied Canada Operations Hub. Snapshot fallback is intentionally disabled.";
+    calgary.workspace.headerMeta = [
+      { label: "Branch", value: "4171 Calgary canonical pattern" },
+      { label: "Data state", value: "Live read failed" },
+      { label: "Why locked", value: "Web API or permission issue" }
+    ];
+    calgary.workspace.summary = {
+      source: "OperationHub live read failed",
+      lastCalculated: "Unavailable"
+    };
+
+    southernAlberta.status = "awaiting";
+    southernAlberta.statusLabel = "Calgary Live Unavailable";
+    southernAlberta.summary = "Southern Alberta keeps the approved shell, but Calgary remains locked until the site can read live qfu data from Applied Canada Operations Hub.";
+    southernAlberta.freshness = "Calgary live read failed";
+    southernAlberta.branchCount = "0 live / 3 visible";
+    southernAlberta.quotesNeedingFollowUp = "Locked";
+    southernAlberta.overdueQuotes = "Locked";
+    southernAlberta.overdueBackorders = "Locked";
+    southernAlberta.budgetPace = "Locked";
+    southernAlberta.liveBranches = "None";
+    southernAlberta.staleBranches = "4171 / 4172 / 4173 locked";
+    southernAlberta.footerNote = "Calgary is approved for Phase 1, but live site data could not be read during render. Snapshot fallback stays disabled.";
+    southernAlberta.branches = southernAlberta.branches.map(function (branch) {
+      return branch.slug === PHASE1_CALGARY_SLUG ? calgary : branch;
+    });
+  }
+
+  function applyCalgaryPhase1State(model) {
+    if (!model || !model.branch) {
+      return;
+    }
+
+    var calgary = bySlug(BRANCHES, PHASE1_CALGARY_SLUG);
+    var southernAlberta = bySlug(REGIONS, "southern-alberta");
+    if (!calgary || !southernAlberta) {
+      return;
+    }
+
+    Object.keys(model.branch).forEach(function (key) {
+      calgary[key] = model.branch[key];
+    });
+
+    if (model.region) {
+      Object.keys(model.region).forEach(function (key) {
+        southernAlberta[key] = model.region[key];
+      });
+    }
+
+    southernAlberta.branches = southernAlberta.branches.map(function (branch) {
+      return branch.slug === PHASE1_CALGARY_SLUG ? calgary : branch;
+    });
+  }
+
+  function loadCalgaryPhase1Data() {
+    if (PHASE1_CALGARY_PROMISE) {
+      return PHASE1_CALGARY_PROMISE;
+    }
+
+    PHASE1_CALGARY_PROMISE = Promise.all([
+      apiGetAll("/_api/qfu_quotes?$select=qfu_quoteid,qfu_quotenumber,qfu_customername,qfu_amount,qfu_assignedto,qfu_cssrname,qfu_nextfollowup,qfu_overduesince,qfu_lasttouchedon,qfu_lastfollowupupdatedon,qfu_priorityscore,qfu_status,qfu_sourcedate,qfu_sourceupdatedon,createdon&$top=5000"),
+      apiGetAll("/_api/qfu_backorders?$select=qfu_backorderid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,createdon&$top=5000"),
+      apiGetAll("/_api/qfu_budgets?$select=qfu_budgetid,qfu_budgetname,qfu_actualsales,qfu_budgetgoal,qfu_percentachieved,qfu_lastupdated,qfu_cadsales,qfu_usdsales,qfu_month,qfu_monthname,qfu_year&$top=200")
+    ]).then(function (results) {
+      var model = buildCalgaryPhase1Model(results[0] || [], results[1] || [], results[2] || []);
+      applyCalgaryPhase1State(model);
+      return model;
+    }).catch(function (error) {
+      console.error("Calgary Phase 1 live data load failed", error);
+      applyCalgaryPhase1FailureState();
+      return null;
+    });
+
+    return PHASE1_CALGARY_PROMISE;
+  }
+
+  function overdueTone(value) {
+    var days = numericDays(value);
+    if (days >= 15) {
+      return "overdue";
+    }
+    if (days >= 5) {
+      return "attention";
+    }
+    if (days > 0) {
+      return "info";
+    }
+    return "neutral";
+  }
+
+  function overdueCell(value) {
+    return tablePill(overdueTone(value), escapeHtml(String(value || "0 Days")));
+  }
+
+  function topUnfollowedRows(rows, limit) {
+    return rows
+      .slice()
+      .filter(function (row) {
+        return String(row.nextFollowup || "").toLowerCase().indexOf("unscheduled") !== -1;
+      })
+      .sort(function (a, b) {
+        var valueDiff = numericCurrency(b.value) - numericCurrency(a.value);
+        if (valueDiff !== 0) {
+          return valueDiff;
+        }
+        return numericDays(b.daysOverdue) - numericDays(a.daysOverdue);
+      })
+      .slice(0, limit || 5);
+  }
+
+  function renderQueueRows(rows) {
+    if (!rows.length) {
+      return '<tr><td colspan="9" class="qfu-phase0-table-empty">No live quote rows are installed in Applied Canada Operations Hub yet.</td></tr>';
+    }
+
+    return rows
+      .map(function (row) {
+        return (
+          "<tr>" +
+          '<td class="qfu-phase0-table__primary"><strong>' + escapeHtml(row.quote) + "</strong></td>" +
+          "<td>" + escapeHtml(row.customer) + "</td>" +
+          '<td class="qfu-phase0-table__numeric">' + escapeHtml(row.value) + "</td>" +
+          '<td class="qfu-phase0-table__status">' + overdueCell(row.daysOverdue + " Days") + "</td>" +
+          "<td>" + escapeHtml(row.nextFollowup) + "</td>" +
+          "<td>" + escapeHtml(row.lastTouched) + "</td>" +
+          "<td>" + escapeHtml(row.owner) + "</td>" +
+          "<td>" + miniAction("Locked", null, "primary") + "</td>" +
+          "<td>" + miniAction("Locked", null, "secondary") + "</td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+  }
+
+  function renderCssrPeople(people, emptyNote) {
+    if (!people.length) {
+      return '<div class="qfu-phase0-empty-state"><strong>Awaiting Integration</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyNote) + "</p></div>";
+    }
+
+    return (
+      '<div class="qfu-phase0-cssr-list">' +
+      people
+        .map(function (person) {
+          var count = parseInt(person.count, 10) || 0;
+          var toneClass = count >= 5 ? " is-overdue" : " is-ok";
+          return (
+            '<div class="qfu-phase0-cssr-item">' +
+            '<span title="' + escapeHtml(person.name) + '">' + escapeHtml(person.name) + "</span>" +
+            '<strong class="qfu-phase0-cssr-item__count' + toneClass + '">' + escapeHtml(person.count) + "</strong>" +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>"
+    );
+  }
+
+  function renderMetricGrid(metrics, emptyNote) {
+    if (!metrics.length) {
+      return '<div class="qfu-phase0-empty-state"><strong>Awaiting Integration</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyNote) + "</p></div>";
+    }
+
+    return (
+      '<div class="qfu-phase0-metric-grid">' +
+      metrics
+        .map(function (item) {
+          return (
+            '<div class="qfu-phase0-metric-cell">' +
+            "<strong>" + escapeHtml(item.value) + "</strong>" +
+            "<span>" + escapeHtml(item.label) + "</span>" +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>"
+    );
+  }
+
+  function renderBackorderCards(cards, emptyNote) {
+    if (!cards.length) {
+      return '<div class="qfu-phase0-empty-state"><strong>Awaiting Integration</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyNote) + "</p></div>";
+    }
+
+    return (
+      '<div class="qfu-phase0-backorder-card-grid">' +
+      cards
+        .map(function (item) {
+          return (
+            '<article class="qfu-phase0-backorder-card">' +
+            '<h3 class="qfu-phase0-backorder-card__title">' + escapeHtml(item.title) + "</h3>" +
+            '<strong class="qfu-phase0-backorder-card__value">' + escapeHtml(item.value) + "</strong>" +
+            '<p class="qfu-phase0-backorder-card__note">' + escapeHtml(item.note) + "</p>" +
+            '<div class="qfu-phase0-backorder-card__subnote">' + escapeHtml(item.subnote) + "</div>" +
+            "</article>"
+          );
+        })
+        .join("") +
+      "</div>"
+    );
+  }
+
+  function renderBackorderRows(rows) {
+    if (!rows.length) {
+      return '<tr><td colspan="8" class="qfu-phase0-table-empty">No live backorder rows are installed in Applied Canada Operations Hub yet.</td></tr>';
+    }
+
+    return rows
+      .map(function (row) {
+        var days = numericDays(row.daysOverdue);
+        var toneClass = days >= 15 ? " is-critical" : days >= 5 ? " is-warning" : " is-normal";
+        return (
+          '<tr class="qfu-phase0-backorder-row' + toneClass + '">' +
+          "<td>" + escapeHtml(shortDate(row.onTimeDate)) + "</td>" +
+          "<td>" + escapeHtml(row.order) + "</td>" +
+          "<td>" + escapeHtml(row.customer) + "</td>" +
+          '<td class="qfu-phase0-table__material"><strong>' + escapeHtml(row.materialNumber) + "</strong><span>" + escapeHtml(row.materialDescription) + "</span></td>" +
+          "<td>" + escapeHtml(row.quantity) + "</td>" +
+          '<td class="qfu-phase0-table__numeric">' + escapeHtml(row.value) + "</td>" +
+          "<td>" + escapeHtml(row.cssr) + "</td>" +
+          '<td class="qfu-phase0-table__status">' + overdueCell(row.daysOverdue) + "</td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+  }
+
+  function formatCurrencyValue(value) {
+    var amount = Number(value || 0);
+    return "$" + amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function countMatching(items, predicate) {
+    return (items || []).filter(function (item, index) {
+      return predicate(item, index);
+    }).length;
+  }
+
+  function uniqueValueCount(items, getter) {
+    var seen = {};
+    (items || []).forEach(function (item, index) {
+      var key = getter(item, index);
+      if (key) {
+        seen[String(key)] = true;
+      }
+    });
+    return Object.keys(seen).length;
+  }
+
+  function sumCurrencyFromRows(rows, key) {
+    return (rows || []).reduce(function (total, row) {
+      return total + numericCurrency(row[key]);
+    }, 0);
+  }
+
+  function maxValueFromRows(rows, getter) {
+    return (rows || []).reduce(function (maxValue, row, index) {
+      return Math.max(maxValue, getter(row, index));
+    }, 0);
+  }
+
+  function renderQueueToolbar(noteLabel, noteText) {
+    var tone = String(noteText || "").toLowerCase().indexOf("live") !== -1 ? "success" : "attention";
+    return (
+      '<div class="qfu-phase0-toolbar">' +
+      '<div class="qfu-phase0-toolbar-field"><label>Search</label><div class="qfu-phase0-toolbar-input is-disabled">Search quote or customer</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>Assigned User</label><div class="qfu-phase0-toolbar-input is-disabled">All Representatives</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>Age Bucket</label><div class="qfu-phase0-toolbar-input is-disabled">All Aging</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>Status</label><div class="qfu-phase0-toolbar-input is-disabled">All Statuses</div></div>' +
+      '<div class="qfu-phase0-toolbar-action"><label>Filters</label><div class="qfu-phase0-toolbar-button is-disabled">Read-only</div></div>' +
+      "</div>" +
+      '<div class="qfu-phase0-toolbar-note qfu-phase0-toolbar-note--standalone">' + tablePill(tone, noteLabel) + "<span>" + escapeHtml(noteText) + "</span></div>"
+    );
+  }
+
+  function renderBackorderToolbar(noteLabel, noteText) {
+    var tone = String(noteText || "").toLowerCase().indexOf("live") !== -1 ? "success" : "attention";
+    return (
+      '<div class="qfu-phase0-backorder-filters">' +
+      '<div class="qfu-phase0-toolbar-field"><label>Min Value</label><div class="qfu-phase0-toolbar-input is-disabled">All Values</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>CSSR</label><div class="qfu-phase0-toolbar-input is-disabled">All CSSRs</div></div>' +
+      '<div class="qfu-phase0-toolbar-note">' + tablePill(tone, noteLabel) + "<span>" + escapeHtml(noteText) + "</span></div>" +
+      "</div>"
+    );
+  }
+
+  function buildOwnerSummaryRows(queueRows, cssrPeople) {
+    var cssrMap = {};
+    var ownerMap = {};
+
+    (cssrPeople || []).forEach(function (person) {
+      var name = String(person.name || "").toUpperCase();
+      cssrMap[name] = parseInt(person.count, 10) || 0;
+    });
+
+    (queueRows || []).forEach(function (row) {
+      var rawOwner = String(row.owner || "Unassigned").trim();
+      var ownerKey = rawOwner.toUpperCase();
+      var entry = ownerMap[ownerKey];
+
+      if (!entry) {
+        entry = {
+          owner: rawOwner,
+          quoteCount: 0,
+          sampleValue: 0,
+          oldestQuoteAge: 0,
+          unscheduledCount: 0,
+          cssrOverdue: cssrMap[ownerKey] || 0
+        };
+        ownerMap[ownerKey] = entry;
+      }
+
+      entry.quoteCount += 1;
+      entry.sampleValue += numericCurrency(row.value);
+      entry.oldestQuoteAge = Math.max(entry.oldestQuoteAge, numericDays(row.daysOverdue));
+      if (String(row.nextFollowup || "").toLowerCase().indexOf("unscheduled") !== -1) {
+        entry.unscheduledCount += 1;
+      }
+    });
+
+    Object.keys(cssrMap).forEach(function (ownerKey) {
+      if (!ownerMap[ownerKey]) {
+        ownerMap[ownerKey] = {
+          owner: ownerKey,
+          quoteCount: 0,
+          sampleValue: 0,
+          oldestQuoteAge: 0,
+          unscheduledCount: 0,
+          cssrOverdue: cssrMap[ownerKey]
+        };
+      }
+    });
+
+    return Object.keys(ownerMap)
+      .map(function (ownerKey) {
+        return ownerMap[ownerKey];
+      })
+      .sort(function (a, b) {
+        if (b.sampleValue !== a.sampleValue) {
+          return b.sampleValue - a.sampleValue;
+        }
+        if (b.quoteCount !== a.quoteCount) {
+          return b.quoteCount - a.quoteCount;
+        }
+        return b.cssrOverdue - a.cssrOverdue;
+      });
+  }
+
+  function renderOwnerSummaryTable(rows, emptyNote) {
+    if (!rows.length) {
+      return '<div class="qfu-phase0-empty-state"><strong>Snapshot Missing</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(emptyNote) + "</p></div>";
+    }
+
+    return (
+      '<div class="qfu-phase0-summary-table-shell">' +
+      '<table class="qfu-phase0-summary-table">' +
+      "<thead><tr><th>Owner</th><th>Sample Quotes</th><th class=\"qfu-phase0-table__numeric\">Sample Value</th><th>Oldest Quote</th><th>Unscheduled</th><th>CSSR Overdue</th></tr></thead>" +
+      "<tbody>" +
+      rows
+        .map(function (row) {
+          return (
+            "<tr>" +
+            "<td><strong>" + escapeHtml(row.owner) + "</strong></td>" +
+            "<td>" + escapeHtml(String(row.quoteCount)) + "</td>" +
+            '<td class="qfu-phase0-table__numeric">' + escapeHtml(formatCurrencyValue(row.sampleValue)) + "</td>" +
+            '<td class="qfu-phase0-table__status">' + overdueCell(row.oldestQuoteAge + " Days") + "</td>" +
+            "<td>" + escapeHtml(String(row.unscheduledCount)) + "</td>" +
+            "<td>" + escapeHtml(String(row.cssrOverdue)) + "</td>" +
+            "</tr>"
+          );
+        })
+        .join("") +
+      "</tbody>" +
+      "</table>" +
+      "</div>"
+    );
+  }
+
+  function renderBudgetBreakdown(budget, note) {
+    if (!budget) {
+      return '<div class="qfu-phase0-empty-state"><strong>Snapshot Missing</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(note) + "</p></div>";
+    }
+
+    return (
+      '<div class="qfu-phase0-budget-summary"><strong>' + escapeHtml(budget.actual) + "</strong><span>/ " + escapeHtml(budget.target) + "</span></div>" +
+      '<div class="qfu-phase0-progress"><div class="qfu-phase0-progress__meta"><span>Progress</span><strong>' + escapeHtml(budget.pace) + "</strong></div><div class=\"qfu-phase0-progress__track\"><span style=\"width:" + escapeHtml(budget.progressWidth || "0%") + ';\"></span></div></div>' +
+      '<dl class="qfu-phase0-support-list qfu-phase0-budget-rows">' +
+      '<div class="qfu-phase0-budget-row qfu-phase0-budget-row--remaining"><dt>Remaining:</dt><dd>' + escapeHtml(budget.remaining) + "</dd></div>" +
+      '<div class="qfu-phase0-budget-row qfu-phase0-budget-row--needed"><dt>Needed per workday:</dt><dd>' + escapeHtml(budget.neededPerWorkday) + "</dd></div>" +
+      '<div class="qfu-phase0-budget-row qfu-phase0-budget-row--trending"><dt>Trending to:</dt><dd>' + escapeHtml(budget.trending) + "</dd></div>" +
+      "</dl>" +
+      '<div class="qfu-phase0-budget-updated">Updated: ' + escapeHtml(budget.updated) + "</div>" +
+      '<div class="qfu-phase0-budget-chip-row">' +
+      '<span class="qfu-phase0-budget-chip qfu-phase0-budget-chip--cad">CAD: ' + escapeHtml(budget.cad) + "</span>" +
+      '<span class="qfu-phase0-budget-chip qfu-phase0-budget-chip--usd">USD: ' + escapeHtml(budget.usd) + "</span>" +
+      '<span class="qfu-phase0-budget-chip qfu-phase0-budget-chip--fx">FX (CAD&#8594;USD): ' + escapeHtml(budget.fx) + "</span>" +
+      "</div>" +
+      '<div class="qfu-phase0-summary-foot">' + escapeHtml(note) + "</div>"
+    );
+  }
+
+  function renderDetailTabs(viewKey, base) {
+    return Object.keys(DETAIL_VIEWS)
+      .map(function (key) {
+        var item = DETAIL_VIEWS[key];
+        var active = key === viewKey ? " is-active" : "";
+        return '<a class="qfu-phase0-link-pill' + active + '" href="' + escapeHtml(base + key) + '">' + escapeHtml(item.title) + "</a>";
+      })
+      .join("");
+  }
+
+  function renderScopeBullets(items) {
+    return (
+      '<ul class="qfu-phase0-section-list">' +
+      items
+        .map(function (item) {
+          return "<li><span>" + escapeHtml(item[0]) + "</span><strong>" + escapeHtml(item[1]) + "</strong></li>";
+        })
+        .join("") +
+      "</ul>"
+    );
+  }
+
+  function isCalgaryPhase1Branch(branch) {
+    return branch && branch.slug === PHASE1_CALGARY_SLUG && branch.status === "live";
+  }
+
+  function isCalgaryPhase1RouteLive(branch, viewKey) {
+    return isCalgaryPhase1Branch(branch) && !!PHASE1_ACTIVE_DETAIL_VIEWS[viewKey];
+  }
+
+  function shouldLoadCalgaryPhase1(pageType, regionSlug, branchSlug) {
+    if (pageType === "hub") {
+      return true;
+    }
+    if (pageType === "region") {
+      return regionSlug === "southern-alberta";
+    }
+    if (pageType === "branch" || pageType === "detail") {
+      return branchSlug === PHASE1_CALGARY_SLUG;
+    }
+    return false;
+  }
+
+  function renderLiveLoadPlaceholder() {
+    return (
+      '<div class="qfu-phase0-shell">' +
+      '<div class="qfu-phase0-loading qfu-phase0-loading--live" role="status" aria-live="polite" aria-label="Loading live dashboard" aria-busy="true">Loading live dashboard</div>' +
+      "</div>"
+    );
+  }
+
+  async function loadCalgaryPhase1WithDeferredPlaceholder(root) {
+    var loadingTimer = window.setTimeout(function () {
+      root.innerHTML = renderLiveLoadPlaceholder();
+    }, LIVE_LOAD_INDICATOR_DELAY_MS);
+
+    try {
+      return await loadCalgaryPhase1Data();
+    } finally {
+      window.clearTimeout(loadingTimer);
+    }
+  }
+
+  function createDefaultBranchWorkspace(branch) {
+    var base = "/" + branch.regionSlug + "/" + branch.slug + "/detail?view=";
+    var statusText = branch.statusLabel === "Not Live" ? "Not Live" : "Awaiting Integration";
+    return {
+      note: "This branch route uses the same operational shell as 4171 Calgary, but no quote, budget, backorder, or workload data is live here yet.",
+      tabs: [
+        { label: "Home", href: "#branch-home", active: true },
+        { label: "Follow-up Queue", href: base + "follow-up-queue", locked: true, state: "Locked" },
+        { label: "Quotes", href: base + "quotes", locked: true, state: "Locked" },
+        { label: "Overdue Quotes", href: base + "overdue-quotes", locked: true, state: "Locked" },
+        { label: "Overdue Backorders", href: base + "overdue-backorders", locked: true, state: "Locked" },
+        { label: "Team Progress", href: base + "team-progress", locked: true, state: "Locked" },
+        { label: "Workload", href: base + "workload", locked: true, state: "Locked" },
+        { label: "Analytics", href: base + "analytics", locked: true, state: "Locked" }
+      ],
+      headerMeta: [
+        { label: "Branch", value: branch.code + " " + branch.name + " placeholder" },
+        { label: "Snapshot", value: "No archived shell loaded" },
+        { label: "Live wiring", value: statusText }
+      ],
+      calloutStats: [
+        { label: "Quotes in Queue", value: statusText, subvalue: "No live queue rows", tone: "neutral", href: base + "follow-up-queue" },
+        { label: "Overdue Follow-ups", value: statusText, subvalue: "No live overdue rows", tone: "neutral", href: base + "follow-up-queue" },
+        { label: "Due Today", value: statusText, subvalue: "No live due-today rows", tone: "neutral", href: base + "follow-up-queue" },
+        { label: "Unscheduled (Old)", value: statusText, subvalue: "Awaiting rollout", tone: "neutral", href: base + "follow-up-queue" }
+      ],
+      queueRows: [],
+      tableNote: "This branch is visible so the branch tool hierarchy can be validated before rollout. No live queue data exists here yet.",
+      budget: {
+        month: "Awaiting Integration",
+        pace: statusText,
+        progressWidth: "0%",
+        actual: statusText,
+        target: statusText,
+        remaining: statusText,
+        neededPerWorkday: statusText,
+        trending: statusText,
+        updated: statusText,
+        cad: statusText,
+        usd: statusText,
+        fx: statusText
+      },
+      cssrOverdue: {
+        note: "CSSR overdue backorders are not available for this branch in OperationHub yet.",
+        people: []
+      },
+      quotes30Days: {
+        note: "Last-30-day quote metrics are not available for this branch in OperationHub yet.",
+        metrics: []
+      },
+      backorderCards: [],
+      backorders: {
+        rowsLabel: statusText,
+        filterNote: "Backorder list, filters, and branch routing stay locked until rollout begins for this branch.",
+        rows: []
+      },
+      summary: {
+        source: "OperationHub Phase 0 shell only",
+        lastCalculated: statusText
+      }
+    };
+  }
+
+  function getBranchWorkspace(branch) {
+    return branch.workspace || createDefaultBranchWorkspace(branch);
+  }
+
+  function renderBranchWorkspace(branch) {
+    var workspace = getBranchWorkspace(branch);
+    var isLiveBranch = branch.status === "live";
+    var tabs = workspaceTabs(workspace.tabs);
+    var headerMeta = (workspace.headerMeta || []).map(workspaceStat).join("");
+    var calloutCards = (workspace.calloutStats || []).map(calloutCard).join("");
+    var homeQueueRows = topUnfollowedRows(workspace.queueRows || [], 5);
+    var queueRows = renderQueueRows(homeQueueRows);
+    var cssrPeople = renderCssrPeople((workspace.cssrOverdue && workspace.cssrOverdue.people) || [], (workspace.cssrOverdue && workspace.cssrOverdue.note) || INTEGRATION_NOTE);
+    var quoteMetrics = renderMetricGrid((workspace.quotes30Days && workspace.quotes30Days.metrics) || [], (workspace.quotes30Days && workspace.quotes30Days.note) || INTEGRATION_NOTE);
+    var backorderCards = renderBackorderCards(workspace.backorderCards || [], "Forecast, late-this-month, and all-backorders summaries are still locked in this environment.");
+    var backorderRows = renderBackorderRows((workspace.backorders && workspace.backorders.rows) || []);
+
+    return (
+      '<div class="qfu-phase0-shell qfu-phase0-shell--tool">' +
+      '<section class="qfu-phase0-app-shell">' +
+      '<header class="qfu-phase0-appbar">' +
+      '<div class="qfu-phase0-brand-block">' +
+      '<span class="qfu-phase0-brand-block__eyebrow">Applied Industrial Technologies</span>' +
+      '<strong class="qfu-phase0-brand-block__title">Quote Operations</strong>' +
+      "</div>" +
+      '<div class="qfu-phase0-appbar__context">' +
+      "<span>Branch context</span>" +
+      "<strong>" + escapeHtml(branch.regionName) + " / " + escapeHtml(branch.code + " " + branch.name) + "</strong>" +
+      "</div>" +
+      '<div class="qfu-phase0-context-badges">' + badge(branch.status, branch.statusLabel) + (isLiveBranch ? badge("live", "Read-only live") : badge("awaiting", "Awaiting Integration")) + "</div>" +
+      "</header>" +
+      tabs +
+      '<div class="qfu-phase0-context-note"><strong>' + escapeHtml(isLiveBranch ? "Phase 1 truth" : "Phase 0 honesty") + "</strong><span>" + escapeHtml(workspace.note || INTEGRATION_NOTE) + "</span></div>" +
+      "</section>" +
+      '<section class="qfu-phase0-home-surface" id="branch-home">' +
+      '<div class="qfu-phase0-home-bar">' +
+      '<div class="qfu-phase0-home-intro">' +
+      '<div class="qfu-phase0-panel__eyebrow">Branch workbench</div>' +
+      '<h1 class="qfu-phase0-home-title">Quote Follow-up Workbench</h1>' +
+      '<div class="qfu-phase0-branch-subtitle">' + escapeHtml(branch.regionName.toUpperCase ? branch.regionName.toUpperCase() : branch.regionName) + " / " + escapeHtml(branch.code + " " + branch.name) + '</div>' +
+      '<p class="qfu-phase0-home-copy">Compact branch workspace with queue work up front, support modules below, and no dashboard filler competing with the table.</p>' +
+      "</div>" +
+      '<div class="qfu-phase0-home-meta">' + headerMeta + "</div>" +
+      "</div>" +
+      '<section class="qfu-phase0-ops-callouts">' + calloutCards + "</section>" +
+      '<div class="qfu-phase0-toolbar">' +
+      '<div class="qfu-phase0-toolbar-field"><label>Search</label><div class="qfu-phase0-toolbar-input is-disabled">Search quote or customer</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>Assigned User</label><div class="qfu-phase0-toolbar-input is-disabled">All Representatives</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>Age Bucket</label><div class="qfu-phase0-toolbar-input is-disabled">All Aging</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>Status</label><div class="qfu-phase0-toolbar-input is-disabled">All Statuses</div></div>' +
+      '<div class="qfu-phase0-toolbar-action"><label>Filters</label><div class="qfu-phase0-toolbar-button is-disabled">' + escapeHtml(isLiveBranch ? "Read-only" : "Awaiting Integration") + "</div></div>" +
+      "</div>" +
+      '<div class="qfu-phase0-toolbar-note qfu-phase0-toolbar-note--standalone">' + tablePill(isLiveBranch ? "success" : branch.status === "stale" ? "attention" : "neutral", branch.statusLabel) + "<span>" + escapeHtml(workspace.tableNote || INTEGRATION_NOTE) + "</span></div>" +
+      '<div class="qfu-phase0-ops-table-shell">' +
+      '<div class="qfu-phase0-section-header">' +
+      '<div><div class="qfu-phase0-panel__eyebrow">Home</div><h2 class="qfu-phase0-panel__title">Top 5 Highest Unfollowed-up Quotes</h2><p class="qfu-phase0-ops-copy">The home queue is narrowed to the five biggest unscheduled quotes so the highest-risk unattended work is obvious first.</p></div>' +
+      '<div class="qfu-phase0-summary-pills">' + tablePill("neutral", "Table-first") + tablePill("overdue", "Problem work surfaced") + tablePill("neutral", escapeHtml(homeQueueRows.length ? String(homeQueueRows.length) + " prioritized rows" : "No live rows")) + "</div>" +
+      "</div>" +
+      '<div class="qfu-phase0-table-wrap">' +
+      '<table class="qfu-phase0-ops-table">' +
+      "<thead><tr><th>Quote #</th><th>Customer</th><th class=\"qfu-phase0-table__numeric\">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead>" +
+      "<tbody>" + queueRows + "</tbody>" +
+      "</table>" +
+      "</div>" +
+      "</div>" +
+      "</section>" +
+      '<section class="qfu-phase0-support-layout qfu-phase0-support-layout--screenshot">' +
+      '<div class="qfu-phase0-support-sidebar">' +
+      '<article class="qfu-phase0-support-module qfu-phase0-support-module--budget">' +
+      '<div class="qfu-phase0-support-module__header qfu-phase0-support-module__header--budget-card"><h2 class="qfu-phase0-panel__title">Monthly Budget Progress</h2><span class="qfu-phase0-budget-month-pill">' + escapeHtml((workspace.budget && workspace.budget.month) || "Budget") + "</span></div>" +
+      '<div class="qfu-phase0-support-module__body qfu-phase0-support-module__body--budget">' +
+      '<div class="qfu-phase0-budget-summary"><strong>' + escapeHtml((workspace.budget && workspace.budget.actual) || "Awaiting Integration") + "</strong><span>/ " + escapeHtml((workspace.budget && workspace.budget.target) || "Awaiting Integration") + "</span></div>" +
+      '<div class="qfu-phase0-progress"><div class="qfu-phase0-progress__meta"><span>Progress</span><strong>' + escapeHtml((workspace.budget && workspace.budget.pace) || "Awaiting Integration") + "</strong></div><div class=\"qfu-phase0-progress__track\"><span style=\"width:" + escapeHtml((workspace.budget && workspace.budget.progressWidth) || "0%") + ';\"></span></div></div>' +
+      '<dl class="qfu-phase0-support-list qfu-phase0-budget-rows">' +
+      '<div class="qfu-phase0-budget-row qfu-phase0-budget-row--remaining"><dt>Remaining:</dt><dd>' + escapeHtml((workspace.budget && workspace.budget.remaining) || "Awaiting Integration") + "</dd></div>" +
+      '<div class="qfu-phase0-budget-row qfu-phase0-budget-row--needed"><dt>Needed per workday:</dt><dd>' + escapeHtml((workspace.budget && workspace.budget.neededPerWorkday) || "Awaiting Integration") + "</dd></div>" +
+      '<div class="qfu-phase0-budget-row qfu-phase0-budget-row--trending"><dt>Trending to:</dt><dd>' + escapeHtml((workspace.budget && workspace.budget.trending) || "Awaiting Integration") + "</dd></div>" +
+      "</dl>" +
+      '<div class="qfu-phase0-budget-updated">Updated: ' + escapeHtml((workspace.budget && workspace.budget.updated) || "Awaiting Integration") + "</div>" +
+      '<div class="qfu-phase0-budget-chip-row">' +
+      '<span class="qfu-phase0-budget-chip qfu-phase0-budget-chip--cad">CAD: ' + escapeHtml((workspace.budget && workspace.budget.cad) || "Awaiting Integration") + "</span>" +
+      '<span class="qfu-phase0-budget-chip qfu-phase0-budget-chip--usd">USD: ' + escapeHtml((workspace.budget && workspace.budget.usd) || "Awaiting Integration") + "</span>" +
+      '<span class="qfu-phase0-budget-chip qfu-phase0-budget-chip--fx">FX (CAD&#8594;USD): ' + escapeHtml((workspace.budget && workspace.budget.fx) || "Awaiting Integration") + "</span>" +
+      "</div>" +
+      "</div>" +
+      "</article>" +
+      '<article class="qfu-phase0-support-module qfu-phase0-support-module--critical">' +
+      '<div class="qfu-phase0-support-module__header qfu-phase0-support-module__header--simple"><h2 class="qfu-phase0-panel__title">CSSR Overdue Back Orders</h2></div>' +
+      '<div class="qfu-phase0-support-module__body qfu-phase0-support-module__body--critical">' +
+      cssrPeople +
+      "</div>" +
+      "</article>" +
+      "</div>" +
+      '<div class="qfu-phase0-support-main">' +
+      '<article class="qfu-phase0-support-module qfu-phase0-support-module--activity">' +
+      '<div class="qfu-phase0-support-module__header qfu-phase0-support-module__header--split"><div class="qfu-phase0-support-module__header-copy"><h2 class="qfu-phase0-panel__title">Quotes - Last 30 Days</h2></div><div class="qfu-phase0-support-module__header-side"><span class="qfu-phase0-support-module__headline-note qfu-phase0-support-module__headline-note--large">Created in last 30 days</span></div></div>' +
+      '<div class="qfu-phase0-support-module__body qfu-phase0-support-module__body--activity">' +
+      quoteMetrics +
+      '<div class="qfu-phase0-summary-foot">' + escapeHtml((workspace.quotes30Days && workspace.quotes30Days.note) || INTEGRATION_NOTE) + "</div>" +
+      "</div>" +
+      "</article>" +
+      '<article class="qfu-phase0-support-module qfu-phase0-support-module--problem qfu-phase0-support-module--frame-none">' +
+      '<div class="qfu-phase0-support-module__body qfu-phase0-support-module__body--problem">' +
+      backorderCards +
+      "</div>" +
+      "</article>" +
+      "</div>" +
+      "</section>" +
+      '<section class="qfu-phase0-support-module qfu-phase0-support-module--wide qfu-phase0-support-module--critical qfu-phase0-backorder-surface">' +
+      '<div class="qfu-phase0-support-module__header"><div><div class="qfu-phase0-panel__eyebrow">Overdue Backorders</div><h2 class="qfu-phase0-panel__title">On-time date, order, customer, material, qty, value, CSSR, days overdue</h2></div><div class="qfu-phase0-summary-pills">' + tablePill("neutral", (workspace.backorders && workspace.backorders.rowsLabel) || "Awaiting Integration") + tablePill(isLiveBranch ? "success" : "overdue", isLiveBranch ? "Live read-only list" : branch.status === "stale" ? "Snapshot list" : "Locked") + "</div></div>" +
+      '<div class="qfu-phase0-support-module__body qfu-phase0-support-module__body--backorders">' +
+      '<div class="qfu-phase0-backorder-filters">' +
+      '<div class="qfu-phase0-toolbar-field"><label>Min Value</label><div class="qfu-phase0-toolbar-input is-disabled">All Values</div></div>' +
+      '<div class="qfu-phase0-toolbar-field"><label>CSSR</label><div class="qfu-phase0-toolbar-input is-disabled">All CSSRs</div></div>' +
+      '<div class="qfu-phase0-toolbar-note">' + tablePill("neutral", "Filters locked") + "<span>" + escapeHtml((workspace.backorders && workspace.backorders.filterNote) || INTEGRATION_NOTE) + "</span></div>" +
+      "</div>" +
+      '<div class="qfu-phase0-summary-table-shell">' +
+      '<table class="qfu-phase0-summary-table qfu-phase0-summary-table--backorders"><thead><tr><th>On-time Date</th><th>Order #</th><th>Customer</th><th>Material</th><th>Qty</th><th class="qfu-phase0-table__numeric">Value</th><th>CSSR</th><th>Days Overdue</th></tr></thead><tbody>' + backorderRows + "</tbody></table>" +
+      "</div>" +
+      '<div class="qfu-phase0-summary-foot">Source: ' + escapeHtml((workspace.summary && workspace.summary.source) || INTEGRATION_NOTE) + "</div>" +
+      "</div>" +
+      "</section>" +
+      "</div>"
+    );
+  }
+
+  function renderHub() {
+    var liveBranchCount = REGIONS.reduce(function (count, region) {
+      return count + (region.branches || []).filter(function (branch) {
+        return branch.status === "live";
+      }).length;
+    }, 0);
+    var hubPhaseLabel = liveBranchCount > 0 ? "Phase 1 Calgary" : "Phase 0";
+    var hubDataLabel = liveBranchCount > 0 ? "Calgary live / rollout locked" : "No Live Data Yet";
+    return (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Hub",
+        title: "Quote Follow Up Regional Operations Hub",
+        subtitle: "Production-style shell locked for the regional rollout. This page is intentionally clean: regions first, drill-down second, no vanity widgets.",
+        badges: [
+          badge(liveBranchCount > 0 ? "live" : "awaiting", hubPhaseLabel),
+          badge(liveBranchCount > 0 ? "live" : "awaiting", hubDataLabel)
+        ],
+        meta: [
+          { label: "Environment", value: ENVIRONMENT_NAME },
+          { label: "Data Activity", value: hubDataLabel },
+          { label: "Navigation Lock", value: "Hub -> Region -> Branch -> Detail" }
+        ],
+        note: INTEGRATION_NOTE
+      }) +
+      '<section class="qfu-phase0-grid qfu-phase0-grid--regions">' +
+      REGIONS.map(hubRegionCard).join("") +
+      "</section>" +
+      "</div>"
+    );
+  }
+
+  function renderRegion(region) {
+    var regionQuotesValue = region.quotesNeedingFollowUp || (region.slug === "southern-alberta" ? "Awaiting Integration" : region.statusLabel);
+    var southernExceptions = region.status === "live"
+      ? '<div class="qfu-phase0-empty-state"><strong>Calgary only</strong><p class="qfu-phase0-empty-copy">Regional exception rollups are not live yet. Calgary branch metrics are live; Lethbridge and Medicine Hat remain locked.</p></div>'
+      : '<div class="qfu-phase0-empty-state"><strong>No Live Data Yet</strong><p class="qfu-phase0-empty-copy">Top regional exceptions stay hidden until OperationHub has a live exception feed and branch summaries.</p></div>';
+    var southernFreshness = region.status === "live"
+      ? '<div class="qfu-phase0-empty-state"><strong>Region partial</strong><p class="qfu-phase0-empty-copy">Calgary is syncing live into the target environment. Branch freshness warnings for 4172 and 4173 remain intentionally locked.</p></div>'
+      : '<div class="qfu-phase0-empty-state"><strong>No Live Data Yet</strong><p class="qfu-phase0-empty-copy">Freshness warnings will appear here once branch imports and summary refreshes exist in this environment.</p></div>';
+    var body = (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Region",
+        title: region.name,
+        subtitle: region.summary,
+        badges: [
+          badge(region.status, region.statusLabel),
+          badge("awaiting", region.freshness)
+        ],
+        breadcrumbs: breadcrumbs([
+          { label: "Hub", url: "/" },
+          { label: region.name }
+        ]),
+        meta: [
+          { label: "Environment", value: ENVIRONMENT_NAME },
+          { label: "Last Refresh", value: region.freshness },
+          { label: "Scope", value: region.slug === "southern-alberta" ? "Regional shell with three branch routes" : "Locked regional shell" }
+        ],
+        note: INTEGRATION_NOTE
+      }) +
+      kpiStrip([
+        { label: "Quotes Needing Follow-Up", value: regionQuotesValue },
+        { label: "Overdue Quotes", value: region.overdueQuotes },
+        { label: "Overdue Backorders", value: region.overdueBackorders },
+        { label: "Budget Pace %", value: region.budgetPace },
+        { label: "Live Branches", value: region.liveBranches },
+        { label: "Stale Branches", value: region.staleBranches }
+      ])
+    );
+
+    if (region.slug === "southern-alberta") {
+      body +=
+        '<section class="qfu-phase0-grid qfu-phase0-grid--branches">' +
+        region.branches.map(branchCard).join("") +
+        "</section>" +
+        '<section class="qfu-phase0-grid qfu-phase0-grid--cards-2">' +
+        panel(
+          "Regional Exceptions",
+          "Locked vs Live",
+          southernExceptions
+        ) +
+        panel(
+          "Stale Branches",
+          "Freshness",
+          southernFreshness
+        ) +
+        "</section>" +
+        '<div class="qfu-phase0-note"><strong>' + escapeHtml(region.status === "live" ? "Phase 1 state" : "Phase 0 lock") + '</strong><div>' + escapeHtml(region.footerNote) + "</div></div>";
+    } else {
+      body +=
+        '<section class="qfu-phase0-grid qfu-phase0-grid--cards-2">' +
+        panel(
+          "Branch Rollout",
+          "Locked",
+          '<div class="qfu-phase0-empty-state"><strong>Awaiting Integration</strong><p class="qfu-phase0-empty-copy">Branch routing, data sources, and security mappings are intentionally blocked for this region in Phase 0.</p></div>'
+        ) +
+        panel(
+          "Regional Monitoring",
+          "Locked",
+          '<div class="qfu-phase0-empty-state"><strong>Locked</strong><p class="qfu-phase0-empty-copy">No KPI strip, branch cards, or exception feed will show live data here until the region enters rollout scope.</p></div>'
+        ) +
+        "</section>" +
+        '<div class="qfu-phase0-note"><strong>Phase 0 lock</strong><div>' + escapeHtml(region.footerNote) + "</div></div>";
+    }
+
+    return body + "</div>";
+  }
+
+  function detailButtons(branch) {
+    var base = "/" + branch.regionSlug + "/" + branch.slug + "/detail?view=";
+    return (
+      '<div class="qfu-phase0-actions">' +
+      '<a class="qfu-phase0-action" href="' + escapeHtml(base + "quotes") + '">Quotes</a>' +
+      '<a class="qfu-phase0-secondary-action" href="' + escapeHtml(base + "overdue-quotes") + '">Overdue Quotes</a>' +
+      '<a class="qfu-phase0-secondary-action" href="' + escapeHtml(base + "overdue-backorders") + '">Overdue Backorders</a>' +
+      '<a class="qfu-phase0-secondary-action" href="' + escapeHtml(base + "workload") + '">Workload / Team Progress</a>' +
+      "</div>"
+    );
+  }
+
+  function renderBranch(branch) {
+    return renderBranchWorkspace(branch);
+  }
+
+  function renderLockedDetail(branch, viewKey) {
+    var detail = DETAIL_VIEWS[viewKey] || DETAIL_VIEWS.quotes;
+    var base = "/" + branch.regionSlug + "/" + branch.slug + "/detail?view=";
+    var tabs = renderDetailTabs(viewKey, base);
+
+    return (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Detail",
+        title: detail.title,
+        subtitle: detail.summary,
+        badges: [
+          badge(detail.status, detail.statusLabel),
+          badge("awaiting", branch.code + " " + branch.name)
+        ],
+        breadcrumbs: breadcrumbs([
+          { label: "Hub", url: "/" },
+          { label: branch.regionName, url: "/" + branch.regionSlug },
+          { label: branch.code + " " + branch.name, url: "/" + branch.regionSlug + "/" + branch.slug },
+          { label: detail.title }
+        ]),
+        meta: [
+          { label: "Branch", value: branch.code + " " + branch.name },
+          { label: "Region", value: branch.regionName },
+          { label: "State", value: detail.statusLabel }
+        ],
+        note: INTEGRATION_NOTE
+      }) +
+      panel(
+        "Locked Detail Shell",
+        "Drill-down",
+        '<div class="qfu-phase0-detail-tabs">' + tabs + "</div>" +
+        '<div class="qfu-phase0-empty-state"><strong>' + escapeHtml(detail.statusLabel) + '</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(detail.summary) + "</p></div>"
+      ) +
+      '<section class="qfu-phase0-grid qfu-phase0-grid--cards-2">' +
+      panel(
+        "Scope",
+        "What belongs here",
+        renderScopeBullets(detail.bullets)
+      ) +
+      panel(
+        "Next Route",
+        "Navigation",
+        '<div class="qfu-phase0-empty-state"><strong>Phase 0 stop</strong><p class="qfu-phase0-empty-copy">This route exists to make structural mistakes obvious now. Building the live list, filters, ownership logic, and data source wiring belongs to a later phase.</p></div>',
+        '<a class="qfu-phase0-secondary-action" href="/' + escapeHtml(branch.regionSlug + "/" + branch.slug) + '">Back to Branch</a>'
+      ) +
+      "</section>" +
+      "</div>"
+    );
+  }
+
+  function renderCalgaryLiveDetail(branch, viewKey) {
+    var detail = DETAIL_VIEWS[viewKey] || DETAIL_VIEWS.quotes;
+    var workspace = getBranchWorkspace(branch);
+    var base = "/" + branch.regionSlug + "/" + branch.slug + "/detail?view=";
+    var tabs = renderDetailTabs(viewKey, base);
+    var queueRows = (workspace.queueRows || []).slice();
+    var quoteRows = (workspace.quoteRows || workspace.queueRows || []).slice();
+    var overdueRows = queueRows
+      .slice()
+      .filter(function (row) {
+        return numericDays(row.daysOverdue) > 0;
+      })
+      .sort(function (a, b) {
+        return numericDays(b.daysOverdue) - numericDays(a.daysOverdue);
+      });
+    var backorderRows = ((workspace.backorders && workspace.backorders.rows) || []).slice();
+    var quoteMetrics = (workspace.quotes30Days && workspace.quotes30Days.metrics) || [];
+    var cssrPeople = (workspace.cssrOverdue && workspace.cssrOverdue.people) || [];
+    var ownerRows = buildOwnerSummaryRows(queueRows, cssrPeople);
+    var summaryNote = (workspace.summary && workspace.summary.source) || "regionaloperationshub qfu tables";
+    var sections = [];
+    var scopeBullets = [];
+    var stripItems = [];
+    var introCopy = "Live Calgary read-only data inside the approved branch shell. Search, filters, row actions, and advanced tabs remain intentionally locked in Phase 1.";
+
+    if (viewKey === "follow-up-queue") {
+      stripItems = [
+        { label: "Live Queue", value: String(queueRows.length) + " quotes" },
+        { label: "Rows Included Here", value: String(queueRows.length) },
+        { label: "Queue Value", value: formatCurrencyValue(sumCurrencyFromRows(queueRows, "value")) },
+        { label: "30+ Day Quotes", value: String(countMatching(queueRows, function (row) { return numericDays(row.daysOverdue) >= 30; })) },
+        { label: "Unscheduled Rows", value: String(countMatching(queueRows, function (row) { return String(row.nextFollowup || "").toLowerCase().indexOf("unscheduled") !== -1; })) },
+        { label: "Oldest Quote", value: String(maxValueFromRows(queueRows, function (row) { return numericDays(row.daysOverdue); })) + " days" }
+      ];
+      scopeBullets = [
+        ["Primary list", "Live Calgary follow-up queue rows"],
+        ["Rows shown", String(queueRows.length) + " live rows currently synced into OperationHub"],
+        ["Source", "regionaloperationshub qfu_quote"],
+        ["Still locked", "Search, filters, scheduling, and row actions"]
+      ];
+      sections.push(
+        panel(
+          "Live Queue Rows",
+          "Follow-up Queue",
+          '<p class="qfu-phase0-ops-copy">The Calgary queue route now reads live qfu_quote rows from Applied Canada Operations Hub without changing the approved branch layout.</p>' +
+          renderQueueToolbar(String(queueRows.length) + " live rows", "Read-only live queue. Search, filters, scheduling, and per-row actions remain intentionally locked in Phase 1.") +
+          '<div class="qfu-phase0-ops-table-shell"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-ops-table"><thead><tr><th>Quote #</th><th>Customer</th><th class="qfu-phase0-table__numeric">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead><tbody>' + renderQueueRows(queueRows) + "</tbody></table></div></div>"
+        )
+      );
+      sections.push(
+        panel(
+          "Owner Coverage",
+          "Live split",
+          renderOwnerSummaryTable(ownerRows, "No owner summary is available because no live Calgary queue rows were returned.")
+        )
+      );
+    } else if (viewKey === "quotes") {
+      stripItems = quoteMetrics.slice();
+      scopeBullets = [
+        ["Primary list", "Live Calgary quote rows"],
+        ["Supporting metrics", "Quotes - Last 30 Days from regionaloperationshub"],
+        ["Rows shown", String(quoteRows.length) + " live quote rows"],
+        ["Source", "regionaloperationshub qfu_quote"],
+        ["Still locked", "Search, filters, and record actions"]
+      ];
+      sections.push(
+        panel(
+          "Live Quote Rows",
+          "Quotes",
+          '<p class="qfu-phase0-ops-copy">This route keeps the approved quote-detail position in the branch hierarchy while exposing synced Calgary quote rows in read-only mode.</p>' +
+          renderQueueToolbar(String(quoteRows.length) + " live rows", "Quotes - Last 30 Days metrics and the table below both come from regionaloperationshub qfu_quote data. Search, filter, and row actions remain locked.") +
+          '<div class="qfu-phase0-ops-table-shell"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-ops-table"><thead><tr><th>Quote #</th><th>Customer</th><th class="qfu-phase0-table__numeric">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead><tbody>' + renderQueueRows(quoteRows) + "</tbody></table></div></div>"
+        )
+      );
+      sections.push(
+        panel(
+          "Quotes - Last 30 Days",
+          "Live metrics",
+          renderMetricGrid(quoteMetrics, "Last-30-day quote metrics are not available in the current Calgary sync.") +
+          '<div class="qfu-phase0-summary-foot">' + escapeHtml((workspace.quotes30Days && workspace.quotes30Days.note) || summaryNote) + "</div>"
+        )
+      );
+    } else if (viewKey === "overdue-quotes") {
+      stripItems = [
+        { label: "Rows Included Here", value: String(overdueRows.length) },
+        { label: "Live Value", value: formatCurrencyValue(sumCurrencyFromRows(overdueRows, "value")) },
+        { label: "15+ Day Quotes", value: String(countMatching(overdueRows, function (row) { return numericDays(row.daysOverdue) >= 15; })) },
+        { label: "30+ Day Quotes", value: String(countMatching(overdueRows, function (row) { return numericDays(row.daysOverdue) >= 30; })) },
+        { label: "Owners Hit", value: String(uniqueValueCount(overdueRows, function (row) { return String(row.owner || "").toUpperCase(); })) },
+        { label: "Oldest Quote", value: String(maxValueFromRows(overdueRows, function (row) { return numericDays(row.daysOverdue); })) + " days" }
+      ];
+      scopeBullets = [
+        ["Primary list", "Live overdue Calgary quote rows"],
+        ["Current filter", "All live Calgary quote rows with aging greater than zero"],
+        ["Rows shown", String(overdueRows.length) + " overdue live rows"],
+        ["Source", "regionaloperationshub qfu_quote"],
+        ["Still locked", "Search, filters, and ownership actions"]
+      ];
+      sections.push(
+        panel(
+          "Overdue Quote Rows",
+          "Overdue Quotes",
+          '<p class="qfu-phase0-ops-copy">The overdue quote route exposes live Calgary aging pressure directly in the approved branch workflow while staying read-only.</p>' +
+          renderQueueToolbar(String(overdueRows.length) + " live rows", "Every row shown here comes from live Calgary qfu_quote data. Aging is visible, but search, filters, and row actions remain locked.") +
+          '<div class="qfu-phase0-ops-table-shell"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-ops-table"><thead><tr><th>Quote #</th><th>Customer</th><th class="qfu-phase0-table__numeric">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead><tbody>' + renderQueueRows(overdueRows) + "</tbody></table></div></div>"
+        )
+      );
+      sections.push(
+        panel(
+          "Owner Exposure",
+          "Live split",
+          renderOwnerSummaryTable(ownerRows, "No overdue-owner summary is available because no live Calgary quote rows were returned.")
+        )
+      );
+    } else if (viewKey === "overdue-backorders") {
+      stripItems = [
+        { label: "March Forecast", value: workspace.backorderCards[0].value },
+        { label: "March Late", value: workspace.backorderCards[1].value },
+        { label: "All Backorders", value: workspace.backorderCards[2].value },
+        { label: "All Late Backorders", value: workspace.backorderCards[3].value },
+        { label: "Rows Included Here", value: String(backorderRows.length) },
+        { label: "CSSRs Tracked", value: String(uniqueValueCount(backorderRows, function (row) { return String(row.cssr || "").toUpperCase(); })) }
+      ];
+      scopeBullets = [
+        ["Primary list", "Live Calgary overdue backorder rows"],
+        ["Summary cards", "Forecast, late-this-month, and all-backorders values from live target data"],
+        ["Rows shown", String(backorderRows.length) + " overdue backorder rows"],
+        ["Source", "regionaloperationshub qfu_backorder"],
+        ["Still locked", "Filters, thresholds, and backorder actions"]
+      ];
+      sections.push(
+        panel(
+          "Backorder Live Cards",
+          "Backorder exposure",
+          renderBackorderCards(workspace.backorderCards || [], "Backorder summary cards are not available in the current Calgary sync.")
+        )
+      );
+      sections.push(
+        panel(
+          "Overdue Backorder Rows",
+          "Backorder detail",
+          renderBackorderToolbar("Read-only live", "The rows below come from live Calgary qfu_backorder data. CSSR routing, min-value filters, and actions remain intentionally locked in Phase 1.") +
+          '<div class="qfu-phase0-summary-table-shell"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--backorders"><thead><tr><th>On-time Date</th><th>Order #</th><th>Customer</th><th>Material</th><th>Qty</th><th class="qfu-phase0-table__numeric">Value</th><th>CSSR</th><th>Days Overdue</th></tr></thead><tbody>' + renderBackorderRows(backorderRows) + "</tbody></table></div>"
+        )
+      );
+    } else {
+      return renderLockedDetail(branch, viewKey);
+    }
+
+    return (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Detail",
+        title: detail.title,
+        subtitle: introCopy,
+        badges: [
+          badge("live", "Live Calgary Data"),
+          badge("locked", "Read-only / no write actions")
+        ],
+        breadcrumbs: breadcrumbs([
+          { label: "Hub", url: "/" },
+          { label: branch.regionName, url: "/" + branch.regionSlug },
+          { label: branch.code + " " + branch.name, url: "/" + branch.regionSlug + "/" + branch.slug },
+          { label: detail.title }
+        ]),
+        meta: [
+          { label: "Branch", value: branch.code + " " + branch.name },
+          { label: "Region", value: branch.regionName },
+          { label: "Data State", value: "Live Calgary sync" }
+        ],
+        note: "Source: " + summaryNote + ". Search, filters, permissions, and write actions remain intentionally locked while Calgary detail routes stay read-only in Phase 1."
+      }) +
+      panel(
+        "Calgary Live Detail",
+        "Phase 1 live",
+        '<div class="qfu-phase0-detail-tabs">' + tabs + "</div>" +
+        '<div class="qfu-phase0-empty-state"><strong>Live read-only</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(introCopy) + "</p></div>",
+        '<a class="qfu-phase0-secondary-action" href="/' + escapeHtml(branch.regionSlug + "/" + branch.slug) + '">Back to Branch</a>'
+      ) +
+      kpiStrip(stripItems) +
+      sections.join("") +
+      '<section class="qfu-phase0-grid qfu-phase0-grid--cards-2">' +
+      panel(
+        "Scope",
+        "What this route now shows",
+        renderScopeBullets(scopeBullets)
+      ) +
+      panel(
+        "Next Route",
+        "Navigation",
+        '<div class="qfu-phase0-empty-state"><strong>Frozen hierarchy</strong><p class="qfu-phase0-empty-copy">Phase 1 wiring stays inside the approved Calgary branch pattern. No dashboard redesign, no fake live state, and no changes to the branch information hierarchy are being introduced here.</p></div>' +
+        detailButtons(branch)
+      ) +
+      "</section>" +
+      "</div>"
+    );
+  }
+
+  function renderDetail(branch, viewKey) {
+    if (isCalgaryPhase1RouteLive(branch, viewKey)) {
+      return renderCalgaryLiveDetail(branch, viewKey);
+    }
+
+    return renderLockedDetail(branch, viewKey);
+  }
+
+  function renderOps() {
+    return (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Ops / Admin",
+        title: "Ops / Admin",
+        subtitle: "Locked entry point only. Operational tooling is intentionally excluded from Phase 0.",
+        badges: [
+          badge("locked", "Locked")
+        ],
+        breadcrumbs: breadcrumbs([
+          { label: "Hub", url: "/" },
+          { label: "Ops / Admin" }
+        ]),
+        meta: [
+          { label: "Surface", value: "Locked only" },
+          { label: "Environment", value: ENVIRONMENT_NAME },
+          { label: "State", value: "Not in scope for Phase 0" }
+        ],
+        note: INTEGRATION_NOTE
+      }) +
+      panel(
+        "Admin Surface",
+        "Locked",
+        '<div class="qfu-phase0-ops-card">' +
+        '<p class="qfu-phase0-ops-copy">This page exists only to prove the final navigation shape. No replay tools, config editors, or user-admin actions are built here in Phase 0.</p>' +
+        '<div class="qfu-phase0-ops-meta">' +
+        '<div><span>Branch configuration</span><strong>Locked</strong></div>' +
+        '<div><span>Region configuration</span><strong>Locked</strong></div>' +
+        '<div><span>Import diagnostics</span><strong>Locked</strong></div>' +
+        '<div><span>Replay / rerun</span><strong>Locked</strong></div>' +
+        "</div>" +
+        '<div class="qfu-phase0-empty-state"><strong>Out of scope</strong><p class="qfu-phase0-empty-copy">Phase 0 ends after the monitoring shell is locked. Admin tooling starts only after approval to move beyond this phase.</p></div>' +
+        "</div>"
+      ) +
+      "</div>"
+    );
+  }
+
+  async function renderPage(root) {
+    var pageType = root.getAttribute("data-page");
+    var regionSlug = root.getAttribute("data-region");
+    var branchSlug = root.getAttribute("data-branch");
+    var branch = branchSlug ? bySlug(BRANCHES, branchSlug) : null;
+    var region = regionSlug ? bySlug(REGIONS, regionSlug) : null;
+    var viewKey = new URLSearchParams(window.location.search).get("view") || "follow-up-queue";
+
+    if (shouldLoadCalgaryPhase1(pageType, regionSlug, branchSlug)) {
+      await loadCalgaryPhase1WithDeferredPlaceholder(root);
+      branch = branchSlug ? bySlug(BRANCHES, branchSlug) : null;
+      region = regionSlug ? bySlug(REGIONS, regionSlug) : null;
+    }
+
+    if (pageType === "hub") {
+      root.innerHTML = renderHub();
+      return;
+    }
+
+    if (pageType === "region" && region) {
+      root.innerHTML = renderRegion(region);
+      return;
+    }
+
+    if (pageType === "branch" && branch) {
+      root.innerHTML = renderBranch(branch);
+      return;
+    }
+
+    if (pageType === "detail" && branch) {
+      root.innerHTML = renderDetail(branch, viewKey);
+      return;
+    }
+
+    if (pageType === "ops") {
+      root.innerHTML = renderOps();
+      return;
+    }
+
+    root.innerHTML =
+      '<div class="qfu-phase0-shell">' +
+      '<div class="qfu-phase0-empty-state"><strong>Page configuration missing</strong><p class="qfu-phase0-empty-copy">Phase 0 shell metadata was not found for this route.</p></div>' +
+      "</div>";
+  }
+
+  INTEGRATION_NOTE = "Southern Alberta now runs as a three-branch live pilot in regionaloperationshub. 4171 Calgary, 4172 Lethbridge, and 4173 Medicine Hat are live in the frozen shell; Team Progress, Workload, Analytics, Northern Alberta, Saskatchewan, and Ops/Admin remain intentionally locked.";
+  var PHASE1_ACTIVE_BRANCH_SLUGS = ["4171-calgary", "4172-lethbridge", "4173-medicine-hat"];
+
+  function isPilotBranchSlug(branchSlug) {
+    return PHASE1_ACTIVE_BRANCH_SLUGS.indexOf(branchSlug || "") !== -1;
+  }
+
+  function branchViewHref(branch, viewKey) {
+    return "/" + branch.regionSlug + "/" + branch.slug + "/detail?view=" + viewKey;
+  }
+
+  function summarySyncLabel(summary, budget) {
+    if (summary && summary.qfu_lastcalculatedon) {
+      return dateTimeLabel(summary.qfu_lastcalculatedon);
+    }
+    if (budget && budget.qfu_lastupdated) {
+      return dateTimeLabel(budget.qfu_lastupdated);
+    }
+    return dateTimeLabel(new Date().toISOString());
+  }
+
+  function latestSummaryForBranch(summaries, branchSlug) {
+    var branchSummaries = (summaries || []).filter(function (record) {
+      return record.qfu_branchslug === branchSlug;
+    });
+    if (!branchSummaries.length) {
+      return null;
+    }
+    return branchSummaries.slice().sort(function (a, b) {
+      var aDate = parseDateValue(a.qfu_lastcalculatedon || a.qfu_summarydate || a.createdon);
+      var bDate = parseDateValue(b.qfu_lastcalculatedon || b.qfu_summarydate || b.createdon);
+      return (bDate || 0) - (aDate || 0);
+    })[0];
+  }
+
+  function toQuoteRow(record, today, branch) {
+    var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+    var lastTouched = parseDateValue(record.qfu_lasttouchedon);
+    var branchRef = branch || bySlug(BRANCHES, record.qfu_branchslug) || bySlug(BRANCHES, PHASE1_CALGARY_SLUG);
+    return {
+      quote: record.qfu_quotenumber || "Unknown",
+      customer: record.qfu_customername || "Unknown customer",
+      value: formatCurrencyNumber(record.qfu_amount),
+      daysOverdue: String(quoteAgeDays(record, today)),
+      nextFollowup: nextFollowup ? shortDate(nextFollowup.toISOString().slice(0, 10)) : "Unscheduled",
+      lastTouched: lastTouched ? shortDate(lastTouched.toISOString().slice(0, 10)) : "-",
+      owner: preferredOwner(record),
+      openHref: branchViewHref(branchRef, "quotes"),
+      queueHref: branchViewHref(branchRef, "follow-up-queue")
+    };
+  }
+
+  function buildPilotBudgetModel(budgets, summary, today) {
+    var budget = buildBudgetModel(budgets, today);
+    if (budget) {
+      return budget;
+    }
+    if (!summary) {
+      return null;
+    }
+    return {
+      month: today.toLocaleString("en-US", { month: "long" }) + " " + today.getFullYear(),
+      pace: formatPercentNumber(summary.qfu_budgetpace),
+      progressWidth: Math.max(0, Math.min(toNumber(summary.qfu_budgetpace), 100)).toFixed(1) + "%",
+      actual: formatCurrencyNumber(summary.qfu_budgetactual),
+      target: formatCurrencyNumber(summary.qfu_budgettarget),
+      remaining: formatCurrencyNumber(Math.max(0, toNumber(summary.qfu_budgettarget) - toNumber(summary.qfu_budgetactual))),
+      neededPerWorkday: "Locked",
+      trending: "Locked",
+      updated: dateTimeLabel(summary.qfu_lastcalculatedon || summary.qfu_summarydate),
+      cad: formatCurrencyNumber(summary.qfu_cadsales),
+      usd: formatCurrencyNumber(summary.qfu_usdsales),
+      fx: "Not provided"
+    };
+  }
+
+  function createLiveBranchWorkspace(branch, quotes, backorders, budgets, summary) {
+    var today = startOfTodayLocal();
+    var graceCutoff = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+    var last30Cutoff = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+    var syncLabel = summarySyncLabel(summary, budgets[0] || null);
+    var openQuotes = quotes.filter(function (record) {
+      return !isClosedQuote(record);
+    });
+    var openQuoteValue = openQuotes.reduce(function (sum, record) {
+      return sum + toNumber(record.qfu_amount);
+    }, 0);
+    var queueRows = openQuotes.slice().sort(function (a, b) {
+      var priorityDiff = toNumber(b.qfu_priorityscore) - toNumber(a.qfu_priorityscore);
+      if (priorityDiff !== 0) {
+        return priorityDiff;
+      }
+      return toNumber(b.qfu_amount) - toNumber(a.qfu_amount);
+    }).map(function (record) {
+      return toQuoteRow(record, today, branch);
+    });
+    var quoteRows = quotes.slice().sort(function (a, b) {
+      return toNumber(b.qfu_amount) - toNumber(a.qfu_amount);
+    }).map(function (record) {
+      return toQuoteRow(record, today, branch);
+    });
+    var overdueQuoteRows = openQuotes.filter(function (record) {
+      var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+      var sourceDate = parseDateValue(record.qfu_sourcedate || record.createdon);
+      if (nextFollowup) {
+        return nextFollowup < today;
+      }
+      return sourceDate && sourceDate < graceCutoff;
+    }).sort(function (a, b) {
+      return quoteAgeDays(b, today) - quoteAgeDays(a, today);
+    }).map(function (record) {
+      return toQuoteRow(record, today, branch);
+    });
+    var dueTodayCount = openQuotes.filter(function (record) {
+      var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+      return nextFollowup && nextFollowup >= today && nextFollowup < new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    }).length;
+    var unscheduledOldCount = openQuotes.filter(function (record) {
+      var nextFollowup = parseDateValue(record.qfu_nextfollowup);
+      var sourceDate = parseDateValue(record.qfu_sourcedate || record.createdon);
+      return !nextFollowup && sourceDate && sourceDate < graceCutoff;
+    }).length;
+    var quotesLast30 = quotes.filter(function (record) {
+      var sourceDate = parseDateValue(record.qfu_sourcedate || record.createdon);
+      return sourceDate && sourceDate >= last30Cutoff;
+    });
+    var wonQuotes30NumberRaw = quotesLast30.filter(function (record) {
+      return Number(record.qfu_status || 0) === 2;
+    }).length;
+    var lostQuotes30NumberRaw = quotesLast30.filter(function (record) {
+      return Number(record.qfu_status || 0) === 3 || Number(record.qfu_status || 0) === 4;
+    }).length;
+    var openQuotes30NumberRaw = Math.max(0, quotesLast30.length - wonQuotes30NumberRaw - lostQuotes30NumberRaw);
+    var avgQuoteValue30Raw = quotesLast30.length ? quotesLast30.reduce(function (sum, record) {
+      return sum + toNumber(record.qfu_amount);
+    }, 0) / quotesLast30.length : 0;
+    var currentMonthBackorders = backorders.filter(function (record) {
+      var onTime = parseDateValue(record.qfu_ontimedate);
+      if (!onTime) {
+        return false;
+      }
+      return onTime.getFullYear() === today.getFullYear() && onTime.getMonth() === today.getMonth();
+    });
+    var currentMonthLate = currentMonthBackorders.filter(function (record) {
+      var onTime = parseDateValue(record.qfu_ontimedate);
+      return toNumber(record.qfu_daysoverdue) > 0 || (onTime && onTime < today);
+    });
+    var overdueBackorders = backorders.filter(function (record) {
+      var onTime = parseDateValue(record.qfu_ontimedate);
+      return toNumber(record.qfu_daysoverdue) > 0 || (onTime && onTime < today);
+    }).sort(function (a, b) {
+      return toNumber(b.qfu_daysoverdue) - toNumber(a.qfu_daysoverdue);
+    });
+    var overdueBackorderRows = overdueBackorders.map(function (record) {
+      return {
+        onTimeDate: record.qfu_ontimedate ? shortDate(String(record.qfu_ontimedate).slice(0, 10)) : "-",
+        order: record.qfu_salesdocnumber || "-",
+        customer: record.qfu_customername || "-",
+        materialNumber: record.qfu_material || "-",
+        materialDescription: record.qfu_description || "-",
+        quantity: String(record.qfu_quantity || ""),
+        value: formatCurrencyNumber(record.qfu_totalvalue),
+        cssr: record.qfu_cssrname || "Unassigned",
+        daysOverdue: String(toNumber(record.qfu_daysoverdue || 0)) + " days"
+      };
+    });
+    var cssrCounts = {};
+    overdueBackorders.forEach(function (record) {
+      var key = record.qfu_cssrname || "Unassigned";
+      cssrCounts[key] = (cssrCounts[key] || 0) + 1;
+    });
+    var cssrPeople = Object.keys(cssrCounts).sort(function (a, b) {
+      return cssrCounts[b] - cssrCounts[a];
+    }).map(function (name) {
+      return { name: name, count: String(cssrCounts[name]) };
+    });
+    var budget = buildPilotBudgetModel(budgets, summary, today);
+    var totalQuotes30Number = Math.max(0, Number(summary ? summary.qfu_quoteslast30days || 0 : quotesLast30.length));
+    var wonQuotes30Number = Math.max(0, Number(summary ? summary.qfu_quoteswon30days || 0 : wonQuotes30NumberRaw));
+    var lostQuotes30Number = Math.max(0, Number(summary ? summary.qfu_quoteslost30days || 0 : lostQuotes30NumberRaw));
+    var openQuotes30Number = Math.max(0, Number(summary ? summary.qfu_quotesopen30days || 0 : openQuotes30NumberRaw));
+    var totalQuotes30 = String(totalQuotes30Number);
+    var wonQuotes30 = String(wonQuotes30Number);
+    var lostQuotes30 = String(lostQuotes30Number);
+    var openQuotes30 = String(openQuotes30Number);
+    var forecastValue = summary ? summary.qfu_currentmonthforecastvalue : currentMonthBackorders.reduce(function (sum, record) {
+      return sum + toNumber(record.qfu_totalvalue);
+    }, 0);
+    var currentMonthLateValue = summary ? summary.qfu_currentmonthlatevalue : currentMonthLate.reduce(function (sum, record) {
+      return sum + toNumber(record.qfu_totalvalue);
+    }, 0);
+    var allBackordersValue = summary ? summary.qfu_allbackordersvalue : backorders.reduce(function (sum, record) {
+      return sum + toNumber(record.qfu_totalvalue);
+    }, 0);
+    var overdueBackordersValue = summary ? summary.qfu_overduebackordersvalue : overdueBackorders.reduce(function (sum, record) {
+      return sum + toNumber(record.qfu_totalvalue);
+    }, 0);
+
+    return {
+      status: "live",
+      statusLabel: "Live Data",
+      freshness: "Target sync " + syncLabel,
+      subtitle: "Approved Phase 0 branch shell with live Southern Alberta pilot data wired into the frozen operational pattern.",
+      overdueQuotes: String(summary ? summary.qfu_overduequotes || overdueQuoteRows.length : overdueQuoteRows.length),
+      overdueBackorders: String(summary ? summary.qfu_overduebackordercount || overdueBackorderRows.length : overdueBackorderRows.length),
+      budgetPace: budget ? budget.pace : "Not Live",
+      kpis: [
+        { label: "Quotes in Queue", value: String(summary ? summary.qfu_openquotes || openQuotes.length : openQuotes.length) },
+        { label: "Overdue Follow-ups", value: String(summary ? summary.qfu_overduequotes || overdueQuoteRows.length : overdueQuoteRows.length) },
+        { label: "All Late Backorders $", value: formatCurrencyNumber(overdueBackordersValue) },
+        { label: "Budget Pace %", value: budget ? budget.pace : "Not Live" },
+        { label: "March Forecast $", value: formatCurrencyNumber(forecastValue) },
+        { label: "March Late $", value: formatCurrencyNumber(currentMonthLateValue) }
+      ],
+      workspace: {
+        note: branch.name + " reads live Southern Alberta pilot data from qfu_quote, qfu_backorder, and qfu_budget, with qfu_branchdailysummary used when present. Search, write actions, and advanced tabs remain intentionally locked.",
+        tabs: [
+          { label: "Home", href: "#branch-home", active: true, state: "Live" },
+          { label: "Follow-up Queue", href: branchViewHref(branch, "follow-up-queue"), state: "Live" },
+          { label: "Quotes", href: branchViewHref(branch, "quotes"), state: "Live" },
+          { label: "Overdue Quotes", href: branchViewHref(branch, "overdue-quotes"), state: "Live" },
+          { label: "Overdue Backorders", href: branchViewHref(branch, "overdue-backorders"), state: "Live" },
+          { label: "Team Progress", href: branchViewHref(branch, "team-progress"), locked: true, state: "Locked" },
+          { label: "Workload", href: branchViewHref(branch, "workload"), locked: true, state: "Locked" },
+          { label: "Analytics", href: branchViewHref(branch, "analytics"), locked: true, state: "Locked" }
+        ],
+        headerMeta: [
+          { label: "Branch", value: branch.code + " " + branch.name + " canonical pattern" },
+          { label: "Data state", value: "Live Southern Alberta pilot" },
+          { label: "Last sync", value: syncLabel }
+        ],
+        calloutStats: [
+          { label: "Quotes in Queue", value: String(summary ? summary.qfu_openquotes || openQuotes.length : openQuotes.length), subvalue: formatCurrencyNumber(summary ? summary.qfu_openquotevalue : openQuoteValue), tone: "success", href: branchViewHref(branch, "follow-up-queue") },
+          { label: "Overdue Follow-ups", value: String(summary ? summary.qfu_overduequotes || overdueQuoteRows.length : overdueQuoteRows.length), subvalue: "Live overdue rows", tone: "overdue", href: branchViewHref(branch, "follow-up-queue") },
+          { label: "Due Today", value: String(summary ? summary.qfu_duetoday || dueTodayCount : dueTodayCount), subvalue: "Live due-today rows", tone: "neutral", href: branchViewHref(branch, "follow-up-queue") },
+          { label: "Unscheduled (Old)", value: String(summary ? summary.qfu_unscheduledold || unscheduledOldCount : unscheduledOldCount), subvalue: "Read-only live queue", tone: "attention", href: branchViewHref(branch, "follow-up-queue") }
+        ],
+        queueRows: queueRows,
+        quoteRows: quoteRows,
+        tableNote: "Rows come from live " + branch.name + " qfu_quote data in regionaloperationshub. Search, reassign, snooze, and write actions stay locked in Phase 1.",
+        budget: budget,
+        cssrOverdue: {
+          note: "Grouped from live overdue " + branch.name + " backorders in regionaloperationshub.",
+          people: cssrPeople
+        },
+        quotes30Days: {
+          note: "Quotes - Last 30 Days stays inside the approved shell and reads target-environment data only.",
+          metrics: [
+            { label: "Total Quotes", value: totalQuotes30 },
+            { label: "Quotes Won", value: wonQuotes30 },
+            { label: "Quotes Lost", value: lostQuotes30 },
+            { label: "Open Quotes", value: openQuotes30 },
+            { label: "Win Rate", value: formatPercentNumber(totalQuotes30Number ? (wonQuotes30Number / totalQuotes30Number) * 100 : 0) },
+            { label: "Avg Quote Value", value: formatCurrencyNumber(summary ? summary.qfu_avgquotevalue30days : avgQuoteValue30Raw) }
+          ]
+        },
+        backorderCards: [
+          { title: "March Forecast", value: formatCurrencyNumber(forecastValue), note: "Current-month " + branch.name + " backorders", subnote: "Live target data" },
+          { title: "March Late", value: formatCurrencyNumber(currentMonthLateValue), note: "Current-month overdue backorders", subnote: "Live target data" },
+          { title: "All Backorders", value: formatCurrencyNumber(allBackordersValue), note: "All " + branch.name + " backorders in target", subnote: "Live target data" },
+          { title: "All Late Backorders", value: formatCurrencyNumber(overdueBackordersValue), note: "All overdue " + branch.name + " backorders", subnote: "Live target data" }
+        ],
+        backorders: {
+          rowsLabel: String(overdueBackorderRows.length) + " live overdue rows",
+          filterNote: "Backorder routing is live and read-only for " + branch.name + ". Filter controls and write actions remain intentionally locked.",
+          rows: overdueBackorderRows
+        },
+        summary: {
+          source: summary ? "regionaloperationshub qfu_branchdailysummary / qfu_quote / qfu_backorder / qfu_budget" : "regionaloperationshub qfu_quote / qfu_backorder / qfu_budget (summary fallback)",
+          lastCalculated: syncLabel
+        }
+      }
+    };
+  }
+
+  function buildCalgaryPhase1Model(quotes, backorders, budgets, summaries) {
+    var southernAlberta = bySlug(REGIONS, "southern-alberta");
+    var branches = {};
+    var liveBranches = [];
+    var totalOpenQuotes = 0;
+    var totalOverdueQuotes = 0;
+    var totalOverdueBackorders = 0;
+    var totalBudgetTarget = 0;
+    var totalBudgetActual = 0;
+    var lastSync = null;
+
+    PHASE1_ACTIVE_BRANCH_SLUGS.forEach(function (branchSlug) {
+      var branch = bySlug(BRANCHES, branchSlug);
+      if (!branch) {
+        return;
+      }
+      var branchQuotes = (quotes || []).filter(function (record) { return record.qfu_branchslug === branchSlug; });
+      var branchBackorders = (backorders || []).filter(function (record) { return record.qfu_branchslug === branchSlug; });
+      var branchBudgets = (budgets || []).filter(function (record) { return record.qfu_branchslug === branchSlug; });
+      var branchSummary = latestSummaryForBranch(summaries || [], branchSlug);
+      if (!branchSummary && !branchQuotes.length && !branchBackorders.length && !branchBudgets.length) {
+        return;
+      }
+      var liveBranch = createLiveBranchWorkspace(branch, branchQuotes, branchBackorders, branchBudgets, branchSummary);
+      branches[branchSlug] = liveBranch;
+      liveBranches.push(branch.code + " " + branch.name);
+      totalOpenQuotes += Number(branchSummary ? branchSummary.qfu_openquotes || 0 : liveBranch.workspace.queueRows.length);
+      totalOverdueQuotes += Number(liveBranch.overdueQuotes || 0);
+      totalOverdueBackorders += Number(liveBranch.overdueBackorders || 0);
+      totalBudgetTarget += toNumber(branchSummary ? branchSummary.qfu_budgettarget : (branchBudgets[0] ? branchBudgets[0].qfu_budgetgoal : 0));
+      totalBudgetActual += toNumber(branchSummary ? branchSummary.qfu_budgetactual : (branchBudgets[0] ? branchBudgets[0].qfu_actualsales : 0));
+      var syncDate = parseDateValue(branchSummary ? branchSummary.qfu_lastcalculatedon || branchSummary.qfu_summarydate : (branchBudgets[0] ? branchBudgets[0].qfu_lastupdated : null));
+      if (syncDate && (!lastSync || syncDate > lastSync)) {
+        lastSync = syncDate;
+      }
+    });
+
+    var liveBranchCount = liveBranches.length;
+    var paceValue = totalBudgetTarget > 0 ? formatPercentNumber((totalBudgetActual / totalBudgetTarget) * 100) : "Not Live";
+
+    return {
+      branches: branches,
+      region: southernAlberta ? {
+        status: liveBranchCount > 0 ? "live" : "awaiting",
+        statusLabel: liveBranchCount > 0 ? "Southern Alberta Live Pilot" : "Awaiting Integration",
+        summary: liveBranchCount > 0 ? "Southern Alberta is live as a three-branch pilot inside the approved Phase 0 shell. No UI redesign has been introduced." : southernAlberta.summary,
+        freshness: liveBranchCount > 0 ? "Pilot synced " + dateTimeLabel((lastSync || new Date()).toISOString()) : southernAlberta.freshness,
+        branchCount: liveBranchCount + " live / 3 visible",
+        quotesNeedingFollowUp: liveBranchCount > 0 ? String(totalOpenQuotes) : "Locked",
+        overdueQuotes: liveBranchCount > 0 ? String(totalOverdueQuotes) : "Locked",
+        overdueBackorders: liveBranchCount > 0 ? String(totalOverdueBackorders) : "Locked",
+        budgetPace: liveBranchCount > 0 ? paceValue : "Locked",
+        liveBranches: liveBranchCount > 0 ? liveBranches.join(" / ") : "None",
+        staleBranches: liveBranchCount > 0 ? "Northern Alberta / Saskatchewan locked" : "4171 / 4172 / 4173 locked",
+        footerNote: liveBranchCount > 0 ? "4171 Calgary, 4172 Lethbridge, and 4173 Medicine Hat are live in the frozen branch shell. Team Progress, Workload, Analytics, Northern Alberta, Saskatchewan, and Ops/Admin remain locked." : southernAlberta.footerNote
+      } : null
+    };
+  }
+
+  function applyCalgaryPhase1FailureState() {
+    var southernAlberta = bySlug(REGIONS, "southern-alberta");
+    PHASE1_ACTIVE_BRANCH_SLUGS.forEach(function (branchSlug) {
+      var branch = bySlug(BRANCHES, branchSlug);
+      if (!branch) {
+        return;
+      }
+      branch.status = "locked";
+      branch.statusLabel = "Locked";
+      branch.freshness = "Live branch data unavailable";
+      branch.overdueQuotes = "Locked";
+      branch.overdueBackorders = "Locked";
+      branch.budgetPace = "Locked";
+      branch.kpis = [
+        { label: "Quotes in Queue", value: "Locked" },
+        { label: "Overdue Follow-ups", value: "Locked" },
+        { label: "All Late Backorders $", value: "Locked" },
+        { label: "Budget Pace %", value: "Locked" },
+        { label: "March Forecast $", value: "Locked" },
+        { label: "March Late $", value: "Locked" }
+      ];
+      branch.workspace = createDefaultBranchWorkspace(branch);
+      branch.workspace.note = branch.name + " is approved for the Southern Alberta pilot, but the site could not read live qfu data from Applied Canada Operations Hub.";
+      branch.workspace.headerMeta = [
+        { label: "Branch", value: branch.code + " " + branch.name + " canonical pattern" },
+        { label: "Data state", value: "Live read failed" },
+        { label: "Why locked", value: "Web API or permission issue" }
+      ];
+    });
+    if (southernAlberta) {
+      southernAlberta.status = "awaiting";
+      southernAlberta.statusLabel = "Southern Alberta Live Unavailable";
+      southernAlberta.summary = "Southern Alberta keeps the approved shell, but the live pilot remains locked until the site can read target-environment qfu data.";
+      southernAlberta.freshness = "Live read failed";
+      southernAlberta.branchCount = "0 live / 3 visible";
+      southernAlberta.quotesNeedingFollowUp = "Locked";
+      southernAlberta.overdueQuotes = "Locked";
+      southernAlberta.overdueBackorders = "Locked";
+      southernAlberta.budgetPace = "Locked";
+      southernAlberta.liveBranches = "None";
+      southernAlberta.staleBranches = "4171 / 4172 / 4173 locked";
+      southernAlberta.footerNote = "Live branch data could not be read from Applied Canada Operations Hub.";
+      southernAlberta.branches = southernAlberta.branches.map(function (branch) {
+        return bySlug(BRANCHES, branch.slug) || branch;
+      });
+    }
+  }
+
+  function applyCalgaryPhase1State(model) {
+    var southernAlberta = bySlug(REGIONS, "southern-alberta");
+    if (!model) {
+      return;
+    }
+    Object.keys(model.branches || {}).forEach(function (branchSlug) {
+      var branch = bySlug(BRANCHES, branchSlug);
+      var liveBranch = model.branches[branchSlug];
+      if (!branch || !liveBranch) {
+        return;
+      }
+      Object.keys(liveBranch).forEach(function (key) {
+        branch[key] = liveBranch[key];
+      });
+    });
+    if (southernAlberta && model.region) {
+      Object.keys(model.region).forEach(function (key) {
+        southernAlberta[key] = model.region[key];
+      });
+      southernAlberta.branches = southernAlberta.branches.map(function (branch) {
+        return bySlug(BRANCHES, branch.slug) || branch;
+      });
+    }
+  }
+
+  function loadCalgaryPhase1Data() {
+    if (PHASE1_CALGARY_PROMISE) {
+      return PHASE1_CALGARY_PROMISE;
+    }
+    PHASE1_CALGARY_PROMISE = Promise.all([
+      apiGetAll("/_api/qfu_quotes?$select=qfu_quoteid,qfu_quotenumber,qfu_customername,qfu_amount,qfu_assignedto,qfu_cssrname,qfu_nextfollowup,qfu_overduesince,qfu_lasttouchedon,qfu_lastfollowupupdatedon,qfu_priorityscore,qfu_status,qfu_sourcedate,qfu_sourceupdatedon,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon&$top=5000"),
+      apiGetAll("/_api/qfu_backorders?$select=qfu_backorderid,qfu_customername,qfu_salesdocnumber,qfu_daysoverdue,qfu_totalvalue,qfu_description,qfu_quantity,qfu_material,qfu_ontimedate,qfu_cssrname,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon&$top=5000"),
+      apiGetAll("/_api/qfu_budgets?$select=qfu_budgetid,qfu_budgetname,qfu_actualsales,qfu_budgetgoal,qfu_percentachieved,qfu_lastupdated,qfu_cadsales,qfu_usdsales,qfu_month,qfu_monthname,qfu_year,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_sourcefamily,createdon&$top=500"),
+      apiGetAll("/_api/qfu_branchdailysummaries?$select=qfu_branchdailysummaryid,qfu_name,qfu_sourceid,qfu_branchcode,qfu_branchslug,qfu_regionslug,qfu_summarydate,qfu_openquotes,qfu_overduequotes,qfu_duetoday,qfu_unscheduledold,qfu_openquotevalue,qfu_quoteslast30days,qfu_quoteswon30days,qfu_quoteslost30days,qfu_quotesopen30days,qfu_avgquotevalue30days,qfu_backordercount,qfu_overduebackordercount,qfu_currentmonthforecastvalue,qfu_currentmonthlatevalue,qfu_allbackordersvalue,qfu_overduebackordersvalue,qfu_budgetactual,qfu_budgettarget,qfu_budgetpace,qfu_cadsales,qfu_usdsales,qfu_lastcalculatedon,createdon&$top=500")
+    ]).then(function (results) {
+      var model = buildCalgaryPhase1Model(results[0] || [], results[1] || [], results[2] || [], results[3] || []);
+      applyCalgaryPhase1State(model);
+      return model;
+    }).catch(function (error) {
+      console.error("Southern Alberta pilot live data load failed", error);
+      applyCalgaryPhase1FailureState();
+      return null;
+    });
+    return PHASE1_CALGARY_PROMISE;
+  }
+
+  function isCalgaryPhase1Branch(branch) {
+    return !!(branch && isPilotBranchSlug(branch.slug) && branch.status === "live");
+  }
+
+  function isCalgaryPhase1RouteLive(branch, viewKey) {
+    return isCalgaryPhase1Branch(branch) && !!PHASE1_ACTIVE_DETAIL_VIEWS[viewKey];
+  }
+
+  function shouldLoadCalgaryPhase1(pageType, regionSlug, branchSlug) {
+    if (pageType === "hub") {
+      return true;
+    }
+    if (pageType === "region") {
+      return regionSlug === "southern-alberta";
+    }
+    if (pageType === "branch" || pageType === "detail") {
+      return isPilotBranchSlug(branchSlug);
+    }
+    return false;
+  }
+
+  function renderHub() {
+    var liveBranchCount = REGIONS.reduce(function (count, region) {
+      return count + (region.branches || []).filter(function (branch) {
+        return branch.status === "live";
+      }).length;
+    }, 0);
+    var hubPhaseLabel = liveBranchCount > 0 ? "Phase 1 Southern Alberta" : "Phase 0";
+    var hubDataLabel = liveBranchCount > 0 ? "Southern Alberta live pilot" : "No Live Data Yet";
+    return (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Hub",
+        title: "Quote Follow Up Regional Operations Hub",
+        subtitle: "Production-style shell locked for the regional rollout. This page is intentionally clean: regions first, drill-down second, no vanity widgets.",
+        badges: [
+          badge(liveBranchCount > 0 ? "live" : "awaiting", hubPhaseLabel),
+          badge(liveBranchCount > 0 ? "live" : "awaiting", hubDataLabel)
+        ],
+        meta: [
+          { label: "Environment", value: ENVIRONMENT_NAME },
+          { label: "Data Activity", value: hubDataLabel },
+          { label: "Navigation Lock", value: "Hub -> Region -> Branch -> Detail" }
+        ],
+        note: INTEGRATION_NOTE
+      }) +
+      '<section class="qfu-phase0-grid qfu-phase0-grid--regions">' +
+      REGIONS.map(hubRegionCard).join("") +
+      "</section>" +
+      "</div>"
+    );
+  }
+
+  function renderCalgaryLiveDetail(branch, viewKey) {
+    var detail = DETAIL_VIEWS[viewKey] || DETAIL_VIEWS.quotes;
+    var workspace = getBranchWorkspace(branch);
+    var base = "/" + branch.regionSlug + "/" + branch.slug + "/detail?view=";
+    var tabs = renderDetailTabs(viewKey, base);
+    var queueRows = (workspace.queueRows || []).slice();
+    var quoteRows = (workspace.quoteRows || workspace.queueRows || []).slice();
+    var overdueRows = queueRows.slice().filter(function (row) {
+      return numericDays(row.daysOverdue) > 0;
+    }).sort(function (a, b) {
+      return numericDays(b.daysOverdue) - numericDays(a.daysOverdue);
+    });
+    var backorderRows = ((workspace.backorders && workspace.backorders.rows) || []).slice();
+    var quoteMetrics = (workspace.quotes30Days && workspace.quotes30Days.metrics) || [];
+    var cssrPeople = (workspace.cssrOverdue && workspace.cssrOverdue.people) || [];
+    var ownerRows = buildOwnerSummaryRows(queueRows, cssrPeople);
+    var summaryNote = (workspace.summary && workspace.summary.source) || "regionaloperationshub qfu tables";
+    var sections = [];
+    var scopeBullets = [];
+    var stripItems = [];
+    var introCopy = "Live read-only " + branch.name + " branch data inside the approved Phase 0 shell. Search, filters, row actions, and advanced tabs remain intentionally locked.";
+    var backorderCards = workspace.backorderCards || [];
+
+    if (viewKey === "follow-up-queue") {
+      stripItems = [
+        { label: "Live Queue", value: String(queueRows.length) + " quotes" },
+        { label: "Rows Included Here", value: String(queueRows.length) },
+        { label: "Queue Value", value: formatCurrencyValue(sumCurrencyFromRows(queueRows, "value")) },
+        { label: "30+ Day Quotes", value: String(countMatching(queueRows, function (row) { return numericDays(row.daysOverdue) >= 30; })) },
+        { label: "Unscheduled Rows", value: String(countMatching(queueRows, function (row) { return String(row.nextFollowup || "").toLowerCase().indexOf("unscheduled") !== -1; })) },
+        { label: "Oldest Quote", value: String(maxValueFromRows(queueRows, function (row) { return numericDays(row.daysOverdue); })) + " days" }
+      ];
+      scopeBullets = [
+        ["Primary list", "Live " + branch.name + " follow-up queue rows"],
+        ["Rows shown", String(queueRows.length) + " live rows currently synced into OperationHub"],
+        ["Source", "regionaloperationshub qfu_quote"],
+        ["Still locked", "Search, filters, scheduling, and row actions"]
+      ];
+      sections.push(panel(
+        "Live Queue Rows",
+        "Follow-up Queue",
+        '<p class="qfu-phase0-ops-copy">The queue route now reads live ' + escapeHtml(branch.name) + ' qfu_quote rows from Applied Canada Operations Hub without changing the approved branch layout.</p>' +
+        renderQueueToolbar(String(queueRows.length) + " live rows", "Read-only live queue. Search, filters, scheduling, and per-row actions remain intentionally locked in Phase 1.") +
+        '<div class="qfu-phase0-ops-table-shell"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-ops-table"><thead><tr><th>Quote #</th><th>Customer</th><th class="qfu-phase0-table__numeric">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead><tbody>' + renderQueueRows(queueRows) + "</tbody></table></div></div>"
+      ));
+      sections.push(panel(
+        "Owner Coverage",
+        "Live split",
+        renderOwnerSummaryTable(ownerRows, "No owner summary is available because no live queue rows were returned.")
+      ));
+    } else if (viewKey === "quotes") {
+      stripItems = quoteMetrics.slice();
+      scopeBullets = [
+        ["Primary list", "Live " + branch.name + " quote rows"],
+        ["Supporting metrics", "Quotes - Last 30 Days from regionaloperationshub"],
+        ["Rows shown", String(quoteRows.length) + " live quote rows"],
+        ["Source", "regionaloperationshub qfu_quote"],
+        ["Still locked", "Search, filters, and record actions"]
+      ];
+      sections.push(panel(
+        "Live Quote Rows",
+        "Quotes",
+        '<p class="qfu-phase0-ops-copy">This route keeps the approved quote-detail position in the branch hierarchy while exposing synced ' + escapeHtml(branch.name) + ' quote rows in read-only mode.</p>' +
+        renderQueueToolbar(String(quoteRows.length) + " live rows", "Quotes - Last 30 Days metrics and the table below both come from regionaloperationshub qfu_quote data. Search, filter, and row actions remain locked.") +
+        '<div class="qfu-phase0-ops-table-shell"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-ops-table"><thead><tr><th>Quote #</th><th>Customer</th><th class="qfu-phase0-table__numeric">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead><tbody>' + renderQueueRows(quoteRows) + "</tbody></table></div></div>"
+      ));
+      sections.push(panel(
+        "Quotes - Last 30 Days",
+        "Live metrics",
+        renderMetricGrid(quoteMetrics, "Last-30-day quote metrics are not available in the current branch sync.") +
+        '<div class="qfu-phase0-summary-foot">' + escapeHtml((workspace.quotes30Days && workspace.quotes30Days.note) || summaryNote) + "</div>"
+      ));
+    } else if (viewKey === "overdue-quotes") {
+      stripItems = [
+        { label: "Rows Included Here", value: String(overdueRows.length) },
+        { label: "Live Value", value: formatCurrencyValue(sumCurrencyFromRows(overdueRows, "value")) },
+        { label: "15+ Day Quotes", value: String(countMatching(overdueRows, function (row) { return numericDays(row.daysOverdue) >= 15; })) },
+        { label: "30+ Day Quotes", value: String(countMatching(overdueRows, function (row) { return numericDays(row.daysOverdue) >= 30; })) },
+        { label: "Owners Hit", value: String(uniqueValueCount(overdueRows, function (row) { return String(row.owner || "").toUpperCase(); })) },
+        { label: "Oldest Quote", value: String(maxValueFromRows(overdueRows, function (row) { return numericDays(row.daysOverdue); })) + " days" }
+      ];
+      scopeBullets = [
+        ["Primary list", "Live overdue " + branch.name + " quote rows"],
+        ["Current filter", "All live quote rows with aging greater than zero"],
+        ["Rows shown", String(overdueRows.length) + " overdue live rows"],
+        ["Source", "regionaloperationshub qfu_quote"],
+        ["Still locked", "Search, filters, and ownership actions"]
+      ];
+      sections.push(panel(
+        "Overdue Quote Rows",
+        "Overdue Quotes",
+        '<p class="qfu-phase0-ops-copy">The overdue quote route exposes live ' + escapeHtml(branch.name) + ' aging pressure directly in the approved branch workflow while staying read-only.</p>' +
+        renderQueueToolbar(String(overdueRows.length) + " live rows", "Every row shown here comes from live qfu_quote data. Aging is visible, but search, filters, and row actions remain locked.") +
+        '<div class="qfu-phase0-ops-table-shell"><div class="qfu-phase0-table-wrap"><table class="qfu-phase0-ops-table"><thead><tr><th>Quote #</th><th>Customer</th><th class="qfu-phase0-table__numeric">Value</th><th>Age</th><th>Next Follow-up</th><th>Last Touched</th><th>Assigned</th><th>Open</th><th>Queue</th></tr></thead><tbody>' + renderQueueRows(overdueRows) + "</tbody></table></div></div>"
+      ));
+      sections.push(panel(
+        "Owner Exposure",
+        "Live split",
+        renderOwnerSummaryTable(ownerRows, "No overdue-owner summary is available because no live quote rows were returned.")
+      ));
+    } else if (viewKey === "overdue-backorders") {
+      stripItems = [
+        { label: "March Forecast", value: backorderCards[0] ? backorderCards[0].value : "Locked" },
+        { label: "March Late", value: backorderCards[1] ? backorderCards[1].value : "Locked" },
+        { label: "All Backorders", value: backorderCards[2] ? backorderCards[2].value : "Locked" },
+        { label: "All Late Backorders", value: backorderCards[3] ? backorderCards[3].value : "Locked" },
+        { label: "Rows Included Here", value: String(backorderRows.length) },
+        { label: "CSSRs Tracked", value: String(uniqueValueCount(backorderRows, function (row) { return String(row.cssr || "").toUpperCase(); })) }
+      ];
+      scopeBullets = [
+        ["Primary list", "Live " + branch.name + " overdue backorder rows"],
+        ["Summary cards", "Forecast, late-this-month, and all-backorders values from live target data"],
+        ["Rows shown", String(backorderRows.length) + " overdue backorder rows"],
+        ["Source", "regionaloperationshub qfu_backorder"],
+        ["Still locked", "Filters, thresholds, and backorder actions"]
+      ];
+      sections.push(panel(
+        "Backorder Live Cards",
+        "Backorder exposure",
+        renderBackorderCards(backorderCards, "Backorder summary cards are not available in the current branch sync.")
+      ));
+      sections.push(panel(
+        "Overdue Backorder Rows",
+        "Backorder detail",
+        renderBackorderToolbar("Read-only live", "The rows below come from live qfu_backorder data. CSSR routing, min-value filters, and actions remain intentionally locked in Phase 1.") +
+        '<div class="qfu-phase0-summary-table-shell"><table class="qfu-phase0-summary-table qfu-phase0-summary-table--backorders"><thead><tr><th>On-time Date</th><th>Order #</th><th>Customer</th><th>Material</th><th>Qty</th><th class="qfu-phase0-table__numeric">Value</th><th>CSSR</th><th>Days Overdue</th></tr></thead><tbody>' + renderBackorderRows(backorderRows) + "</tbody></table></div>"
+      ));
+    } else {
+      return renderLockedDetail(branch, viewKey);
+    }
+
+    return (
+      '<div class="qfu-phase0-shell">' +
+      hero({
+        kicker: "Detail",
+        title: detail.title,
+        subtitle: introCopy,
+        badges: [
+          badge("live", "Live Data"),
+          badge("locked", "Read-only / no write actions")
+        ],
+        breadcrumbs: breadcrumbs([
+          { label: "Hub", url: "/" },
+          { label: branch.regionName, url: "/" + branch.regionSlug },
+          { label: branch.code + " " + branch.name, url: "/" + branch.regionSlug + "/" + branch.slug },
+          { label: detail.title }
+        ]),
+        meta: [
+          { label: "Branch", value: branch.code + " " + branch.name },
+          { label: "Region", value: branch.regionName },
+          { label: "Data State", value: "Southern Alberta live pilot" }
+        ],
+        note: "Source: " + summaryNote + ". Search, filters, permissions, and write actions remain intentionally locked while the approved branch structure stays frozen."
+      }) +
+      panel(
+        "Live Detail",
+        "Phase 1 live",
+        '<div class="qfu-phase0-detail-tabs">' + tabs + "</div>" +
+        '<div class="qfu-phase0-empty-state"><strong>Live read-only</strong><p class="qfu-phase0-empty-copy">' + escapeHtml(introCopy) + "</p></div>",
+        '<a class="qfu-phase0-secondary-action" href="/' + escapeHtml(branch.regionSlug + "/" + branch.slug) + '">Back to Branch</a>'
+      ) +
+      kpiStrip(stripItems) +
+      sections.join("") +
+      '<section class="qfu-phase0-grid qfu-phase0-grid--cards-2">' +
+      panel(
+        "Scope",
+        "What this route now shows",
+        renderScopeBullets(scopeBullets)
+      ) +
+      panel(
+        "Next Route",
+        "Navigation",
+        '<div class="qfu-phase0-empty-state"><strong>Frozen hierarchy</strong><p class="qfu-phase0-empty-copy">Phase 1 wiring stays inside the approved branch pattern. No dashboard redesign, no fake live state, and no changes to the branch information hierarchy are being introduced here.</p></div>' +
+        detailButtons(branch)
+      ) +
+      "</section>" +
+      "</div>"
+    );
+  }
+
+  async function renderPage(root) {
+    var pageType = root.getAttribute("data-page");
+    var regionSlug = root.getAttribute("data-region");
+    var branchSlug = root.getAttribute("data-branch");
+    var branch = branchSlug ? bySlug(BRANCHES, branchSlug) : null;
+    var region = regionSlug ? bySlug(REGIONS, regionSlug) : null;
+    var viewKey = new URLSearchParams(window.location.search).get("view") || "follow-up-queue";
+
+    if (shouldLoadCalgaryPhase1(pageType, regionSlug, branchSlug)) {
+      await loadCalgaryPhase1WithDeferredPlaceholder(root);
+      branch = branchSlug ? bySlug(BRANCHES, branchSlug) : null;
+      region = regionSlug ? bySlug(REGIONS, regionSlug) : null;
+    }
+
+    if (pageType === "hub") {
+      root.innerHTML = renderHub();
+      return;
+    }
+    if (pageType === "region" && region) {
+      root.innerHTML = renderRegion(region);
+      return;
+    }
+    if (pageType === "branch" && branch) {
+      root.innerHTML = renderBranch(branch);
+      return;
+    }
+    if (pageType === "detail" && branch) {
+      root.innerHTML = renderDetail(branch, viewKey);
+      return;
+    }
+    if (pageType === "ops") {
+      root.innerHTML = renderOps();
+      return;
+    }
+
+    root.innerHTML =
+      '<div class="qfu-phase0-shell">' +
+      '<div class="qfu-phase0-empty-state"><strong>Page configuration missing</strong><p class="qfu-phase0-empty-copy">Phase 0 shell metadata was not found for this route.</p></div>' +
+      "</div>";
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var roots = document.querySelectorAll("[data-qfu-phase0]");
+    for (var i = 0; i < roots.length; i += 1) {
+      renderPage(roots[i]).catch(function (error) {
+        console.error("QFU Phase 1 render failed", error);
+      });
+    }
+  });
+})();
+
+</script>

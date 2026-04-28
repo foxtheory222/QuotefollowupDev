@@ -1,0 +1,15 @@
+
+
+Azure Functions Core Tools
+Core Tools Version:       4.9.0+29aeab590e6c229a1a6631f6653df70f150f9f0e (64-bit)
+Function Runtime Version: 4.1047.100.26071
+
+[2026-04-24T21:21:50.857Z] Worker process started and initialized.
+
+Functions:
+
+	process_freight_document: [POST] http://localhost:7081/api/processfreightdocument
+
+For detailed output, run func with --verbose flag.
+[2026-04-24T21:21:51.606Z] Executing 'Functions.process_freight_document' (Reason='This function was programmatically called via the host APIs.', Id=126518d7-dd9f-4358-ba5e-c45748100fc6)
+[2026-04-24T21:21:51.694Z] Executed 'Functions.process_freight_document' (Succeeded, Id=126518d7-dd9f-4358-ba5e-c45748100fc6, Duration=138ms)

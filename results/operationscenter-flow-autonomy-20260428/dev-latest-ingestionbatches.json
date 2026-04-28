@@ -1,0 +1,222 @@
+[
+  {
+    "@odata.etag": "W/\"2837378\"",
+    "qfu_name": "4171 SA1300 Abnormal Margin Snapshot",
+    "modifiedon": "2026-04-27T17:00:30Z",
+    "qfu_ingestionbatchid": "5c9e2f38-2a42-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-ABNORMALMARGIN",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-27T11:14:14Z",
+    "createdon": "2026-04-27T11:14:14Z",
+    "qfu_completedon": "2026-04-27T11:14:14Z"
+  },
+  {
+    "@odata.etag": "W/\"2837379\"",
+    "qfu_name": "4171 SA1300 Late Order Snapshot",
+    "modifiedon": "2026-04-27T17:00:30Z",
+    "qfu_ingestionbatchid": "6c9e2f38-2a42-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-LATEORDER",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-27T11:14:21Z",
+    "createdon": "2026-04-27T11:14:21Z",
+    "qfu_completedon": "2026-04-27T11:14:21Z"
+  },
+  {
+    "@odata.etag": "W/\"2837326\"",
+    "qfu_name": "4173 SA1300 Abnormal Margin Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "e9a16da3-4d3a-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-ABNORMALMARGIN",
+    "qfu_branchcode": "4173",
+    "qfu_startedon": "2026-04-17T11:07:37Z",
+    "createdon": "2026-04-17T11:07:37Z",
+    "qfu_completedon": "2026-04-17T11:07:37Z"
+  },
+  {
+    "@odata.etag": "W/\"2837327\"",
+    "qfu_name": "4173 SA1300 Late Order Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "eca36da3-4d3a-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-LATEORDER",
+    "qfu_branchcode": "4173",
+    "qfu_startedon": "2026-04-17T11:07:44Z",
+    "createdon": "2026-04-17T11:07:44Z",
+    "qfu_completedon": "2026-04-17T11:07:44Z"
+  },
+  {
+    "@odata.etag": "W/\"2837328\"",
+    "qfu_name": "4171 SA1300 Abnormal Margin Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "dc48bbb5-4d3a-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-ABNORMALMARGIN",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-17T11:08:11Z",
+    "createdon": "2026-04-17T11:08:11Z",
+    "qfu_completedon": "2026-04-17T11:08:11Z"
+  },
+  {
+    "@odata.etag": "W/\"2837329\"",
+    "qfu_name": "4171 SA1300 Late Order Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "b038c6c1-4d3a-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-LATEORDER",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-17T11:08:31Z",
+    "createdon": "2026-04-17T11:08:31Z",
+    "qfu_completedon": "2026-04-17T11:08:31Z"
+  },
+  {
+    "@odata.etag": "W/\"2837330\"",
+    "qfu_name": "4171 Freight Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "7da40f0f-a73c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "FREIGHT_LOOMIS_F15",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-20T10:52:46Z",
+    "createdon": "2026-04-20T10:52:46Z",
+    "qfu_completedon": "2026-04-20T14:23:04Z"
+  },
+  {
+    "@odata.etag": "W/\"2837331\"",
+    "qfu_name": "4171 Freight Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "7ea40f0f-a73c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "FREIGHT_LOOMIS_F15",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-20T10:52:46Z",
+    "createdon": "2026-04-20T10:52:46Z",
+    "qfu_completedon": "2026-04-20T14:23:07Z"
+  },
+  {
+    "@odata.etag": "W/\"2837332\"",
+    "qfu_name": "4172 Freight Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "80a40f0f-a73c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "FREIGHT_LOOMIS_F15",
+    "qfu_branchcode": "4172",
+    "qfu_startedon": "2026-04-20T10:52:51Z",
+    "createdon": "2026-04-20T10:52:51Z",
+    "qfu_completedon": "2026-04-20T14:22:58Z"
+  },
+  {
+    "@odata.etag": "W/\"2837333\"",
+    "qfu_name": "4172 SA1300 Abnormal Margin Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "ff94b714-a93c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-ABNORMALMARGIN",
+    "qfu_branchcode": "4172",
+    "qfu_startedon": "2026-04-20T11:07:22Z",
+    "createdon": "2026-04-20T11:07:22Z",
+    "qfu_completedon": "2026-04-20T11:07:22Z"
+  },
+  {
+    "@odata.etag": "W/\"2837334\"",
+    "qfu_name": "4173 SA1300 Abnormal Margin Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "8099f71a-a93c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-ABNORMALMARGIN",
+    "qfu_branchcode": "4173",
+    "qfu_startedon": "2026-04-20T11:07:24Z",
+    "createdon": "2026-04-20T11:07:24Z",
+    "qfu_completedon": "2026-04-20T11:07:24Z"
+  },
+  {
+    "@odata.etag": "W/\"2837335\"",
+    "qfu_name": "4172 SA1300 Late Order Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "a099f71a-a93c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-LATEORDER",
+    "qfu_branchcode": "4172",
+    "qfu_startedon": "2026-04-20T11:07:30Z",
+    "createdon": "2026-04-20T11:07:30Z",
+    "qfu_completedon": "2026-04-20T11:07:30Z"
+  },
+  {
+    "@odata.etag": "W/\"2837336\"",
+    "qfu_name": "4173 SA1300 Late Order Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "a499f71a-a93c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-LATEORDER",
+    "qfu_branchcode": "4173",
+    "qfu_startedon": "2026-04-20T11:07:31Z",
+    "createdon": "2026-04-20T11:07:31Z",
+    "qfu_completedon": "2026-04-20T11:07:31Z"
+  },
+  {
+    "@odata.etag": "W/\"2837337\"",
+    "qfu_name": "4171 SA1300 Abnormal Margin Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "98abe22d-a93c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-ABNORMALMARGIN",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-20T11:08:01Z",
+    "createdon": "2026-04-20T11:08:01Z",
+    "qfu_completedon": "2026-04-20T11:08:01Z"
+  },
+  {
+    "@odata.etag": "W/\"2837338\"",
+    "qfu_name": "4171 SA1300 Late Order Snapshot",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "8825db33-a93c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "SA1300-LATEORDER",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-20T11:08:10Z",
+    "createdon": "2026-04-20T11:08:10Z",
+    "qfu_completedon": "2026-04-20T11:08:10Z"
+  },
+  {
+    "@odata.etag": "W/\"2837339\"",
+    "qfu_name": "4171 GL060 Inbox Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "b69dd53d-c63c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "GL060",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-20T14:35:57Z",
+    "createdon": "2026-04-20T14:35:57Z",
+    "qfu_completedon": "2026-04-20T14:36:58Z"
+  },
+  {
+    "@odata.etag": "W/\"2837340\"",
+    "qfu_name": "4172 GL060 Inbox Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "cf2bcd90-d23c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "GL060",
+    "qfu_branchcode": "4172",
+    "qfu_startedon": "2026-04-20T16:03:11Z",
+    "createdon": "2026-04-20T16:04:11Z",
+    "qfu_completedon": "2026-04-23T21:26:40Z"
+  },
+  {
+    "@odata.etag": "W/\"2837341\"",
+    "qfu_name": "4173 GL060 Inbox Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "d62bcd90-d23c-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "GL060",
+    "qfu_branchcode": "4173",
+    "qfu_startedon": "2026-04-20T16:03:11Z",
+    "createdon": "2026-04-20T16:04:20Z",
+    "qfu_completedon": "2026-04-23T21:26:36Z"
+  },
+  {
+    "@odata.etag": "W/\"2837342\"",
+    "qfu_name": "4173 Freight Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "751771b8-5d3d-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "FREIGHT_PUROLATOR_F07",
+    "qfu_branchcode": "4173",
+    "qfu_startedon": "2026-04-21T08:40:19Z",
+    "createdon": "2026-04-21T08:40:20Z",
+    "qfu_completedon": "2026-04-21T14:51:33Z"
+  },
+  {
+    "@odata.etag": "W/\"2837343\"",
+    "qfu_name": "4171 Freight Import",
+    "modifiedon": "2026-04-27T17:00:29Z",
+    "qfu_ingestionbatchid": "209688ca-5d3d-f111-88b5-000d3a59294a",
+    "qfu_sourcefamily": "FREIGHT_PUROLATOR_F07",
+    "qfu_branchcode": "4171",
+    "qfu_startedon": "2026-04-21T08:40:47Z",
+    "createdon": "2026-04-21T08:40:47Z",
+    "qfu_completedon": "2026-04-21T14:51:43Z"
+  }
+]

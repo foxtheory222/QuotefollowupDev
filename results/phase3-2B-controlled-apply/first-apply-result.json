@@ -1,0 +1,237 @@
+﻿{
+    "phase":  "Phase 3",
+    "checkedAtUtc":  "2026-04-27T22:02:50.6162418Z",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionUniqueName":  "qfu_revenuefollowupworkbench",
+    "mode":  "Apply",
+    "branchCodeFilter":  "",
+    "limitQuoteGroups":  0,
+    "scopeFile":  "results/phase3-2B-controlled-apply/pre-apply-scope-review.csv",
+    "scopeRowsProvided":  5,
+    "scopeQuoteGroupsSelected":  5,
+    "entitySets":  {
+                       "quote":  "qfu_quotes",
+                       "quoteLine":  "qfu_quotelines",
+                       "branch":  "qfu_branchs",
+                       "staff":  "qfu_staffs",
+                       "policy":  "qfu_policies",
+                       "staffAlias":  "qfu_staffaliases",
+                       "workItem":  "qfu_workitems",
+                       "workItemAction":  "qfu_workitemactions",
+                       "assignmentException":  "qfu_assignmentexceptions"
+                   },
+    "optionValues":  {
+                         "quoteWorkType":  985010000,
+                         "sp830SourceSystem":  985010000,
+                         "amNumberAliasType":  985010000,
+                         "cssrNumberAliasType":  985010002,
+                         "gteOperator":  985010001,
+                         "highValueOnlyMode":  985010000,
+                         "allQuotesMode":  985010001,
+                         "reportingOnlyMode":  985010002,
+                         "openWorkItemStatus":  985010000,
+                         "highPriority":  985010002,
+                         "assignedStatus":  985010000,
+                         "needsTsrStatus":  985010002,
+                         "needsCssrStatus":  985010003,
+                         "unmappedStatus":  985010004,
+                         "errorStatus":  985010005,
+                         "missingTsrException":  985010000,
+                         "missingCssrException":  985010001,
+                         "blankAliasException":  985010002,
+                         "zeroAliasException":  985010003,
+                         "ambiguousException":  985010004,
+                         "missingBranchException":  985010005,
+                         "missingPolicyException":  985010006,
+                         "openExceptionStatus":  985010000
+                     },
+    "counts":  {
+                   "quoteSourceRecordsScanned":  521,
+                   "quoteLineRecordsScanned":  1559,
+                   "quoteGroupsFound":  5,
+                   "quoteGroupsAtOrAboveThreshold":  5,
+                   "workItemsWouldBeCreated":  4,
+                   "workItemsWouldBeUpdated":  1,
+                   "workItemsCreated":  4,
+                   "workItemsUpdated":  1,
+                   "lowValueQuoteGroupsSkipped":  0,
+                   "tsrAliasesResolved":  5,
+                   "cssrAliasesResolved":  5,
+                   "tsrExceptions":  0,
+                   "cssrExceptions":  0,
+                   "missingBranchExceptions":  0,
+                   "missingPolicyExceptions":  0,
+                   "ambiguousAliasExceptions":  0,
+                   "assignmentExceptionsWouldBeCreated":  0,
+                   "assignmentExceptionsWouldBeUpdated":  0,
+                   "assignmentExceptionsCreated":  0,
+                   "assignmentExceptionsUpdated":  0,
+                   "alertsSent":  0
+               },
+    "topUnresolvedAmNumbers":  {
+
+                               },
+    "topUnresolvedCssrNumbers":  {
+
+                                 },
+    "sampleWorkItemPayloads":  [
+                                   {
+                                       "sampleId":  "c8cda2c22098",
+                                       "sourceExternalKeyHash":  "c8cda2c22098",
+                                       "sourceDocumentHash":  "b767302230d6",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  5189.05,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-03",
+                                       "assignmentStatus":  "Assigned",
+                                       "tsrResolution":  "resolved",
+                                       "cssrResolution":  "resolved",
+                                       "existingWorkItem":  true,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   },
+                                   {
+                                       "sampleId":  "0dd6567c4d9f",
+                                       "sourceExternalKeyHash":  "0dd6567c4d9f",
+                                       "sourceDocumentHash":  "e9058bbc532f",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  3070.57,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-03",
+                                       "assignmentStatus":  "Assigned",
+                                       "tsrResolution":  "resolved",
+                                       "cssrResolution":  "resolved",
+                                       "existingWorkItem":  false,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   },
+                                   {
+                                       "sampleId":  "33e17d55c46f",
+                                       "sourceExternalKeyHash":  "33e17d55c46f",
+                                       "sourceDocumentHash":  "edadd345e835",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  4178.86,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-03",
+                                       "assignmentStatus":  "Assigned",
+                                       "tsrResolution":  "resolved",
+                                       "cssrResolution":  "resolved",
+                                       "existingWorkItem":  false,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   },
+                                   {
+                                       "sampleId":  "700ab127c1e9",
+                                       "sourceExternalKeyHash":  "700ab127c1e9",
+                                       "sourceDocumentHash":  "6d008de868d1",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  9568.57,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-03",
+                                       "assignmentStatus":  "Assigned",
+                                       "tsrResolution":  "resolved",
+                                       "cssrResolution":  "resolved",
+                                       "existingWorkItem":  false,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   },
+                                   {
+                                       "sampleId":  "1c1138ac5bfd",
+                                       "sourceExternalKeyHash":  "1c1138ac5bfd",
+                                       "sourceDocumentHash":  "8129df9c3d07",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  9968.58,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-14",
+                                       "assignmentStatus":  "Assigned",
+                                       "tsrResolution":  "resolved",
+                                       "cssrResolution":  "resolved",
+                                       "existingWorkItem":  false,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   }
+                               ],
+    "sampleExceptionPayloads":  [
+
+                                ],
+    "normalizationTests":  [
+                               {
+                                   "input":  "7001634.0",
+                                   "normalized":  "7001634",
+                                   "isValid":  true,
+                                   "reason":  ""
+                               },
+                               {
+                                   "input":  "corey carpenter",
+                                   "normalized":  "COREY CARPENTER",
+                                   "isValid":  true,
+                                   "reason":  ""
+                               },
+                               {
+                                   "input":  "",
+                                   "normalized":  "",
+                                   "isValid":  false,
+                                   "reason":  "Blank"
+                               },
+                               {
+                                   "input":  "0",
+                                   "normalized":  "0",
+                                   "isValid":  false,
+                                   "reason":  "Zero"
+                               },
+                               {
+                                   "input":  "00000000",
+                                   "normalized":  "00000000",
+                                   "isValid":  false,
+                                   "reason":  "Zero"
+                               },
+                               {
+                                   "input":  "N/A",
+                                   "normalized":  "N/A",
+                                   "isValid":  false,
+                                   "reason":  "Blank"
+                               },
+                               {
+                                   "input":  "NULL",
+                                   "normalized":  "NULL",
+                                   "isValid":  false,
+                                   "reason":  "Blank"
+                               },
+                               {
+                                   "input":  "001234",
+                                   "normalized":  "001234",
+                                   "isValid":  true,
+                                   "reason":  ""
+                               }
+                           ],
+    "rollupBehavior":  {
+                           "implementedInResolverDryRun":  true,
+                           "activeServerSideFlowOrPlugin":  false,
+                           "completedAttempts":  "Count related qfu_workitemaction rows where qfu_countsasattempt = true.",
+                           "lastFollowedUpOn":  "Max qfu_actionon where qfu_countsasattempt = true.",
+                           "lastActionOn":  "Max qfu_actionon across all related actions.",
+                           "applyModeNote":  "Apply mode does not overwrite existing manual/action-derived values unless a later explicit rollup automation phase enables it."
+                       },
+    "applyModeHardening":  {
+                               "exceptionSourceDocumentNumber":  "qfu_sourcedocumentnumber is populated from the source quote number in apply mode.",
+                               "exceptionSourceQuoteLookup":  "qfu_sourcequote is populated when a quote header exists.",
+                               "exceptionSourceQuoteLineLookup":  "qfu_sourcequoteline is populated from a representative quote line when available.",
+                               "newWorkItemExceptionLink":  "Newly created work item ids are captured and applied to related exception plans before exception writes.",
+                               "statusPreservation":  "Existing qfu_status is only set when blank/null; new work items are set to Open.",
+                               "ownerPreservation":  "Existing non-empty primary, support, TSR, and CSSR owner fields are not overwritten.",
+                               "nextFollowUpPreservation":  "Existing qfu_nextfollowupon is not overwritten.",
+                               "actionHistoryPreservation":  "qfu_workitemaction rows, qfu_lastfollowedupon, qfu_lastactionon, and existing completed attempts are not overwritten."
+                           },
+    "noAlertGuarantee":  "The resolver does not create qfu_alertlog records, does not call Power Automate alert flows, and reports alertsSent = 0.",
+    "preservationGuarantee":  "The resolver does not overwrite qfu_stickynote, qfu_stickynoteupdatedon, qfu_stickynoteupdatedby, qfu_workitemaction history, qfu_lastfollowedupon, qfu_lastactionon, or non-empty manual owner fields."
+}

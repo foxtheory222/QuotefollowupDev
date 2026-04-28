@@ -1,0 +1,441 @@
+# Manifest
+
+Generated: 2026-04-24 08:28:32 -06:00
+
+## Audit Documents
+- ALERTING_AUDIT.md: Required audit document generated from current repo evidence.
+- AUDIT_SUMMARY.md: Required audit document generated from current repo evidence.
+- BRANCH_MANAGER_ADMIN_DESIGN_GAPS.md: Required audit document generated from current repo evidence.
+- CURRENT_REPO_STATE.md: Required audit document generated from current repo evidence.
+- DATA_MODEL.md: Required audit document generated from current repo evidence.
+- FLOW_MONITORING_AUDIT.md: Required audit document generated from current repo evidence.
+- HARDCODED_VALUES.md: Required audit document generated from current repo evidence.
+- POWER_PLATFORM_INVENTORY.md: Required audit document generated from current repo evidence.
+- QUOTE_LIFECYCLE.md: Required audit document generated from current repo evidence.
+- repo_tree.txt: Required audit document generated from current repo evidence.
+- RISKS_AND_GAPS.md: Required audit document generated from current repo evidence.
+- SECURITY_ROLES_AUDIT.md: Required audit document generated from current repo evidence.
+- TARGET_ARCHITECTURE_RECOMMENDATION.md: Required audit document generated from current repo evidence.
+
+## Safe Source Files
+- SAFE_SOURCE_FILES/.azure/plan.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/.gitignore: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/AGENTS.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/AUTHORITATIVE_FILES_USED.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/CARD_CONTRACTS.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/CHANGE_MAP.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/CONVENTIONS.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/analytics-selfpopulate-incident-20260409.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/budget-warning-cache-bust-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/freight-hosted-parser-20260421.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/freight-ingress-restore-20260422.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/freight-queue-repair-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/freight-queue-repair-20260421.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/freight-worklist-sort-repair-20260421.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/gl060-4171-march-repair-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/gl060-mailbox-ingress-hardening-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/live-route-performance-baseline-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/quote-detail-archived-route-repair-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/quote-retention-repair-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/quotes-toolbar-layout-polish-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/docs/ops/runtime-detail-fetch-optimization-20260420.md: Sanitized architecture/ops documentation evidence.
+- SAFE_SOURCE_FILES/FREIGHT_FIELD_MAPPING.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/FREIGHT_IMPLEMENTATION_SUMMARY.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/HANDOFF_2026-04-09.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/HANDOFF_2026-04-10_HOME_SYNC.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/IMPLEMENTATION_SUMMARY.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/KNOWN_LIMITATIONS.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/NON_IMPLEMENTED.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/powerpages-live/operations-hub---operationhub/sitesetting.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/powerpages-live/operations-hub---operationhub/web-files/qfu-phase0.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/audit-live-current-budget-duplicates.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/audit-live-current-state-patterns.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/branch_analytics_semantic.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/create-southern-alberta-pilot-flow-solution.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/deploy-southern-alberta-pilot.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/ensure-regional-config-spine.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/lint-runtime-vs-webapi-allowlists.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/normalize-live-sa1300-current-budgets.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/parse-southern-alberta-workbooks.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/polarity-lint.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/rebind-qfu-shared-commondataserviceforapps.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/repair-live-config-summary-duplicates.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/repair-live-sa1300-abnormal-margin-sync-xrm.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/repair-live-sa1300-budget-selfpopulate.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/repair-southern-alberta-live-dashboard-data.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/standardize-sa1300-budget-flows.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/RAW/scripts/verify-live-budget-lineage.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/README.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/README_IMPLEMENTATION.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/results/freight-archive-summary-20260410B.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/results/freight-verification-seed-20260410B.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/results/quote-line-missing-live-summary-20260420.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/results/sapilotflows/src/Workflows/4171-Budget-Update-SA1300-_GUID_.json: Sanitized exported Power Automate workflow evidence.
+- SAFE_SOURCE_FILES/results/sapilotflows/src/Workflows/4172-Budget-Update-SA1300-_GUID_.json: Sanitized exported Power Automate workflow evidence.
+- SAFE_SOURCE_FILES/results/sapilotflows/src/Workflows/4173-Budget-Update-SA1300-_GUID_.json: Sanitized exported Power Automate workflow evidence.
+- SAFE_SOURCE_FILES/scripts/archive-freight-workitems.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/attach-operationhub-auth-browser.js: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/audit-live-cssr-overdue-order-counts.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/audit-live-margin-snapshot-integrity.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/audit-live-operational-current-state.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/audit-live-overdue-backorder-consistency.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/backfill-live-operational-lifecycle.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/check-live-sa1300-opsdaily-freshness.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/check-local-qfu-task-health.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/check-southern-alberta-flow-health.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/check-southern-alberta-runtime-readiness.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/create-southern-alberta-freight-flow-solution.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/create-southern-alberta-gl060-flow-solution.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/create-southern-alberta-pilot-flow-solution.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/deploy-freight-worklist.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/extract-freight-email-attachments.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/find-shared-mailbox-messages.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/freight_parser.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/invoke-qfu-reliability-diagnostics.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/lint-runtime-vs-webapi-allowlists.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/measure-operationhub-route-performance.js: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/open-operationhub-auth-browser.js: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/parse-freight-report.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/parse-southern-alberta-workbooks.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/parse-zbo-mailbox-capture.py: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/process-freight-inbox-queue.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/prove-gl060-mailbox-ingress.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/queue-freight-samples.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/refresh-live-branch-daily-summaries.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/register-branch-summary-refresh-task.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/register-freight-processor-task.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-backorder-overdue-days.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-current-state-from-parsed-workbooks.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-fy26-budget-archive-targets.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-gl060-mailbox-ingress-xrm.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-ingestion-batch-freshness.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-operational-duplicates.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-quote-line-integrity.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-quote-retention-xrm.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-sa1300-budget-opsdaily-json-xrm.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-sa1300-budget-selfpopulate.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-zbo-current-state-from-mailbox-capture.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-zbo-ingestion-batch-sync.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-zbo-quantity-normalization.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-live-zbo-shared-mailbox-subject-filters.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-southern-alberta-budget-ingestion-batch-sync.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-southern-alberta-live-flow-defects.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/repair-southern-alberta-mailbox-trigger-definitions.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/replace-live-zbo-flows.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/run-live-qfu-health-check.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/seed-freight-verification-rows.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/send-example-branch-replay.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/send-gl060-validation-replay.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/send-latest-branch-replay.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/start-operationhub-auth-browser.ps1: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/scripts/verify-freight-portal.cjs: Sanitized generator/repair/validation script evidence.
+- SAFE_SOURCE_FILES/site/.portalconfig/_DATAVERSE_HOST_-manifest.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/.portalconfig/manifest.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/.portalconfig/portallanguage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/botconsumer.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/footer/Footer.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/footer/Footer.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/header-search-tooltip/Header-Search-ToolTip.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/header-search-tooltip/Header-Search-ToolTip.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/header-toggle-navigation/Header-Toggle-Navigation.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/header-toggle-navigation/Header-Toggle-Navigation.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/logo-alt-text/Logo-alt-text.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/logo-alt-text/Logo-alt-text.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/logo-url/Logo-URL.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/logo-url/Logo-URL.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/mobile-header/Mobile-Header.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/mobile-header/Mobile-Header.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-noresults/Search-NoResults.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-noresults/Search-NoResults.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-resultscount/Search-ResultsCount.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-resultscount/Search-ResultsCount.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-resultstitle/Search-ResultsTitle.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-resultstitle/Search-ResultsTitle.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-title/Search-Title.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/search-title/Search-Title.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/site-name/Site-name.en-US.contentsnippet.value.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/content-snippets/site-name/Site-name.en-US.contentsnippet.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/page-templates/Access-Denied.pagetemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/page-templates/AI-Search-PageTemplate.pagetemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/page-templates/Default-studio-template.pagetemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/page-templates/Profile.pagetemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/page-templates/Search.pagetemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/publishingstate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/sitemarker.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/sitesetting.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_backorder-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_branchdailysummary-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_branch-Global-ReadWrite.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_budgetarchive-Global-ReadWrite.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_budget-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_deliverynotpgi-Global-ReadWrite.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_financesnapshot-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_financevariance-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_freightworkitem-Authenticated-ReadWrite.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_ingestionbatch-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_lateorderexception-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_marginexception-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_quote-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_quoteline-Global-Read.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_region-Global-ReadWrite.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/table-permissions/operationhub-qfu_sourcefeed-Global-ReadWrite.tablepermission.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/bootstrap.min.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/bootstrap.min.css.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/Cat-PC.png.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/Logo-sm-64.png.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/portalbasictheme.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/portalbasictheme.css.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/qfu-phase0.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/qfu-phase0.css.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/robots.txt: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/robots.txt.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/theme.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-files/theme.css.webfile.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/weblink-sets/default/Default.en-US.weblinkset.weblink.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/weblink-sets/default/Default.en-US.weblinkset.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/weblink-sets/profile-navigation/Profile-Navigation.en-US.weblinkset.weblink.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/weblink-sets/profile-navigation/Profile-Navigation.en-US.weblinkset.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/webpagerule.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/4171-Calgary.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/4171-Calgary.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/4171-Calgary.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/4171-Calgary.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/4171-Calgary.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/content-pages/4171-Calgary.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/content-pages/4171-Calgary.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/content-pages/4171-Calgary.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/content-pages/4171-Calgary.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4171-calgary/content-pages/4171-Calgary.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/4172-Lethbridge.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/4172-Lethbridge.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/4172-Lethbridge.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/4172-Lethbridge.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/4172-Lethbridge.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/content-pages/4172-Lethbridge.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/content-pages/4172-Lethbridge.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/content-pages/4172-Lethbridge.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/content-pages/4172-Lethbridge.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4172-lethbridge/content-pages/4172-Lethbridge.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/4173-Medicine-Hat.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/4173-Medicine-Hat.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/4173-Medicine-Hat.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/4173-Medicine-Hat.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/4173-Medicine-Hat.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/content-pages/4173-Medicine-Hat.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/content-pages/4173-Medicine-Hat.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/content-pages/4173-Medicine-Hat.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/content-pages/4173-Medicine-Hat.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/4173-medicine-hat/content-pages/4173-Medicine-Hat.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/Access-Denied.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/Access-Denied.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/Access-Denied.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/Access-Denied.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/Access-Denied.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/content-pages/Access-Denied.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/content-pages/Access-Denied.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/content-pages/Access-Denied.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/content-pages/Access-Denied.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/access-denied/content-pages/Access-Denied.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/content-pages/Detail-Shell_4AA958D9.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/content-pages/Detail-Shell_4AA958D9.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/content-pages/Detail-Shell_4AA958D9.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/content-pages/Detail-Shell_4AA958D9.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/content-pages/Detail-Shell_4AA958D9.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/Detail-Shell_4AA958D9.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/Detail-Shell_4AA958D9.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/Detail-Shell_4AA958D9.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/Detail-Shell_4AA958D9.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_4aa958d9/Detail-Shell_4AA958D9.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/content-pages/Detail-Shell_EF61BB7E.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/content-pages/Detail-Shell_EF61BB7E.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/content-pages/Detail-Shell_EF61BB7E.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/content-pages/Detail-Shell_EF61BB7E.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/content-pages/Detail-Shell_EF61BB7E.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/Detail-Shell_EF61BB7E.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/Detail-Shell_EF61BB7E.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/Detail-Shell_EF61BB7E.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/Detail-Shell_EF61BB7E.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_ef61bb7e/Detail-Shell_EF61BB7E.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/content-pages/Detail-Shell_F0C8F5F0.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/content-pages/Detail-Shell_F0C8F5F0.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/content-pages/Detail-Shell_F0C8F5F0.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/content-pages/Detail-Shell_F0C8F5F0.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/content-pages/Detail-Shell_F0C8F5F0.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/Detail-Shell_F0C8F5F0.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/Detail-Shell_F0C8F5F0.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/Detail-Shell_F0C8F5F0.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/Detail-Shell_F0C8F5F0.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/detail-shell_f0c8f5f0/Detail-Shell_F0C8F5F0.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/content-pages/Hub.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/content-pages/Hub.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/content-pages/Hub.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/content-pages/Hub.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/content-pages/Hub.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/Hub.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/Hub.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/Hub.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/Hub.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/hub/Hub.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/content-pages/Northern-Alberta.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/content-pages/Northern-Alberta.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/content-pages/Northern-Alberta.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/content-pages/Northern-Alberta.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/content-pages/Northern-Alberta.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/Northern-Alberta.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/Northern-Alberta.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/Northern-Alberta.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/Northern-Alberta.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/northern-alberta/Northern-Alberta.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/content-pages/Ops---Admin.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/content-pages/Ops---Admin.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/content-pages/Ops---Admin.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/content-pages/Ops---Admin.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/content-pages/Ops---Admin.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/Ops---Admin.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/Ops---Admin.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/Ops---Admin.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/Ops---Admin.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/ops---admin/Ops---Admin.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/content-pages/Page-Not-Found.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/content-pages/Page-Not-Found.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/content-pages/Page-Not-Found.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/content-pages/Page-Not-Found.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/content-pages/Page-Not-Found.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/Page-Not-Found.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/Page-Not-Found.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/Page-Not-Found.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/Page-Not-Found.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/page-not-found/Page-Not-Found.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/content-pages/Profile.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/content-pages/Profile.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/content-pages/Profile.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/content-pages/Profile.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/content-pages/Profile.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/Profile.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/Profile.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/Profile.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/Profile.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/profile/Profile.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/content-pages/Saskatchewan.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/content-pages/Saskatchewan.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/content-pages/Saskatchewan.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/content-pages/Saskatchewan.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/content-pages/Saskatchewan.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/Saskatchewan.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/Saskatchewan.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/Saskatchewan.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/Saskatchewan.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/saskatchewan/Saskatchewan.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/content-pages/Search.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/content-pages/Search.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/content-pages/Search.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/content-pages/Search.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/content-pages/Search.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/Search.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/Search.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/Search.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/Search.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/search/Search.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/content-pages/Southern-Alberta.en-US.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/content-pages/Southern-Alberta.en-US.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/content-pages/Southern-Alberta.en-US.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/content-pages/Southern-Alberta.en-US.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/content-pages/Southern-Alberta.en-US.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/Southern-Alberta.webpage.copy.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/Southern-Alberta.webpage.custom_css.css: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/Southern-Alberta.webpage.custom_javascript.js: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/Southern-Alberta.webpage.summary.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-pages/southern-alberta/Southern-Alberta.webpage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/webrole.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/website.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/websiteaccess.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/websitelanguage.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/breadcrumbs/Breadcrumbs.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/breadcrumbs/Breadcrumbs.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/default-studio-template/Default-studio-template.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/default-studio-template/Default-studio-template.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/footer/Footer.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/footer/Footer.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/header/Header.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/header/Header.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/languages-dropdown/Languages-Dropdown.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/languages-dropdown/Languages-Dropdown.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/layout-2-column-wide-left/Layout-2-Column-Wide-Left.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/layout-2-column-wide-left/Layout-2-Column-Wide-Left.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/page-copy/Page-Copy.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/page-copy/Page-Copy.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/page-header/Page-Header.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/page-header/Page-Header.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/pages-breadcrumb/Pages-Breadcrumb.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/pages-breadcrumb/Pages-Breadcrumb.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/pagination/Pagination.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/pagination/Pagination.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/power-virtual-agents/Power-Virtual-Agents.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/power-virtual-agents/Power-Virtual-Agents.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/qfu-phase-0-renderer/QFU-Phase-0-Renderer.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/qfu-phase-0-renderer/QFU-Phase-0-Renderer.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/qfu-regional-runtime/QFU-Regional-Runtime.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/qfu-regional-runtime/QFU-Regional-Runtime.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/search/Search.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/search/Search.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/search-results/Search-Results.webtemplate.source.html: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/site/web-templates/search-results/Search-Results.webtemplate.yml: Sanitized Power Pages source/configuration evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/.funcignore: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/entrypoint.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/function_app.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/host.json: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/local.settings.sample.json: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/qfu_freight_parser/__init__.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/qfu_freight_parser/core.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/qfu_freight_parser/dataverse_client.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/qfu_freight_parser/host_contract.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/qfu_freight_parser/processor.py: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/README.md: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/src/freight_parser_host/requirements.txt: Sanitized hosted parser source evidence.
+- SAFE_SOURCE_FILES/TEST_RESULTS_FREIGHT.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/tests/test_freight_hosted_parser_contracts.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/tests/test_freight_parser.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/tests/test_gl060_ingress_contracts.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/tests/test_pilot_flow_generator_contracts.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/tests/test_powerpages_runtime_contracts.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/tests/test_sa1300_budget_selfpopulate.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/tests/test_verification_script_contracts.py: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/allowlist-lint-results.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/allowlist-lint-results.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/analytics-page-contract-checks.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/annual-budget-target-repair-apply-20260410.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/backorder-overdue-day-repair.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/browser-tests-not-run.md: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/budget-duplicate-audit.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/budget-duplicate-audit.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/budget-lineage-checks.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/budget-lineage-checks.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/budget-lineage-post-repair-20260410.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/cssr-overdue-line-count-20260410.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/cssr-overdue-order-counts.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/cssr-overdue-order-counts.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/dryrun-budget-duplicate-report.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/dryrun-budget-duplicate-report.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/flow-budget-checks.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-browser-verification.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-browser-verification.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-current-state-audit-20260409.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-current-state-audit-20260409.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-current-state-from-parsed-workbooks.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-duplicate-sample-evidence-20260409.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-health-check-summary.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/live-quote-line-integrity-repair-summary.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/margin-snapshot-integrity.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/margin-snapshot-integrity.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/month-boundary-tests.md: Sanitized automated test evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/operational-current-state-audit.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/overdue-backorder-consistency.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/phase0-reference-check.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/polarity-lint-results.json: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/polarity-lint-results.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/qfu_isactive-search-results.txt: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/qfu-reliability-diagnostics.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/route-smoke-checks.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/runtime-contract-checks.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/runtime-diagnostics-checks.md: Sanitized source/config/documentation evidence.
+- SAFE_SOURCE_FILES/VERIFICATION/static-checks.md: Sanitized source/config/documentation evidence.

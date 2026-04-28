@@ -1,0 +1,15 @@
+- adx_name: Page Not Found
+  adx_pageid: <GUID>
+  adx_sitemarkerid: <GUID>
+- adx_name: Profile
+  adx_pageid: <GUID>
+  adx_sitemarkerid: <GUID>
+- adx_name: Access Denied
+  adx_pageid: <GUID>
+  adx_sitemarkerid: <GUID>
+- adx_name: Search
+  adx_pageid: <GUID>
+  adx_sitemarkerid: <GUID>
+- adx_name: Home
+  adx_pageid: <GUID>
+  adx_sitemarkerid: <GUID>

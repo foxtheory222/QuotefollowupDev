@@ -1,0 +1,66 @@
+{
+  "environment_url": "https://orga632edd5.crm3.dynamics.com",
+  "timestamp": "2026-04-28 10:36:57 -06:00",
+  "custom_page": {
+    "display_name": "My Work",
+    "logical_name": "qfu_mywork_6e7ed",
+    "canvas_app_id": "e543a070-ae59-46cb-9286-bd9d3ed42309",
+    "canvas_app_row_id": "e37334c2-e8fa-4934-afd9-c4fba602d3c2",
+    "model_driven_app_id": "93917a64-6742-f111-bec7-7c1e52062b6f",
+    "model_driven_app_unique_name": "qfu_RevenueFollowUpWorkbench"
+  },
+  "counts": {
+    "active_work_items": 32,
+    "open": 5,
+    "due_today": 4,
+    "overdue": 22,
+    "roadblocks": 0,
+    "quotes_gte_3k": 32,
+    "missing_attempts": 31,
+    "assignment_issues": 2,
+    "work_items_with_sticky_notes": 1,
+    "active_actions": 8,
+    "attempt_actions": 3,
+    "active_assignment_exceptions": 3,
+    "active_alert_logs": 0,
+    "sent_alert_logs": 0,
+    "duplicate_work_item_keys": 0,
+    "duplicate_assignment_exception_keys": 0
+  },
+  "test_markers": {
+    "sticky_note": "PHASE4B_UI_TEST_STICKY_NOTE",
+    "log_call": "PHASE4B_UI_TEST_LOG_CALL_V3",
+    "log_email": "PHASE4B_UI_TEST_LOG_EMAIL",
+    "non_attempt_note": "PHASE4B_UI_TEST_NOTE_BLANK_ACTIONON",
+    "roadblock": "PHASE4B_UI_TEST_ROADBLOCK",
+    "terminal_lost": "PHASE4B_UI_TEST_LOST",
+    "next_follow_up": "PHASE4B_UI_TEST_NEXT_FOLLOWUP_V4"
+  },
+  "test_records": [
+    {
+      "label": "Test work item A",
+      "status": "Open",
+      "completed_attempts": 3,
+      "sticky_note_marker_present": true,
+      "last_followed_up_from_attempt": true,
+      "last_action_from_all_actions": true,
+      "next_follow_up_updated": true,
+      "customer_data_included": false
+    },
+    {
+      "label": "Test work item B",
+      "status": "Closed Lost",
+      "completed_attempts": 0,
+      "roadblock_action_created": true,
+      "terminal_action_created": true,
+      "terminal_status_preserved_by_formula": true,
+      "customer_data_included": false
+    }
+  ],
+  "no_alert_validation": {
+    "emails_sent": 0,
+    "teams_messages_sent": 0,
+    "sent_alert_logs": 0,
+    "daily_digests": 0
+  }
+}

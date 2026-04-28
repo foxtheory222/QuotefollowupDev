@@ -1,0 +1,13 @@
+{
+  "secondApplyWorkItemsCreated": 0,
+  "secondApplyWorkItemsUpdated": 5,
+  "secondApplyAssignmentExceptionsCreated": 0,
+  "secondApplyAssignmentExceptionsUpdated": 0,
+  "duplicateWorkItemSourceKeys": 0,
+  "duplicateAssignmentExceptionKeys": 0,
+  "alertsSentSecondApply": 0,
+  "stickyNotesPreserved": true,
+  "ownersPreserved": "pass - second apply updated existing records without blanking owners",
+  "statusesPreserved": "pass - Open status remained valid",
+  "validationResult": "pass"
+}

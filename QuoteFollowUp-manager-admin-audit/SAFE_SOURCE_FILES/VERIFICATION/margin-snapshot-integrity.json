@@ -1,0 +1,121 @@
+{
+    "generated_on":  "2026-04-09T21:49:16.9206166Z",
+    "target_environment_url":  "<URL>
+    "current_month":  "2026-04",
+    "branches":  [
+                     {
+                         "branch_code":  "4171",
+                         "current_month":  "2026-04",
+                         "current_month_row_count":  6,
+                         "latest_snapshot_date":  "2026-04-08",
+                         "latest_snapshot_row_count":  4,
+                         "latest_snapshot_duplicate_doc_review_groups":  0,
+                         "repeated_doc_review_across_snapshot_days":  2,
+                         "latest_snapshot_duplicate_samples":  [
+
+                                                               ],
+                         "repeated_doc_review_samples":  [
+                                                             {
+                                                                 "billing_document":  "7034274546",
+                                                                 "review_type":  "abnormal high margin",
+                                                                 "snapshot_days":  [
+                                                                                       "2026-04-07",
+                                                                                       "2026-04-08"
+                                                                                   ],
+                                                                 "source_ids":  [
+                                                                                    "4171|SA1300-MARGIN|2026-04-07|7034274546|abnormal-high-margin",
+                                                                                    "4171|SA1300-MARGIN|2026-04-08|7034274546|abnormal-high-margin"
+                                                                                ]
+                                                             },
+                                                             {
+                                                                 "billing_document":  "7034265912",
+                                                                 "review_type":  "low margin",
+                                                                 "snapshot_days":  [
+                                                                                       "2026-04-07",
+                                                                                       "2026-04-08"
+                                                                                   ],
+                                                                 "source_ids":  [
+                                                                                    "4171|SA1300-MARGIN|2026-04-07|7034265912|low-margin",
+                                                                                    "4171|SA1300-MARGIN|2026-04-08|7034265912|low-margin"
+                                                                                ]
+                                                             }
+                                                         ]
+                     },
+                     {
+                         "branch_code":  "4172",
+                         "current_month":  "2026-04",
+                         "current_month_row_count":  8,
+                         "latest_snapshot_date":  "2026-04-08",
+                         "latest_snapshot_row_count":  5,
+                         "latest_snapshot_duplicate_doc_review_groups":  0,
+                         "repeated_doc_review_across_snapshot_days":  3,
+                         "latest_snapshot_duplicate_samples":  [
+
+                                                               ],
+                         "repeated_doc_review_samples":  [
+                                                             {
+                                                                 "billing_document":  "7034273999",
+                                                                 "review_type":  "large $ margin review",
+                                                                 "snapshot_days":  [
+                                                                                       "2026-04-07",
+                                                                                       "2026-04-08"
+                                                                                   ],
+                                                                 "source_ids":  [
+                                                                                    "4172|SA1300-MARGIN|2026-04-07|7034273999|large-margin-review",
+                                                                                    "4172|SA1300-MARGIN|2026-04-08|7034273999|large-dollars-margin-review"
+                                                                                ]
+                                                             },
+                                                             {
+                                                                 "billing_document":  "7034273975",
+                                                                 "review_type":  "large $ margin review",
+                                                                 "snapshot_days":  [
+                                                                                       "2026-04-07",
+                                                                                       "2026-04-08"
+                                                                                   ],
+                                                                 "source_ids":  [
+                                                                                    "4172|SA1300-MARGIN|2026-04-07|7034273975|large-margin-review",
+                                                                                    "4172|SA1300-MARGIN|2026-04-08|7034273975|large-dollars-margin-review"
+                                                                                ]
+                                                             },
+                                                             {
+                                                                 "billing_document":  "7034274589",
+                                                                 "review_type":  "large $ margin review",
+                                                                 "snapshot_days":  [
+                                                                                       "2026-04-07",
+                                                                                       "2026-04-08"
+                                                                                   ],
+                                                                 "source_ids":  [
+                                                                                    "4172|SA1300-MARGIN|2026-04-07|7034274589|large-margin-review",
+                                                                                    "4172|SA1300-MARGIN|2026-04-08|7034274589|large-dollars-margin-review"
+                                                                                ]
+                                                             }
+                                                         ]
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "current_month":  "2026-04",
+                         "current_month_row_count":  3,
+                         "latest_snapshot_date":  "2026-04-08",
+                         "latest_snapshot_row_count":  2,
+                         "latest_snapshot_duplicate_doc_review_groups":  0,
+                         "repeated_doc_review_across_snapshot_days":  1,
+                         "latest_snapshot_duplicate_samples":  [
+
+                                                               ],
+                         "repeated_doc_review_samples":  [
+                                                             {
+                                                                 "billing_document":  "7034264162",
+                                                                 "review_type":  "negative margin",
+                                                                 "snapshot_days":  [
+                                                                                       "2026-04-07",
+                                                                                       "2026-04-08"
+                                                                                   ],
+                                                                 "source_ids":  [
+                                                                                    "4173|SA1300-MARGIN|2026-04-07|7034264162|negative-margin",
+                                                                                    "4173|SA1300-MARGIN|2026-04-08|7034264162|negative-margin"
+                                                                                ]
+                                                             }
+                                                         ]
+                     }
+                 ]
+}

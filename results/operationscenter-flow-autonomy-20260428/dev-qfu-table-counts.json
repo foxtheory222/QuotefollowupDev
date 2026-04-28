@@ -1,0 +1,68 @@
+[
+  {
+    "logical": "qfu_region",
+    "entityset": "qfu_regions",
+    "count": 3,
+    "latestModified": "2026-04-27T17:00:26Z"
+  },
+  {
+    "logical": "qfu_branch",
+    "entityset": "qfu_branchs",
+    "count": 3,
+    "latestModified": "2026-04-27T17:00:26Z"
+  },
+  {
+    "logical": "qfu_sourcefeed",
+    "entityset": "qfu_sourcefeeds",
+    "count": 24,
+    "latestModified": "2026-04-27T17:00:27Z"
+  },
+  {
+    "logical": "qfu_ingestionbatch",
+    "entityset": "qfu_ingestionbatchs",
+    "count": 127,
+    "latestModified": "2026-04-27T17:00:30Z"
+  },
+  {
+    "logical": "qfu_quote",
+    "entityset": "qfu_quotes",
+    "count": 1130,
+    "latestModified": "2026-04-27T17:01:04Z"
+  },
+  {
+    "logical": "qfu_quoteline",
+    "entityset": "qfu_quotelines",
+    "count": 1559,
+    "latestModified": "2026-04-27T17:01:45Z"
+  },
+  {
+    "logical": "qfu_backorder",
+    "entityset": "qfu_backorders",
+    "count": 3607,
+    "latestModified": "2026-04-27T17:03:11Z"
+  },
+  {
+    "logical": "qfu_deliverynotpgi",
+    "entityset": "qfu_deliverynotpgis",
+    "count": 1655,
+    "latestModified": "2026-04-27T17:03:50Z"
+  },
+  {
+    "logical": "qfu_freightworkitem",
+    "entityset": "qfu_freightworkitems",
+    "count": 397,
+    "latestModified": "2026-04-27T17:04:13Z"
+  },
+  {
+    "logical": "qfu_marginexception",
+    "entityset": "qfu_marginexceptions",
+    "count": 196,
+    "latestModified": "2026-04-27T17:03:54Z"
+  },
+  {
+    "logical": "qfu_lateorderexception",
+    "entityset": "qfu_lateorderexceptions",
+    "count": 349,
+    "latestModified": "2026-04-27T17:04:02Z"
+  }
+]

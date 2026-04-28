@@ -1,0 +1,74 @@
+[
+  {
+    "@odata.etag": "W/\"2659073\"",
+    "modifiedon": "2026-04-19T22:32:55Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_conversionservice",
+    "connectionreferencedisplayname": "Content Conversion",
+    "connectionreferenceid": "e41148d3-87de-45fc-a20f-f0e5cf7fcdf8",
+    "createdon": "2026-03-28T07:27:30Z",
+    "connectionreferencelogicalname": "msdyn_ContentConversion"
+  },
+  {
+    "@odata.etag": "W/\"2659075\"",
+    "modifiedon": "2026-04-19T22:32:55Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+    "connectionreferencedisplayname": "Dataverse",
+    "connectionreferenceid": "e00ad111-834a-458e-ba6a-684acff8a92e",
+    "createdon": "2026-03-28T07:27:30Z",
+    "connectionreferencelogicalname": "msdyn_Dataverse"
+  },
+  {
+    "@odata.etag": "W/\"2846602\"",
+    "modifiedon": "2026-04-27T17:11:46Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_office365",
+    "connectionreferencedisplayname": "Office 365 Outlook",
+    "connectionreferenceid": "914a8026-5c42-f111-bec7-7c1e52062b6f",
+    "createdon": "2026-04-27T17:11:46Z",
+    "connectionreferencelogicalname": "new_sharedoffice365_bbb5d"
+  },
+  {
+    "@odata.etag": "W/\"2846644\"",
+    "modifiedon": "2026-04-27T17:12:08Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_office365",
+    "connectionreferencedisplayname": "qfu_diag_shared_office365",
+    "connectionreferenceid": "f3e484f2-bc8e-43d4-ab4c-d134d847feb9",
+    "createdon": "2026-04-27T17:12:08Z",
+    "connectionreferencelogicalname": "qfu_diag_shared_office365"
+  },
+  {
+    "@odata.etag": "W/\"2846646\"",
+    "modifiedon": "2026-04-27T17:12:09Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+    "connectionreferencedisplayname": "qfu_shared_commondataserviceforapps",
+    "connectionreferenceid": "e5266121-f618-4107-825a-41c2c43e77a6",
+    "createdon": "2026-04-27T14:27:50Z",
+    "connectionreferencelogicalname": "qfu_shared_commondataserviceforapps"
+  },
+  {
+    "@odata.etag": "W/\"2815994\"",
+    "modifiedon": "2026-04-27T14:47:22Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+    "connectionreferencedisplayname": "qfu_shared_excelonlinebusiness",
+    "connectionreferenceid": "2cc8f04c-a99b-4e31-b913-956435369dd7",
+    "createdon": "2026-04-27T14:27:51Z",
+    "connectionreferencelogicalname": "qfu_shared_excelonlinebusiness"
+  },
+  {
+    "@odata.etag": "W/\"2815996\"",
+    "modifiedon": "2026-04-27T14:47:22Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_office365",
+    "connectionreferencedisplayname": "qfu_shared_office365",
+    "connectionreferenceid": "361f3e35-f350-4f01-85da-0db401658b59",
+    "createdon": "2026-04-27T14:27:51Z",
+    "connectionreferencelogicalname": "qfu_shared_office365"
+  },
+  {
+    "@odata.etag": "W/\"2815998\"",
+    "modifiedon": "2026-04-27T14:47:23Z",
+    "connectorid": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+    "connectionreferencedisplayname": "qfu_shared_onedriveforbusiness",
+    "connectionreferenceid": "a14ccc15-cd3b-45a6-a5bf-2376e98a5602",
+    "createdon": "2026-04-27T14:27:51Z",
+    "connectionreferencelogicalname": "qfu_shared_onedriveforbusiness"
+  }
+]

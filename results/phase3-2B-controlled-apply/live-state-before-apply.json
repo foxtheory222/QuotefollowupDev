@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-04-27T16:01:10.4082157-06:00",
+  "activeStaff": 19,
+  "activeStaffAliases": 39,
+  "activeBranchMemberships": 39,
+  "activeWorkItems": 0,
+  "activeAssignmentExceptions": 0,
+  "activeAlertLogs": 0,
+  "sentAlertLogs": 0,
+  "duplicateAliasGroups": 0,
+  "staffMissingEmail": 19,
+  "staffMissingSystemUser": 19
+}

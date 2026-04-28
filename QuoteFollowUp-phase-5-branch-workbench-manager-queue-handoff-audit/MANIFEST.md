@@ -1,0 +1,61 @@
+﻿# Manifest
+
+Every file included in this audit and why it matters:
+
+- CURRENT_REPO_STATE.md - Audit artifact.
+- FIX_TEST_LOOP_REVIEW.md - Audit artifact.
+- LIVE_BUILD_RESULT.md - Audit artifact.
+- MANAGER_TEAM_VIEW_REVIEW.md - Audit artifact.
+- NAVIGATION_REVIEW.md - Audit artifact.
+- NO_ALERT_VALIDATION.md - Audit artifact.
+- OPEN_DECISIONS.md - Audit artifact.
+- ORDER_ENTRY_LINE_METRICS_REVIEW.md - Audit artifact.
+- OVERDUE_ORDERS_INTEGRATION_REVIEW.md - Audit artifact.
+- PHASE_STATUS.md - Audit artifact.
+- QUEUE_HANDOFF_REVIEW.md - Audit artifact.
+- REGRESSION_REVIEW.md - Audit artifact.
+- SAFE_SOURCE_FILES/docs/google-stitch/phase-5-branch-workbench-google-stitch-mcp-output.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-manager-team-view.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-order-entry-line-metrics.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-overdue-orders-integration.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-phase-5-branch-workbench-build.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-phase-5-regression-results.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-phase-5-test-plan.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-phase-5-user-test-guide.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-queue-handoff-behavior.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-server-side-rollup.md - Changed documentation.
+- SAFE_SOURCE_FILES/docs/revenue-follow-up-workbench-ux.md - Changed documentation.
+- SAFE_SOURCE_FILES/powerpages/dev-postupload/web-templates/qfu-regional-runtime/QFU-Regional-Runtime.webtemplate.source.html - Audit artifact.
+- SAFE_SOURCE_FILES/powerpages/dev-refresh/web-templates/qfu-regional-runtime/QFU-Regional-Runtime.webtemplate.source.html - Audit artifact.
+- SAFE_SOURCE_FILES/results/phase5-dataverse-setup-20260428.json - Safe validation output.
+- SAFE_SOURCE_FILES/results/phase5-validation-final-20260428.json - Safe validation output.
+- SAFE_SOURCE_FILES/scripts/Create-RevenueFollowUpPhase5Audit.ps1 - Phase 5 automation script.
+- SAFE_SOURCE_FILES/scripts/Ensure-RevenueFollowUpPhase5Workbench.ps1 - Phase 5 automation script.
+- SAFE_SOURCE_FILES/scripts/New-RevenueFollowUpPhase5WorkbenchCanvasSource.ps1 - Phase 5 automation script.
+- SAFE_SOURCE_FILES/scripts/Test-RevenueFollowUpPhase5Validation.ps1 - Phase 5 automation script.
+- SAFE_SOURCE_FILES/solution/exports/qfu_revenuefollowupworkbench-phase5-final-unmanaged-20260428.zip - Safe solution export/unpack metadata.
+- SAFE_SOURCE_FILES/solution-unpacked/AppModules/qfu_RevenueFollowUpWorkbench/AppModule.xml - Audit artifact.
+- SAFE_SOURCE_FILES/solution-unpacked/AppModuleSiteMaps/qfu_RevenueFollowUpWorkbench/AppModuleSiteMap.xml - Audit artifact.
+- SAFE_SOURCE_FILES/solution-unpacked/CanvasApps/qfu_mywork_6e7ed.meta.xml - Audit artifact.
+- SAFE_SOURCE_FILES/solution-unpacked/CanvasApps/qfu_mywork_6e7ed_DocumentUri.msapp - Audit artifact.
+- SAFE_SOURCE_FILES/solution-unpacked/Entities/qfu_WorkItem/Entity.xml - Audit artifact.
+- SAFE_SOURCE_FILES/solution-unpacked/Other/Solution.xml - Audit artifact.
+- SERVER_SIDE_ROLLUP_REVIEW.md - Audit artifact.
+- SOLUTION_EXPORT_REVIEW.md - Audit artifact.
+- TEST_EVIDENCE/admin-panel-regression-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/data-safety-regression-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/kpi-count-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/my-queue-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/navigation-menu-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/no-alert-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/order-entry-line-metrics-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/overdue-orders-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/queue-handoff-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/quote-followup-regression-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/refresh-persistence-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/server-side-rollup-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/team-view-manager-test.md - Sanitized test evidence.
+- TEST_EVIDENCE/workbench-load-test.md - Sanitized test evidence.
+- TEST_RUN_SUMMARY.md - Audit artifact.
+- USER_REAL_WORLD_TEST_GUIDE.md - Audit artifact.
+- WORKBENCH_COMPONENT_REVIEW.md - Audit artifact.

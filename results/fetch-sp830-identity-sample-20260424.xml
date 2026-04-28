@@ -1,0 +1,17 @@
+<fetch count="25">
+  <entity name="qfu_quoteline">
+    <attribute name="qfu_quotelineid" />
+    <attribute name="qfu_quotenumber" />
+    <attribute name="qfu_branchcode" />
+    <attribute name="qfu_tsr" />
+    <attribute name="qfu_tsrname" />
+    <attribute name="qfu_cssr" />
+    <attribute name="qfu_cssrname" />
+    <attribute name="qfu_amount" />
+    <attribute name="createdon" />
+    <filter>
+      <condition attribute="qfu_sourcefamily" operator="eq" value="SP830CA" />
+    </filter>
+    <order attribute="createdon" descending="true" />
+  </entity>
+</fetch>

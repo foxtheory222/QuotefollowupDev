@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{34438806-f89c-43f9-ac8d-3c28dcf5f87e}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{5fbca90b-ea88-4aa6-88ba-47d0e322e6a7}" IsUserDefined="1">
+          <labels>
+            <label description="Work Item Action Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{ffc6363a-b864-4fc8-90a2-2c1347a3f773}">
+                  <labels>
+                    <label description="Action" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{fc9fe39a-3cee-4bc3-a783-869cb272790c}">
+                        <labels>
+                          <label description="Work Item" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_workitem" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_workitem" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{fe1bc07f-ec6f-4c45-9acf-c211fc35eb67}">
+                        <labels>
+                          <label description="Action Type" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_actiontype" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_actiontype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{2578a9c6-17b7-445f-ae17-4bac99728331}">
+                        <labels>
+                          <label description="Counts As Attempt" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_countsasattempt" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_countsasattempt" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{074c4db6-8f0e-457a-bb01-5e13c9c85b02}">
+                        <labels>
+                          <label description="Action By" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_actionby" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_actionby" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{85f29d78-b3fd-4b5a-bdf5-006e80da147d}">
+                        <labels>
+                          <label description="Action On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_actionon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_actionon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{8501c06b-7c6c-486d-9365-d9c13f8f000d}">
+                        <labels>
+                          <label description="Attempt Number" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_attemptnumber" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_attemptnumber" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{cbca389d-bedf-4645-a796-d89658ce9308}">
+                        <labels>
+                          <label description="Outcome" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_outcome" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_outcome" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b4f041d2-e1e1-46d0-85b0-1af96017e34a}">
+                        <labels>
+                          <label description="Next Follow-Up On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_nextfollowupon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_nextfollowupon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{23978672-c74a-47de-82b4-0e04e9653cc1}">
+                        <labels>
+                          <label description="Related Alert" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_relatedalert" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_relatedalert" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ff1bc2fc-013d-4fe7-86d9-e4d50f0e0342}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Work Item Action Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

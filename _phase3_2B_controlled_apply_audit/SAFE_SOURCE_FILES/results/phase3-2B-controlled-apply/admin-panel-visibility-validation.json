@@ -1,0 +1,11 @@
+{
+  "appFound": true,
+  "validationMethod": "Dataverse metadata and table query validation; browser UI not used in this run",
+  "workItemsNavExpected": "Work Items",
+  "selectedWorkItemsVisibleByQuery": 5,
+  "openWorkItemsViewFound": true,
+  "quotes3kViewFound": true,
+  "needsTsrViewFound": true,
+  "needsCssrViewFound": true,
+  "validationResult": "pass"
+}

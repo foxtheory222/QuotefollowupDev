@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{cc0e0b05-6846-458c-8108-d57a9bacf37b}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{7e90cdbd-e661-4bae-b2e9-d7e969cf0b08}" IsUserDefined="1">
+          <labels>
+            <label description="Assignment Exception Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{fad4f766-b7ea-49c1-94fa-bbbe5f8fa6fa}">
+                  <labels>
+                    <label description="Exception" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{4e1afb93-9bd2-4a73-b7af-c8c5b28b0d7c}">
+                        <labels>
+                          <label description="Exception Type" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_exceptiontype" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_exceptiontype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{20276ccd-948e-4db2-b120-7c4b4a46f310}">
+                        <labels>
+                          <label description="Branch" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_branch" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_branch" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{a67e3b61-6bf4-4110-9536-943783b1f7d2}">
+                        <labels>
+                          <label description="Source System" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcesystem" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcesystem" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e79d45db-6233-4420-ad25-cb8093a1fa8f}">
+                        <labels>
+                          <label description="Source Field" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcefield" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcefield" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{3d093907-66ad-4017-b8fa-131393a74abb}">
+                        <labels>
+                          <label description="Raw Value" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_rawvalue" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_rawvalue" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{f598d041-db7c-457c-85dc-6a71bab739ac}">
+                        <labels>
+                          <label description="Normalized Value" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_normalizedvalue" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_normalizedvalue" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{37a0d6ae-ff7d-4a76-9019-e07a98e4735d}">
+                        <labels>
+                          <label description="Display Name" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_displayname" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_displayname" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e7ffbe3b-0f76-49d8-b2da-14120be40909}">
+                        <labels>
+                          <label description="Source Document Number" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcedocumentnumber" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcedocumentnumber" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{25ba9350-cdec-45d6-8ca6-6947c05410c2}">
+                        <labels>
+                          <label description="Source External Key" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourceexternalkey" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourceexternalkey" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{37ea0326-61e1-4d6c-a98e-b785f885d019}">
+                        <labels>
+                          <label description="Source Quote" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcequote" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcequote" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b2b89046-7595-461c-8d72-3a49ba280882}">
+                        <labels>
+                          <label description="Source Quote Line" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcequoteline" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcequoteline" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{cae7f281-9bb7-424e-97cf-8ab3c07a1642}">
+                        <labels>
+                          <label description="Source Backorder" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcebackorder" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcebackorder" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{0e52de62-d009-48c1-814d-4289e0f75a34}">
+                        <labels>
+                          <label description="Work Item" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_workitem" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_workitem" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ae7ead63-c373-4c02-8b37-b2a5c2c500b7}">
+                        <labels>
+                          <label description="Status" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_status" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_status" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{023d2ae7-628c-439f-a243-cc919a1d035c}">
+                        <labels>
+                          <label description="Resolved Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_resolvedstaff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_resolvedstaff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{aa027e7a-c2bc-404a-99a2-11ca7f6b345d}">
+                        <labels>
+                          <label description="Resolved By" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_resolvedby" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_resolvedby" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{fbc7d7dd-26db-496e-bff3-cea1ca2363ac}">
+                        <labels>
+                          <label description="Resolved On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_resolvedon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_resolvedon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ab558159-3ac3-4b58-b992-3f0454c5aaa6}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Assignment Exception Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

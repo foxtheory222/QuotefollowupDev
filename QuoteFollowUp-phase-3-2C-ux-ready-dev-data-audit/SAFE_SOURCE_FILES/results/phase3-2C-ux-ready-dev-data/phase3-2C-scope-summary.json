@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-04-27T16:13:48.0754360-06:00",
+  "cleanSelectedBranch": "4171",
+  "cleanQuoteGroups": 30,
+  "cleanOverdue": 23,
+  "cleanDueToday": 4,
+  "cleanOpen": 3,
+  "cleanExpectedExceptions": 0.0,
+  "exceptionSelectedBranch": "4171",
+  "exceptionQuoteGroups": 2,
+  "exceptionExpectedExceptions": 3.0,
+  "exceptionTypes": "TSR=invalid-zero;CSSR=resolved; TSR=invalid-blank;CSSR=invalid-blank",
+  "alertsExpected": 0
+}

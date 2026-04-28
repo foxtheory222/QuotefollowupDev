@@ -1,0 +1,217 @@
+{
+    "captured_at":  "2026-04-24T20:40:53.9529718Z",
+    "environment":  "https://regionaloperationshub.crm.dynamics.com",
+    "invoice_sourceid_rows":  [
+                                  {
+                                      "qfu_freightworkitemid":  "5d88fd7b-1935-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4172|freight-purolator-f07|invoice|550256778",
+                                      "qfu_branchcode":  "4172",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "550256778",
+                                      "qfu_trackingnumber":  "WAE000029607",
+                                      "qfu_totalamount":  "500.87",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "a3453a83-1935-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4173|freight-purolator-f07|invoice|550256759",
+                                      "qfu_branchcode":  "4173",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "550256759",
+                                      "qfu_trackingnumber":  "335804496164",
+                                      "qfu_totalamount":  "778.18",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:38 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "41bc088b-1935-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4171|freight-purolator-f07|invoice|550256777",
+                                      "qfu_branchcode":  "4171",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "550256777",
+                                      "qfu_trackingnumber":  "GKT000001917",
+                                      "qfu_totalamount":  "3,071.30",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "b437e00e-4137-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4171|freight-loomis-f15|invoice|11694833",
+                                      "qfu_branchcode":  "4171",
+                                      "qfu_sourcefamily":  "FREIGHT_LOOMIS_F15",
+                                      "qfu_invoicenumber":  "11694833",
+                                      "qfu_trackingnumber":  "LSHP47936290",
+                                      "qfu_totalamount":  "14.82",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "390f846d-1238-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4171|freight-purolator-f07|invoice|565230228",
+                                      "qfu_branchcode":  "4171",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "565230228",
+                                      "qfu_trackingnumber":  "GKT000002048",
+                                      "qfu_totalamount":  "433.66",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "aba78173-1238-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4172|freight-purolator-f07|invoice|565230229",
+                                      "qfu_branchcode":  "4172",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "565230229",
+                                      "qfu_trackingnumber":  "GKP000005108",
+                                      "qfu_totalamount":  "1,280.22",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "bca78173-1238-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4173|freight-purolator-f07|invoice|565230208",
+                                      "qfu_branchcode":  "4173",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "565230208",
+                                      "qfu_trackingnumber":  "335813038841",
+                                      "qfu_totalamount":  "1,084.16",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:38 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "7df71f70-c43c-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4171|freight-loomis-f15|invoice|11697145",
+                                      "qfu_branchcode":  "4171",
+                                      "qfu_sourcefamily":  "FREIGHT_LOOMIS_F15",
+                                      "qfu_invoicenumber":  "11697145",
+                                      "qfu_trackingnumber":  "LSHP48146663",
+                                      "qfu_totalamount":  "15.82",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "fc9d4f95-913d-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4173|freight-purolator-f07|invoice|530242479",
+                                      "qfu_branchcode":  "4173",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "530242479",
+                                      "qfu_trackingnumber":  "LCS000004515",
+                                      "qfu_totalamount":  "681.62",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:38 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "049e4f95-913d-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4171|freight-purolator-f07|invoice|530242498",
+                                      "qfu_branchcode":  "4171",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "530242498",
+                                      "qfu_trackingnumber":  "335822635843",
+                                      "qfu_totalamount":  "368.06",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  },
+                                  {
+                                      "qfu_freightworkitemid":  "296562a1-913d-f111-88b5-000d3a59294a",
+                                      "qfu_sourceid":  "4172|freight-purolator-f07|invoice|530242499",
+                                      "qfu_branchcode":  "4172",
+                                      "qfu_sourcefamily":  "FREIGHT_PUROLATOR_F07",
+                                      "qfu_invoicenumber":  "530242499",
+                                      "qfu_trackingnumber":  "GJJ000002739",
+                                      "qfu_totalamount":  "682.57",
+                                      "qfu_isarchived":  "No",
+                                      "qfu_archivedon":  null,
+                                      "modifiedon":  "4/24/2026 5:37 PM"
+                                  }
+                              ],
+    "summary":  [
+                    {
+                        "key":  "4172, FREIGHT_PUROLATOR_F07, 550256778",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  500.87
+                    },
+                    {
+                        "key":  "4173, FREIGHT_PUROLATOR_F07, 550256759",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  778.18
+                    },
+                    {
+                        "key":  "4171, FREIGHT_PUROLATOR_F07, 550256777",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  3071.3
+                    },
+                    {
+                        "key":  "4171, FREIGHT_LOOMIS_F15, 11694833",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  14.82
+                    },
+                    {
+                        "key":  "4171, FREIGHT_PUROLATOR_F07, 565230228",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  433.66
+                    },
+                    {
+                        "key":  "4172, FREIGHT_PUROLATOR_F07, 565230229",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  1280.22
+                    },
+                    {
+                        "key":  "4173, FREIGHT_PUROLATOR_F07, 565230208",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  1084.16
+                    },
+                    {
+                        "key":  "4171, FREIGHT_LOOMIS_F15, 11697145",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  15.82
+                    },
+                    {
+                        "key":  "4173, FREIGHT_PUROLATOR_F07, 530242479",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  681.62
+                    },
+                    {
+                        "key":  "4171, FREIGHT_PUROLATOR_F07, 530242498",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  368.06
+                    },
+                    {
+                        "key":  "4172, FREIGHT_PUROLATOR_F07, 530242499",
+                        "count":  1,
+                        "active_count":  1,
+                        "archived_count":  0,
+                        "total_amount":  682.57
+                    }
+                ]
+}

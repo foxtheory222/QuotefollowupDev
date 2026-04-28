@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_cssralertmode" localizedName="QFU CSSR Alert Mode" description="QFU CSSR Alert Mode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU CSSR Alert Mode" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU CSSR Alert Mode" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="VisibilityOnly" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="DailyDigestOnly" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="TargetedAlerts" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="CCOnly" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010004" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Disabled" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>

@@ -1,0 +1,235 @@
+﻿{
+    "phase":  "Phase 3",
+    "checkedAtUtc":  "2026-04-27T22:15:22.7859872Z",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionUniqueName":  "qfu_revenuefollowupworkbench",
+    "mode":  "DryRun",
+    "branchCodeFilter":  "",
+    "limitQuoteGroups":  0,
+    "scopeFile":  "results/phase3-2C-ux-ready-dev-data/exception-apply-scope-review.csv",
+    "scopeRowsProvided":  2,
+    "scopeQuoteGroupsSelected":  2,
+    "entitySets":  {
+                       "quote":  "qfu_quotes",
+                       "quoteLine":  "qfu_quotelines",
+                       "branch":  "qfu_branchs",
+                       "staff":  "qfu_staffs",
+                       "policy":  "qfu_policies",
+                       "staffAlias":  "qfu_staffaliases",
+                       "workItem":  "qfu_workitems",
+                       "workItemAction":  "qfu_workitemactions",
+                       "assignmentException":  "qfu_assignmentexceptions"
+                   },
+    "optionValues":  {
+                         "quoteWorkType":  985010000,
+                         "sp830SourceSystem":  985010000,
+                         "amNumberAliasType":  985010000,
+                         "cssrNumberAliasType":  985010002,
+                         "gteOperator":  985010001,
+                         "highValueOnlyMode":  985010000,
+                         "allQuotesMode":  985010001,
+                         "reportingOnlyMode":  985010002,
+                         "openWorkItemStatus":  985010000,
+                         "dueTodayWorkItemStatus":  985010001,
+                         "overdueWorkItemStatus":  985010002,
+                         "waitingCustomerWorkItemStatus":  985010003,
+                         "waitingVendorWorkItemStatus":  985010004,
+                         "roadblockWorkItemStatus":  985010005,
+                         "escalatedWorkItemStatus":  985010006,
+                         "completedWorkItemStatus":  985010007,
+                         "closedWonWorkItemStatus":  985010008,
+                         "closedLostWorkItemStatus":  985010009,
+                         "cancelledWorkItemStatus":  985010010,
+                         "highPriority":  985010002,
+                         "assignedStatus":  985010000,
+                         "needsTsrStatus":  985010002,
+                         "needsCssrStatus":  985010003,
+                         "unmappedStatus":  985010004,
+                         "errorStatus":  985010005,
+                         "missingTsrException":  985010000,
+                         "missingCssrException":  985010001,
+                         "blankAliasException":  985010002,
+                         "zeroAliasException":  985010003,
+                         "ambiguousException":  985010004,
+                         "missingBranchException":  985010005,
+                         "missingPolicyException":  985010006,
+                         "openExceptionStatus":  985010000
+                     },
+    "counts":  {
+                   "quoteSourceRecordsScanned":  521,
+                   "quoteLineRecordsScanned":  1559,
+                   "quoteGroupsFound":  2,
+                   "quoteGroupsAtOrAboveThreshold":  2,
+                   "workItemsWouldBeCreated":  2,
+                   "workItemsWouldBeUpdated":  0,
+                   "workItemsCreated":  0,
+                   "workItemsUpdated":  0,
+                   "lowValueQuoteGroupsSkipped":  0,
+                   "tsrAliasesResolved":  0,
+                   "cssrAliasesResolved":  1,
+                   "tsrExceptions":  2,
+                   "cssrExceptions":  1,
+                   "missingBranchExceptions":  0,
+                   "missingPolicyExceptions":  0,
+                   "ambiguousAliasExceptions":  0,
+                   "assignmentExceptionsWouldBeCreated":  3,
+                   "assignmentExceptionsWouldBeUpdated":  0,
+                   "assignmentExceptionsCreated":  0,
+                   "assignmentExceptionsUpdated":  0,
+                   "alertsSent":  0
+               },
+    "topUnresolvedAmNumbers":  [
+                                   {
+                                       "value":  "0",
+                                       "count":  1
+                                   },
+                                   {
+                                       "value":  "BLANK",
+                                       "count":  1
+                                   }
+                               ],
+    "topUnresolvedCssrNumbers":  {
+                                     "value":  "BLANK",
+                                     "count":  1
+                                 },
+    "sampleWorkItemPayloads":  [
+                                   {
+                                       "sampleId":  "2b5001d9291b",
+                                       "sourceExternalKeyHash":  "2b5001d9291b",
+                                       "sourceDocumentHash":  "f494573bd96c",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  3268.80,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-28",
+                                       "effectiveNextFollowUpOn":  "2026-04-28",
+                                       "calculatedStatus":  "Open",
+                                       "existingStatus":  "New",
+                                       "statusWillAutoUpdate":  true,
+                                       "assignmentStatus":  "Unmapped",
+                                       "tsrResolution":  "not-attempted",
+                                       "cssrResolution":  "not-attempted",
+                                       "existingWorkItem":  false,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   },
+                                   {
+                                       "sampleId":  "b2fb80e21b2d",
+                                       "sourceExternalKeyHash":  "b2fb80e21b2d",
+                                       "sourceDocumentHash":  "a29007e1adbd",
+                                       "branchCode":  "4171",
+                                       "workType":  "Quote",
+                                       "sourceSystem":  "SP830CA",
+                                       "totalValue":  10469.00,
+                                       "requiredAttempts":  3,
+                                       "completedAttemptsActionRollup":  null,
+                                       "nextFollowUpOn":  "2026-04-15",
+                                       "effectiveNextFollowUpOn":  "2026-04-15",
+                                       "calculatedStatus":  "Overdue",
+                                       "existingStatus":  "New",
+                                       "statusWillAutoUpdate":  true,
+                                       "assignmentStatus":  "Needs TSR Assignment",
+                                       "tsrResolution":  "not-attempted",
+                                       "cssrResolution":  "resolved",
+                                       "existingWorkItem":  false,
+                                       "preservation":  "Does not overwrite sticky note, sticky note timestamps, action history, last followed-up/action dates, or non-empty manual owners."
+                                   }
+                               ],
+    "sampleExceptionPayloads":  [
+                                    {
+                                        "sampleId":  "6ec3e725675d",
+                                        "sourceDocumentHash":  "f494573bd96c",
+                                        "exceptionType":  "Blank Alias",
+                                        "sourceField":  "qfu_tsr",
+                                        "normalizedValue":  "BLANK",
+                                        "existingException":  false
+                                    },
+                                    {
+                                        "sampleId":  "bec55145770d",
+                                        "sourceDocumentHash":  "f494573bd96c",
+                                        "exceptionType":  "Blank Alias",
+                                        "sourceField":  "qfu_cssr",
+                                        "normalizedValue":  "BLANK",
+                                        "existingException":  false
+                                    },
+                                    {
+                                        "sampleId":  "d7ed980818da",
+                                        "sourceDocumentHash":  "a29007e1adbd",
+                                        "exceptionType":  "Zero Alias",
+                                        "sourceField":  "qfu_tsr",
+                                        "normalizedValue":  "0",
+                                        "existingException":  false
+                                    }
+                                ],
+    "normalizationTests":  [
+                               {
+                                   "input":  "7001634.0",
+                                   "normalized":  "7001634",
+                                   "isValid":  true,
+                                   "reason":  ""
+                               },
+                               {
+                                   "input":  "corey carpenter",
+                                   "normalized":  "COREY CARPENTER",
+                                   "isValid":  true,
+                                   "reason":  ""
+                               },
+                               {
+                                   "input":  "",
+                                   "normalized":  "",
+                                   "isValid":  false,
+                                   "reason":  "Blank"
+                               },
+                               {
+                                   "input":  "0",
+                                   "normalized":  "0",
+                                   "isValid":  false,
+                                   "reason":  "Zero"
+                               },
+                               {
+                                   "input":  "00000000",
+                                   "normalized":  "00000000",
+                                   "isValid":  false,
+                                   "reason":  "Zero"
+                               },
+                               {
+                                   "input":  "N/A",
+                                   "normalized":  "N/A",
+                                   "isValid":  false,
+                                   "reason":  "Blank"
+                               },
+                               {
+                                   "input":  "NULL",
+                                   "normalized":  "NULL",
+                                   "isValid":  false,
+                                   "reason":  "Blank"
+                               },
+                               {
+                                   "input":  "001234",
+                                   "normalized":  "001234",
+                                   "isValid":  true,
+                                   "reason":  ""
+                               }
+                           ],
+    "rollupBehavior":  {
+                           "implementedInResolverDryRun":  true,
+                           "activeServerSideFlowOrPlugin":  false,
+                           "completedAttempts":  "Count related qfu_workitemaction rows where qfu_countsasattempt = true.",
+                           "lastFollowedUpOn":  "Max qfu_actionon where qfu_countsasattempt = true.",
+                           "lastActionOn":  "Max qfu_actionon across all related actions.",
+                           "applyModeNote":  "Apply mode does not overwrite existing manual/action-derived values unless a later explicit rollup automation phase enables it."
+                       },
+    "applyModeHardening":  {
+                               "exceptionSourceDocumentNumber":  "qfu_sourcedocumentnumber is populated from the source quote number in apply mode.",
+                               "exceptionSourceQuoteLookup":  "qfu_sourcequote is populated when a quote header exists.",
+                               "exceptionSourceQuoteLineLookup":  "qfu_sourcequoteline is populated from a representative quote line when available.",
+                               "newWorkItemExceptionLink":  "Newly created work item ids are captured and applied to related exception plans before exception writes.",
+                               "statusPreservation":  "Existing manual or terminal qfu_status values are preserved. System-owned Open, Due Today, and Overdue statuses are recalculated from qfu_nextfollowupon.",
+                               "ownerPreservation":  "Existing non-empty primary, support, TSR, and CSSR owner fields are not overwritten.",
+                               "nextFollowUpPreservation":  "Existing qfu_nextfollowupon is not overwritten.",
+                               "actionHistoryPreservation":  "qfu_workitemaction rows, qfu_lastfollowedupon, qfu_lastactionon, and existing completed attempts are not overwritten."
+                           },
+    "noAlertGuarantee":  "The resolver does not create qfu_alertlog records, does not call Power Automate alert flows, and reports alertsSent = 0.",
+    "preservationGuarantee":  "The resolver does not overwrite qfu_stickynote, qfu_stickynoteupdatedon, qfu_stickynoteupdatedby, qfu_workitemaction history, qfu_lastfollowedupon, qfu_lastactionon, or non-empty manual owner fields."
+}

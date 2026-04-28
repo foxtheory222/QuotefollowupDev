@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{a5d4e00e-ece4-4512-ac6f-19bb8fd5d624}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{eb0fd749-1a25-41f5-b642-9f3a1044e6a2}" IsUserDefined="1">
+          <labels>
+            <label description="Branch Membership Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{8cd6f458-0a3f-4af9-a925-9145b09429a8}">
+                  <labels>
+                    <label description="Membership" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{2d00beee-4e9d-462d-ae23-5248aa1a601e}">
+                        <labels>
+                          <label description="Branch" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_branch" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_branch" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{70b02c7e-bc77-4eac-abc4-3dcbad694ece}">
+                        <labels>
+                          <label description="Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_staff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_staff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{3ed5fb4f-1677-42c2-9231-4d27db4a5ac2}">
+                        <labels>
+                          <label description="Role" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_role" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_role" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6dfacede-32af-4d98-add7-167930d7fe12}">
+                        <labels>
+                          <label description="Active" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_active" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_active" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7b5b0a19-9fb3-4c25-a752-ce2a70986021}">
+                        <labels>
+                          <label description="Start Date" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_startdate" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_startdate" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e6854d33-f550-4e8c-bbfc-e21172b64ef6}">
+                        <labels>
+                          <label description="End Date" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_enddate" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_enddate" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{27ac3424-a3ac-4f71-8f05-5f855a0a650a}">
+                        <labels>
+                          <label description="Is Primary" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_isprimary" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_isprimary" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{1def768f-5792-4874-9b63-f90f0b853269}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Branch Membership Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

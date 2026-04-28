@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{466fc469-f253-48e5-a05f-10250f3b0acb}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{3e9e332c-3339-4b37-8d78-2d18d64f019f}" IsUserDefined="1">
+          <labels>
+            <label description="Staff Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{b2636e92-2a65-49b6-99fc-b9d2ed4ca758}">
+                  <labels>
+                    <label description="Staff" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{5bb41b53-8329-40e7-a365-f5f3c7279e3e}">
+                        <labels>
+                          <label description="Staff Name" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_name" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{55378335-900f-40c6-b588-804f3b64640c}">
+                        <labels>
+                          <label description="Primary Email" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_primaryemail" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_primaryemail" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5e4f41e9-7e84-4066-9277-e950e1bcd406}">
+                        <labels>
+                          <label description="Staff Number" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_staffnumber" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_staffnumber" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{bfff0712-c7cd-4f8c-a983-3fe35e8a1393}">
+                        <labels>
+                          <label description="Dataverse User" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_systemuser" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_systemuser" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{2a66bbaf-99d3-4758-be00-62e7d7fccf95}">
+                        <labels>
+                          <label description="Entra Object ID" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_entraobjectid" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_entraobjectid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{df7ce5b1-3bc0-49e6-806a-8699811c302f}">
+                        <labels>
+                          <label description="Default Branch" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_defaultbranch" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_defaultbranch" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{1d83827a-f580-4c22-bca4-1cc80201e4a1}">
+                        <labels>
+                          <label description="Active" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_active" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_active" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6db60723-a148-474c-bb05-048d1a147a8a}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Staff Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

@@ -1,0 +1,14 @@
+adx_append: false
+adx_appendto: false
+adx_create: false
+adx_delete: false
+adx_entitylogicalname: qfu_branchdailysummary
+adx_entityname: operationhub qfu_branchdailysummary Global Read
+adx_entitypermission_webrole:
+- 07a9ddec-0ba7-4061-b875-34f13a444da0
+- de7fe134-14f7-4a56-9045-ea79973d73d8
+- fc96f42a-637a-43a5-af0b-65a7474bfdb5
+adx_entitypermissionid: f7d1d339-d1ea-4ebc-ab75-dacbcd83895f
+adx_read: true
+adx_scope: 756150000
+adx_write: false

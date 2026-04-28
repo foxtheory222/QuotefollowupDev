@@ -1,0 +1,150 @@
+{
+    "target_environment":  "https://regionaloperationshub.crm.dynamics.com",
+    "captured_at":  "2026-04-24T20:50:09.8188837Z",
+    "applied_plan":  "results\\live-freight-invoice-survivor-restore-applied-20260424.json",
+    "branch_codes":  [
+                         "4171",
+                         "4172",
+                         "4173"
+                     ],
+    "active_nonredwood_invoice_sourceid_count":  0,
+    "active_nonredwood_invoice_sourceids":  [
+
+                                            ],
+    "plan_check_count":  11,
+    "failed_check_count":  0,
+    "plan_checks":  [
+                        {
+                            "key":  "4171|FREIGHT_LOOMIS_F15|11694833",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  2,
+                            "active_restored_count":  2,
+                            "expected_restored_total":  14.82,
+                            "active_restored_total":  14.82,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4171|FREIGHT_LOOMIS_F15|11697145",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  2,
+                            "active_restored_count":  2,
+                            "expected_restored_total":  15.82,
+                            "active_restored_total":  15.82,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4171|FREIGHT_PUROLATOR_F07|530242498",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  23,
+                            "active_restored_count":  23,
+                            "expected_restored_total":  368.06,
+                            "active_restored_total":  368.06,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4171|FREIGHT_PUROLATOR_F07|550256777",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  49,
+                            "active_restored_count":  49,
+                            "expected_restored_total":  3924.74,
+                            "active_restored_total":  3924.74,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4171|FREIGHT_PUROLATOR_F07|565230228",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  22,
+                            "active_restored_count":  22,
+                            "expected_restored_total":  433.66,
+                            "active_restored_total":  433.66,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4172|FREIGHT_PUROLATOR_F07|530242499",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  36,
+                            "active_restored_count":  36,
+                            "expected_restored_total":  682.57,
+                            "active_restored_total":  682.57,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4172|FREIGHT_PUROLATOR_F07|550256778",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  27,
+                            "active_restored_count":  27,
+                            "expected_restored_total":  500.87,
+                            "active_restored_total":  500.87,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4172|FREIGHT_PUROLATOR_F07|565230229",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  44,
+                            "active_restored_count":  44,
+                            "expected_restored_total":  1280.22,
+                            "active_restored_total":  1280.22,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4173|FREIGHT_PUROLATOR_F07|530242479",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  34,
+                            "active_restored_count":  34,
+                            "expected_restored_total":  681.62,
+                            "active_restored_total":  681.62,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4173|FREIGHT_PUROLATOR_F07|550256759",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  37,
+                            "active_restored_count":  37,
+                            "expected_restored_total":  778.18,
+                            "active_restored_total":  778.18,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        },
+                        {
+                            "key":  "4173|FREIGHT_PUROLATOR_F07|565230208",
+                            "invoice_survivor_count":  1,
+                            "invoice_survivors_archived":  1,
+                            "expected_restored_count":  40,
+                            "active_restored_count":  40,
+                            "expected_restored_total":  1084.16,
+                            "active_restored_total":  1084.16,
+                            "duplicate_restored_sourceids":  [
+
+                                                             ]
+                        }
+                    ]
+}

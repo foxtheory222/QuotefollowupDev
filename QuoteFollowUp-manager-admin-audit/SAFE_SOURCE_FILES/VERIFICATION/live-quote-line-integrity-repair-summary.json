@@ -1,0 +1,469 @@
+{
+    "captured_at":  "2026-04-09T22:22:19.1695587Z",
+    "target_environment":  "<URL>
+    "apply":  true,
+    "parsed_workbook_json":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\results\\live-quote-line-integrity\\parsed-workbooks.json",
+    "branches":  [
+                     {
+                         "branch_code":  "4172",
+                         "parsed_quote_source_file":  "SP830CA - Quote Follow Up Report.xlsx",
+                         "inserted_line_source_ids":  {
+
+                                                      },
+                         "parsed_quote_line_count":  25,
+                         "live_quote_line_count":  215,
+                         "deactivated_orphan_quotes":  [
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515392155",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515392155",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437073",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515437073",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437106",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515437106",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437182",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515437182",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437516",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515437516",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437866",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515437866",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438942",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515438942",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438999",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515438999",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439746",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515439746",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439869",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515439869",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439968",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515439968",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515440441",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515440441",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515440863",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515440863",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441004",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515441004",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441160",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515441160",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441186",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515441186",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441209",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515441209",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441419",
+                                                               "qfu_sourceid":  "4172|SP830CA|0515441419",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           }
+                                                       ],
+                         "removed_duplicate_line_ids":  [
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>"
+                                                        ],
+                         "branch_slug":  "4172-lethbridge",
+                         "parsed_quote_count":  15,
+                         "live_quote_count":  18,
+                         "normalized_line_groups":  149,
+                         "remaining_missing_quote_headers":  {
+
+                                                             }
+                     },
+                     {
+                         "branch_code":  "4173",
+                         "parsed_quote_source_file":  "SP830CA - Quote Follow Up Report.xlsx",
+                         "inserted_line_source_ids":  {
+
+                                                      },
+                         "parsed_quote_line_count":  17,
+                         "live_quote_line_count":  43,
+                         "deactivated_orphan_quotes":  [
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437490",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515437490",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437523",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515437523",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438820",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515438820",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439139",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515439139",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515440471",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515440471",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515440839",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515440839",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441337",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515441337",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441484",
+                                                               "qfu_sourceid":  "4173|SP830CA|0515441484",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           }
+                                                       ],
+                         "removed_duplicate_line_ids":  [
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>"
+                                                        ],
+                         "branch_slug":  "4173-medicine-hat",
+                         "parsed_quote_count":  7,
+                         "live_quote_count":  8,
+                         "normalized_line_groups":  32,
+                         "remaining_missing_quote_headers":  {
+
+                                                             }
+                     },
+                     {
+                         "branch_code":  "4171",
+                         "parsed_quote_source_file":  "SP830CA - Quote Follow Up Report.xlsx",
+                         "inserted_line_source_ids":  {
+
+                                                      },
+                         "parsed_quote_line_count":  44,
+                         "live_quote_line_count":  198,
+                         "deactivated_orphan_quotes":  [
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437699",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515437699",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515437955",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515437955",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438113",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515438113",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438128",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515438128",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438274",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515438274",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438681",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515438681",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515438811",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515438811",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439263",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515439263",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439677",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515439677",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515439822",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515439822",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515440886",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515440886",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441248",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515441248",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441354",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515441354",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441418",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515441418",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           },
+                                                           {
+                                                               "qfu_quoteid":  "<GUID>",
+                                                               "qfu_quotenumber":  "0515441439",
+                                                               "qfu_sourceid":  "4171|SP830CA|0515441439",
+                                                               "qfu_sourcefile":  "SP830CA - Quote Follow Up Report.xlsx",
+                                                               "reason":  "active quote header had no line rows and is absent from the current parsed SP830 workbook"
+                                                           }
+                                                       ],
+                         "removed_duplicate_line_ids":  [
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>",
+                                                            "<GUID>"
+                                                        ],
+                         "branch_slug":  "4171-calgary",
+                         "parsed_quote_count":  19,
+                         "live_quote_count":  30,
+                         "normalized_line_groups":  161,
+                         "remaining_missing_quote_headers":  {
+
+                                                             }
+                     }
+                 ]
+}

@@ -1,0 +1,6 @@
+Connected as smcfarlane@applied.com
+Connected to... Applied Canada Operations Hub
+
+qfu_status modifiedon        qfu_totalamount qfu_sourcefamily      qfu_invoicenumber qfu_branchcode qfu_ownername     qfu_isarchived qfu_sourceid                                 qfu_freightworkitemid
+Open       4/24/2026 5:37 PM 3,071.30        FREIGHT_PUROLATOR_F07 550256777         4171           Stephen McFarlane No             4171|freight-purolator-f07|invoice|550256777 41bc088b-1935-f111-88b5-000d3a59294a
+

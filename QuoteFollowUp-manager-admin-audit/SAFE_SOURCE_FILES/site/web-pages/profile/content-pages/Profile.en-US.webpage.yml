@@ -1,0 +1,15 @@
+adx_enablerating: false
+adx_enabletracking: false
+adx_excludefromsearch: false
+adx_hiddenfromsitemap: true
+adx_isroot: false
+adx_name: Profile
+adx_pagetemplateid: <GUID>
+adx_parentpageid: <GUID>
+adx_partialurl: profile
+adx_publishingstateid: <GUID>
+adx_rootwebpageid: <GUID>
+adx_sharedpageconfiguration: false
+adx_title: Profile
+adx_webpageid: <GUID>
+adx_webpagelanguageid: <GUID>

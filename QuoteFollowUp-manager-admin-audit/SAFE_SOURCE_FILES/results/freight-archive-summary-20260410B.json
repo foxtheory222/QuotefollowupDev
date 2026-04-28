@@ -1,0 +1,15 @@
+{
+  "target_environment": "<URL>
+  "archive_after_days": 60,
+  "archived_count": 1,
+  "archived_rows": [
+    {
+      "id": "<GUID>",
+      "source_id": "4171|freight-test|archive|20260410B",
+      "branch_code": "4171",
+      "branch_slug": "4171-calgary",
+      "status": "Closed",
+      "last_activity_on": "2026-01-25T00:00:00"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "timestamp": "2026-04-27T15:45:15.0294132-06:00",
+  "environmentUrl": "https://orga632edd5.crm3.dynamics.com/",
+  "solutionFound": true,
+  "appFound": true,
+  "entitySets": {
+    "staff": "qfu_staffs",
+    "staffAlias": "qfu_staffaliases",
+    "branchMembership": "qfu_branchmemberships",
+    "quote": "qfu_quotes",
+    "quoteLine": "qfu_quotelines",
+    "branch": "qfu_branchs",
+    "workItem": "qfu_workitems",
+    "assignmentException": "qfu_assignmentexceptions"
+  },
+  "keyChecks": [
+    {
+      "table": "qfu_staffalias",
+      "keyName": "qfu_key_staffalias_source_type_alias_scope",
+      "found": true,
+      "indexStatus": "Active",
+      "attributes": "qfu_aliastype, qfu_normalizedalias, qfu_scopekey, qfu_sourcesystem"
+    },
+    {
+      "table": "qfu_branchmembership",
+      "keyName": "qfu_key_branchmembership_branch_staff_role",
+      "found": true,
+      "indexStatus": "Active",
+      "attributes": "qfu_branch, qfu_role, qfu_staff"
+    },
+    {
+      "table": "qfu_policy",
+      "keyName": "qfu_key_policy_scope_worktype_activekey",
+      "found": true,
+      "indexStatus": "Active",
+      "attributes": "qfu_policykey"
+    },
+    {
+      "table": "qfu_workitem",
+      "keyName": "qfu_key_workitem_type_sourcekey",
+      "found": true,
+      "indexStatus": "Active",
+      "attributes": "qfu_sourceexternalkey, qfu_worktype"
+    },
+    {
+      "table": "qfu_alertlog",
+      "keyName": "qfu_key_alertlog_dedupekey",
+      "found": true,
+      "indexStatus": "Active",
+      "attributes": "qfu_dedupekey"
+    },
+    {
+      "table": "qfu_assignmentexception",
+      "keyName": "qfu_key_assignmentexception_sourcekey_type_field_value",
+      "found": true,
+      "indexStatus": "Active",
+      "attributes": "qfu_exceptionkey"
+    }
+  ],
+  "quoteHeaderRecordsScanned": 1130,
+  "quoteLineRecordsScanned": 1559,
+  "distinctValidStaffNumbersFound": 19,
+  "invalidAliasGroups": 6,
+  "conflictRows": 0,
+  "provisionalStaffCreated": 19,
+  "provisionalStaffUpdated": 0,
+  "provisionalAliasesCreated": 39,
+  "provisionalAliasesUpdated": 0,
+  "provisionalBranchMembershipsCreated": 39,
+  "provisionalBranchMembershipsUpdated": 0,
+  "emailsGuessed": 0,
+  "systemUsersGuessed": 0,
+  "entraIdsGuessed": 0,
+  "resolverApplyModeRun": false,
+  "workItemsCreated": 0,
+  "assignmentExceptionsCreated": 0,
+  "alertsSent": 0,
+  "preCounts": {
+    "activeStaffRecords": null,
+    "activeStaffAliasRecords": 0,
+    "activeAmNumberAliases": 0,
+    "activeCssrNumberAliases": 0,
+    "activeBranchMemberships": 0,
+    "duplicateAliasGroups": 0,
+    "staffMissingEmail": 1,
+    "staffMissingSystemUser": 1
+  },
+  "postCounts": {
+    "activeStaffRecords": 20,
+    "activeStaffAliasRecords": 39,
+    "activeAmNumberAliases": 16,
+    "activeCssrNumberAliases": 23,
+    "activeBranchMemberships": 39,
+    "duplicateAliasGroups": 0,
+    "staffMissingEmail": 20,
+    "staffMissingSystemUser": 20
+  },
+  "outputFiles": [
+    "provisional-staff-created.csv",
+    "provisional-aliases-created.csv",
+    "provisional-branchmemberships-created.csv",
+    "identity-conflicts-review.csv",
+    "invalid-alias-review.csv"
+  ],
+  "orphanDuplicateCleanup": {
+    "timestamp": "2026-04-27T15:46:30.467516-06:00",
+    "action": "deactivated orphan duplicate source-generated qfu_staff",
+    "staffId": "4a1b642c-8242-f111-bec7-7c1e52062b6f",
+    "staffNumber": "7000807",
+    "reason": "initial lookup-bind failure created a staff row before alias write failed; record had no alias or branch membership references",
+    "resolverApplyModeRun": false,
+    "workItemsCreated": 0,
+    "assignmentExceptionsCreated": 0,
+    "alertsSent": 0
+  },
+  "finalCountsAfterCleanup": {
+    "activeStaffRecords": 19,
+    "activeStaffAliasRecords": 39,
+    "activeAmNumberAliases": 16,
+    "activeCssrNumberAliases": 23,
+    "activeBranchMemberships": 39,
+    "duplicateAliasGroups": 0,
+    "duplicateStaffNumberGroups": 0,
+    "staffMissingEmail": 19,
+    "staffMissingSystemUser": 19
+  },
+  "netActiveProvisionalStaffRecords": 19
+}

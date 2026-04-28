@@ -4,7 +4,7 @@ Date: 2026-04-24
 
 ## Phase Boundary
 
-Current phase: Phase 2 - live Dataverse tables and Power Apps Admin Panel MVP.
+Current phase: Phase 1.2 - follow-up date, sticky notes, and Google Stitch UI prompt standard before live Dataverse table creation.
 
 Functional after this phase:
 
@@ -17,8 +17,7 @@ Not functional yet:
 - No Google Stitch prototype has been generated.
 - No frontend code has been generated or committed.
 - No Power Apps custom pages have been created.
-- Live Dataverse table metadata is part of Phase 2.
-- Production frontend code, custom pages, resolver flows, alerts, and security are not created by Stitch.
+- No live Dataverse tables, flows, or app metadata have been created.
 
 What comes next:
 
@@ -28,12 +27,13 @@ What comes next:
 Still left:
 
 - Confirm exact Power Apps custom page scope.
-- Build or validate Dataverse tables and model-driven app assets.
+- Build Dataverse tables and model-driven app assets.
 - Validate final Power Apps screens with real permissions and Dataverse data.
 
 Questions that must not be guessed:
 
 - Whether My Work and Quote Detail should start as custom pages or model-driven views/forms first.
+- First follow-up due date rule.
 - CSSR, GM, and Manager alert/CC modes.
 
 ## Standard
@@ -124,53 +124,29 @@ Use accessible contrast, readable spacing, clear status chips, and no hardcoded 
 ## Prompt 4 - Admin Panel MVP
 
 ```text
-Product:
-Revenue Follow-Up Workbench
+Design a Google Stitch screen for Revenue Follow-Up Workbench: Admin Panel MVP.
 
-Page:
-Admin Panel MVP
+Create a model-driven Power Apps admin area concept using simple Dataverse-style tables, filters, and forms. This is an admin configuration surface, not a polished staff work queue.
 
-Implementation target:
-Power Apps model-driven app backed by Dataverse. Google Stitch is design guidance only, not production frontend code.
+Roles: Admin, Manager, GM, TSR, CSSR.
 
-User roles:
-Admin, GM, Manager.
+Core objects: work item, quote, quote line, backorder, staff alias, branch membership, policy, assignment exception.
 
-Admin Panel MVP navigation:
-- Staff
-- Branch Memberships
-- Staff Alias Mapping
-- Branch Policies
-- Assignment Exceptions
-- Work Items
-- Work Item Actions
-- Alert Logs
+Include navigation for Staff, Branch Memberships, Staff Alias Mapping, Branch Policies, Assignment Exceptions, Work Items, Work Item Actions, and Alert Logs. Branch Policy should expose threshold operator, work item generation mode, first follow-up basis, first follow-up business days, GM CC mode, Manager CC mode, and CSSR alert mode.
 
-UX goals:
-- clean
-- simple
-- low-click
-- operations-focused
-- desktop optimized
-- readable spacing
-- accessible contrast
-- no clutter
-- no hardcoded people/emails/branches
-- make exception cleanup obvious
-- make sticky notes visible near top of work item forms
-- show Last Followed Up On
-- show Completed Attempts / Required Attempts
-- show Assignment Status
-- show policy fields clearly
+Work Item admin review should show Sticky Note, Sticky Note Updated On, Sticky Note Updated By, Last Followed Up On, Last Action On, Completed Attempts, and Required Attempts. Work Item Actions should show action date, action type, action by, counts as attempt, and notes.
 
-Core objects:
-work item, quote, quote line, backorder, staff alias, branch membership, policy, assignment exception.
-
-Form/view guidance:
-Use Dataverse-style tables, filters, and forms. Branch Policy should expose threshold operator, work item generation mode, first follow-up basis, first follow-up business days, GM CC mode, Manager CC mode, and CSSR alert mode. Work Item admin review should show Sticky Note, Sticky Note Updated On, Sticky Note Updated By, Last Followed Up On, Last Action On, Completed Attempts, Required Attempts, and Assignment Status. Work Item Actions should show action date, action type, action by, counts as attempt, and notes.
-
-Do not generate or commit frontend code from Stitch unless explicitly requested. Keep the concept suitable for a Power Apps model-driven app backed by Dataverse.
+Keep it simple, dense, readable, and suitable for Dataverse model-driven forms/views. Do not include hardcoded people, emails, branches, IDs, or production customer data.
 ```
+
+Phase 2.1 dedicated Admin Panel MVP prompt:
+
+- `docs/revenue-follow-up-admin-panel-mvp-google-stitch-prompt.md`
+- Product: Revenue Follow-Up Workbench
+- Page: Admin Panel MVP
+- Implementation target: Power Apps model-driven app backed by Dataverse
+- Stitch remains design/prototype guidance only, not production frontend code.
+- Roles for the Admin Panel MVP prompt: Admin, GM, Manager.
 
 ## Prompt 5 - GM Review Page
 

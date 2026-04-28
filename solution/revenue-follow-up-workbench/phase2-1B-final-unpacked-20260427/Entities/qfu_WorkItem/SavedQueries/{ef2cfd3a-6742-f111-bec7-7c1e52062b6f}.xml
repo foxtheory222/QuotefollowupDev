@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{ef2cfd3a-6742-f111-bec7-7c1e52062b6f}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qfu_workitemnumber" select="1" icon="1" preview="1">
+        <row name="result" id="qfu_workitemid">
+          <cell name="qfu_workitemnumber" width="175" />
+          <cell name="qfu_branch" width="175" />
+          <cell name="qfu_customername" width="250" />
+          <cell name="qfu_totalvalue" width="175" />
+          <cell name="qfu_cssrstaff" width="175" />
+          <cell name="qfu_assignmentstatus" width="175" />
+          <cell name="qfu_nextfollowupon" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="qfu_workitem">
+          <attribute name="qfu_workitemid" />
+          <attribute name="qfu_workitemnumber" />
+          <attribute name="qfu_branch" />
+          <attribute name="qfu_customername" />
+          <attribute name="qfu_totalvalue" />
+          <attribute name="qfu_cssrstaff" />
+          <attribute name="qfu_assignmentstatus" />
+          <attribute name="qfu_nextfollowupon" />
+          <order attribute="qfu_nextfollowupon" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+            <condition attribute="qfu_assignmentstatus" operator="eq" value="985010003" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Needs CSSR Assignment" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

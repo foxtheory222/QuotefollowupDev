@@ -1,0 +1,17 @@
+﻿{
+    "timestamp":  "2026-04-27T16:00:30.3165866-06:00",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com/",
+    "preferredBranchCode":  "4171",
+    "maxQuoteGroups":  5,
+    "selectedBranchCode":  "4171",
+    "selectedQuoteGroupCount":  5,
+    "selectedBothTsrCssrResolved":  5,
+    "selectedExpectedExceptionCount":  0,
+    "selectedExpectedAlertsSent":  0,
+    "selectionReason":  "Preferred branch 4171 had at least 5 high-value quote groups with both TSR and CSSR resolved.",
+    "totalHighValueCandidates":  109,
+    "outputFiles":  [
+                        "pre-apply-scope-review.csv",
+                        "controlled-scope-candidates.csv"
+                    ]
+}

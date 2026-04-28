@@ -1,0 +1,29 @@
+{
+  "target_environment": "<URL>
+  "seeded_on_utc": "2026-04-10T21:58:37.7026440Z",
+  "run_tag": "20260410B",
+  "portal_source_id": "4171|freight-test|portal|20260410B",
+  "archive_source_id": "4171|freight-test|archive|20260410B",
+  "portal_reference": "QFU-FREIGHT-PORTAL-VERIFY-20260410B",
+  "archive_reference": "QFU-FREIGHT-ARCHIVE-VERIFY-20260410B",
+  "records": [
+    {
+      "source_id": "4171|freight-test|portal|20260410B",
+      "record_id": "<GUID>",
+      "result": "created",
+      "reference": "QFU-FREIGHT-PORTAL-VERIFY-20260410B",
+      "status": "Open",
+      "archived": false
+    },
+    {
+      "source_id": "4171|freight-test|archive|20260410B",
+      "record_id": "<GUID>",
+      "result": "created",
+      "reference": "QFU-FREIGHT-ARCHIVE-VERIFY-20260410B",
+      "status": "Closed",
+      "archived": false
+    }
+  ],
+  "portal_url": "<URL>
+  "archive_url": "<URL>
+}

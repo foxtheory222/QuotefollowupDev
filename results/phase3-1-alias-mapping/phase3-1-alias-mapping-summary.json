@@ -1,0 +1,119 @@
+﻿{
+    "phase":  "Phase 3.1",
+    "checkedAtUtc":  "2026-04-27T21:22:12.2052354Z",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionFound":  true,
+    "appFound":  true,
+    "entitySets":  {
+                       "staff":  "qfu_staffs",
+                       "staffAlias":  "qfu_staffaliases",
+                       "branchMembership":  "qfu_branchmemberships",
+                       "workItem":  "qfu_workitems",
+                       "assignmentException":  "qfu_assignmentexceptions",
+                       "quote":  "qfu_quotes",
+                       "quoteLine":  "qfu_quotelines",
+                       "branch":  "qfu_branchs",
+                       "policy":  "qfu_policies"
+                   },
+    "alternateKeys":  [
+                          {
+                              "table":  "qfu_staffalias",
+                              "keyName":  "qfu_key_staffalias_source_type_alias_scope",
+                              "found":  true,
+                              "entityKeyIndexStatus":  "Active",
+                              "keyAttributes":  [
+                                                    "qfu_aliastype",
+                                                    "qfu_normalizedalias",
+                                                    "qfu_scopekey",
+                                                    "qfu_sourcesystem"
+                                                ],
+                              "active":  true
+                          },
+                          {
+                              "table":  "qfu_branchmembership",
+                              "keyName":  "qfu_key_branchmembership_branch_staff_role",
+                              "found":  true,
+                              "entityKeyIndexStatus":  "Active",
+                              "keyAttributes":  [
+                                                    "qfu_branch",
+                                                    "qfu_role",
+                                                    "qfu_staff"
+                                                ],
+                              "active":  true
+                          },
+                          {
+                              "table":  "qfu_policy",
+                              "keyName":  "qfu_key_policy_scope_worktype_activekey",
+                              "found":  true,
+                              "entityKeyIndexStatus":  "Active",
+                              "keyAttributes":  "qfu_policykey",
+                              "active":  true
+                          },
+                          {
+                              "table":  "qfu_workitem",
+                              "keyName":  "qfu_key_workitem_type_sourcekey",
+                              "found":  true,
+                              "entityKeyIndexStatus":  "Active",
+                              "keyAttributes":  [
+                                                    "qfu_sourceexternalkey",
+                                                    "qfu_worktype"
+                                                ],
+                              "active":  true
+                          },
+                          {
+                              "table":  "qfu_alertlog",
+                              "keyName":  "qfu_key_alertlog_dedupekey",
+                              "found":  true,
+                              "entityKeyIndexStatus":  "Active",
+                              "keyAttributes":  "qfu_dedupekey",
+                              "active":  true
+                          },
+                          {
+                              "table":  "qfu_assignmentexception",
+                              "keyName":  "qfu_key_assignmentexception_sourcekey_type_field_value",
+                              "found":  true,
+                              "entityKeyIndexStatus":  "Active",
+                              "keyAttributes":  "qfu_exceptionkey",
+                              "active":  true
+                          }
+                      ],
+    "liveCounts":  {
+                       "activeStaffRecords":  0,
+                       "activeStaffAliasRecords":  0,
+                       "activeAmNumberAliases":  0,
+                       "activeCssrNumberAliases":  0,
+                       "activeBranchMemberships":  0,
+                       "duplicateAliasMappingGroups":  0,
+                       "multiStaffSameScopeAliasGroups":  0,
+                       "activeStaffMissingPrimaryEmail":  0,
+                       "activeStaffMissingSystemUser":  0
+                   },
+    "duplicateAliasMappingGroups":  [
+
+                                    ],
+    "multiStaffSameScopeAliasGroups":  [
+
+                                       ],
+    "headerLineCompleteness":  {
+                                   "quoteHeaderGroups":  521,
+                                   "quoteLineGroups":  566,
+                                   "lineGroupsWithoutHeader":  45,
+                                   "headerGroupsWithoutLines":  0,
+                                   "recommendation":  "Do not guess. Later resolver design should explicitly decide whether to process the union of header and line groups."
+                               },
+    "aliasMapping":  {
+                         "unresolvedAliasRows":  26,
+                         "unresolvedAmNumberRows":  10,
+                         "unresolvedCssrNumberRows":  16,
+                         "invalidAliasRows":  9,
+                         "guessedMappings":  0,
+                         "templatesDirectory":  "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\results\\phase3-1-alias-mapping",
+                         "files":  [
+                                       "unresolved-staff-alias-review.csv",
+                                       "invalid-alias-exceptions-review.csv",
+                                       "qfu_staff-import-template.csv",
+                                       "qfu_staffalias-import-template.csv",
+                                       "qfu_branchmembership-import-template.csv"
+                                   ]
+                     }
+}

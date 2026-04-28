@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_assignmentstatus" localizedName="QFU Assignment Status" description="QFU Assignment Status" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU Assignment Status" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU Assignment Status" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Assigned" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Partially Assigned" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Needs TSR Assignment" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Needs CSSR Assignment" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010004" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Unmapped" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010005" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Error" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>

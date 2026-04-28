@@ -1,0 +1,686 @@
+[
+  {
+    "environment": "DEV operationscenter",
+    "url": "https://orga632edd5.crm3.dynamics.com",
+    "organization": [
+      {
+        "@odata.etag": "W/\"2854006\"",
+        "organizationid": "4630c55b-2d2d-f111-a7e6-7c1e520647f7",
+        "name": "orga632edd5"
+      }
+    ],
+    "qfuSolutions": [
+      {
+        "uniquename": "qfu_mailboxdiagnosticdemo",
+        "friendlyname": "QFU Mailbox Diagnostic Demo",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T17:12:07Z"
+      },
+      {
+        "uniquename": "qfu_sabackorderflowpatch",
+        "friendlyname": "QFU Southern Alberta Backorder Flow Patch",
+        "version": "1.0.0.4",
+        "installedon": "2026-04-27T14:47:21Z"
+      },
+      {
+        "uniquename": "qfu_sabackorderr2",
+        "friendlyname": "QFU Southern Alberta Backorder Replacement Flows R2",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:46:51Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr2",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R2",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:27:49Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr3",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R3",
+        "version": "1.0.0.2",
+        "installedon": "2026-04-27T14:28:29Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr4",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R4",
+        "version": "1.0.0.2",
+        "installedon": "2026-04-27T14:29:09Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr5",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R5",
+        "version": "1.0.0.5",
+        "installedon": "2026-04-27T14:29:39Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr6",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R6",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:30:09Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr7",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R7",
+        "version": "1.0.0.7",
+        "installedon": "2026-04-27T14:30:39Z"
+      },
+      {
+        "uniquename": "qfu_safreightflows",
+        "friendlyname": "QFU Southern Alberta Freight Flows",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:46:12Z"
+      },
+      {
+        "uniquename": "qfu_sagl060flows",
+        "friendlyname": "QFU Southern Alberta GL060 Flows",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:45:31Z"
+      },
+      {
+        "uniquename": "qfu_sapilotflows",
+        "friendlyname": "QFU Southern Alberta Pilot Flows",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:44:22Z"
+      },
+      {
+        "uniquename": "qfu_tempmailboxcapture",
+        "friendlyname": "QFU Temp Mailbox Capture",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:31:19Z"
+      },
+      {
+        "uniquename": "qfu_tempmailboxcapture4171",
+        "friendlyname": "QFU Temp Mailbox Capture 4171",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-27T14:31:50Z"
+      },
+      {
+        "uniquename": "qfu_revenuefollowupworkbench",
+        "friendlyname": "Revenue Follow-Up Workbench",
+        "version": "1.0.0.0",
+        "installedon": "2026-04-27T14:21:42Z"
+      }
+    ],
+    "flowCount": 29,
+    "activeFlowCount": 0,
+    "draftFlowCount": 29,
+    "southernFlowNames": [
+      {
+        "name": "4171-BackOrder-Update-ZBO",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "94ae1bae-fe22-455e-bf63-24ba92644dc0",
+        "modifiedon": "2026-04-27T14:47:23Z"
+      },
+      {
+        "name": "4171-BackOrder-Update-ZBO-Live",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "c3af4e9f-235a-4e03-b35a-01f83adefea4",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4171-BackOrder-Update-ZBO-Live-R2",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "08ce9cfa-7511-2b2a-1be5-360ca2f92c4c",
+        "modifiedon": "2026-04-27T14:46:53Z"
+      },
+      {
+        "name": "4171-Budget-Update-SA1300",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "6db19ff3-c313-4db6-9a57-f3335fe55558",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4171-Freight-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "cf9dbe3d-e0a8-4257-9b97-e21f34a39119",
+        "modifiedon": "2026-04-27T14:46:14Z"
+      },
+      {
+        "name": "4171-GL060-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "fd1ec8dc-56ca-4af7-ab8d-49465802b52a",
+        "modifiedon": "2026-04-27T14:45:33Z"
+      },
+      {
+        "name": "4171-Mailbox-Diagnostic-Demo",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "b8c1b59c-6e53-44f6-97ad-a8c4d1fb4211",
+        "modifiedon": "2026-04-27T17:12:10Z"
+      },
+      {
+        "name": "4171-QuoteFollowUp-Import-Staging",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "0aff92f1-a8f0-45d7-b05c-3afe5ade9ed1",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4171-Temp-Mailbox-Capture",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "7b4e2b57-a83d-4d1f-b23c-82f6037e7217",
+        "modifiedon": "2026-04-27T14:31:51Z"
+      },
+      {
+        "name": "4172-BackOrder-Update-ZBO",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "a5a911cc-1d2d-4e5a-b0ab-da6f52def8b0",
+        "modifiedon": "2026-04-27T14:47:24Z"
+      },
+      {
+        "name": "4172-BackOrder-Update-ZBO-Live",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "5e11f5d1-dd65-4cbd-bc5d-24998c506cb5",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4172-BackOrder-Update-ZBO-Live-R2",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "0f47dbda-6e71-889f-29ae-8b59c2e85d5f",
+        "modifiedon": "2026-04-27T14:46:53Z"
+      },
+      {
+        "name": "4172-Budget-Update-SA1300",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "078cea4c-84f6-4c4f-b73b-62ad838f7cae",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4172-Freight-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "f1a3e7b2-7a34-4bc7-8cfa-20e4d9350f56",
+        "modifiedon": "2026-04-27T14:46:14Z"
+      },
+      {
+        "name": "4172-GL060-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "7447f66d-93d0-44dd-9bf4-449e320190e7",
+        "modifiedon": "2026-04-27T14:45:33Z"
+      },
+      {
+        "name": "4172-Mailbox-Diagnostic-Demo",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "cd53ba51-b6fc-4b83-81cb-4517a8497822",
+        "modifiedon": "2026-04-27T17:12:09Z"
+      },
+      {
+        "name": "4172-QuoteFollowUp-Import-Staging",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "3520a9d9-f40d-430b-aec8-56b9f4c5d96c",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4173-BackOrder-Update-ZBO",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "3277dd8e-14f6-4e7b-b627-ebc923ba86ef",
+        "modifiedon": "2026-04-27T14:47:24Z"
+      },
+      {
+        "name": "4173-BackOrder-Update-ZBO-Live",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "78d68445-b3dc-4eda-a74b-5b14a2fd1812",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4173-BackOrder-Update-ZBO-Live-R2",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "4210a722-67bf-c38e-45f4-bf6a27f66eab",
+        "modifiedon": "2026-04-27T14:46:53Z"
+      },
+      {
+        "name": "4173-Budget-Update-SA1300",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "3c2ebd80-35d9-4e3c-bdbe-70be98a82ae6",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "4173-Freight-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "b6cd0d55-c3d8-4d83-a2e0-53ef2dd19d24",
+        "modifiedon": "2026-04-27T14:46:14Z"
+      },
+      {
+        "name": "4173-GL060-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "cb327979-b304-4b7f-9a42-44c01c959666",
+        "modifiedon": "2026-04-27T14:45:33Z"
+      },
+      {
+        "name": "4173-Mailbox-Diagnostic-Demo",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "20cc8b36-f95c-4a8e-ad91-6787f52f442f",
+        "modifiedon": "2026-04-27T17:12:10Z"
+      },
+      {
+        "name": "4173-QuoteFollowUp-Import-Staging",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "490e1685-4623-461e-ba1c-6c0907a60e33",
+        "modifiedon": "2026-04-27T14:44:24Z"
+      },
+      {
+        "name": "QFU-Freight-Archive-Workitems",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "d0e9e2a5-5155-4d7b-bd8f-c3fd99ff181d",
+        "modifiedon": "2026-04-27T14:46:14Z"
+      }
+    ],
+    "counts": {
+      "qfu_region": null,
+      "qfu_branch": null,
+      "qfu_sourcefeed": null,
+      "qfu_ingestionbatch": null,
+      "qfu_quote": null,
+      "qfu_quoteline": null,
+      "qfu_backorder": null,
+      "qfu_deliverynotpgi": null,
+      "qfu_freightworkitem": null,
+      "qfu_marginexception": null,
+      "qfu_lateorderexception": null
+    },
+    "latestModified": {
+      "qfu_ingestionbatch": null,
+      "qfu_quote": null,
+      "qfu_backorder": null,
+      "qfu_deliverynotpgi": null,
+      "qfu_freightworkitem": null,
+      "qfu_marginexception": null,
+      "qfu_lateorderexception": null
+    }
+  },
+  {
+    "environment": "SOURCE operationhub",
+    "url": "https://regionaloperationshub.crm.dynamics.com",
+    "organization": [
+      {
+        "@odata.etag": "W/\"3470303\"",
+        "organizationid": "97ef5420-712c-f111-a7e3-0022480c1b3f",
+        "name": "regionaloperationshub"
+      }
+    ],
+    "qfuSolutions": [
+      {
+        "uniquename": "qfu_mailboxdiagnosticdemo",
+        "friendlyname": "QFU Mailbox Diagnostic Demo",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-08T14:57:36Z"
+      },
+      {
+        "uniquename": "qfu_sabackorderflowpatch",
+        "friendlyname": "QFU Southern Alberta Backorder Flow Patch",
+        "version": "1.0.0.4",
+        "installedon": "2026-04-13T18:53:21Z"
+      },
+      {
+        "uniquename": "qfu_sabackorderr2",
+        "friendlyname": "QFU Southern Alberta Backorder Replacement Flows R2",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-15T07:11:31Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr2",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R2",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-14T22:17:48Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr3",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R3",
+        "version": "1.0.0.2",
+        "installedon": "2026-04-15T01:21:09Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr4",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R4",
+        "version": "1.0.0.2",
+        "installedon": "2026-04-15T02:40:59Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr5",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R5",
+        "version": "1.0.0.5",
+        "installedon": "2026-04-15T16:29:58Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr6",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R6",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-15T16:58:49Z"
+      },
+      {
+        "uniquename": "qfu_sabudgetr7",
+        "friendlyname": "QFU Southern Alberta Budget Replacement Flows R7",
+        "version": "1.0.0.7",
+        "installedon": "2026-04-15T21:50:24Z"
+      },
+      {
+        "uniquename": "qfu_safreightflows",
+        "friendlyname": "QFU Southern Alberta Freight Flows",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-10T20:01:48Z"
+      },
+      {
+        "uniquename": "qfu_sagl060flows",
+        "friendlyname": "QFU Southern Alberta GL060 Flows",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-01T21:55:50Z"
+      },
+      {
+        "uniquename": "qfu_sapilotflows",
+        "friendlyname": "QFU Southern Alberta Pilot Flows",
+        "version": "1.0.0.1",
+        "installedon": "2026-03-31T20:56:23Z"
+      },
+      {
+        "uniquename": "qfu_tempmailboxcapture",
+        "friendlyname": "QFU Temp Mailbox Capture",
+        "version": "1.0.0.1",
+        "installedon": "2026-03-31T19:03:50Z"
+      },
+      {
+        "uniquename": "qfu_tempmailboxcapture4171",
+        "friendlyname": "QFU Temp Mailbox Capture 4171",
+        "version": "1.0.0.1",
+        "installedon": "2026-04-07T15:45:56Z"
+      },
+      {
+        "uniquename": "qfu_revenuefollowupworkbench",
+        "friendlyname": "Revenue Follow-Up Workbench",
+        "version": "1.0.0.0",
+        "installedon": "2026-04-24T20:52:32Z"
+      }
+    ],
+    "flowCount": 30,
+    "activeFlowCount": 18,
+    "draftFlowCount": 12,
+    "southernFlowNames": [
+      {
+        "name": "4171 Probe Shared Mailbox Trigger",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "8db59325-1bdf-ef43-c3e4-348a8f06e05d",
+        "modifiedon": "2026-04-07T16:44:56Z"
+      },
+      {
+        "name": "4171-BackOrder-Update-ZBO",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "94ae1bae-fe22-455e-bf63-24ba92644dc0",
+        "modifiedon": "2026-04-13T19:34:09Z"
+      },
+      {
+        "name": "4171-BackOrder-Update-ZBO-Live",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "c3af4e9f-235a-4e03-b35a-01f83adefea4",
+        "modifiedon": "2026-04-15T10:12:13Z"
+      },
+      {
+        "name": "4171-BackOrder-Update-ZBO-Live-R2",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "08ce9cfa-7511-2b2a-1be5-360ca2f92c4c",
+        "modifiedon": "2026-04-15T10:12:25Z"
+      },
+      {
+        "name": "4171-Budget-Update-SA1300",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "6db19ff3-c313-4db6-9a57-f3335fe55558",
+        "modifiedon": "2026-04-16T17:12:39Z"
+      },
+      {
+        "name": "4171-Freight-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "cf9dbe3d-e0a8-4257-9b97-e21f34a39119",
+        "modifiedon": "2026-04-22T16:07:41Z"
+      },
+      {
+        "name": "4171-GL060-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "fd1ec8dc-56ca-4af7-ab8d-49465802b52a",
+        "modifiedon": "2026-04-20T15:55:29Z"
+      },
+      {
+        "name": "4171-Mailbox-Diagnostic-Demo",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "b8c1b59c-6e53-44f6-97ad-a8c4d1fb4211",
+        "modifiedon": "2026-04-08T17:38:29Z"
+      },
+      {
+        "name": "4171-QuoteFollowUp-Import-Staging",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "0aff92f1-a8f0-45d7-b05c-3afe5ade9ed1",
+        "modifiedon": "2026-04-20T17:35:03Z"
+      },
+      {
+        "name": "4171-Temp-Mailbox-Capture",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "7b4e2b57-a83d-4d1f-b23c-82f6037e7217",
+        "modifiedon": "2026-04-07T16:31:46Z"
+      },
+      {
+        "name": "4172-BackOrder-Update-ZBO",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "a5a911cc-1d2d-4e5a-b0ab-da6f52def8b0",
+        "modifiedon": "2026-04-13T19:34:09Z"
+      },
+      {
+        "name": "4172-BackOrder-Update-ZBO-Live",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "5e11f5d1-dd65-4cbd-bc5d-24998c506cb5",
+        "modifiedon": "2026-04-15T10:13:21Z"
+      },
+      {
+        "name": "4172-BackOrder-Update-ZBO-Live-R2",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "0f47dbda-6e71-889f-29ae-8b59c2e85d5f",
+        "modifiedon": "2026-04-15T10:12:45Z"
+      },
+      {
+        "name": "4172-Budget-Update-SA1300",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "078cea4c-84f6-4c4f-b73b-62ad838f7cae",
+        "modifiedon": "2026-04-16T17:13:26Z"
+      },
+      {
+        "name": "4172-Freight-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "f1a3e7b2-7a34-4bc7-8cfa-20e4d9350f56",
+        "modifiedon": "2026-04-22T16:07:49Z"
+      },
+      {
+        "name": "4172-GL060-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "7447f66d-93d0-44dd-9bf4-449e320190e7",
+        "modifiedon": "2026-04-20T15:55:44Z"
+      },
+      {
+        "name": "4172-Mailbox-Diagnostic-Demo",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "cd53ba51-b6fc-4b83-81cb-4517a8497822",
+        "modifiedon": "2026-04-08T17:38:45Z"
+      },
+      {
+        "name": "4172-QuoteFollowUp-Import-Staging",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "3520a9d9-f40d-430b-aec8-56b9f4c5d96c",
+        "modifiedon": "2026-04-20T17:35:19Z"
+      },
+      {
+        "name": "4173-BackOrder-Update-ZBO",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "3277dd8e-14f6-4e7b-b627-ebc923ba86ef",
+        "modifiedon": "2026-04-13T19:34:09Z"
+      },
+      {
+        "name": "4173-BackOrder-Update-ZBO-Live",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "78d68445-b3dc-4eda-a74b-5b14a2fd1812",
+        "modifiedon": "2026-04-15T10:13:31Z"
+      },
+      {
+        "name": "4173-BackOrder-Update-ZBO-Live-R2",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "4210a722-67bf-c38e-45f4-bf6a27f66eab",
+        "modifiedon": "2026-04-15T10:13:12Z"
+      },
+      {
+        "name": "4173-Budget-Update-SA1300",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "3c2ebd80-35d9-4e3c-bdbe-70be98a82ae6",
+        "modifiedon": "2026-04-16T17:14:17Z"
+      },
+      {
+        "name": "4173-Freight-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "b6cd0d55-c3d8-4d83-a2e0-53ef2dd19d24",
+        "modifiedon": "2026-04-22T16:07:56Z"
+      },
+      {
+        "name": "4173-GL060-Inbox-Ingress",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "cb327979-b304-4b7f-9a42-44c01c959666",
+        "modifiedon": "2026-04-20T15:55:57Z"
+      },
+      {
+        "name": "4173-Mailbox-Diagnostic-Demo",
+        "uniquename": null,
+        "statecode": 0,
+        "statuscode": 1,
+        "workflowid": "20cc8b36-f95c-4a8e-ad91-6787f52f442f",
+        "modifiedon": "2026-04-08T17:39:01Z"
+      },
+      {
+        "name": "4173-QuoteFollowUp-Import-Staging",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "490e1685-4623-461e-ba1c-6c0907a60e33",
+        "modifiedon": "2026-04-20T17:35:35Z"
+      },
+      {
+        "name": "QFU-Freight-Archive-Workitems",
+        "uniquename": null,
+        "statecode": 1,
+        "statuscode": 2,
+        "workflowid": "d0e9e2a5-5155-4d7b-bd8f-c3fd99ff181d",
+        "modifiedon": "2026-04-22T16:08:01Z"
+      }
+    ],
+    "counts": {
+      "qfu_region": null,
+      "qfu_branch": null,
+      "qfu_sourcefeed": null,
+      "qfu_ingestionbatch": null,
+      "qfu_quote": null,
+      "qfu_quoteline": null,
+      "qfu_backorder": null,
+      "qfu_deliverynotpgi": null,
+      "qfu_freightworkitem": null,
+      "qfu_marginexception": null,
+      "qfu_lateorderexception": null
+    },
+    "latestModified": {
+      "qfu_ingestionbatch": null,
+      "qfu_quote": null,
+      "qfu_backorder": null,
+      "qfu_deliverynotpgi": null,
+      "qfu_freightworkitem": null,
+      "qfu_marginexception": null,
+      "qfu_lateorderexception": null
+    }
+  }
+]

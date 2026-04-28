@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_actiontype" localizedName="QFU Action Type" description="QFU Action Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU Action Type" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU Action Type" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Call" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Email" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Customer Advised" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Vendor Contacted" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010004" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Due Date Updated" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010005" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Follow-Up Scheduled" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010006" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Roadblock" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010007" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Escalated" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010008" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Won" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010009" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Lost" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010010" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Cancelled" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010011" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Note" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010012" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Assignment/Reassignment" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010013" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Sticky Note Updated" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>

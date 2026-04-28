@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-04-27T16:14:23.9628323-06:00",
+  "activeStaff": 19,
+  "activeStaffAliases": 39,
+  "activeBranchMemberships": 39,
+  "activeWorkItems": 5,
+  "activeAssignmentExceptions": 0,
+  "activeAlertLogs": 0,
+  "duplicateWorkItemSourceKeys": 0,
+  "duplicateAssignmentExceptionKeys": 0,
+  "openStatusCount": 5,
+  "dueTodayStatusCount": 0,
+  "overdueStatusCount": 0,
+  "sentAlertLogs": 0
+}

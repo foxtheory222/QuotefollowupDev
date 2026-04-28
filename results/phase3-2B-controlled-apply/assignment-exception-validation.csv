@@ -1,0 +1,2 @@
+"exception_type","source_field","raw_value","normalized_value","source_document_number_present","source_external_key_present","source_quote_linkage_present","source_line_linkage_present","work_item_linkage_present","duplicate_check_result","validation_result"
+"none","none","none","none","not applicable","not applicable","not applicable","not applicable","not applicable","pass - no controlled exceptions expected or created","pass"

@@ -1,0 +1,22 @@
+<fetch>
+  <entity name="qfu_freightworkitem">
+    <attribute name="qfu_freightworkitemid" />
+    <attribute name="qfu_sourceid" />
+    <attribute name="qfu_branchcode" />
+    <attribute name="qfu_sourcefamily" />
+    <attribute name="qfu_invoicenumber" />
+    <attribute name="qfu_totalamount" />
+    <attribute name="qfu_ownername" />
+    <attribute name="qfu_status" />
+    <attribute name="qfu_isarchived" />
+    <attribute name="qfu_archivedon" />
+    <attribute name="modifiedon" />
+    <filter type="and">
+      <condition attribute="qfu_branchcode" operator="eq" value="4171" />
+      <condition attribute="qfu_sourcefamily" operator="eq" value="FREIGHT_PUROLATOR_F07" />
+      <condition attribute="qfu_invoicenumber" operator="eq" value="550256777" />
+    </filter>
+    <order attribute="qfu_isarchived" descending="false" />
+    <order attribute="modifiedon" descending="true" />
+  </entity>
+</fetch>

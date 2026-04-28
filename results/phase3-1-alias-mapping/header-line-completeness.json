@@ -1,0 +1,7 @@
+﻿{
+    "quoteHeaderGroups":  521,
+    "quoteLineGroups":  566,
+    "lineGroupsWithoutHeader":  45,
+    "headerGroupsWithoutLines":  0,
+    "recommendation":  "Do not guess. Later resolver design should explicitly decide whether to process the union of header and line groups."
+}

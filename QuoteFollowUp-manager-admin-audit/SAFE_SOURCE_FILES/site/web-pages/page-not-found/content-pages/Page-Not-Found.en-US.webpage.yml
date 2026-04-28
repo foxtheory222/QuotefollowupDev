@@ -1,0 +1,14 @@
+adx_enablerating: false
+adx_enabletracking: false
+adx_excludefromsearch: true
+adx_hiddenfromsitemap: true
+adx_isroot: false
+adx_name: Page Not Found
+adx_pagetemplateid: <GUID>
+adx_parentpageid: <GUID>
+adx_partialurl: page-not-found
+adx_publishingstateid: <GUID>
+adx_rootwebpageid: <GUID>
+adx_sharedpageconfiguration: false
+adx_webpageid: <GUID>
+adx_webpagelanguageid: <GUID>

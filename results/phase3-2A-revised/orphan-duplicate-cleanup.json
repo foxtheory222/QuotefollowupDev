@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-04-27T15:46:30.4675160-06:00",
+  "action": "deactivated orphan duplicate source-generated qfu_staff",
+  "staffId": "4a1b642c-8242-f111-bec7-7c1e52062b6f",
+  "staffNumber": "7000807",
+  "reason": "initial lookup-bind failure created a staff row before alias write failed; record had no alias or branch membership references",
+  "resolverApplyModeRun": false,
+  "workItemsCreated": 0,
+  "assignmentExceptionsCreated": 0,
+  "alertsSent": 0
+}

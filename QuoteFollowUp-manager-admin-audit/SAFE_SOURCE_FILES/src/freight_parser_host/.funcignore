@@ -1,0 +1,10 @@
+.azure
+.git
+__pycache__
+docs
+node_modules
+output
+powerpages-live
+results
+tests
+tmp

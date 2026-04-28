@@ -1,0 +1,22 @@
+﻿# Live Build Result
+
+- Power Platform tooling available: yes.
+- Authenticated environment: yes.
+- Target environment: https://orga632edd5.crm3.dynamics.com/
+- Solution found: True.
+- Model-driven app found: True.
+- Workbench custom page found: True.
+- Branch navigation Workbench link found: yes, browser-validated on the 4171 branch page.
+- Admin Panel navigation still found: yes.
+- Queue-owner fields created/found: yes.
+- qfu_currentqueueownerstaff: found
+- qfu_currentqueuerole: found
+- qfu_queueassignedon: found
+- qfu_queueassignedby: found
+- qfu_queuehandoffreason: found
+- qfu_queuehandoffcount: found
+- Queue handoff implemented: partial; backend validated through Dataverse API.
+- Server-side rollup created/found: no.
+- App published: yes.
+- Solution exported/unpacked: yes.
+- Blockers/failures: server-side rollup tooling path unavailable; queue role filter not wired in final gallery formula; handoff UI button click not fully validated.

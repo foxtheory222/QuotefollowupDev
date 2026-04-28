@@ -1,0 +1,12 @@
+adx_enablerating: false
+adx_enabletracking: false
+adx_excludefromsearch: false
+adx_hiddenfromsitemap: true
+adx_isroot: true
+adx_name: Search
+adx_pagetemplateid: <GUID>
+adx_parentpageid: <GUID>
+adx_partialurl: search
+adx_publishingstateid: <GUID>
+adx_sharedpageconfiguration: false
+adx_webpageid: <GUID>
