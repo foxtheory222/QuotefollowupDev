@@ -1,0 +1,130 @@
+﻿{
+    "timestamp":  "2026-04-29T09:36:08.3703271-06:00",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "currentUser":  {
+                        "emailMasked":  "s***@applied.com",
+                        "systemUserId":  "c3e715ed-572a-f111-88b4-7ced8d067891"
+                    },
+    "solutionFound":  true,
+    "modelDrivenAppFound":  true,
+    "tablesAccessible":  {
+                             "qfu_branchmembership":  true,
+                             "qfu_assignmentexception":  true,
+                             "qfu_alertlog":  true,
+                             "qfu_staff":  true,
+                             "qfu_workitemaction":  true,
+                             "qfu_workitem":  true,
+                             "qfu_quote":  true,
+                             "qfu_quoteline":  true,
+                             "qfu_backorder":  true
+                         },
+    "counts":  {
+                   "recipientCandidates":  51,
+                   "failedAlertLogs":  0,
+                   "duplicateAlertDedupeKeys":  0,
+                   "workItemActions":  29,
+                   "missingAttemptsWorkItems":  30,
+                   "duplicateAssignmentExceptionKeys":  0,
+                   "managerMemberships":  0,
+                   "activeStaffWithEmail":  1,
+                   "recipientCandidatesMissingEmail":  47,
+                   "activeStaffMissingSystemUser":  18,
+                   "activeAssignmentExceptions":  3,
+                   "tsrMemberships":  16,
+                   "cssrMemberships":  23,
+                   "activeStaffMissingEmail":  18,
+                   "statecodeZeroStaffLinkedToSystemUser":  1,
+                   "recipientCandidatesResolvable":  3,
+                   "activeWorkItems":  38,
+                   "overdueWorkItems":  31,
+                   "recipientCandidatesMissingStaff":  1,
+                   "duplicateWorkItemSourceKeys":  0,
+                   "alertLogsTotal":  75,
+                   "activeStaff":  19,
+                   "roadblockWorkItems":  0,
+                   "activeStaffLinkedToSystemUser":  1,
+                   "gmMemberships":  0,
+                   "sentAlertLogs":  0,
+                   "dueTodayWorkItems":  0,
+                   "statecodeZeroStaffWithEmail":  1,
+                   "assignmentIssues":  7,
+                   "adminMemberships":  1
+               },
+    "phase6FlowReview":  [
+                             {
+                                 "workflowId":  "b7afa683-3143-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Work Item Action Rollup - Phase 5",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "ac07bf1c-3d43-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Queue Handoff - Workbench",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "2274d8ff-5343-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Alert Dispatcher - Phase 6",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "978b8806-5443-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Daily Staff Digest - Phase 6",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "a78b8806-5443-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Manager Digest - Phase 6",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "9429d20c-5443-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Escalation Processor - Phase 6",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "208f1814-5443-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Assignment Exception Digest - Phase 6",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             },
+                             {
+                                 "workflowId":  "308f1814-5443-f111-bec7-7c1e52062b6f",
+                                 "name":  "QFU Alert Flow Health Monitor - Phase 6",
+                                 "statecode":  1,
+                                 "statuscode":  2,
+                                 "containsSendMail":  false,
+                                 "containsTeams":  false
+                             }
+                         ],
+    "noUnapprovedSend":  {
+                             "containsSendMailInQfuFlows":  0,
+                             "containsTeamsInQfuFlows":  0,
+                             "sentAlertLogs":  0
+                         },
+    "securityReadiness":  {
+                              "productionRoleSecurityComplete":  false,
+                              "qfuTeamsFound":  3,
+                              "qfuSecurityRolesFound":  5,
+                              "blocker":  "No production-verified Manager/GM/Admin roster and no approved final privilege matrix were present in the environment."
+                          }
+}

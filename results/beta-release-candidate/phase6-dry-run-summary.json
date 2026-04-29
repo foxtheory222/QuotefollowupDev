@@ -1,0 +1,91 @@
+﻿{
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "timestamp":  "2026-04-29T09:36:51.8087052-06:00",
+    "policy":  {
+                   "policyId":  "c839a82d-6f42-f111-bec7-7c1e52062b6f",
+                   "policyKey":  "GLOBAL|Quote|Active",
+                   "alertMode":  "DryRunOnly",
+                   "digestEnabled":  true,
+                   "targetedAlertEnabled":  true,
+                   "highValueThreshold":  3000.0000000000,
+                   "requiredAttempts":  3,
+                   "escalateAfterBusinessDays":  1
+               },
+    "liveCounts":  {
+                       "activeStaff":  19,
+                       "staffWithPrimaryEmail":  1,
+                       "staffMissingPrimaryEmail":  18,
+                       "activeBranchMemberships":  40,
+                       "managerMemberships":  0,
+                       "gmMemberships":  0,
+                       "adminMemberships":  1,
+                       "activeWorkItems":  38,
+                       "dueTodayWorkItems":  4,
+                       "overdueWorkItems":  28,
+                       "roadblockWorkItems":  0,
+                       "missingAttemptsWorkItems":  31,
+                       "assignmentIssues":  7,
+                       "openAssignmentExceptions":  3
+                   },
+    "alertCountsBefore":  {
+                              "total":  75,
+                              "sent":  0,
+                              "failed":  0,
+                              "skipped":  75,
+                              "suppressed":  0,
+                              "duplicateDedupeKeys":  0
+                          },
+    "alertCountsAfter":  {
+                             "total":  151,
+                             "sent":  0,
+                             "failed":  0,
+                             "skipped":  149,
+                             "suppressed":  2,
+                             "duplicateDedupeKeys":  0
+                         },
+    "candidates":  {
+                       "total":  76,
+                       "alertDispatcher":  33,
+                       "staffDigest":  5,
+                       "managerDigest":  1,
+                       "escalation":  36,
+                       "assignmentExceptionDigest":  1
+                   },
+    "firstRun":  {
+                     "created":  76,
+                     "existing":  0,
+                     "failed":  0
+                 },
+    "secondRun":  {
+                      "created":  0,
+                      "existing":  76,
+                      "failed":  0,
+                      "duplicateSuppressionPassed":  true
+                  },
+    "resolver":  {
+                     "resolvedWithEmail":  2,
+                     "missingEmailOrStaff":  74
+                 },
+    "sendValidation":  {
+                           "productionEmailsSent":  0,
+                           "teamsMessagesSent":  0,
+                           "liveDigestsSent":  0,
+                           "testRecipientSendTest":  "skipped-no-verified-test-recipient",
+                           "noUnapprovedSends":  true
+                       },
+    "duplicateChecks":  {
+                            "duplicateAlertDedupeKeys":  0,
+                            "duplicateWorkItemSourceKeys":  0,
+                            "duplicateAssignmentExceptionKeys":  0
+                        },
+    "outputFiles":  [
+                        "staff-email-readiness.csv",
+                        "missing-recipient-email-review.csv",
+                        "recipient-resolver-dry-run.csv",
+                        "alert-dispatcher-dry-run.csv",
+                        "staff-digest-dry-run.csv",
+                        "manager-digest-dry-run.csv",
+                        "escalation-dry-run.csv",
+                        "assignment-exception-digest-dry-run.csv"
+                    ]
+}

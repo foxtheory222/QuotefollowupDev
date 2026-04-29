@@ -1,0 +1,87 @@
+{
+  "timestamp": "2026-04-29T15:37:42.191Z",
+  "blocked": true,
+  "blocker": "Microsoft sign-in blocked Workbench validation.",
+  "persona": "current authenticated dev/maker only",
+  "portalNavigation": {
+    "railLabels": [
+      "Dashboard",
+      "Workbench",
+      "Quotes",
+      "Back Orders",
+      "Ready to Ship",
+      "Freight Recovery",
+      "Analytics"
+    ],
+    "expectedBasePresent": true,
+    "removedLabelsAbsent": true
+  },
+  "adminMonitoringViews": [
+    {
+      "table": "qfu_staff",
+      "viewName": "Phase 8 Identity Setup - Missing Email",
+      "opened": false,
+      "authBlocked": true
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Phase 8 Identity Setup - Missing System User",
+      "opened": false,
+      "authBlocked": true
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Phase 8 Identity Setup - Linked Staff",
+      "opened": false,
+      "authBlocked": true
+    },
+    {
+      "table": "qfu_branchmembership",
+      "viewName": "Phase 8 Role Setup - Manager GM Admin",
+      "opened": false,
+      "authBlocked": true
+    },
+    {
+      "table": "qfu_workitem",
+      "viewName": "Phase 8 Monitoring - Overdue Work Items",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 681
+    },
+    {
+      "table": "qfu_workitem",
+      "viewName": "Phase 8 Monitoring - Assignment Issues",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 723
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Phase 8 Monitoring - Skipped Alerts",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 696
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Phase 8 Monitoring - Failed Alerts",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 696
+    },
+    {
+      "table": "qfu_assignmentexception",
+      "viewName": "Phase 8 Monitoring - Open Assignment Exceptions",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 845
+    },
+    {
+      "table": "qfu_policy",
+      "viewName": "Phase 8 Monitoring - Alert Policies",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 726
+    }
+  ]
+}

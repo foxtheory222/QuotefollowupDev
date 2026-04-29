@@ -1,0 +1,67 @@
+﻿{
+    "timestamp":  "2026-04-29T09:41:45.0859560-06:00",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "currentUser":  {
+                        "systemUserId":  "c3e715ed-572a-f111-88b4-7ced8d067891",
+                        "emailMasked":  "s***@applied.com"
+                    },
+    "branchCode":  "4171",
+    "branchFound":  true,
+    "branchId":  "071be77a-a533-f111-88b4-000d3a59294a",
+    "testAccounts":  {
+                         "systemUsersFound":  0,
+                         "staffRowsFound":  0,
+                         "membershipsFound":  0,
+                         "completePersonaSetFound":  false
+                     },
+    "security":  {
+                     "qfuRolesFound":  5,
+                     "qfuTeamsFound":  3,
+                     "rolePrivilegeCounts":  [
+                                                 {
+                                                     "roleName":  "QFU Staff",
+                                                     "roleId":  "8f753e16-dc43-f111-bec7-7c1e52062b6f",
+                                                     "privilegeCount":  9
+                                                 },
+                                                 {
+                                                     "roleName":  "QFU Manager",
+                                                     "roleId":  "a5753e16-dc43-f111-bec7-7c1e52062b6f",
+                                                     "privilegeCount":  9
+                                                 },
+                                                 {
+                                                     "roleName":  "QFU GM",
+                                                     "roleId":  "b1753e16-dc43-f111-bec7-7c1e52062b6f",
+                                                     "privilegeCount":  9
+                                                 },
+                                                 {
+                                                     "roleName":  "QFU Admin",
+                                                     "roleId":  "be753e16-dc43-f111-bec7-7c1e52062b6f",
+                                                     "privilegeCount":  9
+                                                 },
+                                                 {
+                                                     "roleName":  "QFU Service Account",
+                                                     "roleId":  "ca753e16-dc43-f111-bec7-7c1e52062b6f",
+                                                     "privilegeCount":  9
+                                                 }
+                                             ],
+                     "rolePrivilegesPresent":  true,
+                     "privilegesAppliedEnoughForBeta":  false,
+                     "privilegesValidationNote":  "Privilege rows are present, but beta least-privilege validation requires separate role-specific users and cannot be accepted from counts alone."
+                 },
+    "counts":  {
+                   "activeWorkItems":  38,
+                   "sentAlertLogs":  0,
+                   "failedAlertLogs":  0,
+                   "duplicateAlertDedupeKeys":  0,
+                   "duplicateWorkItemSourceKeys":  0,
+                   "duplicateAssignmentExceptionKeys":  0,
+                   "duplicateActiveAliasKeys":  0
+               },
+    "betaReady":  false,
+    "blockers":  [
+                     "Separate QFU beta test accounts were not verified as a complete persona set.",
+                     "Tenant/user creation requires admin approval if accounts are missing.",
+                     "QFU security role privileges must be approved and validated with role-specific users.",
+                     "TestRecipientOnly requires a verified test mailbox and controlled send approval."
+                 ]
+}
