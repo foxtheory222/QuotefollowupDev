@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-04-29T14:23:43.766Z",
+  "blocked": false,
+  "blocker": null,
+  "portalNavigation": {
+    "railLabels": [
+      "Dashboard",
+      "Workbench",
+      "Quotes",
+      "Back Orders",
+      "Ready to Ship",
+      "Freight Recovery",
+      "Analytics"
+    ],
+    "workbenchPresent": true,
+    "followUpQueueAbsent": true,
+    "overdueQuotesAbsent": true,
+    "teamProgressAbsent": true,
+    "backOrdersPresent": true,
+    "freightRecoveryPresent": true,
+    "expectedBasePresent": true
+  },
+  "powerAppNavigation": {
+    "workbenchFound": true,
+    "managerPanelFound": true,
+    "adminPanelFound": true,
+    "myQueueFound": true,
+    "teamViewFound": true
+  },
+  "queueRoleFilters": [
+    {
+      "value": "All",
+      "count": 38,
+      "noItems": false,
+      "error": null
+    },
+    {
+      "value": "TSR",
+      "count": 30,
+      "noItems": false,
+      "error": null
+    },
+    {
+      "value": "CSSR",
+      "count": 2,
+      "noItems": true,
+      "error": null
+    },
+    {
+      "value": "Unassigned",
+      "count": 6,
+      "noItems": true,
+      "error": null
+    }
+  ],
+  "adminViewChecks": [
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Linked to System User",
+      "opened": true,
+      "textHasViewName": false,
+      "authBlocked": null,
+      "bodyLength": 1122
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Missing System User",
+      "opened": true,
+      "textHasViewName": false,
+      "authBlocked": null,
+      "bodyLength": 1122
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff With Email",
+      "opened": true,
+      "textHasViewName": false,
+      "authBlocked": null,
+      "bodyLength": 1122
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Missing Email",
+      "opened": true,
+      "textHasViewName": true,
+      "authBlocked": null,
+      "bodyLength": 1150
+    },
+    {
+      "table": "qfu_branchmembership",
+      "viewName": "Active Manager GM Admin Memberships",
+      "opened": true,
+      "textHasViewName": false,
+      "authBlocked": null,
+      "bodyLength": 1532
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "All Alert Logs",
+      "opened": true,
+      "textHasViewName": false,
+      "authBlocked": null,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Skipped Alerts",
+      "opened": true,
+      "textHasViewName": false,
+      "authBlocked": null,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Sent Alerts",
+      "opened": true,
+      "textHasViewName": true,
+      "authBlocked": null,
+      "bodyLength": 612
+    }
+  ]
+}

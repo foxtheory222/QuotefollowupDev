@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{96ea556b-3975-46c2-ac01-50bff38bd0f1}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qfu_workitemnumber" select="1" icon="1" preview="1">
+        <row name="result" id="qfu_workitemid">
+          <cell name="qfu_workitemnumber" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="qfu_workitem">
+          <attribute name="qfu_workitemid" />
+          <attribute name="qfu_workitemnumber" />
+          <attribute name="createdon" />
+          <order attribute="qfu_workitemnumber" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive Work Items" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

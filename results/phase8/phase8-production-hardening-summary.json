@@ -1,0 +1,195 @@
+﻿{
+    "timestamp":  "2026-04-29T09:01:56.7875098-06:00",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionFound":  true,
+    "currentUser":  {
+                        "businessUnitId":  "d1e015ed-572a-f111-88b4-7ced8d067891",
+                        "systemUserId":  "c3e715ed-572a-f111-88b4-7ced8d067891"
+                    },
+    "counts":  {
+                   "duplicateAlertDedupeKeys":  0,
+                   "managerMemberships":  0,
+                   "activeStaffLinkedToSystemUser":  1,
+                   "activeWorkItems":  38,
+                   "sentAlertLogs":  0,
+                   "adminMemberships":  1,
+                   "qfuBranchTeamShells":  3,
+                   "duplicateWorkItemSourceKeys":  0,
+                   "activeStaffMissingSystemUser":  18,
+                   "gmMemberships":  0,
+                   "activeStaffMissingEmail":  18,
+                   "qfuSecurityRoleShells":  5,
+                   "activeStaff":  19,
+                   "alertLogs":  75,
+                   "activeStaffWithEmail":  1,
+                   "duplicateAssignmentExceptionKeys":  0
+               },
+    "securityRoleShells":  [
+                               {
+                                   "name":  "QFU Staff",
+                                   "roleId":  "8f753e16-dc43-f111-bec7-7c1e52062b6f",
+                                   "status":  "found",
+                                   "addedToSolution":  true,
+                                   "failure":  ""
+                               },
+                               {
+                                   "name":  "QFU Manager",
+                                   "roleId":  "a5753e16-dc43-f111-bec7-7c1e52062b6f",
+                                   "status":  "found",
+                                   "addedToSolution":  true,
+                                   "failure":  ""
+                               },
+                               {
+                                   "name":  "QFU GM",
+                                   "roleId":  "b1753e16-dc43-f111-bec7-7c1e52062b6f",
+                                   "status":  "found",
+                                   "addedToSolution":  true,
+                                   "failure":  ""
+                               },
+                               {
+                                   "name":  "QFU Admin",
+                                   "roleId":  "be753e16-dc43-f111-bec7-7c1e52062b6f",
+                                   "status":  "found",
+                                   "addedToSolution":  true,
+                                   "failure":  ""
+                               },
+                               {
+                                   "name":  "QFU Service Account",
+                                   "roleId":  "ca753e16-dc43-f111-bec7-7c1e52062b6f",
+                                   "status":  "found",
+                                   "addedToSolution":  true,
+                                   "failure":  ""
+                               }
+                           ],
+    "branchTeamShells":  [
+                             {
+                                 "name":  "QFU Branch 4171",
+                                 "teamId":  "d6753e16-dc43-f111-bec7-7c1e52062b6f",
+                                 "status":  "found",
+                                 "addedToSolution":  false,
+                                 "failure":  ""
+                             },
+                             {
+                                 "name":  "QFU Branch 4172",
+                                 "teamId":  "d9753e16-dc43-f111-bec7-7c1e52062b6f",
+                                 "status":  "found",
+                                 "addedToSolution":  false,
+                                 "failure":  ""
+                             },
+                             {
+                                 "name":  "QFU Branch 4173",
+                                 "teamId":  "dca9721c-dc43-f111-bec7-7c1e52062b6f",
+                                 "status":  "found",
+                                 "addedToSolution":  false,
+                                 "failure":  ""
+                             }
+                         ],
+    "views":  [
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Phase 8 Identity Setup - Missing Email",
+                      "savedqueryid":  "e0a9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Phase 8 Identity Setup - Missing System User",
+                      "savedqueryid":  "e2a9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Phase 8 Identity Setup - Linked Staff",
+                      "savedqueryid":  "e4a9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Phase 8 Identity Setup - Active Staff",
+                      "savedqueryid":  "e6a9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_branchmembership",
+                      "viewName":  "Phase 8 Role Setup - Manager GM Admin",
+                      "savedqueryid":  "e8a9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_branchmembership",
+                      "viewName":  "Phase 8 Role Setup - Admin Memberships",
+                      "savedqueryid":  "eaa9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_workitem",
+                      "viewName":  "Phase 8 Monitoring - Overdue Work Items",
+                      "savedqueryid":  "3a3e5757-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "created",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_workitem",
+                      "viewName":  "Phase 8 Monitoring - Roadblocks",
+                      "savedqueryid":  "3c3e5757-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "created",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_workitem",
+                      "viewName":  "Phase 8 Monitoring - Assignment Issues",
+                      "savedqueryid":  "3e3e5757-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "created",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_alertlog",
+                      "viewName":  "Phase 8 Monitoring - Skipped Alerts",
+                      "savedqueryid":  "efa9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_alertlog",
+                      "viewName":  "Phase 8 Monitoring - Failed Alerts",
+                      "savedqueryid":  "f1a9721c-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_assignmentexception",
+                      "viewName":  "Phase 8 Monitoring - Open Assignment Exceptions",
+                      "savedqueryid":  "a4e37b22-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  },
+                  {
+                      "table":  "qfu_policy",
+                      "viewName":  "Phase 8 Monitoring - Alert Policies",
+                      "savedqueryid":  "a6e37b22-dc43-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true,
+                      "failure":  ""
+                  }
+              ],
+    "productionSecurityComplete":  false,
+    "productionSecurityBlocker":  "Verified staff roster, Manager/GM/Admin roster, and final privilege matrix are still required before production role enforcement."
+}

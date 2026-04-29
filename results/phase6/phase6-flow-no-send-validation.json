@@ -1,0 +1,62 @@
+﻿{
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "timestamp":  "2026-04-28T16:52:41.7139943-06:00",
+    "phase6Flows":  [
+                        {
+                            "name":  "QFU Alert Dispatcher - Phase 6",
+                            "workflowId":  "2274d8ff-5343-f111-bec7-7c1e52062b6f",
+                            "statecode":  1,
+                            "statuscode":  2,
+                            "containsSendMail":  false,
+                            "containsTeams":  false,
+                            "containsDryRunOnly":  true
+                        },
+                        {
+                            "name":  "QFU Daily Staff Digest - Phase 6",
+                            "workflowId":  "978b8806-5443-f111-bec7-7c1e52062b6f",
+                            "statecode":  1,
+                            "statuscode":  2,
+                            "containsSendMail":  false,
+                            "containsTeams":  false,
+                            "containsDryRunOnly":  true
+                        },
+                        {
+                            "name":  "QFU Manager Digest - Phase 6",
+                            "workflowId":  "a78b8806-5443-f111-bec7-7c1e52062b6f",
+                            "statecode":  1,
+                            "statuscode":  2,
+                            "containsSendMail":  false,
+                            "containsTeams":  false,
+                            "containsDryRunOnly":  true
+                        },
+                        {
+                            "name":  "QFU Escalation Processor - Phase 6",
+                            "workflowId":  "9429d20c-5443-f111-bec7-7c1e52062b6f",
+                            "statecode":  1,
+                            "statuscode":  2,
+                            "containsSendMail":  false,
+                            "containsTeams":  false,
+                            "containsDryRunOnly":  true
+                        },
+                        {
+                            "name":  "QFU Assignment Exception Digest - Phase 6",
+                            "workflowId":  "208f1814-5443-f111-bec7-7c1e52062b6f",
+                            "statecode":  1,
+                            "statuscode":  2,
+                            "containsSendMail":  false,
+                            "containsTeams":  false,
+                            "containsDryRunOnly":  true
+                        },
+                        {
+                            "name":  "QFU Alert Flow Health Monitor - Phase 6",
+                            "workflowId":  "308f1814-5443-f111-bec7-7c1e52062b6f",
+                            "statecode":  1,
+                            "statuscode":  2,
+                            "containsSendMail":  false,
+                            "containsTeams":  false,
+                            "containsDryRunOnly":  true
+                        }
+                    ],
+    "phase6FlowCount":  6,
+    "allNoSend":  true
+}

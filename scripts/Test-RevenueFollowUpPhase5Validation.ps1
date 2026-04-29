@@ -97,8 +97,19 @@ $app = Get-AllRows "appmodules?`$select=appmoduleid,name,uniquename&`$filter=uni
 $canvasApps = Get-AllRows "canvasapps?`$select=canvasappid,name,displayname&`$filter=name eq 'qfu_mywork_6e7ed'"
 
 $attributes = Invoke-DvGet "EntityDefinitions(LogicalName='qfu_workitem')/Attributes?`$select=LogicalName"
-$queueFields = @('qfu_currentqueueownerstaff','qfu_currentqueuerole','qfu_queueassignedon','qfu_queueassignedby','qfu_queuehandoffreason','qfu_queuehandoffcount')
+$queueFields = @(
+    'qfu_currentqueueownerstaff',
+    'qfu_currentqueuerole',
+    'qfu_currentqueueroletext',
+    'qfu_currentqueueownerstaffkey',
+    'qfu_currentqueueownername',
+    'qfu_queueassignedon',
+    'qfu_queueassignedby',
+    'qfu_queuehandoffreason',
+    'qfu_queuehandoffcount'
+)
 $fieldNames = @($attributes.value | ForEach-Object { $_.LogicalName })
+$rollupFlow = Get-AllRows "workflows?`$select=workflowid,name,statecode,statuscode,category,type,createdon,modifiedon&`$filter=name eq 'QFU Work Item Action Rollup - Phase 5'" | Select-Object -First 1
 
 $activeWorkItems = Get-AllRows "qfu_workitems?`$select=qfu_workitemid,qfu_sourceexternalkey,qfu_worktype,qfu_status,qfu_assignmentstatus,qfu_completedattempts,qfu_requiredattempts,qfu_currentqueuerole,_qfu_currentqueueownerstaff_value,_qfu_tsrstaff_value,_qfu_cssrstaff_value,qfu_queuehandoffcount,qfu_stickynote,qfu_stickynoteupdatedon&`$filter=statecode eq 0"
 $activeActions = Get-AllRows "qfu_workitemactions?`$select=qfu_workitemactionid,qfu_countsasattempt,qfu_actiontype&`$filter=statecode eq 0"
@@ -233,8 +244,12 @@ $result = [ordered]@{
     duplicateAssignmentExceptionKeys = @($duplicateExceptionKeys).Count
     controlledHandoff = $handoffResult
     serverSideRollup = [ordered]@{
-        implemented = $false
-        validation = 'Blocked/deferred. PAC has no supported cloud-flow create command in this session, and dotnet/plugin build tooling is unavailable. App-side rollup remains active in the custom page.'
+        implemented = [bool]$rollupFlow
+        flowName = if ($rollupFlow) { $rollupFlow.name } else { $null }
+        workflowId = if ($rollupFlow) { $rollupFlow.workflowid } else { $null }
+        statecode = if ($rollupFlow) { $rollupFlow.statecode } else { $null }
+        statuscode = if ($rollupFlow) { $rollupFlow.statuscode } else { $null }
+        validation = if ($rollupFlow) { 'Rollup flow found. Use Test-RevenueFollowUpPhase5ServerRollup.ps1 for behavior validation.' } else { 'Rollup flow not found by name.' }
     }
 }
 

@@ -1,0 +1,72 @@
+﻿{
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "timestamp":  "2026-04-28T17:02:01.1437024-06:00",
+    "alertLogsTotal":  75,
+    "sentAlertLogs":  0,
+    "failedAlertLogs":  0,
+    "skippedAlertLogs":  75,
+    "dryRunSuppressedAlertLogs":  0,
+    "duplicateAlertDedupeKeys":  0,
+    "activeWorkItems":  38,
+    "duplicateWorkItemSourceKeys":  0,
+    "activeAssignmentExceptions":  3,
+    "duplicateAssignmentExceptionKeys":  0,
+    "flows":  [
+                  {
+                      "@odata.etag":  "W/\"3107528\"",
+                      "statuscode":  2,
+                      "name":  "QFU Work Item Action Rollup - Phase 5",
+                      "workflowid":  "b7afa683-3143-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3054252\"",
+                      "statuscode":  2,
+                      "name":  "QFU Queue Handoff - Workbench",
+                      "workflowid":  "ac07bf1c-3d43-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3109550\"",
+                      "statuscode":  2,
+                      "name":  "QFU Alert Dispatcher - Phase 6",
+                      "workflowid":  "2274d8ff-5343-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3109601\"",
+                      "statuscode":  2,
+                      "name":  "QFU Daily Staff Digest - Phase 6",
+                      "workflowid":  "978b8806-5443-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3109649\"",
+                      "statuscode":  2,
+                      "name":  "QFU Manager Digest - Phase 6",
+                      "workflowid":  "a78b8806-5443-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3109689\"",
+                      "statuscode":  2,
+                      "name":  "QFU Escalation Processor - Phase 6",
+                      "workflowid":  "9429d20c-5443-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3109718\"",
+                      "statuscode":  2,
+                      "name":  "QFU Assignment Exception Digest - Phase 6",
+                      "workflowid":  "208f1814-5443-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  },
+                  {
+                      "@odata.etag":  "W/\"3109765\"",
+                      "statuscode":  2,
+                      "name":  "QFU Alert Flow Health Monitor - Phase 6",
+                      "workflowid":  "308f1814-5443-f111-bec7-7c1e52062b6f",
+                      "statecode":  1
+                  }
+              ]
+}

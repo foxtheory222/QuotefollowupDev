@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{89d42082-c1b0-4267-9a31-cb6f95acf088}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{578da058-b1af-4e53-b4d9-c13e9b96b485}" IsUserDefined="1">
+          <labels>
+            <label description="Work Item Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{d7d9baa4-ba11-4f5c-bcf3-ec1316a165ec}">
+                  <labels>
+                    <label description="Follow-Up Priority" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{8756db97-9ce2-49e6-9569-9f6739035651}">
+                        <labels>
+                          <label description="Work Item Number" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_workitemnumber" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_workitemnumber" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{97534e68-1cc0-4413-b11c-3f8d40d9f04d}">
+                        <labels>
+                          <label description="Work Type" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_worktype" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_worktype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{471f3c60-2829-4367-a4bd-9c3cbdee41ae}">
+                        <labels>
+                          <label description="Source System" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcesystem" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcesystem" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{64449849-84fd-4cdc-b978-4d36d2eee2cc}">
+                        <labels>
+                          <label description="Branch" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_branch" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_branch" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b4fcafba-5799-4efa-965e-a5589607c9d7}">
+                        <labels>
+                          <label description="Source Document Number" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_sourcedocumentnumber" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_sourcedocumentnumber" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{f63b4765-d001-42d8-a9f6-8d49f3665853}">
+                        <labels>
+                          <label description="Sticky Note" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_stickynote" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_stickynote" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ceccc8f4-d06e-4b3c-87c7-ac8788cfdb7a}">
+                        <labels>
+                          <label description="Sticky Note Updated On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_stickynoteupdatedon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_stickynoteupdatedon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7f1c491c-6daa-4f63-891b-3040687cfdd7}">
+                        <labels>
+                          <label description="Sticky Note Updated By" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_stickynoteupdatedby" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_stickynoteupdatedby" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{dcb5d09f-cebc-4edc-a4cd-ce47b79cf36a}">
+                        <labels>
+                          <label description="Customer Name" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_customername" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_customername" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{2203d2f3-e669-4598-965f-cb6cc6d7e631}">
+                        <labels>
+                          <label description="Total Value" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_totalvalue" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_totalvalue" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d7984037-72f2-43ce-9459-c4795adfb453}">
+                        <labels>
+                          <label description="Primary Owner Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_primaryownerstaff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_primaryownerstaff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{734126a1-bef5-402d-b87d-89922d52a548}">
+                        <labels>
+                          <label description="Support Owner Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_supportownerstaff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_supportownerstaff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d90a540f-465b-4c57-8b29-6de236247aa5}">
+                        <labels>
+                          <label description="TSR Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_tsrstaff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_tsrstaff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7de3dd97-40c1-42f6-8791-92faf2274175}">
+                        <labels>
+                          <label description="CSSR Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_cssrstaff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_cssrstaff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{65d1994f-e939-4cb2-b2d9-091725ec059e}">
+                        <labels>
+                          <label description="Required Attempts" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_requiredattempts" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_requiredattempts" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{735661bc-e00f-4988-bb3a-33a5c45b7cf4}">
+                        <labels>
+                          <label description="Completed Attempts" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_completedattempts" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_completedattempts" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{38bbc260-6858-4be4-a3a0-9745106006b8}">
+                        <labels>
+                          <label description="Status" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_status" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_status" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{c6160a7c-a727-4264-94c9-8851f2ab6708}">
+                        <labels>
+                          <label description="Priority" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_priority" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_priority" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4cef759b-f744-4380-a06e-3d31b991e764}">
+                        <labels>
+                          <label description="Next Follow-Up On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_nextfollowupon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_nextfollowupon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{eed9ef9b-76e7-47b9-b449-61aa680da251}">
+                        <labels>
+                          <label description="Last Followed Up On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_lastfollowedupon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_lastfollowedupon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{db5f7a3c-6bec-49b2-a1f7-7c989fccb27c}">
+                        <labels>
+                          <label description="Last Action On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_lastactionon" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_lastactionon" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{bf9ce4d7-c81d-49b3-9dba-c26fe97a769f}">
+                        <labels>
+                          <label description="Overdue Since" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_overduesince" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_overduesince" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{bb133a55-d642-4833-9857-4500fba974b9}">
+                        <labels>
+                          <label description="Escalation Level" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_escalationlevel" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_escalationlevel" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{dbeb4c77-e629-4ea4-9ee1-234f72f360ed}">
+                        <labels>
+                          <label description="Policy" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_policy" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_policy" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{dbb66ed1-2acf-4706-aa47-2274243e2612}">
+                        <labels>
+                          <label description="Assignment Status" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_assignmentstatus" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_assignmentstatus" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{2f3a6640-b7ac-429b-a213-470a21d61c8d}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Work Item Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

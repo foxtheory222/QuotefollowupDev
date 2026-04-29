@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>qfu_mywork_6e7ed</Name>
+  <AppVersion>2026-04-28T22:07:25Z</AppVersion>
+  <Status>Ready</Status>
+  <CreatedByClientVersion>3.26043.17.0</CreatedByClientVersion>
+  <MinClientVersion>3.26043.17.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"1366","primaryDeviceHeight":"768","supportsPortrait":"true","supportsLandscape":"true","primaryFormFactor":"Tablet","showStatusBar":"false","publisherVersion":"3.26043.17","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false","m365CopilotSettingValue":"0","sienaVersion":"20260428T143439Z-3.26043.17.0"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <GalleryItemId xsi:nil="true"></GalleryItemId>
+  <BackgroundColor>RGBA(0,176,240,1)</BackgroundColor>
+  <DisplayName>Workbench</DisplayName>
+  <Description></Description>
+  <CommitMessage>Phase 5 Completion queue-role filter and Manager Panel navigation</CommitMessage>
+  <Publisher></Publisher>
+  <AuthorizationReferences>[]</AuthorizationReferences>
+  <ConnectionReferences>{}</ConnectionReferences>
+  <DatabaseReferences>{"default.cds":{"databaseDetails":{"referenceType":"Environmental","environmentName":"default.cds","overrideValues":{"status":"NotSpecified","environmentVariableName":""}},"dataSources":{"Work Items":{"entitySetName":"qfu_workitems","logicalName":"qfu_workitem"},"Work Item Actions":{"entitySetName":"qfu_workitemactions","logicalName":"qfu_workitemaction"},"Staff":{"entitySetName":"qfu_staffs","logicalName":"qfu_staff"},"Assignment Exceptions":{"entitySetName":"qfu_assignmentexceptions","logicalName":"qfu_assignmentexception"},"qfu_branchs":{"entitySetName":"qfu_branchs","logicalName":"qfu_branch"},"QFU Branches":{"entitySetName":"qfu_branchs","logicalName":"qfu_branch"}}}}</DatabaseReferences>
+  <AppComponents>[]</AppComponents>
+  <AppComponentDependencies>[]</AppComponentDependencies>
+  <CanConsumeAppPass>1</CanConsumeAppPass>
+  <CanvasAppType>2</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <AdminControlBypassConsent>0</AdminControlBypassConsent>
+  <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <CdsDependencies>{"cdsdependencies":[{"componenttype":1,"logicalname":"qfu_workitem"},{"componenttype":1,"logicalname":"qfu_workitemaction"},{"componenttype":1,"logicalname":"qfu_staff"},{"componenttype":1,"logicalname":"qfu_assignmentexception"},{"componenttype":1,"logicalname":"qfu_branch"}]}</CdsDependencies>
+  <IsCustomizable>1</IsCustomizable>
+  <BackgroundImageUri>/CanvasApps/qfu_mywork_6e7ed_BackgroundImageUri</BackgroundImageUri>
+  <DocumentUri>/CanvasApps/qfu_mywork_6e7ed_DocumentUri.msapp</DocumentUri>
+  <AdditionalUris>
+    <AdditionalUri>/CanvasApps/qfu_mywork_6e7ed_AdditionalUris0_identity.json</AdditionalUri>
+  </AdditionalUris>
+</CanvasApp>

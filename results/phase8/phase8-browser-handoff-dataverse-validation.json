@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-04-29T09:10:20.3910241-06:00",
+  "workItemId": "6e95c619-2f43-f111-bec7-7c1e52062b6f",
+  "escalateMarker": "PHASE8_BROWSER_HANDOFF_TSR_20260429150815",
+  "routeMarker": "PHASE8_BROWSER_HANDOFF_CSSR_20260429150903",
+  "before": {
+    "queueRole": "CSSR",
+    "attempts": 5,
+    "lastFollowedUp": "2026-04-28T22:52:41Z"
+  },
+  "after": {
+    "queueRole": "CSSR",
+    "owner": "d268e64f-8242-f111-bec7-7c1e52062b6f",
+    "cssr": "d268e64f-8242-f111-bec7-7c1e52062b6f",
+    "tsr": "460b1856-8242-f111-bec7-7c1e52062b6f",
+    "attempts": 5,
+    "lastFollowedUp": "2026-04-28T22:52:41Z",
+    "lastAction": "2026-04-29T15:09:54Z",
+    "ownerStaffKeyPopulated": true
+  },
+  "escalateActionRows": 1,
+  "routeActionRows": 1,
+  "allMatchedHandoffActionsNonAttempt": true,
+  "cssrOwnerMatched": true,
+  "completedAttemptsPreserved": true,
+  "lastFollowedUpPreserved": true,
+  "sentAlertLogs": 0,
+  "validationPassed": true
+}

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppModuleSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SiteMapUniqueName>qfu_RevenueFollowUpWorkbench</SiteMapUniqueName>
+  <EnableCollapsibleGroups>True</EnableCollapsibleGroups>
+  <ShowHome>True</ShowHome>
+  <ShowPinned>True</ShowPinned>
+  <ShowRecents>True</ShowRecents>
+  <SiteMap IntroducedVersion="7.0.0.0">
+    <Area Id="qfu_admin_panel_mvp" ShowGroups="true" IntroducedVersion="7.0.0.0">
+      <Titles>
+        <Title LCID="1033" Title="Admin Panel MVP" />
+      </Titles>
+      <Group Id="qfu_admin_group" IntroducedVersion="7.0.0.0" IsProfile="false" ToolTipResourseId="SitemapDesigner.Unknown">
+        <Titles>
+          <Title LCID="1033" Title="Admin Panel" />
+        </Titles>
+        <SubArea Id="qfu_nav_staff" Entity="qfu_staff" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Staff" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_branchmembership" Entity="qfu_branchmembership" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Branch Memberships" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_staffalias" Entity="qfu_staffalias" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Staff Alias Mapping" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_policy" Entity="qfu_policy" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Branch Policies" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_assignmentexception" Entity="qfu_assignmentexception" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Assignment Exceptions" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_workitem" Entity="qfu_workitem" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Work Items" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_workitemaction" Entity="qfu_workitemaction" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Work Item Actions" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_alertlog" Entity="qfu_alertlog" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA">
+          <Titles>
+            <Title LCID="1033" Title="Alert Logs" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="subarea_58d6a89c" Icon="/_imgs/imagestrips/transparent_spacer.gif" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA" Page="qfu_mywork_6e7ed">
+          <Titles>
+            <Title LCID="1033" Title="Workbench" />
+          </Titles>
+        </SubArea>
+        <SubArea Id="qfu_nav_manager_panel" Icon="/_imgs/imagestrips/transparent_spacer.gif" Client="All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web" AvailableOffline="true" PassParams="false" Sku="All,OnPremise,Live,SPLA" Page="qfu_mywork_6e7ed">
+          <Titles>
+            <Title LCID="1033" Title="Manager Panel" />
+          </Titles>
+        </SubArea>
+      </Group>
+    </Area>
+  </SiteMap>
+  <LocalizedNames>
+    <LocalizedName description="Revenue Follow-Up Workbench" languagecode="1033" />
+  </LocalizedNames>
+</AppModuleSiteMap>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebResource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <WebResourceId>{8c917a64-6742-f111-bec7-7c1e52062b6f}</WebResourceId>
+  <Name>qfu_/RevenueFollowUpWorkbenchIcon.svg</Name>
+  <DisplayName>Revenue Follow-Up Workbench App Icon</DisplayName>
+  <Description>Phase 2.1B app icon for Revenue Follow-Up Workbench.</Description>
+  <WebResourceType>11</WebResourceType>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsEnabledForMobileClient>0</IsEnabledForMobileClient>
+  <IsAvailableForMobileOffline>0</IsAvailableForMobileOffline>
+  <IsCustomizable>1</IsCustomizable>
+  <CanBeDeleted>1</CanBeDeleted>
+  <IsHidden>0</IsHidden>
+  <FileName>/WebResources/qfu_RevenueFollowUpWorkbenchIconsvg8C917A64-6742-F111-BEC7-7C1E52062B6F</FileName>
+</WebResource>

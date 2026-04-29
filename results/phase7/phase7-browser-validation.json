@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-04-29T14:23:43.766Z",
+  "blocked": false,
+  "blocker": null,
+  "notes": [],
+  "portalNavigation": {
+    "url": "https://operationscenter.powerappsportals.com/southern-alberta/4171-calgary/?phase7=1777472623787",
+    "title": "4171 Calgary",
+    "railLabels": [
+      "Dashboard",
+      "Workbench",
+      "Quotes",
+      "Back Orders",
+      "Ready to Ship",
+      "Freight Recovery",
+      "Analytics"
+    ],
+    "workbenchPresent": true,
+    "followUpQueueAbsent": true,
+    "overdueQuotesAbsent": true,
+    "teamProgressAbsent": true,
+    "backOrdersPresent": true,
+    "freightRecoveryPresent": true,
+    "expectedBasePresent": true,
+    "sample": "This site is private:\nOnly specific people can view this site.\nLearn more\nSigned in as Stephen McFarlane\nOPERATIONS HUB\nBranch Navigation\nSouthern Alberta\nCalgary (4171)\nSouthern Alberta\nBack to Southern Alberta\nDashboard\nWorkbench\nQuotes\nBack Orders\nReady to Ship\nFreight Recovery\nAnalytics\nCalgary (4171)\nBack to Southern Alberta\nQuotes Needing Follow-Up\n202\nOverdue Quotes\n191\nOverdue Backorder Lines\n92\nReady to Ship, Not PGI'd\n14\n$[VALUE] open on dispatch board\nAbnormal Margin Exceptions (MTD)\n7\nApril 2026 | Snapshot Apr 29, 2026\nLate Orders (7d)\n13\nApr 29, 2026\nTop 5 Unfollowed Quotes\n202 items\nQuote [DOC]\nAMRIZE CANADA INC\nCSSR JASON MARCHANT | TSR MARTY VERGATA | Created Mar 19, 2026 | Next Unscheduled | Last Never\nOVERDUE\n41\nVALUE\n$[VALUE]\nQuote [DOC]\nAGRIUM CANADA PARTNERSHIP\nCSSR STEPHEN MCFARLANE | TSR YAMA SHAH | Created Mar 19, 2026 | Next Unscheduled | Last Never\nOVERDUE\n41\nVALUE\n$[VALUE]\nQuote [DOC]\nAMRIZE CANADA INC\nCSSR JASON MARCHANT | TSR MARTY VERGATA | Created Mar 19, 2026 | Next Unscheduled | Last Never\nOVERDUE\n41\nVALUE\n$[VALUE]\nQuote [DOC]\nCGC INC\nCSSR COREY CARPENTER | TSR YAMA SHAH | Created Mar 19, 2026 | Next Unscheduled | Last Never\nOVERDUE\n41\nVALUE\n$[VALUE]\nQuote [DOC]\nPROSTAR WELL SERVICE\nCSSR BRONSON LODGE | TSR OSCAR RUFARO CHINYANI | Created Mar 19, 2026 | Next Unscheduled | Last Never\nOVERDUE\n41\nVALUE\n$[VALUE]\nShowing 5 of 202 rows | Missing touch, unscheduled, or overdue follow-up first\nDAILY BUDGET PACE + QUOTE CONVERSION\nCurrent Month Sales Pace\n\nBudget progress and quote movement share one top board so the branch opens with the month signal and the quote signal in the same scan.\n\nApril 2026\nLive\nBUDGET\nMonthly Budget Progress\n\nLive SA1300 actuals versus the current-month target.\n\nACHIEVED\nApril 2026\n$[VALUE]\n\nCurrent month SA1300 actuals are live for April 2026.\n\nPERCENT TO TARGET\n63.9%\nProjected $[VALUE] (67% of goal)\nMONTH-END TARGET\n$[VALUE]\nVARIANCE\n-$[VALUE]\nNEEDED / WORKDAY\n$[VALUE] / day\nTRENDING TO\n$[VALUE] (67% of goal)\nUpdated: Apr 29, 2026, 5:08 a.m. | Actual: Latest SA1300 qfu_budget row | Target: qfu_budgetarchive\nQUOTES\nQuotes - Last 30 Days\n\nCreated in last 30 days\n\n30-DAY PIPELINE\n225\nquotes created\nWIN RATE\n16%\n36 won of 225 quotes\nWon\n36\nLost\n0\nOpen\n189\nTOTAL QUOTES\n225\n$[VALUE] pipeline\nQUOTES WON\n36\n$[VALUE] won\nQUOTES LOST\n0\nOPEN QUOTES\n189\n$[VALUE] open\nWIN RATE\n16%\n36 won of 225 quotes\nAVG QUOTE VALUE"
+  },
+  "powerAppNavigation": {
+    "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=custom&name=qfu_mywork_6e7ed",
+    "title": "Branch Workbench - Power Apps",
+    "workbenchFound": true,
+    "managerPanelFound": true,
+    "adminPanelFound": true,
+    "myQueueFound": true,
+    "teamViewFound": true,
+    "accessDeniedFound": false,
+    "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nScreen1\nBranch Workbench\nMy Queue first, Team View for managers | Apr 29, 2026\nRefreshed 8:24 AM\nRefresh\nBranch/team filter\nStaff filter / picker\nCurrent-user staff mapping is not ready. Use branch, staff, and queue-role filters for Phase 5.\nMy Queue\nTeam View\nQueue role\nDue Today\n4\nOverdue\n28\nQuote Follow-Up\n33\nMissing Attempts\n31\nRoadblocks\n0\nAssignment Issues\n7\nOverdue\nDue Today\nMy Queue\nTeam Stats\nQuote Follow-Up\nOverdue Orders\nHigh Value\nNeeds Attempts\nWaiting\nRoadblocks\nAll Open\nAssignment Issues\nQueue      Status       Quote / Source Document       Customer       Value       Attempts       Next Follow-Up       Last Followed Up       Sticky Note\nNumber of items in Gallery: 38\nShowing items 1 to 16\nItem 1. Selected.\n[DOC]\nAGRIUM CANADA PARTNERSHIP\nClosed Lost\nAssigned\n$[VALUE]\n0/3\nApr 3\nPHASE5_UI_TEST_STICKY_NOTE\nLog follow-up\nItem 2\n[DOC]\nCGC INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 3\nNo sticky note\nLog follow-up\nItem 3\n[DOC]\nAMRIZE CANADA INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 3\nNo sticky note\nLog follow-up\nItem 4\n[DOC]\nAMRIZE CANADA INC\nOpen\nAssigned\n$[VALUE]\n3/3\nMay 1\nPHASE4B_UI_TEST_STICKY_NOTE\nReview/close\nItem 5\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 6\n[DOC]\nSHORELINE FABRICATION LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 7\n[DOC]\nCOMPASS ENERGY SYSTEMS LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 8\n[DOC]\nSERVA GROUP (CANADA) ULC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 9\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 10\n[DOC]\nCOBALT INDUSTRIAL SUPPLY & SERVICE\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 11\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 12\n[DOC]\nROCKY MOUNTAIN HYDRAULIC & BEARING\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 13\n[DOC]\nSHORELINE FABRICATION LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 15\nNo sticky note\nLog follow-up\nItem 14\n[DOC]\nCARGILL "
+  },
+  "queueRoleFilters": [
+    {
+      "value": "All",
+      "count": 38,
+      "noItems": false,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nScreen1\nBranch Workbench\nMy Queue first, Team View for managers | Apr 29, 2026\nRefreshed 8:24 AM\nRefresh\nBranch/team filter\nStaff filter / picker\nCurrent-user staff mapping is not ready. Use branch, staff, and queue-role filters for Phase 5.\nMy Queue\nTeam View\nQueue role\nDue Today\n4\nOverdue\n28\nQuote Follow-Up\n33\nMissing Attempts\n31\nRoadblocks\n0\nAssignment Issues\n7\nOverdue\nDue Today\nMy Queue\nTeam Stats\nQuote Follow-Up\nOverdue Orders\nHigh Value\nNeeds Attempts\nWaiting\nRoadblocks\nAll Open\nAssignment Issues\nQueue      Status       Quote / Source Document       Customer       Value       Attempts       Next Follow-Up       Last Followed Up       Sticky Note\nNumber of items in Gallery: 38\nShowing items 1 to 16\nItem 1. Selected.\n[DOC]\nAGRIUM CANADA PARTNERSHIP\nClosed Lost\nAssigned\n$[VALUE]\n0/3\nApr 3\nPHASE5_UI_TEST_STICKY_NOTE\nLog follow-up\nItem 2\n[DOC]\nCGC INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 3\nNo sticky note\nLog follow-up\nItem 3\n[DOC]\nAMRIZE CANADA INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 3\nNo sticky note\nLog follow-up\nItem 4\n[DOC]\nAMRIZE CANADA INC\nOpen\nAssigned\n$[VALUE]\n3/3\nMay 1\nPHASE4B_UI_TEST_STICKY_NOTE\nReview/close\nItem 5\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 6\n[DOC]\nSHORELINE FABRICATION LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 7\n[DOC]\nCOMPASS ENERGY SYSTEMS LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 8\n[DOC]\nSERVA GROUP (CANADA) ULC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 9\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 10\n[DOC]\nCOBALT INDUSTRIAL SUPPLY & SERVICE\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 11\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 12\n[DOC]\nROCKY MOUNTAIN HYDRAULIC & BEARING\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 13\n[DOC]\nSHORELINE FABRICATION LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 15\nNo sticky note\nLog follow-up\nItem 14\n[DOC]\nCARGILL "
+    },
+    {
+      "value": "TSR",
+      "count": 30,
+      "noItems": false,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nScreen1\nBranch Workbench\nMy Queue first, Team View for managers | Apr 29, 2026\nRefreshed 8:24 AM\nRefresh\nBranch/team filter\nStaff filter / picker\nCurrent-user staff mapping is not ready. Use branch, staff, and queue-role filters for Phase 5.\nMy Queue\nTeam View\nQueue role\nDue Today\n4\nOverdue\n28\nQuote Follow-Up\n33\nMissing Attempts\n31\nRoadblocks\n0\nAssignment Issues\n7\nOverdue\nDue Today\nMy Queue\nTeam Stats\nQuote Follow-Up\nOverdue Orders\nHigh Value\nNeeds Attempts\nWaiting\nRoadblocks\nAll Open\nAssignment Issues\nQueue      Status       Quote / Source Document       Customer       Value       Attempts       Next Follow-Up       Last Followed Up       Sticky Note\nNumber of items in Gallery: 30\nShowing items 1 to 16\nItem 1. Selected.\n[DOC]\nAGRIUM CANADA PARTNERSHIP\nClosed Lost\nAssigned\n$[VALUE]\n0/3\nApr 3\nPHASE5_UI_TEST_STICKY_NOTE\nLog follow-up\nItem 2\n[DOC]\nAMRIZE CANADA INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 3\nNo sticky note\nLog follow-up\nItem 3\n[DOC]\nAMRIZE CANADA INC\nOpen\nAssigned\n$[VALUE]\n3/3\nMay 1\nPHASE4B_UI_TEST_STICKY_NOTE\nReview/close\nItem 4\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 5\n[DOC]\nSHORELINE FABRICATION LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 6\n[DOC]\nCOMPASS ENERGY SYSTEMS LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 7\n[DOC]\nSERVA GROUP (CANADA) ULC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 8\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 9\n[DOC]\nCOBALT INDUSTRIAL SUPPLY & SERVICE\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 13\nNo sticky note\nLog follow-up\nItem 10\n[DOC]\nINTERPRO PIPE & STEEL INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 11\n[DOC]\nROCKY MOUNTAIN HYDRAULIC & BEARING\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 14\nNo sticky note\nLog follow-up\nItem 12\n[DOC]\nSHORELINE FABRICATION LTD\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 15\nNo sticky note\nLog follow-up\nItem 13\n[DOC]\nCARGILL VALUE ADDED PROTEIN\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 23\nNo sticky note\nLog follow-up\nI"
+    },
+    {
+      "value": "CSSR",
+      "count": 2,
+      "noItems": true,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nScreen1\nBranch Workbench\nMy Queue first, Team View for managers | Apr 29, 2026\nRefreshed 8:24 AM\nRefresh\nBranch/team filter\nStaff filter / picker\nCurrent-user staff mapping is not ready. Use branch, staff, and queue-role filters for Phase 5.\nMy Queue\nTeam View\nQueue role\nDue Today\n4\nOverdue\n28\nQuote Follow-Up\n33\nMissing Attempts\n31\nRoadblocks\n0\nAssignment Issues\n7\nOverdue\nDue Today\nMy Queue\nTeam Stats\nQuote Follow-Up\nOverdue Orders\nHigh Value\nNeeds Attempts\nWaiting\nRoadblocks\nAll Open\nAssignment Issues\nQueue      Status       Quote / Source Document       Customer       Value       Attempts       Next Follow-Up       Last Followed Up       Sticky Note\nNumber of items in Gallery: 2\nShowing items 1 to 2\nItem 1\n[DOC]\nCGC INC\nOverdue\nAssigned\n$[VALUE]\n0/3\nApr 3\nNo sticky note\nLog follow-up\nItem 2\n[DOC]\nCASTLE MOUNTAIN RESORT INC\nOverdue\nNeeds TSR Assignment\n$[VALUE]\n0/3\nApr 15\nNo sticky note\nLog follow-up\nSelect a work item\nCustomer: not loaded\nValue:  | Attempts: 0/3\nStatus:  | Assignment: \nNext follow-up: not set\nLast followed up: none\nLast action: none\nSticky Note\nUpdated: not yet\nSave Sticky Note\nQueue handoff reason\nLog Call\nLog Email\nCustomer Advised\nSet Next Follow-Up\nRoadblock\nEscalate to TSR\nRoute to CSSR\nWon\nLost\nNote\nAction History\nNo items in Gallery"
+    },
+    {
+      "value": "Unassigned",
+      "count": 6,
+      "noItems": true,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nScreen1\nBranch Workbench\nMy Queue first, Team View for managers | Apr 29, 2026\nRefreshed 8:24 AM\nRefresh\nBranch/team filter\nStaff filter / picker\nCurrent-user staff mapping is not ready. Use branch, staff, and queue-role filters for Phase 5.\nMy Queue\nTeam View\nQueue role\nDue Today\n4\nOverdue\n28\nQuote Follow-Up\n33\nMissing Attempts\n31\nRoadblocks\n0\nAssignment Issues\n7\nOverdue\nDue Today\nMy Queue\nTeam Stats\nQuote Follow-Up\nOverdue Orders\nHigh Value\nNeeds Attempts\nWaiting\nRoadblocks\nAll Open\nAssignment Issues\nQueue      Status       Quote / Source Document       Customer       Value       Attempts       Next Follow-Up       Last Followed Up       Sticky Note\nNumber of items in Gallery: 6\nShowing items 1 to 6\nItem 1. Selected.\n[DOC]\nCROWN METAL PACKAGING CANADA\nOpen\nUnmapped\n$[VALUE]\n0/3\nApr 28\nNo sticky note\nLog follow-up\nItem 2\n[DOC]\nCONDILLO FOODS LTD\nOverdue\nUnmapped\n$[VALUE]\n0/0\nNo next date\nNo sticky note\nReview/close\nItem 3\n[DOC]\nCANADA BREAD COMPANY LIMITED\nOverdue\nUnmapped\n$[VALUE]\n0/0\nNo next date\nNo sticky note\nReview/close\nItem 4\n[DOC]\nROSTEL INDUSTRIES\nOverdue\nUnmapped\n$[VALUE]\n0/0\nNo next date\nNo sticky note\nReview/close\nItem 5\n[DOC]\nROSTEL INDUSTRIES\nOverdue\nUnmapped\n$[VALUE]\n0/0\nNo next date\nNo sticky note\nReview/close\nItem 6\n[DOC]\nOIL LIFT TECHNOLOGY INC\nOverdue\nUnmapped\n$[VALUE]\n0/0\nNo next date\nNo sticky note\nReview/close\n[DOC]\nCustomer: CROWN METAL PACKAGING CANADA\nValue: $[VALUE] | Attempts: 0/3\nStatus: Open | Assignment: Unmapped\nNext follow-up: Apr 28, 2026 12:00 AM\nLast followed up: none\nLast action: none\nSticky Note\nUpdated: not yet\nSave Sticky Note\nQueue handoff reason\nLog Call\nLog Email\nCustomer Advised\nSet Next Follow-Up\nRoadblock\nEscalate to TSR\nRoute to CSSR\nWon\nLost\nNote\nAction History\nNo items in Gallery"
+    }
+  ],
+  "adminViewChecks": [
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Linked to System User",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_staff&viewid=e58494ad-d793-4e36-ab86-8c0f05379031&viewType=1039",
+      "title": "Staff Active Staff - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 1122,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nActive Staff\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\n\nStaff Name\n\n\nPrimary Email\n\nStaff Number\n\nDataverse User\n\nDefault Branch\n\n\nANGELICA MCLOUGHLIN\n7003737\n\nASHLEIGH MORGAN\n7003752\n\nBRONSON LODGE\n7004134\n\nCHAD ROSS\n7002817\n\nCHAD SEMPERGER\n7003201\n\nCHRISTOPHER MILES ROGERS\n7003328\n\nCOLBY JAMES MEYER\n7003381\n\nCOREY CARPENTER\n7003771\n\nCRAIG JAMES RUSSELL LAMB\n7000807\n\nJARED RANDALL HEILMAN\n7003683\n\nJASON MARCHANT\n7003593\n\nJOHN DARIN CHAIKA\n7002719\n\nJOSH BOWEN\n7002470\n\nKEVIN BRIAN KRASSELT\n7003604\n\nLAETEN JAMES\n7003740\n\nMARTY VERGATA\n7001634\n\nOSCAR RUFARO CHINYANI\n7003448\n\nSTEPHEN MCFARLANE\n[EMAIL]\n7002464\nStephen McFarlane (Available)\n\nYAMA SHAH\n7003309\nRows: 19"
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Missing System User",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_staff&viewid=e58494ad-d793-4e36-ab86-8c0f05379031&viewType=1039",
+      "title": "Staff Active Staff - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 1122,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nActive Staff\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\n\nStaff Name\n\n\nPrimary Email\n\nStaff Number\n\nDataverse User\n\nDefault Branch\n\n\nANGELICA MCLOUGHLIN\n7003737\n\nASHLEIGH MORGAN\n7003752\n\nBRONSON LODGE\n7004134\n\nCHAD ROSS\n7002817\n\nCHAD SEMPERGER\n7003201\n\nCHRISTOPHER MILES ROGERS\n7003328\n\nCOLBY JAMES MEYER\n7003381\n\nCOREY CARPENTER\n7003771\n\nCRAIG JAMES RUSSELL LAMB\n7000807\n\nJARED RANDALL HEILMAN\n7003683\n\nJASON MARCHANT\n7003593\n\nJOHN DARIN CHAIKA\n7002719\n\nJOSH BOWEN\n7002470\n\nKEVIN BRIAN KRASSELT\n7003604\n\nLAETEN JAMES\n7003740\n\nMARTY VERGATA\n7001634\n\nOSCAR RUFARO CHINYANI\n7003448\n\nSTEPHEN MCFARLANE\n[EMAIL]\n7002464\nStephen McFarlane (Available)\n\nYAMA SHAH\n7003309\nRows: 19"
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff With Email",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_staff&viewid=e58494ad-d793-4e36-ab86-8c0f05379031&viewType=1039",
+      "title": "Staff Active Staff - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 1122,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nActive Staff\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\n\nStaff Name\n\n\nPrimary Email\n\nStaff Number\n\nDataverse User\n\nDefault Branch\n\n\nANGELICA MCLOUGHLIN\n7003737\n\nASHLEIGH MORGAN\n7003752\n\nBRONSON LODGE\n7004134\n\nCHAD ROSS\n7002817\n\nCHAD SEMPERGER\n7003201\n\nCHRISTOPHER MILES ROGERS\n7003328\n\nCOLBY JAMES MEYER\n7003381\n\nCOREY CARPENTER\n7003771\n\nCRAIG JAMES RUSSELL LAMB\n7000807\n\nJARED RANDALL HEILMAN\n7003683\n\nJASON MARCHANT\n7003593\n\nJOHN DARIN CHAIKA\n7002719\n\nJOSH BOWEN\n7002470\n\nKEVIN BRIAN KRASSELT\n7003604\n\nLAETEN JAMES\n7003740\n\nMARTY VERGATA\n7001634\n\nOSCAR RUFARO CHINYANI\n7003448\n\nSTEPHEN MCFARLANE\n[EMAIL]\n7002464\nStephen McFarlane (Available)\n\nYAMA SHAH\n7003309\nRows: 19"
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Missing Email",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_staff&viewid=327df134-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Staff Staff Missing Email - Power Apps",
+      "textHasViewName": true,
+      "bodyLength": 1150,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nStaff Missing Email\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\n\nStaff Name\n\n\nStaff Number\n\nPrimary Email\n\nActive\n\nDataverse User\n\n\nYAMA SHAH\n7003309\nYes\n\nOSCAR RUFARO CHINYANI\n7003448\nYes\n\nMARTY VERGATA\n7001634\nYes\n\nLAETEN JAMES\n7003740\nYes\n\nKEVIN BRIAN KRASSELT\n7003604\nYes\n\nJOSH BOWEN\n7002470\nYes\n\nJOHN DARIN CHAIKA\n7002719\nYes\n\nJASON MARCHANT\n7003593\nYes\n\nJARED RANDALL HEILMAN\n7003683\nYes\n\nCRAIG JAMES RUSSELL LAMB\n7000807\nNo\n\nCRAIG JAMES RUSSELL LAMB\n7000807\nYes\n\nCOREY CARPENTER\n7003771\nYes\n\nCOLBY JAMES MEYER\n7003381\nYes\n\nCHRISTOPHER MILES ROGERS\n7003328\nYes\n\nCHAD SEMPERGER\n7003201\nYes\n\nCHAD ROSS\n7002817\nYes\n\nBRONSON LODGE\n7004134\nYes\n\nASHLEIGH MORGAN\n7003752\nYes\n\nANGELICA MCLOUGHLIN\n7003737\nYes\nRows: 19"
+    },
+    {
+      "table": "qfu_branchmembership",
+      "viewName": "Active Manager GM Admin Memberships",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_branchmembership&viewid=4ea0bcd6-8ef3-4d98-950a-7df8bfb243e2&viewType=1039",
+      "title": "Branch Memberships Active Branch Memberships - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 1532,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nActive Branch Memberships\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\n\nBranch\n\n\nStaff\n\nRole\n\nPrimary\n\nStart Date\n\n\n4171 Calgary\nMARTY VERGATA\nTSR\nNo\n\n4171 Calgary\nSTEPHEN MCFARLANE\nCSSR\nNo\n\n4171 Calgary\nJOHN DARIN CHAIKA\nTSR\nNo\n\n4171 Calgary\nCHAD ROSS\nTSR\nNo\n\n4171 Calgary\nYAMA SHAH\nCSSR\nNo\n\n4171 Calgary\nYAMA SHAH\nTSR\nNo\n\n4171 Calgary\nCHRISTOPHER MILES ROGERS\nTSR\nNo\n\n4171 Calgary\nOSCAR RUFARO CHINYANI\nTSR\nNo\n\n4171 Calgary\nJASON MARCHANT\nCSSR\nNo\n\n4171 Calgary\nCOREY CARPENTER\nCSSR\nNo\n\n4171 Calgary\nBRONSON LODGE\nCSSR\nNo\n\n4171 Calgary\nSTEPHEN MCFARLANE\nAdmin\nNo\n\n4172 Lethbridge\nJOSH BOWEN\nCSSR\nNo\n\n4172 Lethbridge\nCHAD ROSS\nTSR\nNo\n\n4172 Lethbridge\nCHAD SEMPERGER\nCSSR\nNo\n\n4172 Lethbridge\nYAMA SHAH\nCSSR\nNo\n\n4172 Lethbridge\nYAMA SHAH\nTSR\nNo\n\n4172 Lethbridge\nCOLBY JAMES MEYER\nCSSR\nNo\n\n4172 Lethbridge\nCOLBY JAMES MEYER\nTSR\nNo\n\n4172 Lethbridge\nOSCAR RUFARO CHINYANI\nTSR\nNo\n\n4172 Lethbridge\nJASON MARCHANT\nCSSR\nNo\n\n4172 Lethbridge\nKEVIN BRIAN KRASSELT\nCSSR\nNo\n\n4172 Lethbridge\nKEVIN BRIAN KRASSELT\nTSR\nNo\n\n4172 Lethbridge\nLAETEN JAMES\nCSSR\nNo\n\n4172 Lethbridge\nCOREY CARPENTER\nCSSR\nNo\nRows: 40"
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "All Alert Logs",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 614,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nFailed Alerts\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\nStatus column No rows to select\nAlert Name\n\nAlert Type\n\nStatus\n\nRecipient Staff\n\nRecipient Email\n\nWe didn't find anything to show here\nRows: 0"
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Skipped Alerts",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 614,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nFailed Alerts\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\nStatus column No rows to select\nAlert Name\n\nAlert Type\n\nStatus\n\nRecipient Staff\n\nRecipient Email\n\nWe didn't find anything to show here\nRows: 0"
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Sent Alerts",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=012dfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Sent Alerts - Power Apps",
+      "textHasViewName": true,
+      "bodyLength": 612,
+      "sample": "Skip to main content\nPower Apps\nRevenue Follow-Up Workbench\nAccount manager for Stephen McFarlane\nHome\nRecent\nPinned\nAdmin Panel\nStaff\nBranch Memberships\nStaff Alias Mapping\nBranch Policies\nAssignment Exceptions\nWork Items\nWork Item Actions\nAlert Logs\n\nWorkbench\n\nManager Panel\nShow Chart\nNew\nDelete\nRefresh\nShare\nSent Alerts\nOpen popup to change view.\n\n\nEdit the view by adding, removing or re-ordering columns.\n\nEdit the view with advanced filter queries.\n\nStatus column No rows to select\nAlert Name\n\nAlert Type\n\nStatus\n\nRecipient Staff\n\nRecipient Email\n\nWe didn't find anything to show here\nRows: 0"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-04-28T22:58:25.828Z",
+  "blocked": false,
+  "blocker": null,
+  "portalNavigation": {
+    "url": "https://operationscenter.powerappsportals.com/southern-alberta/4171-calgary/?cb=1777417105838",
+    "title": "4171 Calgary",
+    "railLabels": [
+      "Dashboard",
+      "Workbench",
+      "Quotes",
+      "Back Orders",
+      "Ready to Ship",
+      "Freight Recovery",
+      "Analytics"
+    ],
+    "workbenchPresent": true,
+    "followUpQueueRemoved": true,
+    "overdueQuotesRemoved": true,
+    "teamProgressRemoved": true,
+    "expectedRemainingPresent": true
+  },
+  "powerAppNavigation": {
+    "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=custom&name=qfu_mywork_6e7ed",
+    "title": "Branch Workbench - Power Apps",
+    "workbenchFound": true,
+    "managerPanelFound": true,
+    "adminPanelFound": true,
+    "alertLogsFound": true,
+    "myQueueFound": true,
+    "teamViewFound": true
+  },
+  "queueRoleFilters": [
+    {
+      "value": "All",
+      "count": 38,
+      "noItems": false
+    },
+    {
+      "value": "TSR",
+      "count": 30,
+      "noItems": false
+    },
+    {
+      "value": "CSSR",
+      "count": 2,
+      "noItems": true
+    },
+    {
+      "value": "Unassigned",
+      "count": 6,
+      "noItems": true
+    }
+  ],
+  "adminViewChecks": [
+    {
+      "table": "qfu_alertlog",
+      "viewName": "All Alert Logs",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Dry Run Alert Logs",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Skipped Alerts",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Missing Recipient Email",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Failed Alerts",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=ff2cfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Failed Alerts - Power Apps",
+      "textHasViewName": true,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Sent Alerts",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_alertlog&viewid=012dfd3a-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Alert Logs Sent Alerts - Power Apps",
+      "textHasViewName": true,
+      "bodyLength": 612
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Staff Missing Email",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_staff&viewid=327df134-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Staff Staff Missing Email - Power Apps",
+      "textHasViewName": true,
+      "bodyLength": 1182
+    },
+    {
+      "table": "qfu_policy",
+      "viewName": "Active Alert Policies",
+      "opened": true,
+      "url": "https://orga632edd5.crm3.dynamics.com/main.aspx?appid=93917a64-6742-f111-bec7-7c1e52062b6f&forceUCI=1&pagetype=entitylist&etn=qfu_policy&viewid=437df134-6742-f111-bec7-7c1e52062b6f&viewType=1039",
+      "title": "Branch Policies Active Policies - Power Apps",
+      "textHasViewName": false,
+      "bodyLength": 605
+    }
+  ]
+}

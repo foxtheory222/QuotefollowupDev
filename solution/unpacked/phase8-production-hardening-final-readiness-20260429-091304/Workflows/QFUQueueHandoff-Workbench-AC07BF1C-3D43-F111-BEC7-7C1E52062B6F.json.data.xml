@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Workflow WorkflowId="{ac07bf1c-3d43-f111-bec7-7c1e52062b6f}" Name="QFU Queue Handoff - Workbench" Description="Phase 5 Workbench queue handoff flow. Triggered by non-attempt Assignment/Reassignment action rows from the Workbench. Updates queue owner helper fields and true queue fields. Sends no alerts." xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <JsonFileName>/Workflows/QFUQueueHandoff-Workbench-AC07BF1C-3D43-F111-BEC7-7C1E52062B6F.json</JsonFileName>
+  <Type>1</Type>
+  <Subprocess>0</Subprocess>
+  <Category>5</Category>
+  <Mode>0</Mode>
+  <Scope>4</Scope>
+  <OnDemand>0</OnDemand>
+  <TriggerOnCreate>0</TriggerOnCreate>
+  <TriggerOnDelete>0</TriggerOnDelete>
+  <AsyncAutodelete>0</AsyncAutodelete>
+  <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+  <StateCode>1</StateCode>
+  <StatusCode>2</StatusCode>
+  <RunAs>1</RunAs>
+  <IsTransacted>1</IsTransacted>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <BusinessProcessType>0</BusinessProcessType>
+  <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+  <ModernFlowType>0</ModernFlowType>
+  <PrimaryEntity>none</PrimaryEntity>
+  <LocalizedNames>
+    <LocalizedName languagecode="1033" description="QFU Queue Handoff - Workbench" />
+  </LocalizedNames>
+  <Descriptions>
+    <Description languagecode="1033" description="Phase 5 Workbench queue handoff flow. Triggered by non-attempt Assignment/Reassignment action rows from the Workbench. Updates queue owner helper fields and true queue fields. Sends no alerts." />
+  </Descriptions>
+</Workflow>

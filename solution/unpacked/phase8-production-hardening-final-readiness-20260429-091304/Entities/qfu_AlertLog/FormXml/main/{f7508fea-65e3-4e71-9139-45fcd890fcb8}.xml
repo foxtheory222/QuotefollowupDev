@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{f7508fea-65e3-4e71-9139-45fcd890fcb8}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{fbbafebb-0da1-420c-b839-bf6653edb85c}" IsUserDefined="1">
+          <labels>
+            <label description="Alert Log Admin Main" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="true" showbar="false" IsUserDefined="1" id="{55c1b49e-6ad4-4114-9e8b-35e60e35ead8}">
+                  <labels>
+                    <label description="Alert" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{0ec32ab6-a185-4dbc-9a8b-dcdfb0a06e92}">
+                        <labels>
+                          <label description="Work Item" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_workitem" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_workitem" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5a77f4fb-8e76-441e-b1f7-40bdb2234ff2}">
+                        <labels>
+                          <label description="Alert Type" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_alerttype" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_alerttype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{da5e21be-1042-4fc8-94b0-472c26ea8492}">
+                        <labels>
+                          <label description="Recipient Staff" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_recipientstaff" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_recipientstaff" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{c8308d46-7530-4ad9-955c-99683b514c75}">
+                        <labels>
+                          <label description="Recipient Email" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_recipientemail" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_recipientemail" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{dfc6fa11-ad8c-4229-8b95-38b7f2159366}">
+                        <labels>
+                          <label description="CC Emails" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_ccemails" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_ccemails" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4f1f351e-f56a-47a8-b149-8e861197bd76}">
+                        <labels>
+                          <label description="Dedupe Key" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_dedupekey" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_dedupekey" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ada9df81-6329-4fcf-8fbc-b9368e1cc021}">
+                        <labels>
+                          <label description="Status" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_status" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_status" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{2ba156c5-c8ec-4f82-8116-7ffe7484c6c1}">
+                        <labels>
+                          <label description="Sent On" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_senton" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_senton" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{f0a95d43-bee0-407e-bf66-140ba9766fca}">
+                        <labels>
+                          <label description="Failure Message" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_failuremessage" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_failuremessage" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b050244a-4ca8-483f-8a69-82c7004af67f}">
+                        <labels>
+                          <label description="Flow Run ID" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_flowrunid" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_flowrunid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{46d5fb2a-1a94-423f-9a4c-5f678602d885}">
+                        <labels>
+                          <label description="Notes" languagecode="1033" />
+                        </labels>
+                        <control id="qfu_notes" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="qfu_notes" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Alert Log Admin Main" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Phase 2.1B Revenue Follow-Up Workbench Admin Panel MVP form." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

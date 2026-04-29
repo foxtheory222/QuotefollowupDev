@@ -1,0 +1,42 @@
+{
+  "timestamp": "2026-04-29T09:16:33.8146614-06:00",
+  "browserAuthBlocked": false,
+  "navigationLabels": [
+    "Dashboard",
+    "Workbench",
+    "Quotes",
+    "Back Orders",
+    "Ready to Ship",
+    "Freight Recovery",
+    "Analytics"
+  ],
+  "removedLabelsAbsent": true,
+  "queueFilterCounts": [
+    {
+      "value": "All",
+      "count": 38
+    },
+    {
+      "value": "TSR",
+      "count": 29
+    },
+    {
+      "value": "CSSR",
+      "count": 3
+    },
+    {
+      "value": "Unassigned",
+      "count": 6
+    }
+  ],
+  "escalateSubmitted": true,
+  "routeSubmitted": true,
+  "dataverseValidationPassed": true,
+  "escalateActionRows": 1,
+  "routeActionRows": 1,
+  "handoffActionsNonAttempt": true,
+  "completedAttemptsPreserved": true,
+  "lastFollowedUpPreserved": true,
+  "sentAlertLogs": 0,
+  "note": "Safe summary excludes browser body samples and customer-visible text."
+}

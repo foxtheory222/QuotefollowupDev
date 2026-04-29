@@ -8,8 +8,23 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$callerParameters = @{
+  RepoRoot = $RepoRoot
+  TargetEnvironmentUrl = $TargetEnvironmentUrl
+  Username = $Username
+  OutputJson = $OutputJson
+  TopCount = $TopCount
+}
+
 . (Join-Path $RepoRoot "scripts\deploy-southern-alberta-pilot.ps1")
+foreach ($parameterName in $callerParameters.Keys) {
+  Set-Variable -Name $parameterName -Value $callerParameters[$parameterName] -Scope Local
+}
+
 . (Join-Path $RepoRoot "scripts\deploy-freight-worklist.ps1")
+foreach ($parameterName in $callerParameters.Keys) {
+  Set-Variable -Name $parameterName -Value $callerParameters[$parameterName] -Scope Local
+}
 
 function Ensure-FreightProcessorSchema {
   param([Microsoft.Xrm.Tooling.Connector.CrmServiceClient]$Connection)

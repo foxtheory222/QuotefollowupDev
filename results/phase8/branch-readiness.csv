@@ -1,0 +1,4 @@
+"branchId","branchCode","hasTSR","hasCSSR","hasManager","hasGM","hasAdmin","activeWorkItems","assignmentExceptions","readinessStatus"
+"071be77a-a533-f111-88b4-000d3a59294a","4171","True","True","False","False","True","38","3","MissingManagerOrGM"
+"171be77a-a533-f111-88b4-000d3a59294a","4172","True","True","False","False","False","0","0","MissingManagerOrGM"
+"191be77a-a533-f111-88b4-000d3a59294a","4173","True","True","False","False","False","0","0","MissingManagerOrGM"

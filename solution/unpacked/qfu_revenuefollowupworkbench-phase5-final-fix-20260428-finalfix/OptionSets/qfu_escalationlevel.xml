@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<optionset Name="qfu_escalationlevel" localizedName="QFU Escalation Level" description="QFU Escalation Level" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OptionSetType>picklist</OptionSetType>
+  <IsGlobal>1</IsGlobal>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <displaynames>
+    <displayname description="QFU Escalation Level" languagecode="1033" />
+  </displaynames>
+  <Descriptions>
+    <Description description="QFU Escalation Level" languagecode="1033" />
+  </Descriptions>
+  <options>
+    <option value="985010000" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="None" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010001" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Manager" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010002" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="GM" languagecode="1033" />
+      </labels>
+    </option>
+    <option value="985010003" ExternalValue="" IsHidden="0">
+      <labels>
+        <label description="Admin" languagecode="1033" />
+      </labels>
+    </option>
+  </options>
+</optionset>

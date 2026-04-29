@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-29T08:37:42.3529410-06:00",
+  "workItemId": "6e95c619-2f43-f111-bec7-7c1e52062b6f",
+  "escalateMarker": "PHASE5_BROWSER_HANDOFF_TSR_20260429143040",
+  "routeMarkerSubmitted": "PHASE7_BROWSER_HANDOFF_CSSR_20260429143602",
+  "routeActionMarkerNotePresent": false,
+  "routeActionMatchedByOutcomeAndTime": true,
+  "beforeRoute": {
+    "queueRole": "TSR",
+    "owner": "460b1856-8242-f111-bec7-7c1e52062b6f",
+    "attempts": 5,
+    "lastFollowedUp": "2026-04-28T22:52:41Z"
+  },
+  "afterRoute": {
+    "queueRole": "CSSR",
+    "owner": "d268e64f-8242-f111-bec7-7c1e52062b6f",
+    "cssr": "d268e64f-8242-f111-bec7-7c1e52062b6f",
+    "tsr": "460b1856-8242-f111-bec7-7c1e52062b6f",
+    "attempts": 5,
+    "lastFollowedUp": "2026-04-28T22:52:41Z",
+    "lastAction": "2026-04-29T14:36:48Z",
+    "ownerStaffKeyPopulated": true
+  },
+  "escalateActionRows": 1,
+  "routeActionRows": 1,
+  "allMatchedHandoffActionsNonAttempt": true,
+  "cssrOwnerMatched": true,
+  "completedAttemptsPreserved": true,
+  "lastFollowedUpPreserved": true,
+  "sentAlertLogs": 0,
+  "validationPassed": true
+}

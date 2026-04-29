@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-04-29T09:15:26.6963817-06:00",
+  "environmentUrl": "https://orga632edd5.crm3.dynamics.com",
+  "exportPath": "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\solution\\exports\\qfu_revenuefollowupworkbench-phase8-production-hardening-unmanaged-20260429-091304.zip",
+  "unpackedPath": "C:\\Users\\smcfarlane\\Desktop\\WorkBench\\QuoteFollowUpRegion\\solution\\unpacked\\phase8-production-hardening-final-readiness-20260429-091304",
+  "unmanaged": true,
+  "publishAttempted": true,
+  "exportExists": true,
+  "unpackExists": true
+}

@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-04-29T15:02:56.177Z",
+  "blocked": false,
+  "blocker": null,
+  "portalNavigation": {
+    "railLabels": [
+      "Dashboard",
+      "Workbench",
+      "Quotes",
+      "Back Orders",
+      "Ready to Ship",
+      "Freight Recovery",
+      "Analytics"
+    ],
+    "expectedBasePresent": true,
+    "removedLabelsAbsent": true
+  },
+  "powerAppNavigation": {
+    "workbenchFound": true,
+    "managerPanelFound": true,
+    "adminPanelFound": true,
+    "myQueueFound": true,
+    "teamViewFound": true
+  },
+  "queueRoleFilters": [
+    {
+      "value": "All",
+      "count": 38,
+      "noItems": false
+    },
+    {
+      "value": "TSR",
+      "count": 29,
+      "noItems": false
+    },
+    {
+      "value": "CSSR",
+      "count": 3,
+      "noItems": true
+    },
+    {
+      "value": "Unassigned",
+      "count": 6,
+      "noItems": true
+    }
+  ],
+  "adminMonitoringViews": [
+    {
+      "table": "qfu_staff",
+      "viewName": "Phase 8 Identity Setup - Missing Email",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 1122
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Phase 8 Identity Setup - Missing System User",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 1122
+    },
+    {
+      "table": "qfu_staff",
+      "viewName": "Phase 8 Identity Setup - Linked Staff",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 1122
+    },
+    {
+      "table": "qfu_branchmembership",
+      "viewName": "Phase 8 Role Setup - Manager GM Admin",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 1532
+    },
+    {
+      "table": "qfu_workitem",
+      "viewName": "Phase 8 Monitoring - Overdue Work Items",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 622
+    },
+    {
+      "table": "qfu_workitem",
+      "viewName": "Phase 8 Monitoring - Assignment Issues",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 622
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Phase 8 Monitoring - Skipped Alerts",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_alertlog",
+      "viewName": "Phase 8 Monitoring - Failed Alerts",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 614
+    },
+    {
+      "table": "qfu_assignmentexception",
+      "viewName": "Phase 8 Monitoring - Open Assignment Exceptions",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 702
+    },
+    {
+      "table": "qfu_policy",
+      "viewName": "Phase 8 Monitoring - Alert Policies",
+      "opened": true,
+      "textHasViewName": false,
+      "bodyLength": 605
+    }
+  ]
+}

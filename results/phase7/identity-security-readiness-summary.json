@@ -1,0 +1,74 @@
+﻿{
+    "timestamp":  "2026-04-29T08:18:09.9766820-06:00",
+    "environmentUrl":  "https://orga632edd5.crm3.dynamics.com",
+    "solutionFound":  true,
+    "currentUser":  {
+                        "systemUserId":  "c3e715ed-572a-f111-88b4-7ced8d067891",
+                        "emailMasked":  "s***@applied.com",
+                        "hasEntraObjectId":  true
+                    },
+    "counts":  {
+                   "statecodeZeroStaffWithEmail":  1,
+                   "activeStaffWithEmail":  1,
+                   "gmMemberships":  0,
+                   "activeSystemUsers":  144,
+                   "statecodeZeroStaffLinkedToSystemUser":  1,
+                   "adminMemberships":  1,
+                   "activeStaffMissingEmail":  18,
+                   "devOnlyAdminMemberships":  1,
+                   "managerMemberships":  0,
+                   "activeStaffLinkedToSystemUser":  1,
+                   "activeStaff":  19,
+                   "activeStaffMissingSystemUser":  18
+               },
+    "exactProductionUpdates":  0,
+    "devOnlyUpdates":  1,
+    "devMapping":  {
+                       "enabled":  true,
+                       "status":  "completed-dev-only",
+                       "currentSystemUserId":  "c3e715ed-572a-f111-88b4-7ced8d067891",
+                       "currentUserEmailMasked":  "s***@applied.com",
+                       "staffId":  "d268e64f-8242-f111-bec7-7c1e52062b6f",
+                       "branchId":  "071be77a-a533-f111-88b4-000d3a59294a",
+                       "adminMembershipId":  "3cfee124-d643-f111-bec7-7c1e52062b6f",
+                       "message":  "Created/updated dev-only current maker staff mapping and Admin membership. Not production-verified."
+                   },
+    "views":  [
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Staff Linked to System User",
+                      "savedqueryid":  "3dfee124-d643-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true
+                  },
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Staff Missing System User",
+                      "savedqueryid":  "3ffee124-d643-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true
+                  },
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Staff With Email",
+                      "savedqueryid":  "d81a8820-5443-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true
+                  },
+                  {
+                      "table":  "qfu_staff",
+                      "viewName":  "Staff Missing Email",
+                      "savedqueryid":  "327df134-6742-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true
+                  },
+                  {
+                      "table":  "qfu_branchmembership",
+                      "viewName":  "Active Manager GM Admin Memberships",
+                      "savedqueryid":  "f1d6072b-d643-f111-bec7-7c1e52062b6f",
+                      "status":  "updated",
+                      "addedToSolution":  true
+                  }
+              ],
+    "securityRoleAction":  "No QFU security role privileges were created by this script; Phase 7 records the privilege model as a controlled security task."
+}

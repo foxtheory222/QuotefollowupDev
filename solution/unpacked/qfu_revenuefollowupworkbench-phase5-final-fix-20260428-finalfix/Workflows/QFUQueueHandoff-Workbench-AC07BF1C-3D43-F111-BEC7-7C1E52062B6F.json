@@ -1,0 +1,254 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "connection": {
+          "connectionReferenceLogicalName": "qfu_shared_commondataserviceforapps"
+        },
+        "runtimeSource": "embedded",
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "triggers": {
+        "When_a_work_item_action_is_added_or_modified": {
+          "inputs": {
+            "host": {
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/entityname": "qfu_workitemaction",
+              "subscriptionRequest/message": 4
+            },
+            "authentication": "@parameters('')"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "metadata": {
+            "operationMetadataId": "c423d196-da32-4f54-a849-fa3f5f5104f2"
+          }
+        }
+      },
+      "actions": {
+        "Condition_Is_Queue_Handoff": {
+          "runAfter": {},
+          "actions": {
+            "Compose_Target_Role": {
+              "runAfter": {
+                "List_parent_work_item": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Compose",
+              "inputs": "@toUpper(coalesce(triggerOutputs()?['body/qfu_outcome'], ''))"
+            },
+            "List_parent_work_item": {
+              "runAfter": {},
+              "inputs": {
+                "host": {
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qfu_workitems",
+                  "$top": 1,
+                  "$filter": "qfu_workitemid eq @{triggerOutputs()?['body/_qfu_workitem_value']}",
+                  "$select": "qfu_workitemid,qfu_workitemnumber,qfu_status,qfu_queuehandoffcount,_qfu_tsrstaff_value,_qfu_cssrstaff_value,qfu_completedattempts,qfu_lastfollowedupon"
+                },
+                "authentication": "@parameters('')"
+              },
+              "type": "OpenApiConnection",
+              "metadata": {
+                "operationMetadataId": "ef04255f-be7e-4479-b332-f1694883dbfd"
+              }
+            },
+            "Condition_Target_Staff_Mapped": {
+              "runAfter": {
+                "Compose_Target_Staff_Id": [
+                  "Succeeded"
+                ]
+              },
+              "actions": {
+                "Update_work_item_queue": {
+                  "runAfter": {
+                    "List_target_staff": [
+                      "Succeeded"
+                    ]
+                  },
+                  "inputs": {
+                    "host": {
+                      "operationId": "UpdateOnlyRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "connectionName": "shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "recordId": "@triggerOutputs()?['body/_qfu_workitem_value']",
+                      "item/qfu_CurrentQueueOwnerStaff@odata.bind": "@{concat('/qfu_staffs(', outputs('Compose_Target_Staff_Id'), ')')}",
+                      "item/qfu_queueassignedon": "@utcNow()",
+                      "item/qfu_currentqueueownername": "@first(outputs('List_target_staff')?['body/value'])?['qfu_name']",
+                      "item/qfu_currentqueuerole": "@if(equals(outputs('Compose_Target_Role'), 'TSR'), 985020000, 985020001)",
+                      "item/qfu_currentqueueownerstaffkey": "@coalesce(first(outputs('List_target_staff')?['body/value'])?['qfu_staffnumber'], outputs('Compose_Target_Staff_Id'))",
+                      "item/qfu_queuehandoffreason": "@coalesce(triggerOutputs()?['body/qfu_notes'], concat('Routed to ', outputs('Compose_Target_Role'), ' from Workbench'))",
+                      "item/qfu_queuehandoffcount": "@add(coalesce(first(outputs('List_parent_work_item')?['body/value'])?['qfu_queuehandoffcount'], 0), 1)",
+                      "item/qfu_currentqueueroletext": "@outputs('Compose_Target_Role')",
+                      "entityName": "qfu_workitems"
+                    },
+                    "authentication": "@parameters('')"
+                  },
+                  "type": "OpenApiConnection",
+                  "metadata": {
+                    "operationMetadataId": "f50807a0-a7fb-4ef8-b294-cfdb3610ee0d"
+                  }
+                },
+                "List_target_staff": {
+                  "runAfter": {},
+                  "inputs": {
+                    "host": {
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "connectionName": "shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "qfu_staffs",
+                      "$top": 1,
+                      "$filter": "qfu_staffid eq @{outputs('Compose_Target_Staff_Id')}",
+                      "$select": "qfu_staffid,qfu_name,qfu_staffnumber"
+                    },
+                    "authentication": "@parameters('')"
+                  },
+                  "type": "OpenApiConnection",
+                  "metadata": {
+                    "operationMetadataId": "5864d04d-8ae7-479b-8173-82fab2ea1019"
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Compose_Handoff_Skipped": {
+                    "inputs": "Queue handoff skipped because target staff is missing or work item is terminal.",
+                    "type": "Compose"
+                  }
+                }
+              },
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "greater": [
+                      "@length(outputs('List_parent_work_item')?['body/value'])",
+                      0
+                    ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('Compose_Target_Staff_Id')",
+                        null
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "or": [
+                        {
+                          "equals": [
+                            "@first(outputs('List_parent_work_item')?['body/value'])?['qfu_status']",
+                            985010008
+                          ]
+                        },
+                        {
+                          "equals": [
+                            "@first(outputs('List_parent_work_item')?['body/value'])?['qfu_status']",
+                            985010009
+                          ]
+                        },
+                        {
+                          "equals": [
+                            "@first(outputs('List_parent_work_item')?['body/value'])?['qfu_status']",
+                            985010010
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "Compose_Target_Staff_Id": {
+              "runAfter": {
+                "Compose_Target_Role": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Compose",
+              "inputs": "@if(equals(outputs('Compose_Target_Role'), 'TSR'), first(outputs('List_parent_work_item')?['body/value'])?['_qfu_tsrstaff_value'], first(outputs('List_parent_work_item')?['body/value'])?['_qfu_cssrstaff_value'])"
+            }
+          },
+          "else": {
+            "actions": {
+              "Compose_Not_Handoff": {
+                "inputs": "Not a queue handoff action.",
+                "type": "Compose"
+              }
+            }
+          },
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/qfu_actiontype']",
+                  985010012
+                ]
+              },
+              {
+                "or": [
+                  {
+                    "equals": [
+                      "@toUpper(coalesce(triggerOutputs()?['body/qfu_outcome'], ''))",
+                      "TSR"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@toUpper(coalesce(triggerOutputs()?['body/qfu_outcome'], ''))",
+                      "CSSR"
+                    ]
+                  }
+                ]
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/_qfu_workitem_value']",
+                    null
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "contentVersion": "1.0.0.0",
+      "outputs": {},
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

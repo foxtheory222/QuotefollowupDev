@@ -1,0 +1,56 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "triggers": {
+        "manual": {
+          "inputs": {
+            "schema": {
+              "properties": {
+                "branchScope": {
+                  "type": "string"
+                },
+                "requestSource": {
+                  "type": "string"
+                },
+                "alertMode": {
+                  "type": "string"
+                },
+                "maxRecords": {
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "Request",
+          "kind": "Button"
+        }
+      },
+      "actions": {
+        "Compose_Phase_6_Safe_Mode": {
+          "runAfter": {},
+          "type": "Compose",
+          "inputs": {
+            "sendsEmail": false,
+            "sendsTeams": false,
+            "purpose": "Builds assignment-exception digest candidates for managers, GMs, and admins",
+            "note": "Phase 6 solution-aware no-send flow shell. Operational dry-run candidate creation and dedupe validation are performed by the checked-in Phase 6 validation harness until live alert enablement is approved.",
+            "defaultMode": "DryRunOnly"
+          }
+        }
+      },
+      "contentVersion": "1.0.0.0",
+      "outputs": {},
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

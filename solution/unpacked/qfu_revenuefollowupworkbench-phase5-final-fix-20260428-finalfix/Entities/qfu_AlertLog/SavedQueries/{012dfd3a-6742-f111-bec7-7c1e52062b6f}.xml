@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{012dfd3a-6742-f111-bec7-7c1e52062b6f}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qfu_name" select="1" icon="1" preview="1">
+        <row name="result" id="qfu_alertlogid">
+          <cell name="qfu_workitem" width="175" />
+          <cell name="qfu_alerttype" width="175" />
+          <cell name="qfu_recipientemail" width="175" />
+          <cell name="qfu_ccemails" width="175" />
+          <cell name="qfu_status" width="175" />
+          <cell name="qfu_senton" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="qfu_alertlog">
+          <attribute name="qfu_alertlogid" />
+          <attribute name="qfu_workitem" />
+          <attribute name="qfu_alerttype" />
+          <attribute name="qfu_recipientemail" />
+          <attribute name="qfu_ccemails" />
+          <attribute name="qfu_status" />
+          <attribute name="qfu_senton" />
+          <order attribute="qfu_senton" descending="false" />
+          <filter type="and">
+            <condition attribute="qfu_status" operator="eq" value="985010001" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Sent Alerts" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
